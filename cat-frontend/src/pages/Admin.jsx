@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage } from '../api'
+import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getDiscoveries, getSightings, reviewDiscovery, updateCat, uploadCatImage } from '../api'
 
 const emptyForm = {
   name: '',
@@ -55,6 +55,7 @@ export default function Admin() {
   const [authenticated, setAuthenticated] = useState(Boolean(getAdminToken()))
   const [password, setPassword] = useState('')
   const [cats, setCats] = useState([])
+  const [discoveries, setDiscoveries] = useState([])
   const [sightings, setSightings] = useState([])
   const [selectedCatId, setSelectedCatId] = useState(null)
   const [form, setForm] = useState(emptyForm)
@@ -66,10 +67,11 @@ export default function Admin() {
 
   const loadData = () => {
     setLoading(true)
-    Promise.all([getCats(), getSightings({ limit: 8 })])
-      .then(([catsData, sightingsData]) => {
+    Promise.all([getCats(), getSightings({ limit: 8 }), getDiscoveries({ status: 'pending', limit: 20 })])
+      .then(([catsData, sightingsData, discoveryData]) => {
         setCats(catsData)
         setSightings(sightingsData)
+        setDiscoveries(discoveryData)
       })
       .catch((err) => setError(err.message || '后台数据加载失败'))
       .finally(() => setLoading(false))
@@ -193,6 +195,26 @@ export default function Admin() {
     }
   }
 
+  const handleDiscoveryReview = async (discovery, action) => {
+    setSaving(true)
+    setError('')
+    setMessage('')
+    try {
+      await reviewDiscovery(discovery.id, {
+        action,
+        name: discovery.suggested_name || '新朋友',
+        color: discovery.suggested_color || '',
+        note: discovery.note || discovery.ai_summary || '',
+      })
+      setMessage(action === 'approve' ? '新猫已建档，并已发放发现者勋章' : '线索已拒绝')
+      loadData()
+    } catch (err) {
+      setError(err.message || '审核失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
@@ -266,6 +288,40 @@ export default function Admin() {
           {error || message}
         </div>
       )}
+
+      <section className="space-y-3">
+        <h2 className="font-display font-bold text-lg text-text">新猫发现审核</h2>
+        {discoveries.length > 0 ? (
+          <div className="space-y-3">
+            {discoveries.map((discovery) => (
+              <article key={discovery.id} className="clay-card p-4 space-y-3">
+                <div className="flex gap-3">
+                  <div className="w-20 h-20 rounded-2xl bg-primary-light overflow-hidden shrink-0 flex items-center justify-center text-2xl">
+                    {discovery.image_path ? <img src={discovery.image_path} alt="新猫线索" className="w-full h-full object-cover" /> : '🐾'}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold text-text">{discovery.suggested_name || '新猫线索'} · {discovery.suggested_color || '待确认'}</p>
+                    <p className="text-xs text-text-secondary mt-1">📍 {discovery.location_name || '未知地点'}</p>
+                    <p className="text-xs text-text-secondary mt-1">AI 置信度 {Math.round((discovery.ai_confidence || 0) * 100)}%</p>
+                  </div>
+                </div>
+                <p className="text-sm text-text-secondary">{discovery.ai_summary}</p>
+                {discovery.note && <p className="text-xs text-text-secondary">用户备注：“{discovery.note}”</p>}
+                <div className="grid grid-cols-2 gap-2">
+                  <button disabled={saving} onClick={() => handleDiscoveryReview(discovery, 'approve')} className="rounded-full bg-primary text-white py-2 text-sm font-bold disabled:opacity-60">
+                    通过并建档
+                  </button>
+                  <button disabled={saving} onClick={() => handleDiscoveryReview(discovery, 'reject')} className="rounded-full border border-border text-text-secondary py-2 text-sm font-bold disabled:opacity-60">
+                    拒绝
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="clay-card p-5 text-sm text-text-secondary text-center">暂无待审核新猫线索</div>
+        )}
+      </section>
 
       <section className="space-y-3">
         <h2 className="font-display font-bold text-lg text-text">猫档案列表</h2>

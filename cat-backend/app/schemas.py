@@ -113,6 +113,7 @@ class UserProfile(BaseModel):
     nickname: str
     avatar: Optional[str]
     created_at: datetime
+    badges: List[str] = []
 
     class Config:
         from_attributes = True
@@ -165,3 +166,34 @@ class HeatmapPoint(BaseModel):
     latitude: float
     longitude: float
     count: int
+
+
+class DiscoveryResponse(BaseModel):
+    id: int
+    user_id: int
+    image_path: Optional[str]
+    location_name: Optional[str]
+    latitude: Optional[float]
+    longitude: Optional[float]
+    note: Optional[str]
+    ai_status: Optional[str]
+    ai_confidence: Optional[float]
+    ai_summary: Optional[str]
+    suggested_name: Optional[str]
+    suggested_color: Optional[str]
+    status: str
+    reviewed_by: Optional[str]
+    reviewed_at: Optional[datetime]
+    created_cat_id: Optional[int]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class DiscoveryReview(BaseModel):
+    action: Literal["approve", "reject", "merge"]
+    cat_id: Optional[int] = None
+    name: Optional[str] = None
+    color: Optional[str] = None
+    note: Optional[str] = None

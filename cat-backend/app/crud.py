@@ -230,6 +230,86 @@ def get_user(db: Session, user_id: int = 1) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
+def get_user_badges(db: Session, user_id: int = 1) -> List[str]:
+    rows = db.query(models.BadgeEvent.badge_key).filter(models.BadgeEvent.user_id == user_id).all()
+    return [row.badge_key for row in rows]
+
+
+def _mock_discovery_ai(note: Optional[str]) -> dict:
+    text = note or ""
+    color = "橘白" if "橘" in text else "待确认"
+    return {
+        "ai_status": "needs_review",
+        "ai_confidence": 0.72,
+        "ai_summary": "AI 初审：疑似未入库校园猫，建议猫协结合地点与照片复核。",
+        "suggested_name": "新朋友",
+        "suggested_color": color,
+    }
+
+
+def create_discovery(db: Session, image_path: Optional[str], location_name: Optional[str], latitude: Optional[float], longitude: Optional[float], note: Optional[str], user_id: int = 1) -> models.CatDiscovery:
+    discovery = models.CatDiscovery(
+        user_id=user_id,
+        image_path=image_path,
+        location_name=location_name,
+        latitude=latitude,
+        longitude=longitude,
+        note=note,
+        **_mock_discovery_ai(note),
+    )
+    db.add(discovery)
+    db.commit()
+    db.refresh(discovery)
+    return discovery
+
+
+def get_discoveries(db: Session, status: Optional[str] = None, skip: int = 0, limit: int = 50) -> List[models.CatDiscovery]:
+    query = db.query(models.CatDiscovery)
+    if status:
+        query = query.filter(models.CatDiscovery.status == status)
+    return query.order_by(desc(models.CatDiscovery.created_at)).offset(skip).limit(limit).all()
+
+
+def review_discovery(db: Session, discovery_id: int, review: schemas.DiscoveryReview, reviewer: str = "cat_admin") -> Optional[models.CatDiscovery]:
+    discovery = db.query(models.CatDiscovery).filter(models.CatDiscovery.id == discovery_id).first()
+    if not discovery:
+        return None
+    if discovery.status != "pending":
+        return discovery
+
+    if review.action == "approve":
+        cat = models.Cat(
+            name=(review.name or discovery.suggested_name or "新朋友").strip(),
+            color=review.color or discovery.suggested_color,
+            location=discovery.location_name,
+            story=review.note or discovery.note,
+            avatar=discovery.image_path,
+        )
+        db.add(cat)
+        db.flush()
+        if discovery.image_path:
+            db.add(models.CatImage(cat_id=cat.id, image_path=discovery.image_path))
+        discovery.created_cat_id = cat.id
+        discovery.status = "approved"
+        db.add(models.BadgeEvent(user_id=discovery.user_id, badge_key="new_cat_finder", source_type="discovery", source_id=discovery.id))
+    elif review.action == "merge":
+        if not review.cat_id:
+            raise ValueError("cat_id is required for merge")
+        cat = db.query(models.Cat).filter(models.Cat.id == review.cat_id).first()
+        if not cat:
+            raise ValueError("target cat not found")
+        discovery.created_cat_id = cat.id
+        discovery.status = "merged"
+    else:
+        discovery.status = "rejected"
+
+    discovery.reviewed_by = reviewer
+    discovery.reviewed_at = datetime.now()
+    db.commit()
+    db.refresh(discovery)
+    return discovery
+
+
 def init_mock_data(db: Session):
     demo_cats = [
         {"name": "小白", "nickname": "图书馆馆长", "gender": "母", "neutered": "是", "age_estimate": "3岁", "color": "白色", "personality": "温顺亲人，爱晒太阳", "story": "小白是图书馆门口的常驻馆长。她总能精准找到阳光最好的一块地砖，安静地陪同学们度过赶论文的下午。", "location": "图书馆", "avatar": "/uploads/cats/xiaobai.jpg"},

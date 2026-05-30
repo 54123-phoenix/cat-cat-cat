@@ -105,3 +105,42 @@ class PostLike(Base):
 
     post = relationship("Post", back_populates="likes")
     user = relationship("User")
+
+
+class CatDiscovery(Base):
+    __tablename__ = "cat_discoveries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    image_path = Column(String(200))
+    location_name = Column(String(100))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    note = Column(Text)
+    ai_status = Column(String(30), default="needs_review")
+    ai_confidence = Column(Float)
+    ai_summary = Column(Text)
+    suggested_name = Column(String(50))
+    suggested_color = Column(String(50))
+    status = Column(String(20), nullable=False, default="pending")
+    reviewed_by = Column(String(50))
+    reviewed_at = Column(DateTime)
+    created_cat_id = Column(Integer, ForeignKey("cats.id"))
+    created_at = Column(DateTime, default=datetime.now)
+
+    user = relationship("User")
+    created_cat = relationship("Cat")
+
+
+class BadgeEvent(Base):
+    __tablename__ = "badge_events"
+    __table_args__ = (UniqueConstraint("user_id", "badge_key", "source_type", "source_id", name="uq_badge_source"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    badge_key = Column(String(50), nullable=False)
+    source_type = Column(String(50))
+    source_id = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now)
+
+    user = relationship("User")

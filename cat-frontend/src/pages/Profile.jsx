@@ -13,6 +13,7 @@ const ALL_BADGES = [
   { id: 'hundred', emoji: '📸', name: '百次记录', desc: '累计上传 100 条偶遇' },
   { id: 'seasons', emoji: '🌸', name: '四季偶遇', desc: '春夏秋冬各偶遇一次' },
   { id: 'honor', emoji: '👑', name: '猫协荣誉', desc: '由猫协志愿者授予' },
+  { id: 'new_cat_finder', emoji: '🧭', name: '新猫发现者', desc: '提交的新猫线索被猫协审核通过' },
 ]
 
 export default function Profile() {

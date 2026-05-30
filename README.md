@@ -6,6 +6,7 @@
 
 - 拍照识猫：支持上传/拍照、本地预览、识别等待态和三种识别结果。
 - 三态识别契约：`confirmed`、`uncertain`、`unknown`，方便后续接入 YOLO/CLIP/FAISS 等真实模型。
+- AI/人协同新猫审核：未知猫线索先由 AI mock 初审，再由猫协管理员终审，通过后自动建档并发放勋章。
 - 猫猫档案：展示猫猫基础信息、性格、故事、照片和最近偶遇。
 - Cat-egorize 档案管理：支持猫档案新增、编辑、删除接口和管理员上传参考照片。
 - 照片墙：聚合展示所有已上传的猫咪参考照片，为后续 AI 训练/检索准备数据雏形。
@@ -184,6 +185,34 @@ python -m compileall app
 - 普通文件名：高置信度识别成功。
 - 文件名包含 `uncertain`：返回 Top3 候选。
 - 文件名包含 `unknown`：返回新猫状态。
+
+## 新猫发现与审核流程
+
+当识别结果为 `unknown` 时，前端会引导用户提交新猫线索。线索会进入 AI 初审与猫协复核流程。
+
+接口位置：
+
+```text
+POST /api/discoveries
+GET  /api/discoveries?status=pending
+POST /api/discoveries/{id}/review
+```
+
+当前 AI 初审为 mock 实现，会生成：
+
+- `ai_status`
+- `ai_confidence`
+- `ai_summary`
+- `suggested_name`
+- `suggested_color`
+
+管理员在 `/admin` 审核通过后：
+
+- 自动创建猫档案。
+- 将线索照片写入猫猫参考照片。
+- 给提交者发放 `new_cat_finder` 勋章。
+
+后续真实 AI 可替换 mock 初审逻辑，接入图像质量判断、疑似重复猫检索和档案字段建议。
 
 ## 地图说明
 

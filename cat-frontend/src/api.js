@@ -130,13 +130,39 @@ export function createSighting({ catId, location, locationName, latitude, longit
   return request('/sightings', { method: 'POST', body: form })
 }
 
+export function createDiscovery({ locationName, latitude, longitude, note, file }) {
+  const form = new FormData()
+  if (locationName) form.append('location_name', locationName)
+  if (latitude !== undefined) form.append('latitude', latitude)
+  if (longitude !== undefined) form.append('longitude', longitude)
+  if (note) form.append('note', note)
+  if (file) form.append('file', file)
+  return request('/discoveries', { method: 'POST', body: form })
+}
+
+export function getDiscoveries(params = {}) {
+  const search = new URLSearchParams()
+  if (params.status) search.set('status', params.status)
+  if (params.limit) search.set('limit', params.limit)
+  const query = search.toString()
+  return request(`/discoveries${query ? `?${query}` : ''}`, { headers: adminHeaders() })
+}
+
+export function reviewDiscovery(discoveryId, payload) {
+  return request(`/discoveries/${discoveryId}/review`, {
+    method: 'POST',
+    headers: adminHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  })
+}
+
 export function getUserProfile() {
   return request('/user/profile')
 }
 
 export async function fetchProfile() {
   const [user, cats, sightings] = await Promise.all([
-    getUserProfile().catch(() => ({ nickname: '猫猫爱好者' })),
+    getUserProfile().catch(() => ({ nickname: '猫猫爱好者', badges: ['first', 'champion', 'collect'] })),
     getCats(),
     getSightings({ limit: 5 }),
   ])
@@ -148,7 +174,7 @@ export async function fetchProfile() {
     daysJoined: 28,
     sightings: sightings.length,
     catsKnown: cats.length,
-    badges: ['first', 'champion', 'collect'],
+    badges: user.badges || [],
     recentSightings: sightings,
   }
 }

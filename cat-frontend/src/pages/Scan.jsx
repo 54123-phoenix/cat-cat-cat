@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ConfidenceBar from '../components/ConfidenceBar'
 import TopBar from '../components/TopBar'
-import { createSighting, identifyCat } from '../api'
+import { createDiscovery, createSighting, identifyCat } from '../api'
 import { campusLocations, findCampusLocation } from '../campusLocations'
 
 export default function Scan() {
@@ -11,6 +11,8 @@ export default function Scan() {
   const [preview, setPreview] = useState(null)
   const [result, setResult] = useState(null)
   const [message, setMessage] = useState('')
+  const [discoveryNote, setDiscoveryNote] = useState('')
+  const [discovery, setDiscovery] = useState(null)
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const fileRef = useRef(null)
 
@@ -66,9 +68,25 @@ export default function Scan() {
     navigate(`/cats/${candidate.cat_id}`)
   }
 
+  async function submitDiscovery() {
+    const file = fileRef.current?.files?.[0]
+    const location = findCampusLocation(selectedLocation)
+    setMessage('')
+    const created = await createDiscovery({
+      locationName: location.name,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      note: discoveryNote || '识别为未知猫，等待猫协复核',
+      file,
+    })
+    setDiscovery(created)
+  }
+
   function reset() {
     setPhase('idle')
     setResult(null)
+    setDiscovery(null)
+    setDiscoveryNote('')
     setMessage('')
     if (preview) URL.revokeObjectURL(preview)
     setPreview(null)
@@ -172,10 +190,25 @@ export default function Scan() {
           <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
             <div className="text-4xl mb-3">🐾</div>
             <div className="font-medium text-gray-800">发现新朋友！</div>
-            <div className="text-xs text-gray-400 mt-1 mb-4">这只猫还没有记录，帮它建立档案吧</div>
-            <button onClick={() => navigate('/admin')} className="w-full bg-cat-orange text-white rounded-full py-3 text-sm font-medium">
-              帮它登记 →
-            </button>
+            <div className="text-xs text-gray-400 mt-1 mb-4">AI 初步判断它可能还没入库，提交后将由猫协复核</div>
+            {discovery ? (
+              <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left mb-3">
+                <p className="text-sm font-medium text-green-700">线索已提交，等待猫协审核</p>
+                <p className="text-xs text-green-600 mt-1">{discovery.ai_summary}</p>
+              </div>
+            ) : (
+              <>
+                <textarea
+                  value={discoveryNote}
+                  onChange={(event) => setDiscoveryNote(event.target.value)}
+                  placeholder="补充描述：毛色、状态、你在哪里看到它..."
+                  className="w-full h-24 text-sm text-gray-700 border border-gray-100 rounded-xl p-3 outline-none resize-none mb-3"
+                />
+                <button onClick={submitDiscovery} className="w-full bg-cat-orange text-white rounded-full py-3 text-sm font-medium">
+                  提交给 AI 与猫协审核 →
+                </button>
+              </>
+            )}
             <button onClick={reset} className="w-full mt-2 text-sm text-gray-400">取消</button>
           </div>
         )}

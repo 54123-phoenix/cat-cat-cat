@@ -13,4 +13,10 @@ def get_profile(db: Session = Depends(get_db)):
     if not user:
         from app.models import User
         user = User(id=1, nickname="猫猫爱好者", avatar="/uploads/avatar/default.jpg")
-    return user
+    return schemas.UserProfile(
+        id=user.id,
+        nickname=user.nickname,
+        avatar=user.avatar,
+        created_at=user.created_at,
+        badges=crud.get_user_badges(db, user.id),
+    )
