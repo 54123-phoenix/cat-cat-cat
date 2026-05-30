@@ -161,9 +161,8 @@ export function getUserProfile() {
 }
 
 export async function fetchProfile() {
-  const [user, cats, sightings] = await Promise.all([
+  const [user, sightings] = await Promise.all([
     getUserProfile().catch(() => ({ nickname: '猫猫爱好者', badges: ['first', 'champion', 'collect'] })),
-    getCats(),
     getSightings({ limit: 5 }),
   ])
 
@@ -172,8 +171,9 @@ export async function fetchProfile() {
     nickname: user.nickname || '猫猫爱好者',
     avatar: user.avatar,
     daysJoined: 28,
-    sightings: sightings.length,
-    catsKnown: cats.length,
+    stats: user.stats || {},
+    sightings: user.stats?.sightings || 0,
+    catsKnown: user.stats?.cats_known || 0,
     badges: user.badges || [],
     recentSightings: sightings,
   }

@@ -108,12 +108,21 @@ class RecognizeResponse(BaseModel):
     candidates: List[RecognizeCandidate] = []
 
 
+class UserStats(BaseModel):
+    sightings: int = 0
+    posts: int = 0
+    discoveries: int = 0
+    approved_discoveries: int = 0
+    cats_known: int = 0
+
+
 class UserProfile(BaseModel):
     id: int
     nickname: str
     avatar: Optional[str]
     created_at: datetime
     badges: List[str] = []
+    stats: UserStats = UserStats()
 
     class Config:
         from_attributes = True

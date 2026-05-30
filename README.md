@@ -222,6 +222,33 @@ POST /api/discoveries/{id}/review
 
 后续真实 AI 可替换 mock 初审逻辑，接入图像质量判断、疑似重复猫检索和档案字段建议。
 
+## 个人贡献与勋章规则
+
+个人页 `/profile` 会从后端 `GET /api/user/profile` 获取真实贡献统计：
+
+```json
+{
+  "badges": ["first_sighting", "first_post"],
+  "stats": {
+    "sightings": 8,
+    "posts": 4,
+    "discoveries": 2,
+    "approved_discoveries": 1,
+    "cats_known": 8
+  }
+}
+```
+
+当前基础勋章规则：
+
+- `first_sighting`：至少 1 条偶遇记录。
+- `first_post`：至少 1 条社区帖子。
+- `community_helper`：至少 3 条社区帖子。
+- `cat_observer`：至少 5 条偶遇记录。
+- `new_cat_finder`：提交的新猫线索被猫协审核通过。
+
+其中 `new_cat_finder` 来自持久化 `badge_events`，其他基础勋章由后端根据当前贡献统计即时计算。
+
 ## 地图说明
 
 地图页使用高德地图 JS API，并在 `/map` 页面按需异步加载，避免地图脚本影响其他页面启动。

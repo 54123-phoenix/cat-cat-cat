@@ -19,4 +19,5 @@ def get_profile(db: Session = Depends(get_db)):
         avatar=user.avatar,
         created_at=user.created_at,
         badges=crud.get_user_badges(db, user.id),
+        stats=crud.get_user_stats(db, user.id),
     )

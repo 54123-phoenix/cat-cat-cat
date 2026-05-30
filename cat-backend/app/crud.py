@@ -233,7 +233,35 @@ def get_user(db: Session, user_id: int = 1) -> Optional[models.User]:
 
 def get_user_badges(db: Session, user_id: int = 1) -> List[str]:
     rows = db.query(models.BadgeEvent.badge_key).filter(models.BadgeEvent.user_id == user_id).all()
-    return [row.badge_key for row in rows]
+    badges = {row.badge_key for row in rows}
+    stats = get_user_stats(db, user_id)
+    if stats.sightings >= 1:
+        badges.add("first_sighting")
+    if stats.posts >= 1:
+        badges.add("first_post")
+    if stats.posts >= 3:
+        badges.add("community_helper")
+    if stats.sightings >= 5:
+        badges.add("cat_observer")
+    return sorted(badges)
+
+
+def get_user_stats(db: Session, user_id: int = 1) -> schemas.UserStats:
+    sightings = db.query(models.Sighting).filter(models.Sighting.spotted_by == "猫猫爱好者").count()
+    posts = db.query(models.Post).filter(models.Post.user_id == user_id).count()
+    discoveries = db.query(models.CatDiscovery).filter(models.CatDiscovery.user_id == user_id).count()
+    approved_discoveries = db.query(models.CatDiscovery).filter(
+        models.CatDiscovery.user_id == user_id,
+        models.CatDiscovery.status == "approved",
+    ).count()
+    cats_known = db.query(models.Cat).count()
+    return schemas.UserStats(
+        sightings=sightings,
+        posts=posts,
+        discoveries=discoveries,
+        approved_discoveries=approved_discoveries,
+        cats_known=cats_known,
+    )
 
 
 def create_discovery(db: Session, image_path: Optional[str], location_name: Optional[str], latitude: Optional[float], longitude: Optional[float], note: Optional[str], user_id: int = 1) -> models.CatDiscovery:

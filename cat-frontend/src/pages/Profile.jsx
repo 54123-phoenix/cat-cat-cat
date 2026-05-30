@@ -5,14 +5,10 @@ import FeedItem from '../components/FeedItem'
 import { fetchProfile } from '../api'
 
 const ALL_BADGES = [
-  { id: 'first', emoji: '🌟', name: '初次相遇', desc: '第一次上传偶遇记录' },
-  { id: 'champion', emoji: '🏆', name: '最佳铲屎官', desc: '某只猫本月偶遇最多' },
-  { id: 'night', emoji: '🌙', name: '深夜偶遇', desc: '22:00 后记录一次偶遇' },
-  { id: 'rain', emoji: '☔', name: '雨天同行', desc: '雨天仍然去偶遇猫咪' },
-  { id: 'collect', emoji: '🗺️', name: '集齐全员', desc: '偶遇所有在册猫咪' },
-  { id: 'hundred', emoji: '📸', name: '百次记录', desc: '累计上传 100 条偶遇' },
-  { id: 'seasons', emoji: '🌸', name: '四季偶遇', desc: '春夏秋冬各偶遇一次' },
-  { id: 'honor', emoji: '👑', name: '猫协荣誉', desc: '由猫协志愿者授予' },
+  { id: 'first_sighting', emoji: '🌟', name: '初次相遇', desc: '第一次上传偶遇记录' },
+  { id: 'first_post', emoji: '💬', name: '社区首帖', desc: '第一次发布社区动态' },
+  { id: 'community_helper', emoji: '🤝', name: '社区帮手', desc: '累计发布 3 条社区动态' },
+  { id: 'cat_observer', emoji: '📸', name: '猫猫观察员', desc: '累计记录 5 次偶遇' },
   { id: 'new_cat_finder', emoji: '🧭', name: '新猫发现者', desc: '提交的新猫线索被猫协审核通过' },
 ]
 
@@ -37,6 +33,7 @@ export default function Profile() {
   }
 
   const earnedIds = new Set(profile?.badges || [])
+  const stats = profile?.stats || {}
 
   return (
     <div className="pb-8">
@@ -49,12 +46,29 @@ export default function Profile() {
       <div className="mx-3 -mt-8 bg-white rounded-2xl border border-gray-100 p-4">
         <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
           {[
-            { num: profile?.sightings || 0, label: '偶遇记录' },
-            { num: profile?.catsKnown || 0, label: '认识的猫' },
+            { num: stats.sightings || 0, label: '偶遇记录' },
+            { num: stats.posts || 0, label: '社区发帖' },
             { num: profile?.badges?.length || 0, label: '获得勋章' },
           ].map(({ num, label }) => (
             <div key={label} className="px-2">
               <div className="text-xl font-medium text-cat-orange">{num}</div>
+              <div className="text-[11px] text-gray-400 mt-0.5">{label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="px-3 mt-4">
+        <h2 className="text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-2">贡献数据</h2>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { num: stats.discoveries || 0, label: '新猫线索' },
+            { num: stats.approved_discoveries || 0, label: '审核通过' },
+            { num: stats.cats_known || 0, label: '在册猫猫' },
+            { num: stats.posts || 0, label: '社区贡献' },
+          ].map(({ num, label }) => (
+            <div key={label} className="bg-white rounded-xl border border-gray-100 p-3 text-center">
+              <div className="text-lg font-medium text-cat-orange">{num}</div>
               <div className="text-[11px] text-gray-400 mt-0.5">{label}</div>
             </div>
           ))}
