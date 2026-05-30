@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { createCat, getCat, getCats, getSightings, updateCat, uploadCatImage } from '../api'
+import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage } from '../api'
 
 const emptyForm = {
   name: '',
@@ -52,6 +52,8 @@ function Field({ label, name, value, onChange, textarea = false }) {
 }
 
 export default function Admin() {
+  const [authenticated, setAuthenticated] = useState(Boolean(getAdminToken()))
+  const [password, setPassword] = useState('')
   const [cats, setCats] = useState([])
   const [sightings, setSightings] = useState([])
   const [selectedCatId, setSelectedCatId] = useState(null)
@@ -74,8 +76,45 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    loadData()
-  }, [])
+    if (!authenticated) {
+      setLoading(false)
+      return
+    }
+
+    getAdminMe()
+      .then(loadData)
+      .catch(() => {
+        clearAdminToken()
+        setAuthenticated(false)
+        setError('登录已过期，请重新登录')
+        setLoading(false)
+      })
+  }, [authenticated])
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    setSaving(true)
+    setError('')
+    try {
+      await adminLogin(password)
+      setPassword('')
+      setAuthenticated(true)
+      setMessage('猫协管理员登录成功')
+    } catch (err) {
+      setError(err.message || '登录失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLogout = () => {
+    clearAdminToken()
+    setAuthenticated(false)
+    resetForm()
+    setCats([])
+    setSightings([])
+    setMessage('已退出猫协管理模式')
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -162,6 +201,44 @@ export default function Admin() {
     )
   }
 
+  if (!authenticated) {
+    return (
+      <div className="space-y-5">
+        <header className="clay-card p-5 space-y-2">
+          <Link to="/profile" className="text-sm font-bold text-text-secondary">
+            ← 返回普通模式
+          </Link>
+          <div>
+            <h1 className="text-2xl font-display font-bold text-text">猫协管理登录</h1>
+            <p className="text-sm text-text-secondary mt-1">请输入猫协管理员口令后维护档案</p>
+          </div>
+        </header>
+
+        {(message || error) && (
+          <div className={`rounded-2xl px-4 py-3 text-sm font-bold ${error ? 'bg-red-50 text-red-500' : 'bg-green-50 text-success'}`}>
+            {error || message}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="clay-card p-5 space-y-4">
+          <label className="space-y-1 block">
+            <span className="block text-xs font-bold text-text-secondary">管理员口令</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="w-full rounded-2xl border-2 border-border bg-card px-3 py-3 text-sm text-text outline-none"
+              placeholder="默认 cat-admin，可通过 .env 修改"
+            />
+          </label>
+          <button type="submit" disabled={saving || !password.trim()} className="clay-btn w-full disabled:opacity-60">
+            {saving ? '登录中...' : '进入管理台'}
+          </button>
+        </form>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-5">
       <header className="clay-card p-5 space-y-2">
@@ -173,9 +250,14 @@ export default function Admin() {
             <h1 className="text-2xl font-display font-bold text-text">猫协管理台</h1>
             <p className="text-sm text-text-secondary">维护猫档案、参考照片和偶遇记录</p>
           </div>
-          <button onClick={resetForm} className="text-xs font-bold text-primary bg-primary-light px-3 py-2 rounded-full shrink-0">
-            新增猫
-          </button>
+          <div className="flex flex-col gap-2 shrink-0">
+            <button onClick={resetForm} className="text-xs font-bold text-primary bg-primary-light px-3 py-2 rounded-full">
+              新增猫
+            </button>
+            <button onClick={handleLogout} className="text-xs font-bold text-text-secondary bg-card px-3 py-2 rounded-full border border-border">
+              退出
+            </button>
+          </div>
         </div>
       </header>
 

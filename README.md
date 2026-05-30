@@ -12,7 +12,7 @@
 - 偶遇动态：记录并展示校园猫咪时间线。
 - 高德地图热力图：基于偶遇记录展示猫猫出没热点。
 - 社区模块：广场、寻猫、日常、健康、建议等话题，支持发帖、标签、关联猫猫、评论和点赞，并持久化到 MySQL。
-- 猫协管理端：维护猫档案、上传参考照片、查看最近偶遇。
+- 猫协管理端：通过管理员口令登录后维护猫档案、上传参考照片、查看最近偶遇。
 - 移动端优先：以 375px 宽度为基准设计，底部五栏导航。
 
 ## 技术栈
@@ -235,6 +235,26 @@ POST /api/posts/{id}/comments
 - `/admin`：管理员维护猫档案和上传参考照片。
 - `/gallery`：展示所有上传的参考照片。
 
+## 管理端鉴权
+
+`/admin` 使用轻量管理员口令登录。后端会签发 12 小时有效的 Bearer token，前端保存到 `localStorage`，并在猫档案写操作中自动附带。
+
+受保护接口：
+
+- `POST /api/cats`
+- `PUT /api/cats/{cat_id}`
+- `DELETE /api/cats/{cat_id}`
+- `POST /api/cats/{cat_id}/images`
+
+环境变量：
+
+```text
+ADMIN_PASSWORD=cat-admin
+ADMIN_SECRET=change-this-in-production
+```
+
+默认口令为 `cat-admin`，正式部署前应通过 `.env` 修改。
+
 ## 数据与上传文件
 
 - MySQL 数据保存在 Docker volume `mysql_data` 中。
@@ -251,5 +271,5 @@ https://github.com/54123-phoenix/cat-cat-cat
 
 - 真实 AI 识别模型未接入，仅保留稳定接口契约。
 - 社区用户身份当前使用默认用户 `1`，后续可接入真实登录系统。
-- `/admin` 是演示版猫协管理端，暂未加入登录鉴权。
+- `/admin` 已加入轻量口令鉴权，但尚未实现完整多账号和角色体系。
 - 高德地图点位为演示级校园坐标。

@@ -1,4 +1,5 @@
 const API_BASE = '/api'
+const ADMIN_TOKEN_KEY = 'cat_admin_token'
 
 async function request(url, options = {}) {
   const res = await fetch(`${API_BASE}${url}`, options)
@@ -7,6 +8,33 @@ async function request(url, options = {}) {
     throw new Error(err.detail || `HTTP ${res.status}`)
   }
   return res.json()
+}
+
+function adminHeaders(extra = {}) {
+  const token = localStorage.getItem(ADMIN_TOKEN_KEY)
+  return token ? { ...extra, Authorization: `Bearer ${token}` } : extra
+}
+
+export function getAdminToken() {
+  return localStorage.getItem(ADMIN_TOKEN_KEY)
+}
+
+export function clearAdminToken() {
+  localStorage.removeItem(ADMIN_TOKEN_KEY)
+}
+
+export async function adminLogin(password) {
+  const data = await request('/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  })
+  localStorage.setItem(ADMIN_TOKEN_KEY, data.token)
+  return data
+}
+
+export function getAdminMe() {
+  return request('/admin/me', { headers: adminHeaders() })
 }
 
 export function getCats() {
@@ -22,7 +50,7 @@ export function getCat(catId) {
 export function createCat(cat) {
   return request('/cats', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: adminHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(cat),
   })
 }
@@ -30,7 +58,7 @@ export function createCat(cat) {
 export function updateCat(catId, cat) {
   return request(`/cats/${catId}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: adminHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(cat),
   })
 }
@@ -38,7 +66,7 @@ export function updateCat(catId, cat) {
 export function uploadCatImage(catId, file) {
   const form = new FormData()
   form.append('file', file)
-  return request(`/cats/${catId}/images`, { method: 'POST', body: form })
+  return request(`/cats/${catId}/images`, { method: 'POST', headers: adminHeaders(), body: form })
 }
 
 export function getGalleryImages(params = {}) {
