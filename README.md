@@ -170,6 +170,14 @@ python -m compileall app
 
 当前项目保留 AI 图像识别接口，真实模型由后续团队接入。现阶段 `/api/recognize` 使用 mock 逻辑，返回统一三态结构：
 
+AI 接入边界已抽象到：
+
+```text
+cat-backend/app/services/ai.py
+```
+
+完整对接契约见：`docs/AI_INTEGRATION.md`。
+
 ```json
 {
   "status": "confirmed | uncertain | unknown",

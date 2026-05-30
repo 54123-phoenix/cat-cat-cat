@@ -6,6 +6,7 @@ from sqlalchemy import desc, func
 from typing import Optional, List
 
 from app import models, schemas
+from app.services.ai import review_new_cat_discovery
 
 
 def get_cats(db: Session, location: Optional[str] = None, skip: int = 0, limit: int = 20) -> List[models.Cat]:
@@ -235,19 +236,8 @@ def get_user_badges(db: Session, user_id: int = 1) -> List[str]:
     return [row.badge_key for row in rows]
 
 
-def _mock_discovery_ai(note: Optional[str]) -> dict:
-    text = note or ""
-    color = "橘白" if "橘" in text else "待确认"
-    return {
-        "ai_status": "needs_review",
-        "ai_confidence": 0.72,
-        "ai_summary": "AI 初审：疑似未入库校园猫，建议猫协结合地点与照片复核。",
-        "suggested_name": "新朋友",
-        "suggested_color": color,
-    }
-
-
 def create_discovery(db: Session, image_path: Optional[str], location_name: Optional[str], latitude: Optional[float], longitude: Optional[float], note: Optional[str], user_id: int = 1) -> models.CatDiscovery:
+    ai_review = review_new_cat_discovery(image_path=image_path, note=note)
     discovery = models.CatDiscovery(
         user_id=user_id,
         image_path=image_path,
@@ -255,7 +245,11 @@ def create_discovery(db: Session, image_path: Optional[str], location_name: Opti
         latitude=latitude,
         longitude=longitude,
         note=note,
-        **_mock_discovery_ai(note),
+        ai_status=ai_review.ai_status,
+        ai_confidence=ai_review.ai_confidence,
+        ai_summary=ai_review.ai_summary,
+        suggested_name=ai_review.suggested_name,
+        suggested_color=ai_review.suggested_color,
     )
     db.add(discovery)
     db.commit()
