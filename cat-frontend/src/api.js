@@ -41,6 +41,14 @@ export function uploadCatImage(catId, file) {
   return request(`/cats/${catId}/images`, { method: 'POST', body: form })
 }
 
+export function getGalleryImages(params = {}) {
+  const search = new URLSearchParams()
+  if (params.limit) search.set('limit', params.limit)
+  if (params.skip) search.set('skip', params.skip)
+  const query = search.toString()
+  return request(`/cats/images${query ? `?${query}` : ''}`)
+}
+
 export function getSightings(params = {}) {
   const search = new URLSearchParams()
   if (params.catId) search.set('cat_id', params.catId)

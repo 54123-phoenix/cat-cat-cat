@@ -7,7 +7,7 @@ services:
       - ./cat-frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_TARGET=http://backend:8000
+      - VITE_API_TARGET=${VITE_API_TARGET:-http://backend:8000}
     depends_on:
       - backend
 
@@ -19,8 +19,8 @@ services:
       - ./cat-backend:/app
       - ./uploads:/app/uploads
     environment:
-      - DATABASE_URL=mysql+pymysql://root:root123@db:3306/cat_community
-      - UPLOAD_DIR=./uploads
+      - DATABASE_URL=${DATABASE_URL:-mysql+pymysql://root:root123@db:3306/cat_community}
+      - UPLOAD_DIR=${UPLOAD_DIR:-./uploads}
     depends_on:
       - db
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

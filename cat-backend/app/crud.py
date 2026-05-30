@@ -45,7 +45,11 @@ def delete_cat(db: Session, cat_id: int) -> bool:
 
 
 def get_cat_images(db: Session, cat_id: int) -> List[models.CatImage]:
-    return db.query(models.CatImage).filter(models.CatImage.cat_id == cat_id).all()
+    return db.query(models.CatImage).filter(models.CatImage.cat_id == cat_id).order_by(desc(models.CatImage.created_at)).all()
+
+
+def get_gallery_images(db: Session, skip: int = 0, limit: int = 60) -> List[models.CatImage]:
+    return db.query(models.CatImage).order_by(desc(models.CatImage.created_at)).offset(skip).limit(limit).all()
 
 
 def create_cat_image(db: Session, cat_id: int, image_path: str) -> models.CatImage:

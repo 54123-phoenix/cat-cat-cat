@@ -65,6 +65,10 @@ class CatListResponse(BaseModel):
         from_attributes = True
 
 
+class GalleryImageResponse(CatImageResponse):
+    cat: Optional[CatListResponse] = None
+
+
 class SightingBase(BaseModel):
     cat_id: int
     location: Optional[str] = None

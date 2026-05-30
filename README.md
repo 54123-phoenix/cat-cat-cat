@@ -7,6 +7,8 @@
 - 拍照识猫：支持上传/拍照、本地预览、识别等待态和三种识别结果。
 - 三态识别契约：`confirmed`、`uncertain`、`unknown`，方便后续接入 YOLO/CLIP/FAISS 等真实模型。
 - 猫猫档案：展示猫猫基础信息、性格、故事、照片和最近偶遇。
+- Cat-egorize 档案管理：支持猫档案新增、编辑、删除接口和管理员上传参考照片。
+- 照片墙：聚合展示所有已上传的猫咪参考照片，为后续 AI 训练/检索准备数据雏形。
 - 偶遇动态：记录并展示校园猫咪时间线。
 - 高德地图热力图：基于偶遇记录展示猫猫出没热点。
 - 社区模块：广场、寻猫、日常、健康、建议等话题，支持发帖、标签、关联猫猫和点赞。
@@ -33,6 +35,7 @@
 ### DevOps
 
 - Docker Compose
+- Makefile
 
 ## 项目结构
 
@@ -57,6 +60,8 @@
 │   ├── Dockerfile
 │   └── package.json
 ├── docx/                 # 项目文档材料
+├── Makefile              # 常用开发命令
+├── .env.example          # 环境变量样例
 ├── docker-compose.yml
 └── README.md
 ```
@@ -67,6 +72,12 @@
 
 ```bash
 docker compose up -d --build
+```
+
+也可以使用 Makefile：
+
+```bash
+make up
 ```
 
 启动后访问：
@@ -82,10 +93,34 @@ docker compose up -d --build
 docker compose ps
 ```
 
+或：
+
+```bash
+make ps
+```
+
 停止服务：
 
 ```bash
 docker compose down
+```
+
+或：
+
+```bash
+make down
+```
+
+常用 Make 命令：
+
+```bash
+make up              # 构建并启动服务
+make down            # 停止服务
+make restart         # 重启服务
+make logs            # 查看日志
+make test            # 前端构建 + 后端语法检查
+make frontend-build  # 仅检查前端构建
+make backend-check   # 仅检查后端语法
 ```
 
 ## 本地开发
@@ -124,6 +159,7 @@ python -m compileall app
 - `/scan`：拍照识别页。
 - `/feed`：偶遇动态时间线。
 - `/map`：高德地图热力图。
+- `/gallery`：猫猫照片墙。
 - `/community`：社区讨论页。
 - `/profile`：个人页和勋章墙。
 - `/admin`：猫协管理端。
@@ -172,6 +208,26 @@ POST /posts/{id}/comments
 ```
 
 当前后端尚未实现这些接口，前端会自动使用本地种子数据和 `localStorage` 兜底，保证演示时社区页可用。
+
+## Cat-egorize 档案管理
+
+当前阶段重点夯实猫猫档案管理系统，为 AI 识别上线前准备可维护的数据基础。
+
+已具备能力：
+
+- `GET /api/cats`：猫档案列表。
+- `GET /api/cats/{cat_id}`：猫档案详情。
+- `POST /api/cats`：新增猫档案。
+- `PUT /api/cats/{cat_id}`：编辑猫档案。
+- `DELETE /api/cats/{cat_id}`：删除猫档案。
+- `POST /api/cats/{cat_id}/images`：上传猫咪参考照片。
+- `GET /api/cats/{cat_id}/images`：查看单只猫的参考照片。
+- `GET /api/cats/images`：照片墙聚合接口。
+
+前端入口：
+
+- `/admin`：管理员维护猫档案和上传参考照片。
+- `/gallery`：展示所有上传的参考照片。
 
 ## 数据与上传文件
 

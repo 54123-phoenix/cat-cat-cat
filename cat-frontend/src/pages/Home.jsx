@@ -65,16 +65,18 @@ export default function Home() {
       </div>
 
       <div className="px-3 pb-3">
-        <Link to="/map" className="block bg-white rounded-2xl border border-orange-100 p-4 active:bg-orange-50">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-medium text-cat-orange">猫猫地图</p>
-              <h2 className="text-base font-medium text-gray-800 mt-0.5">查看今日出没热力图</h2>
-              <p className="text-xs text-gray-400 mt-1">基于最近偶遇记录生成高德地图热点</p>
-            </div>
-            <span className="text-3xl">🗺️</span>
-          </div>
-        </Link>
+        <div className="grid grid-cols-2 gap-2">
+          <Link to="/map" className="block bg-white rounded-2xl border border-orange-100 p-4 active:bg-orange-50">
+            <p className="text-xs font-medium text-cat-orange">猫猫地图</p>
+            <h2 className="text-sm font-medium text-gray-800 mt-0.5">今日出没热力图</h2>
+            <p className="text-2xl mt-2">🗺️</p>
+          </Link>
+          <Link to="/gallery" className="block bg-white rounded-2xl border border-orange-100 p-4 active:bg-orange-50">
+            <p className="text-xs font-medium text-cat-orange">照片墙</p>
+            <h2 className="text-sm font-medium text-gray-800 mt-0.5">查看参考照片</h2>
+            <p className="text-2xl mt-2">🖼️</p>
+          </Link>
+        </div>
       </div>
 
       <div className="px-3">
