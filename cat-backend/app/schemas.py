@@ -116,3 +116,45 @@ class UserProfile(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class RelatedCatResponse(BaseModel):
+    id: int
+    name: str
+    emoji: str = "cat"
+
+
+class PostCreate(BaseModel):
+    topic: Literal["find", "daily", "health", "suggest"]
+    content: str
+    tags: List[str] = []
+    relatedCatId: Optional[int] = None
+    image: Optional[str] = None
+
+
+class PostResponse(BaseModel):
+    id: int
+    userId: str
+    userEmoji: str = "user"
+    topic: str
+    content: str
+    tags: List[str] = []
+    relatedCat: Optional[RelatedCatResponse] = None
+    image: Optional[str] = None
+    likes: int
+    liked: bool
+    comments: int
+    createdAt: str
+
+
+class CommentCreate(BaseModel):
+    content: str
+
+
+class CommentResponse(BaseModel):
+    id: int
+    postId: int
+    userId: str
+    userEmoji: str = "user"
+    content: str
+    createdAt: str

@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from typing import Optional, List
@@ -79,6 +82,117 @@ def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: O
     return db_sighting
 
 
+def _relative_time(value: datetime) -> str:
+    seconds = max(0, int((datetime.now() - value).total_seconds()))
+    if seconds < 60:
+        return "刚刚"
+    minutes = seconds // 60
+    if minutes < 60:
+        return f"{minutes}分钟前"
+    hours = minutes // 60
+    if hours < 24:
+        return f"{hours}小时前"
+    days = hours // 24
+    return f"{days}天前"
+
+
+def _parse_tags(value: Optional[str]) -> List[str]:
+    if not value:
+        return []
+    try:
+        data = json.loads(value)
+        return data if isinstance(data, list) else []
+    except json.JSONDecodeError:
+        return []
+
+
+def serialize_post(post: models.Post, current_user_id: int = 1) -> schemas.PostResponse:
+    related_cat = None
+    if post.related_cat:
+        related_cat = schemas.RelatedCatResponse(id=post.related_cat.id, name=post.related_cat.name)
+    return schemas.PostResponse(
+        id=post.id,
+        userId=str(post.user_id),
+        topic=post.topic,
+        content=post.content,
+        tags=_parse_tags(post.tags),
+        relatedCat=related_cat,
+        image=post.image,
+        likes=len(post.likes),
+        liked=any(like.user_id == current_user_id for like in post.likes),
+        comments=len(post.comments),
+        createdAt=_relative_time(post.created_at),
+    )
+
+
+def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, current_user_id: int = 1) -> List[schemas.PostResponse]:
+    query = db.query(models.Post)
+    if topic != "all":
+        query = query.filter(models.Post.topic == topic)
+    posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
+    return [serialize_post(post, current_user_id=current_user_id) for post in posts]
+
+
+def create_post(db: Session, post: schemas.PostCreate, current_user_id: int = 1) -> schemas.PostResponse:
+    db_post = models.Post(
+        user_id=current_user_id,
+        topic=post.topic,
+        content=post.content.strip(),
+        tags=json.dumps(post.tags, ensure_ascii=False),
+        related_cat_id=post.relatedCatId,
+        image=post.image,
+    )
+    db.add(db_post)
+    db.commit()
+    db.refresh(db_post)
+    return serialize_post(db_post, current_user_id=current_user_id)
+
+
+def toggle_post_like(db: Session, post_id: int, current_user_id: int = 1) -> Optional[schemas.PostResponse]:
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not post:
+        return None
+    like = db.query(models.PostLike).filter(models.PostLike.post_id == post_id, models.PostLike.user_id == current_user_id).first()
+    if like:
+        db.delete(like)
+    else:
+        db.add(models.PostLike(post_id=post_id, user_id=current_user_id))
+    db.commit()
+    db.refresh(post)
+    return serialize_post(post, current_user_id=current_user_id)
+
+
+def get_post_comments(db: Session, post_id: int, skip: int = 0, limit: int = 50) -> List[schemas.CommentResponse]:
+    comments = db.query(models.PostComment).filter(models.PostComment.post_id == post_id).order_by(models.PostComment.created_at).offset(skip).limit(limit).all()
+    return [
+        schemas.CommentResponse(
+            id=comment.id,
+            postId=comment.post_id,
+            userId=str(comment.user_id),
+            content=comment.content,
+            createdAt=_relative_time(comment.created_at),
+        )
+        for comment in comments
+    ]
+
+
+def create_comment(db: Session, post_id: int, comment: schemas.CommentCreate, current_user_id: int = 1) -> Optional[schemas.CommentResponse]:
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not post:
+        return None
+    db_comment = models.PostComment(post_id=post_id, user_id=current_user_id, content=comment.content.strip())
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return schemas.CommentResponse(
+        id=db_comment.id,
+        postId=db_comment.post_id,
+        userId=str(db_comment.user_id),
+        content=db_comment.content,
+        createdAt=_relative_time(db_comment.created_at),
+    )
+
+
 def get_user(db: Session, user_id: int = 1) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
@@ -147,5 +261,21 @@ def init_mock_data(db: Session):
     user = models.User(id=1, nickname="猫猫爱好者", avatar="/uploads/avatar/default.jpg")
     if not db.query(models.User).filter(models.User.id == 1).first():
         db.add(user)
+
+    if db.query(models.Post).count() == 0:
+        seed_posts = [
+            ("daily", "今天在图书馆门口又看到小白了，晒太阳晒得很认真，状态很好。", ["#小白", "#图书馆", "#治愈瞬间"], "小白"),
+            ("find", "有人今天看到橘子吗？昨天在二食堂附近，今天还没见到。", ["#橘子", "#二食堂", "#求助"], "橘子"),
+            ("health", "黑咪右眼看起来有点分泌物，已经记录给猫协志愿者了，大家遇到可以观察一下。", ["#黑咪", "#健康", "#猫协"], "黑咪"),
+            ("suggest", "建议在地图页加一个最近24小时筛选，这样找猫会更准确。", ["#建议反馈", "#地图"], None),
+        ]
+        for topic, content, tags, cat_name in seed_posts:
+            db.add(models.Post(
+                user_id=1,
+                topic=topic,
+                content=content,
+                tags=json.dumps(tags, ensure_ascii=False),
+                related_cat_id=cat_ids.get(cat_name) if cat_name else None,
+            ))
 
     db.commit()

@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Float, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -61,3 +61,47 @@ class User(Base):
     nickname = Column(String(50), nullable=False)
     avatar = Column(String(200))
     created_at = Column(DateTime, default=datetime.now)
+
+
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    topic = Column(String(20), nullable=False, index=True)
+    content = Column(Text, nullable=False)
+    tags = Column(Text)
+    related_cat_id = Column(Integer, ForeignKey("cats.id"))
+    image = Column(String(200))
+    created_at = Column(DateTime, default=datetime.now)
+
+    user = relationship("User")
+    related_cat = relationship("Cat")
+    comments = relationship("PostComment", back_populates="post", cascade="all, delete-orphan")
+    likes = relationship("PostLike", back_populates="post", cascade="all, delete-orphan")
+
+
+class PostComment(Base):
+    __tablename__ = "post_comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.now)
+
+    post = relationship("Post", back_populates="comments")
+    user = relationship("User")
+
+
+class PostLike(Base):
+    __tablename__ = "post_likes"
+    __table_args__ = (UniqueConstraint("post_id", "user_id", name="uq_post_like_user"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.now)
+
+    post = relationship("Post", back_populates="likes")
+    user = relationship("User")

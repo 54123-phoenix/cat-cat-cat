@@ -229,7 +229,13 @@ export async function createPost(data) {
     return await request('/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        topic: data.topic,
+        content: data.content,
+        tags: data.tags || [],
+        relatedCatId: data.relatedCatId,
+        image: data.image,
+      }),
     })
   } catch {
     const posts = readLocalPosts()
@@ -266,5 +272,14 @@ export async function likePost(postId) {
   }
 }
 
-export const fetchPostComments = () => Promise.resolve([])
-export const createComment = () => Promise.resolve({ ok: true })
+export async function fetchPostComments(postId) {
+  return request(`/posts/${postId}/comments`)
+}
+
+export async function createComment(postId, content) {
+  return request(`/posts/${postId}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content }),
+  })
+}

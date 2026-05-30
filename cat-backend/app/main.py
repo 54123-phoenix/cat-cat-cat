@@ -5,7 +5,7 @@ import os
 from sqlalchemy import inspect, text
 
 from app.database import engine, SessionLocal, Base
-from app.api import cats, sightings, recognize, user
+from app.api import cats, sightings, recognize, user, posts
 from app.crud import init_mock_data
 
 app = FastAPI(title="猫猫社区 API", version="1.0.0")
@@ -66,6 +66,7 @@ app.include_router(cats.router)
 app.include_router(sightings.router)
 app.include_router(recognize.router)
 app.include_router(user.router)
+app.include_router(posts.router)
 
 
 @app.on_event("startup")

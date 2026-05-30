@@ -11,7 +11,7 @@
 - 照片墙：聚合展示所有已上传的猫咪参考照片，为后续 AI 训练/检索准备数据雏形。
 - 偶遇动态：记录并展示校园猫咪时间线。
 - 高德地图热力图：基于偶遇记录展示猫猫出没热点。
-- 社区模块：广场、寻猫、日常、健康、建议等话题，支持发帖、标签、关联猫猫和点赞。
+- 社区模块：广场、寻猫、日常、健康、建议等话题，支持发帖、标签、关联猫猫、评论和点赞，并持久化到 MySQL。
 - 猫协管理端：维护猫档案、上传参考照片、查看最近偶遇。
 - 移动端优先：以 375px 宽度为基准设计，底部五栏导航。
 
@@ -197,17 +197,23 @@ python -m compileall app
 
 ## 社区模块说明
 
-新版社区模块预留了后端帖子接口：
+社区模块已实现 MySQL 持久化接口：
 
 ```text
-GET  /posts?topic=all&limit=20
-POST /posts
-POST /posts/{id}/like
-GET  /posts/{id}/comments
-POST /posts/{id}/comments
+GET  /api/posts?topic=all&limit=20
+POST /api/posts
+POST /api/posts/{id}/like
+GET  /api/posts/{id}/comments
+POST /api/posts/{id}/comments
 ```
 
-当前后端尚未实现这些接口，前端会自动使用本地种子数据和 `localStorage` 兜底，保证演示时社区页可用。
+数据表包括：
+
+- `posts`：帖子主体、话题、正文、标签、关联猫猫。
+- `post_likes`：帖子点赞记录，同一用户对同一帖子唯一。
+- `post_comments`：帖子评论。
+
+前端仍保留本地兜底逻辑，便于后端不可用时不影响演示，但正常情况下优先使用真实后端。
 
 ## Cat-egorize 档案管理
 
@@ -244,6 +250,6 @@ https://github.com/54123-phoenix/cat-cat-cat
 ## 当前限制
 
 - 真实 AI 识别模型未接入，仅保留稳定接口契约。
-- 社区帖子后端接口未实现，当前为前端本地兜底。
+- 社区用户身份当前使用默认用户 `1`，后续可接入真实登录系统。
 - `/admin` 是演示版猫协管理端，暂未加入登录鉴权。
 - 高德地图点位为演示级校园坐标。
