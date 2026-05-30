@@ -158,3 +158,10 @@ class CommentResponse(BaseModel):
     userEmoji: str = "user"
     content: str
     createdAt: str
+
+
+class HeatmapPoint(BaseModel):
+    name: str
+    latitude: float
+    longitude: float
+    count: int

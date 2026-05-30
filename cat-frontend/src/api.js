@@ -100,27 +100,12 @@ export async function fetchStats() {
   }
 }
 
-export async function fetchHeatmap() {
-  const sightings = await getSightings({ limit: 100 })
-  const grouped = new Map()
-
-  sightings.forEach((sighting) => {
-    if (sighting.latitude === null || sighting.latitude === undefined || sighting.longitude === null || sighting.longitude === undefined) {
-      return
-    }
-    const key = `${sighting.longitude},${sighting.latitude}`
-    const current = grouped.get(key) || {
-      longitude: Number(sighting.longitude),
-      latitude: Number(sighting.latitude),
-      count: 0,
-      name: sighting.location_name || sighting.location || '校园某处',
-      emoji: '🐱',
-    }
-    current.count += 1
-    grouped.set(key, current)
-  })
-
-  return Array.from(grouped.values())
+export function fetchHeatmap(params = {}) {
+  const search = new URLSearchParams()
+  if (params.days !== undefined) search.set('days', params.days)
+  if (params.limit) search.set('limit', params.limit)
+  const query = search.toString()
+  return request(`/map/heatmap${query ? `?${query}` : ''}`)
 }
 
 export function recognize(file) {

@@ -1,8 +1,8 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from typing import Optional, List
 
 from app import models, schemas
@@ -68,6 +68,39 @@ def get_sightings(db: Session, cat_id: Optional[int] = None, skip: int = 0, limi
     if cat_id:
         query = query.filter(models.Sighting.cat_id == cat_id)
     return query.order_by(desc(models.Sighting.created_at)).offset(skip).limit(limit).all()
+
+
+def get_heatmap_points(db: Session, days: int = 7, limit: int = 100) -> List[schemas.HeatmapPoint]:
+    query = db.query(
+        models.Sighting.location_name,
+        models.Sighting.location,
+        models.Sighting.latitude,
+        models.Sighting.longitude,
+        func.count(models.Sighting.id).label("count"),
+    ).filter(
+        models.Sighting.latitude.isnot(None),
+        models.Sighting.longitude.isnot(None),
+    )
+
+    if days > 0:
+        query = query.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
+
+    rows = query.group_by(
+        models.Sighting.location_name,
+        models.Sighting.location,
+        models.Sighting.latitude,
+        models.Sighting.longitude,
+    ).order_by(desc("count")).limit(limit).all()
+
+    return [
+        schemas.HeatmapPoint(
+            name=row.location_name or row.location or "校园某处",
+            latitude=float(row.latitude),
+            longitude=float(row.longitude),
+            count=int(row.count),
+        )
+        for row in rows
+    ]
 
 
 def get_sighting(db: Session, sighting_id: int) -> Optional[models.Sighting]:
