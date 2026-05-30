@@ -1,0 +1,199 @@
+import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ConfidenceBar from '../components/ConfidenceBar'
+import TopBar from '../components/TopBar'
+import { createSighting, identifyCat } from '../api'
+import { campusLocations, findCampusLocation } from '../campusLocations'
+
+export default function Scan() {
+  const navigate = useNavigate()
+  const [phase, setPhase] = useState('idle')
+  const [preview, setPreview] = useState(null)
+  const [result, setResult] = useState(null)
+  const [message, setMessage] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
+  const fileRef = useRef(null)
+
+  function onFileChange(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    if (preview) URL.revokeObjectURL(preview)
+    setPreview(URL.createObjectURL(file))
+    setPhase('ready')
+    setResult(null)
+    setMessage('')
+  }
+
+  async function saveConfirmedSighting(data) {
+    if (!data.cat_id) return
+    const file = fileRef.current?.files?.[0]
+    const location = findCampusLocation(selectedLocation)
+    await createSighting({
+      catId: data.cat_id,
+      location: location.name,
+      locationName: location.name,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      spottedBy: '猫猫爱好者',
+      confidence: data.confidence,
+      file,
+    })
+  }
+
+  async function handleIdentify() {
+    const file = fileRef.current?.files?.[0]
+    if (!file) return
+    setPhase('loading')
+    setMessage('')
+    const timer = window.setTimeout(() => setMessage('网络较慢，稍等一下🐾'), 5000)
+    try {
+      const data = await identifyCat(file)
+      window.clearTimeout(timer)
+      setResult(data)
+      setPhase(data.status)
+      if (data.status === 'confirmed') {
+        await saveConfirmedSighting(data)
+      }
+    } catch (error) {
+      window.clearTimeout(timer)
+      setMessage(error.message || '识别失败，请重试')
+      setPhase('error')
+    }
+  }
+
+  async function confirmCandidate(candidate) {
+    await saveConfirmedSighting({ ...candidate, cat_id: candidate.cat_id, confidence: candidate.confidence })
+    navigate(`/cats/${candidate.cat_id}`)
+  }
+
+  function reset() {
+    setPhase('idle')
+    setResult(null)
+    setMessage('')
+    if (preview) URL.revokeObjectURL(preview)
+    setPreview(null)
+    if (fileRef.current) fileRef.current.value = ''
+  }
+
+  return (
+    <div className="pb-6">
+      <TopBar title="拍照识别" subtitle="拍一张照片，认识这只猫" />
+
+      <div className="p-3 space-y-3">
+        <label className="block bg-white rounded-xl border border-gray-100 p-3">
+          <span className="text-xs font-medium text-gray-500">偶遇地点</span>
+          <select
+            value={selectedLocation}
+            onChange={(event) => setSelectedLocation(event.target.value)}
+            className="mt-1 w-full bg-cat-warm rounded-full px-3 py-2 text-sm text-gray-700 outline-none"
+          >
+            {campusLocations.map((location) => <option key={location.name} value={location.name}>{location.name}</option>)}
+          </select>
+        </label>
+
+        {phase === 'idle' ? (
+          <label className="block border-2 border-dashed border-cat-orange rounded-xl p-8 text-center cursor-pointer bg-cat-warm active:bg-orange-100">
+            <div className="text-4xl mb-2">📷</div>
+            <div className="text-cat-orange font-medium">拍照或上传图片</div>
+            <div className="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</div>
+            <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFileChange} />
+          </label>
+        ) : preview ? (
+          <div className="relative rounded-xl overflow-hidden aspect-square bg-gray-100">
+            <img src={preview} alt="预览" className="w-full h-full object-cover" />
+            {phase === 'ready' && (
+              <button onClick={reset} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm">
+                ×
+              </button>
+            )}
+          </div>
+        ) : null}
+
+        {phase === 'ready' && (
+          <button onClick={handleIdentify} className="w-full bg-cat-orange text-white rounded-full py-3.5 font-medium text-base active:opacity-90">
+            开始识别 ✨
+          </button>
+        )}
+
+        {phase === 'loading' && (
+          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
+            <div className="text-3xl mb-2 animate-paw">🐾</div>
+            <div className="text-sm text-gray-600">AI 正在识别中…</div>
+            <div className="text-xs text-gray-400 mt-1">{message || '通常不超过 3 秒'}</div>
+          </div>
+        )}
+
+        {phase === 'confirmed' && result && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-2.5">
+              <span className="text-green-500 text-lg">✓</span>
+              <span className="text-sm text-green-800">识别成功 · 置信度 {Math.round(result.confidence * 100)}%</span>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-14 h-14 rounded-2xl bg-cat-warm flex items-center justify-center text-3xl">🐱</div>
+                <div>
+                  <div className="text-base font-medium">{result.cat_name || '校园猫猫'}</div>
+                  <div className="text-xs text-green-500 mt-0.5">高置信度匹配</div>
+                </div>
+              </div>
+              <ConfidenceBar value={result.confidence} />
+            </div>
+            <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-cat-orange text-white rounded-full py-3 font-medium text-sm">
+              查看猫猫档案
+            </button>
+            <button onClick={reset} className="w-full border border-cat-orange text-cat-orange rounded-full py-3 font-medium text-sm">
+              重新识别
+            </button>
+          </div>
+        )}
+
+        {phase === 'uncertain' && result && (
+          <div className="space-y-2">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-2.5">
+              <div className="text-sm text-yellow-800">🤔 找到几个相似的猫咪，请确认是哪一只</div>
+            </div>
+            {result.candidates?.map((candidate) => (
+              <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
+                <div className="w-12 h-12 rounded-xl bg-cat-warm flex items-center justify-center text-2xl">🐱</div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium">{candidate.cat_name}</div>
+                  <ConfidenceBar value={candidate.confidence} />
+                </div>
+              </button>
+            ))}
+            <button onClick={reset} className="w-full border border-gray-200 text-gray-500 rounded-full py-3 text-sm">
+              都不对，重新拍
+            </button>
+          </div>
+        )}
+
+        {phase === 'unknown' && (
+          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
+            <div className="text-4xl mb-3">🐾</div>
+            <div className="font-medium text-gray-800">发现新朋友！</div>
+            <div className="text-xs text-gray-400 mt-1 mb-4">这只猫还没有记录，帮它建立档案吧</div>
+            <button onClick={() => navigate('/admin')} className="w-full bg-cat-orange text-white rounded-full py-3 text-sm font-medium">
+              帮它登记 →
+            </button>
+            <button onClick={reset} className="w-full mt-2 text-sm text-gray-400">取消</button>
+          </div>
+        )}
+
+        {phase === 'error' && (
+          <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center text-sm text-red-500">
+            {message || '识别失败，请重试'}
+          </div>
+        )}
+
+        {phase === 'idle' && (
+          <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
+            <div>· 尽量拍清晰的正面或侧面照片</div>
+            <div>· 光线充足识别效果更佳</div>
+            <div>· 识别不确定时会展示多个候选</div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

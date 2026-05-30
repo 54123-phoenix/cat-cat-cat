@@ -1,0 +1,39 @@
+services:
+  frontend:
+    build: ./cat-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./cat-frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_TARGET=http://backend:8000
+    depends_on:
+      - backend
+
+  backend:
+    build: ./cat-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./cat-backend:/app
+      - ./uploads:/app/uploads
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:root123@db:3306/cat_community
+      - UPLOAD_DIR=./uploads
+    depends_on:
+      - db
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: cat_community
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
