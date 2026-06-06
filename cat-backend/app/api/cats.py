@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas
-from app.api.admin import require_admin
 
 router = APIRouter(prefix="/api/cats", tags=["cats"])
 
@@ -18,11 +17,6 @@ def list_cats(location: Optional[str] = None, skip: int = 0, limit: int = 20, db
     return crud.get_cats(db, location=location, skip=skip, limit=limit)
 
 
-@router.get("/images", response_model=List[schemas.GalleryImageResponse])
-def list_gallery_images(skip: int = 0, limit: int = 60, db: Session = Depends(get_db)):
-    return crud.get_gallery_images(db, skip=skip, limit=limit)
-
-
 @router.get("/{cat_id}", response_model=schemas.CatResponse)
 def get_cat(cat_id: int, db: Session = Depends(get_db)):
     cat = crud.get_cat(db, cat_id)
@@ -32,12 +26,12 @@ def get_cat(cat_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("", response_model=schemas.CatResponse)
-def create_cat(cat: schemas.CatCreate, db: Session = Depends(get_db), _: None = Depends(require_admin)):
+def create_cat(cat: schemas.CatCreate, db: Session = Depends(get_db)):
     return crud.create_cat(db, cat)
 
 
 @router.put("/{cat_id}", response_model=schemas.CatResponse)
-def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db), _: None = Depends(require_admin)):
+def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db)):
     updated = crud.update_cat(db, cat_id, cat)
     if not updated:
         raise HTTPException(status_code=404, detail="Cat not found")
@@ -45,7 +39,7 @@ def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db
 
 
 @router.delete("/{cat_id}")
-def delete_cat(cat_id: int, db: Session = Depends(get_db), _: None = Depends(require_admin)):
+def delete_cat(cat_id: int, db: Session = Depends(get_db)):
     success = crud.delete_cat(db, cat_id)
     if not success:
         raise HTTPException(status_code=404, detail="Cat not found")
@@ -58,7 +52,7 @@ def list_cat_images(cat_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{cat_id}/images", response_model=schemas.CatImageResponse)
-async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Session = Depends(get_db), _: None = Depends(require_admin)):
+async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     cat = crud.get_cat(db, cat_id)
     if not cat:
         raise HTTPException(status_code=404, detail="Cat not found")

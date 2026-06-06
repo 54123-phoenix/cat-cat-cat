@@ -167,6 +167,18 @@ def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, c
     return [serialize_post(post, current_user_id=current_user_id) for post in posts]
 
 
+def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, current_user_id: int = 1) -> List[schemas.PostResponse]:
+    from sqlalchemy import or_
+    query = db.query(models.Post).filter(
+        or_(
+            models.Post.content.contains(keyword),
+            models.Post.tags.contains(keyword),
+        )
+    )
+    posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
+    return [serialize_post(post, current_user_id=current_user_id) for post in posts]
+
+
 def create_post(db: Session, post: schemas.PostCreate, current_user_id: int = 1) -> schemas.PostResponse:
     db_post = models.Post(
         user_id=current_user_id,
@@ -331,17 +343,229 @@ def review_discovery(db: Session, discovery_id: int, review: schemas.DiscoveryRe
     db.refresh(discovery)
     return discovery
 
+def get_health_records(db: Session, cat_id: int, record_type: Optional[str] = None, limit: int = 50) -> List[models.HealthRecord]:
+    query = db.query(models.HealthRecord).filter(models.HealthRecord.cat_id == cat_id)
+    if record_type:
+        query = query.filter(models.HealthRecord.record_type == record_type)
+    return query.order_by(desc(models.HealthRecord.record_date)).limit(limit).all()
+
+
+def create_health_record(db: Session, cat_id: int, record: schemas.HealthRecordCreate, created_by: int = 1) -> models.HealthRecord:
+    db_record = models.HealthRecord(
+        cat_id=cat_id,
+        record_type=record.record_type,
+        title=record.title,
+        description=record.description,
+        record_date=record.record_date,
+        location=record.location,
+        status=record.status,
+        created_by=created_by,
+    )
+    db.add(db_record)
+    db.commit()
+    db.refresh(db_record)
+    return db_record
+
+
+def delete_health_record(db: Session, record_id: int) -> bool:
+    record = db.query(models.HealthRecord).filter(models.HealthRecord.id == record_id).first()
+    if not record:
+        return False
+    db.delete(record)
+    db.commit()
+    return True
+
+
+def get_feeding_points(db: Session, active_only: bool = True) -> List[models.FeedingPoint]:
+    query = db.query(models.FeedingPoint)
+    if active_only:
+        query = query.filter(models.FeedingPoint.is_active == "yes")
+    return query.order_by(models.FeedingPoint.name).all()
+
+
+def create_feeding_point(db: Session, point: schemas.FeedingPointCreate) -> models.FeedingPoint:
+    db_point = models.FeedingPoint(**point.model_dump())
+    db.add(db_point)
+    db.commit()
+    db.refresh(db_point)
+    return db_point
+
+
+def delete_feeding_point(db: Session, point_id: int) -> bool:
+    point = db.query(models.FeedingPoint).filter(models.FeedingPoint.id == point_id).first()
+    if not point:
+        return False
+    db.delete(point)
+    db.commit()
+    return True
+
+
+def get_feeding_check_ins(db: Session, point_id: Optional[int] = None, limit: int = 50) -> List[models.FeedingCheckIn]:
+    query = db.query(models.FeedingCheckIn)
+    if point_id:
+        query = query.filter(models.FeedingCheckIn.point_id == point_id)
+    return query.order_by(desc(models.FeedingCheckIn.created_at)).limit(limit).all()
+
+
+def create_feeding_check_in(db: Session, point_id: int, check_in: schemas.FeedingCheckInCreate, user_id: int = 1) -> models.FeedingCheckIn:
+    db_check_in = models.FeedingCheckIn(
+        point_id=point_id,
+        user_id=user_id,
+        food_remaining=check_in.food_remaining,
+        cats_seen=check_in.cats_seen,
+        note=check_in.note,
+    )
+    db.add(db_check_in)
+    db.commit()
+    db.refresh(db_check_in)
+    return db_check_in
+
+
+def create_notification(db: Session, user_id: int, notification_type: str, title: str, content: str = None, related_id: int = None, related_type: str = None) -> models.Notification:
+    notification = models.Notification(
+        user_id=user_id,
+        type=notification_type,
+        title=title,
+        content=content,
+        related_id=related_id,
+        related_type=related_type,
+    )
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
+    return notification
+
+
+def get_notifications(db: Session, user_id: int, unread_only: bool = False, limit: int = 50) -> List[models.Notification]:
+    query = db.query(models.Notification).filter(models.Notification.user_id == user_id)
+    if unread_only:
+        query = query.filter(models.Notification.is_read == "no")
+    return query.order_by(desc(models.Notification.created_at)).limit(limit).all()
+
+
+def mark_notification_read(db: Session, notification_id: int, user_id: int) -> bool:
+    notification = db.query(models.Notification).filter(
+        models.Notification.id == notification_id,
+        models.Notification.user_id == user_id,
+    ).first()
+    if not notification:
+        return False
+    notification.is_read = "yes"
+    db.commit()
+    return True
+
+
+def mark_all_notifications_read(db: Session, user_id: int) -> int:
+    count = db.query(models.Notification).filter(
+        models.Notification.user_id == user_id,
+        models.Notification.is_read == "no",
+    ).update({"is_read": "yes"})
+    db.commit()
+    return count
+
+
+def create_audit_log(db: Session, action: str, entity_type: str, entity_id: int = None, old_value: str = None, new_value: str = None, performed_by: str = "admin") -> models.AuditLog:
+    log = models.AuditLog(
+        action=action,
+        entity_type=entity_type,
+        entity_id=entity_id,
+        old_value=old_value,
+        new_value=new_value,
+        performed_by=performed_by,
+    )
+    db.add(log)
+    db.commit()
+    db.refresh(log)
+    return log
+
+
+def get_audit_logs(db: Session, action: str = None, entity_type: str = None, limit: int = 100) -> List[models.AuditLog]:
+    query = db.query(models.AuditLog)
+    if action:
+        query = query.filter(models.AuditLog.action == action)
+    if entity_type:
+        query = query.filter(models.AuditLog.entity_type == entity_type)
+    return query.order_by(desc(models.AuditLog.created_at)).limit(limit).all()
+
+
+def get_weekly_report(db: Session, user_id: int = 1):
+    from datetime import timedelta
+    now = datetime.now()
+    week_start = now - timedelta(days=7)
+
+    # This week's sightings by user
+    week_sightings = db.query(models.Sighting).filter(
+        models.Sighting.created_at >= week_start,
+    ).all()
+
+    # Filter by user nickname (since sightings don't have user_id yet)
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user_nickname = user.nickname if user else "猫猫爱好者"
+    user_sightings = [s for s in week_sightings if s.spotted_by == user_nickname]
+
+    unique_cats = len(set(s.cat_id for s in user_sightings))
+    total_sightings = len(user_sightings)
+
+    # Most frequent location
+    location_counts = {}
+    for s in user_sightings:
+        loc = s.location_name or s.location or "未知地点"
+        location_counts[loc] = location_counts.get(loc, 0) + 1
+    top_location = max(location_counts, key=location_counts.get) if location_counts else None
+    top_location_count = location_counts.get(top_location, 0) if top_location else 0
+
+    # Daily streak (consecutive days with sightings)
+    sighting_dates = sorted(set(s.created_at.date() for s in user_sightings))
+    streak = 0
+    if sighting_dates:
+        streak = 1
+        for i in range(len(sighting_dates) - 1, 0, -1):
+            if (sighting_dates[i] - sighting_dates[i-1]).days == 1:
+                streak += 1
+            else:
+                break
+
+    # Last week's comparison
+    last_week_start = week_start - timedelta(days=7)
+    last_week_sightings = db.query(models.Sighting).filter(
+        models.Sighting.created_at >= last_week_start,
+        models.Sighting.created_at < week_start,
+    ).all()
+    last_week_user_sightings = [s for s in last_week_sightings if s.spotted_by == user_nickname]
+    last_week_count = len(last_week_user_sightings)
+
+    return {
+        "week_start": week_start.isoformat(),
+        "week_end": now.isoformat(),
+        "total_sightings": total_sightings,
+        "unique_cats": unique_cats,
+        "top_location": top_location,
+        "top_location_count": top_location_count,
+        "streak_days": streak,
+        "last_week_count": last_week_count,
+        "trend": "up" if total_sightings > last_week_count else "down" if total_sightings < last_week_count else "same",
+    }
+
 
 def init_mock_data(db: Session):
     demo_cats = [
-        {"name": "小白", "nickname": "图书馆馆长", "gender": "母", "neutered": "是", "age_estimate": "3岁", "color": "白色", "personality": "温顺亲人，爱晒太阳", "story": "小白是图书馆门口的常驻馆长。她总能精准找到阳光最好的一块地砖，安静地陪同学们度过赶论文的下午。", "location": "图书馆", "avatar": "/uploads/cats/xiaobai.jpg"},
-        {"name": "橘子", "nickname": "二食堂饭搭子", "gender": "公", "neutered": "是", "age_estimate": "4岁", "color": "橘色", "personality": "贪吃，社牛，会撒娇", "story": "橘子熟悉二食堂每一条路线。只要听见塑料袋声，他就会迈着自信小碎步出现，像在检查今天的菜单。", "location": "二食堂", "avatar": "/uploads/cats/juzi.jpg"},
-        {"name": "黑咪", "nickname": "夜巡队长", "gender": "母", "neutered": "未知", "age_estimate": "2岁", "color": "黑色", "personality": "高冷，警觉，慢热", "story": "黑咪喜欢在教学楼附近夜巡。她不轻易靠近人，但会保持三米距离默默同行，像一位沉默的晚归护卫。", "location": "教学楼", "avatar": "/uploads/cats/heimi.jpg"},
-        {"name": "奶盖", "nickname": "草坪小云朵", "gender": "母", "neutered": "否", "age_estimate": "1岁", "color": "奶牛色", "personality": "活泼，好奇，爱翻肚皮", "story": "奶盖经常在图书馆草坪边冒出来，看到落叶都会认真研究半天。她的日常任务是把路过同学的心情调成晴天。", "location": "图书馆草坪", "avatar": "/uploads/cats/naigai.jpg"},
-        {"name": "煤球", "nickname": "楼道影子", "gender": "公", "neutered": "是", "age_estimate": "5岁", "color": "黑白", "personality": "谨慎，聪明，认路", "story": "煤球总在光华楼附近神出鬼没。他熟悉每个避风角落，偶尔接受投喂，但更喜欢用眼神表达边界感。", "location": "光华楼", "avatar": "/uploads/cats/meiqiu.jpg"},
-        {"name": "三花", "nickname": "宿舍区外交官", "gender": "母", "neutered": "是", "age_estimate": "3岁", "color": "三花", "personality": "亲人，话多，爱蹭腿", "story": "三花是宿舍区最会打招呼的猫。她会在晚饭后准时营业，用一串喵喵声通知大家今天也要好好生活。", "location": "宿舍区", "avatar": "/uploads/cats/sanhua.jpg"},
-        {"name": "豆沙", "nickname": "教学楼门神", "gender": "公", "neutered": "未知", "age_estimate": "2岁", "color": "狸花", "personality": "稳重，胆大，爱观察", "story": "豆沙喜欢守在教学楼台阶旁，像在旁听每一门课。他不急着亲近人，但会认真观察每个匆忙赶课的身影。", "location": "教学楼", "avatar": "/uploads/cats/dousha.jpg"},
-        {"name": "雪糕", "nickname": "晨跑陪练", "gender": "母", "neutered": "否", "age_estimate": "1岁半", "color": "白橘", "personality": "敏捷，胆小，爱追影子", "story": "雪糕常在清晨出现在草坪边。她跑得很快，像一团会移动的小火苗，只在安全距离内给晨跑同学加油。", "location": "图书馆草坪", "avatar": "/uploads/cats/xuegao.jpg"},
+        {"name": "Amber", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Amber/avatar.jpg"},
+        {"name": "Awu", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Awu/avatar.jpg"},
+        {"name": "Baguette", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Baguette/avatar.jpg"},
+        {"name": "Chewy", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Chewy/avatar.jpg"},
+        {"name": "Coco", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Coco/avatar.jpg"},
+        {"name": "Curry", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Curry/avatar.jpg"},
+        {"name": "DarkChocolate", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/DarkChocolate/avatar.jpg"},
+        {"name": "Glaze", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Glaze/avatar.jpg"},
+        {"name": "LittleStick", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/LittleStick/avatar.jpg"},
+        {"name": "Meimei", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Meimei/avatar.jpg"},
+        {"name": "Nana", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Nana/avatar.jpg"},
+        {"name": "Naonao", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Naonao/avatar.jpg"},
+        {"name": "osmanthus", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/osmanthus/avatar.jpg"},
+        {"name": "PeanutCandy", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/PeanutCandy/avatar.jpg"},
+        {"name": "Roll", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Roll/avatar.jpg"},
+        {"name": "Salmon", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Salmon/avatar.jpg"},
+        {"name": "Shasha", "nickname": "", "gender": "", "neutered": "", "age_estimate": "", "color": "", "personality": "", "story": "", "location": "", "avatar": "/uploads/cats/Shasha/avatar.jpg"},
     ]
 
     cat_ids = {}
@@ -359,29 +583,27 @@ def init_mock_data(db: Session):
 
     db.commit()
 
-    for name, cat_id in cat_ids.items():
+    # Add reference images for each cat
+    import os
+    uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads", "cats")
+    for cat_name, cat_id in cat_ids.items():
         if db.query(models.CatImage).filter(models.CatImage.cat_id == cat_id).count() == 0:
-            slug = {
-                "小白": "xiaobai",
-                "橘子": "juzi",
-                "黑咪": "heimi",
-                "奶盖": "naigai",
-                "煤球": "meiqiu",
-                "三花": "sanhua",
-                "豆沙": "dousha",
-                "雪糕": "xuegao",
-            }[name]
-            db.add(models.CatImage(cat_id=cat_id, image_path=f"/uploads/cats/{slug}_1.jpg"))
+            cat_dir = os.path.join(uploads_dir, cat_name)
+            if os.path.isdir(cat_dir):
+                images = [f for f in os.listdir(cat_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+                for img in images:
+                    db.add(models.CatImage(cat_id=cat_id, image_path=f"/uploads/cats/{cat_name}/{img}"))
 
+    # Create sample sightings
     demo_sightings = [
-        ("小白", "图书馆门口", 31.3009, 121.5037, "在门口晒太阳", 0.95),
-        ("橘子", "二食堂", 31.2996, 121.5018, "蹲在台阶旁边", 0.88),
-        ("小白", "图书馆草坪", 31.3013, 121.5043, "草坪边巡逻", 0.92),
-        ("奶盖", "图书馆草坪", 31.3013, 121.5043, "追着落叶跑了两圈", 0.86),
-        ("煤球", "光华楼", 31.3001, 121.5005, "躲在柱子后面观察大家", 0.81),
-        ("三花", "宿舍区", 31.3021, 121.5012, "主动蹭了三位同学", 0.9),
-        ("豆沙", "教学楼", 31.2991, 121.5049, "守在台阶旁边发呆", 0.84),
-        ("雪糕", "图书馆草坪", 31.3013, 121.5043, "清晨从草坪边跑过", 0.79),
+        ("Amber", "Campus", 31.3009, 121.5037, "Spotted near the library", 0.95),
+        ("Awu", "Campus", 31.2996, 121.5018, "Resting under a tree", 0.88),
+        ("Baguette", "Campus", 31.3013, 121.5043, "Walking around the garden", 0.92),
+        ("Coco", "Campus", 31.3001, 121.5005, "Playing with leaves", 0.86),
+        ("Curry", "Campus", 31.3021, 121.5012, "Sleeping on a bench", 0.81),
+        ("Glaze", "Campus", 31.2991, 121.5049, "Looking for food", 0.9),
+        ("Salmon", "Campus", 31.3013, 121.5043, "Chasing butterflies", 0.84),
+        ("Shasha", "Campus", 31.3013, 121.5043, "Sitting by the fountain", 0.79),
     ]
 
     for name, location, latitude, longitude, note, confidence in demo_sightings:
@@ -391,18 +613,18 @@ def init_mock_data(db: Session):
             models.Sighting.note == note,
         ).first()
         if not existing:
-            db.add(models.Sighting(cat_id=cat_id, location=location, location_name=location, latitude=latitude, longitude=longitude, spotted_by="猫猫爱好者", note=note, confidence=confidence))
+            db.add(models.Sighting(cat_id=cat_id, location=location, location_name=location, latitude=latitude, longitude=longitude, spotted_by="Cat Lover", note=note, confidence=confidence))
 
-    user = models.User(id=1, nickname="猫猫爱好者", avatar="/uploads/avatar/default.jpg")
+    user = models.User(id=1, nickname="Cat Lover", avatar="/uploads/avatar/default.jpg")
     if not db.query(models.User).filter(models.User.id == 1).first():
         db.add(user)
 
     if db.query(models.Post).count() == 0:
         seed_posts = [
-            ("daily", "今天在图书馆门口又看到小白了，晒太阳晒得很认真，状态很好。", ["#小白", "#图书馆", "#治愈瞬间"], "小白"),
-            ("find", "有人今天看到橘子吗？昨天在二食堂附近，今天还没见到。", ["#橘子", "#二食堂", "#求助"], "橘子"),
-            ("health", "黑咪右眼看起来有点分泌物，已经记录给猫协志愿者了，大家遇到可以观察一下。", ["#黑咪", "#健康", "#猫协"], "黑咪"),
-            ("suggest", "建议在地图页加一个最近24小时筛选，这样找猫会更准确。", ["#建议反馈", "#地图"], None),
+            ("daily", "Spotted Amber near the library today, looking healthy and happy!", ["#Amber", "#Campus", "#Cute"], "Amber"),
+            ("find", "Has anyone seen Baguette recently? Last spotted near the garden.", ["#Baguette", "#Missing", "#Help"], "Baguette"),
+            ("health", "Curry seems to have a slight limp. Already notified the campus cat care team.", ["#Curry", "#Health", "#Care"], "Curry"),
+            ("suggest", "Would be great to have a 'last 24 hours' filter on the map for easier cat spotting.", ["#Suggestion", "#Map"], None),
         ]
         for topic, content, tags, cat_name in seed_posts:
             db.add(models.Post(

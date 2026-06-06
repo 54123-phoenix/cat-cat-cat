@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { CameraIcon } from '@heroicons/react/24/outline'
+import { Camera } from 'lucide-react'
 
 export default function CameraButton({ onCapture, disabled = false }) {
   const inputRef = useRef(null)
@@ -15,7 +15,6 @@ export default function CameraButton({ onCapture, disabled = false }) {
     if (file) {
       onCapture(file)
     }
-    // Reset so the same file can be picked again
     e.target.value = ''
   }
 
@@ -35,7 +34,7 @@ export default function CameraButton({ onCapture, disabled = false }) {
         className="camera-btn"
         aria-label="拍照识猫"
       >
-        <CameraIcon className="w-16 h-16 text-white drop-shadow-md" />
+        <Camera className="w-16 h-16 text-white drop-shadow-md" />
       </button>
     </>
   )

@@ -29,11 +29,6 @@ def get_sighting(sighting_id: int, db: Session = Depends(get_db)):
 async def create_sighting(
     cat_id: int = Form(...),
     location: Optional[str] = Form(None),
-    location_name: Optional[str] = Form(None),
-    latitude: Optional[float] = Form(None),
-    longitude: Optional[float] = Form(None),
-    note: Optional[str] = Form(None),
-    spotted_by: Optional[str] = Form(None),
     confidence: Optional[float] = Form(None),
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
@@ -51,14 +46,5 @@ async def create_sighting(
 
         image_path = f"/uploads/sightings/{filename}"
 
-    sighting = schemas.SightingCreate(
-        cat_id=cat_id,
-        location=location or location_name,
-        location_name=location_name or location,
-        latitude=latitude,
-        longitude=longitude,
-        note=note,
-        spotted_by=spotted_by,
-        confidence=confidence,
-    )
+    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence)
     return crud.create_sighting(db, sighting, image_path=image_path)

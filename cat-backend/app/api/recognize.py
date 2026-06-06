@@ -7,4 +7,5 @@ router = APIRouter(prefix="/api", tags=["recognize"])
 
 @router.post("/recognize", response_model=RecognizeResponse)
 async def recognize(file: UploadFile = File(...)):
-    return recognize_cat_image(filename=file.filename or "")
+    image_bytes = await file.read()
+    return recognize_cat_image(image_bytes=image_bytes, filename=file.filename or "")

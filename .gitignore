@@ -38,3 +38,12 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# ML Models
+models/
+*.pt
+*.pth
+*.onnx
+
+# Pre-computed embeddings
+cat-backend/embeddings/
