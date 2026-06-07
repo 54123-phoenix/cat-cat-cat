@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Award, MapPin } from 'lucide-react'
+import { User, Award, MapPin, Cat, PawPrint } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import { getUserProfile, getCats } from '../api'
@@ -60,7 +60,7 @@ export default function Profile() {
   function badgeSummary() {
     const count = earnedBadges.length
     if (count === 0) return '快去完成任务获得勋章吧'
-    if (count === totalBadges) return '全部收集完成！🎉'
+    if (count === totalBadges) return '全部收集完成！'
     return `已获得 ${count}/${totalBadges}`
   }
 
@@ -120,7 +120,10 @@ export default function Profile() {
           onClick={() => navigate('/badges')}
           className="w-full flex items-center justify-between"
         >
-          <h3 className="text-lg font-bold text-text">🏅 勋章墙</h3>
+          <h3 className="text-lg font-bold text-text flex items-center gap-1.5">
+            <Award className="w-5 h-5 text-primary" />
+            勋章墙
+          </h3>
           <span className="text-sm text-primary font-medium">
             {badgeSummary()} ›
           </span>
@@ -150,7 +153,7 @@ export default function Profile() {
           </div>
         ) : (
           <div className="card p-6 text-center space-y-2">
-            <span className="text-3xl">🐾</span>
+            <PawPrint className="w-8 h-8 text-text-muted mx-auto" />
             <p className="text-sm text-text-secondary">
               还没有获得勋章
             </p>
@@ -197,7 +200,7 @@ export default function Profile() {
           </div>
         ) : (
           <div className="card p-8 text-center space-y-2">
-            <span className="text-3xl">🐱</span>
+            <Cat className="w-10 h-10 text-text-muted mx-auto" />
             <p className="text-text-secondary text-sm">
               还没有解锁猫猫
             </p>

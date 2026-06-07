@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import FeedItem from '../components/FeedItem'
-import TopBar from '../components/TopBar'
+import PageHeader from '../components/PageHeader'
 import { getSightings } from '../api'
 
 export default function Feed() {
@@ -17,7 +17,7 @@ export default function Feed() {
 
   return (
     <div className="pb-6">
-      <TopBar title="偶遇动态" subtitle="复旦校园猫咪时间线" />
+      <PageHeader title="偶遇动态" subtitle="校园猫咪时间线" />
 
       <div className="p-3 space-y-2">
         {loading ? (

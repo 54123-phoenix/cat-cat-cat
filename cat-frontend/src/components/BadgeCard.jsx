@@ -10,7 +10,7 @@ export default function BadgeCard({ badge, earned, size = 'sm' }) {
       } ${sm ? 'w-16 p-2' : 'w-20 p-3'}`}
     >
       <div className={sm ? 'text-xl' : 'text-2xl'}>{badge.emoji || '🎖️'}</div>
-      <div className={`${sm ? 'text-[9px]' : 'text-[10px]'} text-gray-500 mt-1 leading-tight truncate`}>
+      <div className={`${sm ? 'text-[10px]' : 'text-xs'} text-text-secondary mt-1 leading-tight truncate`}>
         {badge.name}
       </div>
     </div>

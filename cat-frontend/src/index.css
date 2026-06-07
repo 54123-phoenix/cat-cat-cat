@@ -7,7 +7,7 @@
 @layer base {
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #FFFBF5;
+    background-color: #FAFAF9;
     color: #1C1917;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -18,14 +18,64 @@
   .card {
     background: #FFFFFF;
     border: 1px solid #E7E5E4;
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 16px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
     transition: box-shadow 0.2s ease;
   }
 
   .card-hoverable:hover {
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  }
+
+  .clay-card {
+    background: #FFFFFF;
+    border: 1px solid #E7E5E4;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow:
+      0 2px 4px rgb(0 0 0 / 0.03),
+      0 8px 16px rgb(0 0 0 / 0.04),
+      inset 0 1px 0 rgb(255 255 255 / 0.8);
+  }
+
+  .clay-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    background: #F97316;
+    color: white;
+    box-shadow:
+      0 2px 4px rgb(249 115 22 / 0.2),
+      0 4px 12px rgb(249 115 22 / 0.15),
+      inset 0 1px 0 rgb(255 255 255 / 0.2);
+    transition: transform 0.12s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .clay-btn:hover:not(:disabled) {
+    background: #EA580C;
+    box-shadow:
+      0 4px 8px rgb(249 115 22 / 0.25),
+      0 6px 16px rgb(249 115 22 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.2);
+  }
+
+  .clay-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .clay-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
   }
 
   .btn {
@@ -132,6 +182,12 @@
     box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
     animation: badge-glow 2s ease-in-out infinite;
   }
+
+  /* Focus ring for accessibility */
+  .focus-ring:focus-visible {
+    outline: 2px solid #F97316;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {
@@ -191,6 +247,11 @@
 .animate-scale-in { animation: scale-in 0.25s ease-out; }
 .animate-like-pop { animation: like-pop 0.35s ease-out; }
 .animate-slide-up { animation: slide-up 0.3s ease-out; }
+.animate-fillbar { animation: fillbar 0.6s ease-out forwards; }
+.animate-tail-wag {
+  animation: tail-wag 0.8s ease-in-out infinite;
+  transform-origin: 30px 24px;
+}
 
 @keyframes cat-spin {
   from { transform: rotate(0deg); }
@@ -225,6 +286,15 @@
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
+@keyframes fillbar {
+  from { width: 0; }
+}
+
+@keyframes tail-wag {
+  0%, 100% { d: path("M30 24 Q36 20 34 14 Q32 10 36 8"); }
+  50% { d: path("M30 24 Q38 22 36 16 Q34 12 38 6"); }
+}
+
 .animate-cat-spin {
   animation: cat-spin 0.6s linear infinite;
 }
@@ -252,3 +322,16 @@
 ::-webkit-scrollbar-thumb:hover { background: #D6D3D1; }
 
 .amap-container { width: 100%; height: 100%; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .skeleton {
+    animation: none;
+    background: #F5F5F4;
+  }
+}

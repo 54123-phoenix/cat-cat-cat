@@ -5,10 +5,10 @@ import { reportPost } from '../api'
 
 const TABS = [
   { id: 'all', label: '广场' },
-  { id: 'find', label: '🔍 寻猫' },
-  { id: 'daily', label: '💬 日常' },
-  { id: 'health', label: '🏥 健康' },
-  { id: 'suggest', label: '💡 建议' },
+  { id: 'find', label: '寻猫' },
+  { id: 'daily', label: '日常' },
+  { id: 'health', label: '健康' },
+  { id: 'suggest', label: '建议' },
 ]
 
 export default function Community() {
@@ -36,8 +36,8 @@ export default function Community() {
 
   return (
     <div className="flex flex-col h-full pb-6">
-      <div className="bg-primary px-4 pt-4 pb-3 text-white rounded-b-[24px] shadow-lg shadow-orange-100">
-        <h1 className="text-lg font-medium">社区</h1>
+      <div className="bg-primary px-4 pt-4 pb-3 text-white rounded-b-2xl">
+        <h1 className="text-lg font-bold">社区</h1>
         <p className="text-xs opacity-80 mt-0.5">和其他铲屎官一起聊聊</p>
       </div>
 

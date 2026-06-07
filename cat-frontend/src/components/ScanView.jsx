@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Camera } from 'lucide-react'
+import { Camera, Cat, Check } from 'lucide-react'
 import CatSpinner from './CatSpinner'
 
 export default function ScanView({ onCapture, onResultClose }) {
@@ -138,11 +138,11 @@ function ResultView({ result, onRetake, onClose }) {
         <div className="relative w-48 h-48 rounded-full overflow-hidden bg-primary-light shadow-lg shadow-primary/20">
           {result.cat_name ? (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-6xl">🐱</span>
+              <Cat className="w-16 h-16 text-primary/30" />
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-6xl">🐱</span>
+              <Cat className="w-16 h-16 text-primary/30" />
             </div>
           )}
         </div>
@@ -188,9 +188,11 @@ function ResultView({ result, onRetake, onClose }) {
           <div className="flex gap-3 overflow-x-auto pb-2 animate-fade-up">
             {result.candidates.map((c, i) => (
               <div key={i} className="flex-shrink-0 w-20 text-center p-2 rounded-xl bg-white border border-gray-100">
-                <span className="text-2xl">🐱</span>
+                <div className="flex items-center justify-center h-8">
+                  <Cat className="w-6 h-6 text-primary/30" />
+                </div>
                 <p className="text-xs font-medium text-text mt-1 truncate">{c.cat_name}</p>
-                <p className="text-[10px] text-primary">{Math.round(c.confidence * 100)}%</p>
+                <p className="text-xs text-primary">{Math.round(c.confidence * 100)}%</p>
               </div>
             ))}
           </div>

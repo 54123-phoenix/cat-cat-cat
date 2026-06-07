@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import PageHeader from '../components/PageHeader'
 import { getBadges } from '../api'
 
 const SERIES_LABEL = {
@@ -17,7 +16,6 @@ function getBadgeFromApi(b) {
 export default function BadgeGallery() {
   const [badges, setBadges] = useState([])
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
     getBadges()
@@ -40,17 +38,10 @@ export default function BadgeGallery() {
 
   return (
     <div className="min-h-screen bg-warm-50">
-      <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-b border-border">
-        <button onClick={() => navigate(-1)} className="p-1 -ml-1 rounded-lg hover:bg-primary-light transition-colors">
-          <ArrowLeft className="w-5 h-5 text-text" />
-        </button>
-        <div>
-          <h1 className="text-lg font-bold text-text">勋章库</h1>
-          <p className="text-xs text-text-secondary">
-            {loading ? '加载中…' : `已获得 ${earned}/${total}`}
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="勋章库"
+        subtitle={loading ? '加载中…' : `已获得 ${earned}/${total}`}
+      />
 
       {loading ? (
         <div className="p-4 space-y-4">
@@ -98,7 +89,7 @@ export default function BadgeGallery() {
                               {badge.name}
                             </span>
                             {isEarned && (
-                              <span className="text-[10px] text-success font-medium shrink-0">已获得</span>
+                              <span className="text-xs text-success font-medium shrink-0">已获得</span>
                             )}
                           </div>
                           <p className="text-xs text-text-secondary mt-0.5">
@@ -112,7 +103,7 @@ export default function BadgeGallery() {
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>
-                              <span className="text-[10px] text-text-secondary shrink-0">
+                              <span className="text-xs text-text-secondary shrink-0">
                                 {badge.progress_current}/{badge.progress_total}
                               </span>
                             </div>

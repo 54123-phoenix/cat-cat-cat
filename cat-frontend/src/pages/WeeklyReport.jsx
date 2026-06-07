@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import PageHeader from '../components/PageHeader'
 import { getWeeklyReport } from '../api'
 
 export default function WeeklyReport() {
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
     getWeeklyReport()
@@ -17,12 +16,7 @@ export default function WeeklyReport() {
 
   return (
     <div className="min-h-screen bg-warm-50">
-      <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-b border-border">
-        <button onClick={() => navigate(-1)} className="p-1 -ml-1 rounded-lg hover:bg-primary-light">
-          <ArrowLeft className="w-5 h-5 text-text" />
-        </button>
-        <h1 className="text-lg font-bold text-text">本周报告</h1>
-      </header>
+      <PageHeader title="本周报告" />
 
       <div className="p-4 space-y-4">
         {loading ? (

@@ -123,7 +123,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
                 className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 hover:border-primary hover:text-primary transition-colors"
               >
                 <Plus className="w-5 h-5" />
-                <span className="text-[10px] mt-0.5">{images.length}/{MAX_IMAGES}</span>
+                <span className="text-xs mt-0.5">{images.length}/{MAX_IMAGES}</span>
               </button>
             )}
           </div>
@@ -149,7 +149,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${
+                className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
                   tags.includes(tag) ? 'bg-primary-light text-orange-800 border-primary-light' : 'bg-white text-gray-400 border-gray-200'
                 }`}
               >
@@ -170,7 +170,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {tags.map((tag) => (
-                <span key={tag} onClick={() => toggleTag(tag)} className="bg-primary-light text-orange-800 text-[11px] px-2.5 py-1 rounded-full cursor-pointer">
+                <span key={tag} onClick={() => toggleTag(tag)} className="bg-primary-light text-orange-800 text-xs px-2.5 py-1 rounded-full cursor-pointer">
                   {tag} ×
                 </span>
               ))}

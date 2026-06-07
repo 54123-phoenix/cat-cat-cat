@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import TopBar from '../components/TopBar'
+import PageHeader from '../components/PageHeader'
+import { Cat, PawPrint, Image } from 'lucide-react'
 import { getGalleryImages } from '../api'
 
 export default function Gallery() {
@@ -17,11 +18,11 @@ export default function Gallery() {
 
   return (
     <div className="pb-6">
-      <TopBar
+      <PageHeader
         title="猫猫照片墙"
         subtitle="猫协上传的参考照片会汇聚在这里"
         action={(
-          <Link to="/admin" className="bg-white/20 rounded-full px-3 py-1.5 text-xs font-medium">
+          <Link to="/admin" className="bg-primary/10 rounded-full px-3 py-1.5 text-xs font-medium text-primary">
             上传
           </Link>
         )}
@@ -30,7 +31,7 @@ export default function Gallery() {
       <div className="p-3">
         {loading ? (
           <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
-            <div className="text-3xl mb-2">🐾</div>
+            <div className="text-3xl mb-2"><PawPrint className="w-8 h-8 text-text-muted mx-auto" /></div>
             加载照片中…
           </div>
         ) : error ? (
@@ -50,18 +51,18 @@ export default function Gallery() {
                       event.currentTarget.style.display = 'none'
                     }}
                   />
-                  <span>🐱</span>
+                  <Cat className="w-8 h-8 text-primary/30" />
                 </div>
                 <div className="p-2.5">
                   <p className="text-sm font-medium text-gray-800 truncate">{image.cat?.name || '校园猫猫'}</p>
-                  <p className="text-[11px] text-gray-400 truncate">{image.cat?.location || '参考照片'}</p>
+                  <p className="text-xs text-gray-400 truncate">{image.cat?.location || '参考照片'}</p>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
           <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
-            <div className="text-4xl mb-2">🖼️</div>
+            <div className="text-4xl mb-2"><Image className="w-10 h-10 text-text-muted mx-auto" /></div>
             <p className="text-sm font-medium text-gray-700">还没有参考照片</p>
             <Link to="/admin" className="inline-block mt-3 bg-primary text-white rounded-full px-5 py-2 text-sm font-medium">
               去上传照片

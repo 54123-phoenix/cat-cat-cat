@@ -4,10 +4,10 @@ import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2 } from 'lucide-react'
 
 const TOPIC_LABEL = {
-  find: '🔍 寻猫问猫',
-  daily: '💬 铲屎日常',
-  health: '🏥 健康互助',
-  suggest: '💡 建议反馈',
+  find: '寻猫问猫',
+  daily: '铲屎日常',
+  health: '健康互助',
+  suggest: '建议反馈',
 }
 
 const TOPIC_COLORS = {
@@ -68,16 +68,16 @@ export default function PostCard({ post, onReport, onDeleted }) {
           </div>
           <div>
             <div className="text-xs font-medium text-gray-700">{post.user?.nickname || `铲屎官 #${post.userId}`}</div>
-            <div className="text-[10px] text-gray-400">{post.createdAt}</div>
+            <div className="text-xs text-gray-400">{post.createdAt}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
             TOPIC_COLORS[post.topic]?.bg || 'bg-gray-50'
           } ${
             TOPIC_COLORS[post.topic]?.text || 'text-gray-400'
           }`}>
-            {TOPIC_LABEL[post.topic] || '💬 铲屎日常'}
+            {TOPIC_LABEL[post.topic] || '铲屎日常'}
           </span>
           {canDelete && (
             <button onClick={() => setShowDeleteConfirm(true)} className="text-gray-300 hover:text-red-400 transition-colors">
@@ -124,7 +124,7 @@ export default function PostCard({ post, onReport, onDeleted }) {
       {post.tags?.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {post.tags.map((tag) => (
-            <span key={tag} className="text-[11px] text-primary bg-primary-light px-2 py-0.5 rounded-full">
+            <span key={tag} className="text-xs text-primary bg-primary-light px-2 py-0.5 rounded-full">
               {tag}
             </span>
           ))}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
+import { Cat, PawPrint } from 'lucide-react'
 import { getCat, getSightings, getHealthRecords } from '../api'
 
 function formatTime(value) {
@@ -62,11 +64,11 @@ export default function CatDetail() {
 
   if (error || !cat) {
     return (
-      <div className="card p-6 text-center space-y-4">
-        <p className="text-text-secondary">{error || '没有找到这只猫'}</p>
-        <Link to="/profile" className="btn btn-primary inline-block">
-          返回档案
-        </Link>
+      <div className="pb-6">
+        <PageHeader title="猫猫档案" />
+        <div className="p-4 text-center space-y-4">
+          <p className="text-text-secondary">{error || '没有找到这只猫'}</p>
+        </div>
       </div>
     )
   }
@@ -76,19 +78,18 @@ export default function CatDetail() {
     : []
 
   return (
-    <div className="space-y-5">
-      <Link to="/profile" className="text-sm font-semibold text-text-secondary">
-        ← 返回我的猫档案
-      </Link>
+    <div className="pb-6">
+      <PageHeader title={cat.name} subtitle={cat.location || '校园猫猫'} />
 
-      <section className="card overflow-hidden p-0">
-        <div className="aspect-[4/3] bg-primary-light flex items-center justify-center overflow-hidden">
-          {cat.avatar ? (
-            <img src={cat.avatar} alt={cat.name} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-7xl">🐱</span>
-          )}
-        </div>
+      <div className="space-y-4 p-3">
+        <section className="card overflow-hidden p-0">
+          <div className="aspect-[4/3] bg-primary-light flex items-center justify-center overflow-hidden">
+            {cat.avatar ? (
+              <img src={cat.avatar} alt={cat.name} className="w-full h-full object-cover" />
+            ) : (
+              <Cat className="w-12 h-12 text-primary/30" />
+            )}
+          </div>
         <div className="p-5 space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -120,20 +121,20 @@ export default function CatDetail() {
           {(cat.gender || cat.age_estimate || cat.neutered) && (
             <div className="grid grid-cols-3 gap-2 pt-2">
               {cat.gender && (
-                <div className="rounded-2xl bg-primary-light p-2 text-center">
-                  <p className="text-[11px] text-text-secondary">性别</p>
+                <div className="rounded-xl bg-primary-light p-2 text-center">
+                  <p className="text-xs text-text-secondary">性别</p>
                   <p className="font-bold text-text text-sm">{cat.gender}</p>
                 </div>
               )}
               {cat.age_estimate && (
-                <div className="rounded-2xl bg-primary-light p-2 text-center">
-                  <p className="text-[11px] text-text-secondary">年龄</p>
+                <div className="rounded-xl bg-primary-light p-2 text-center">
+                  <p className="text-xs text-text-secondary">年龄</p>
                   <p className="font-bold text-text text-sm">{cat.age_estimate}</p>
                 </div>
               )}
               {cat.neutered && (
-                <div className="rounded-2xl bg-primary-light p-2 text-center">
-                  <p className="text-[11px] text-text-secondary">绝育</p>
+                <div className="rounded-xl bg-primary-light p-2 text-center">
+                  <p className="text-xs text-text-secondary">绝育</p>
                   <p className="font-bold text-text text-sm">{cat.neutered}</p>
                 </div>
               )}
@@ -161,10 +162,10 @@ export default function CatDetail() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-medium text-text">{r.title}</p>
-                    <span className="text-[10px] text-text-secondary shrink-0">{formatDate(r.record_date)}</span>
+                    <span className="text-xs text-text-secondary shrink-0">{formatDate(r.record_date)}</span>
                   </div>
                   {r.description && <p className="text-xs text-text-secondary mt-0.5">{r.description}</p>}
-                  {r.location && <p className="text-[10px] text-text-muted mt-0.5">📍 {r.location}</p>}
+                  {r.location && <p className="text-xs text-text-muted mt-0.5">📍 {r.location}</p>}
                 </div>
               </div>
             ))}
@@ -196,7 +197,7 @@ export default function CatDetail() {
             {sightings.map((sighting) => (
               <article key={sighting.id} className="card flex gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-primary-light flex items-center justify-center shrink-0">
-                  🐾
+                  <PawPrint className="w-5 h-5 text-primary/40" />
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-text">{sighting.location || '校园某处'}</p>
@@ -222,6 +223,7 @@ export default function CatDetail() {
           </div>
         )}
       </section>
+      </div>
     </div>
   )
 }

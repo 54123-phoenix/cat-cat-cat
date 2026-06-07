@@ -10,7 +10,7 @@ export default function ConfidenceBar({ value = 0 }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[11px] text-gray-400 w-8 text-right">{pct}%</span>
+      <span className="text-xs text-gray-400 w-8 text-right">{pct}%</span>
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Camera, PawPrint, Cat, Check } from 'lucide-react'
 import ConfidenceBar from '../components/ConfidenceBar'
-import TopBar from '../components/TopBar'
+import PageHeader from '../components/PageHeader'
 import { createDiscovery, createSighting, identifyCat } from '../api'
 import { campusLocations, findCampusLocation } from '../campusLocations'
 
@@ -91,7 +92,7 @@ export default function Scan() {
 
   return (
     <div className="pb-6">
-      <TopBar title="拍照识别" subtitle="拍一张照片，认识这只猫" />
+      <PageHeader title="拍照识别" subtitle="拍一张照片，认识这只猫" />
 
       <div className="p-3 space-y-3">
         <label className="block bg-white rounded-xl border border-gray-100 p-3">
@@ -107,7 +108,7 @@ export default function Scan() {
 
         {phase === 'idle' ? (
           <label className="block border-2 border-dashed border-primary rounded-xl p-8 text-center cursor-pointer bg-primary-light active:bg-orange-100">
-            <div className="text-4xl mb-2">📷</div>
+            <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
             <div className="text-primary font-medium">拍照或上传图片</div>
             <div className="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</div>
             <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFileChange} />
@@ -131,7 +132,7 @@ export default function Scan() {
 
         {phase === 'loading' && (
           <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <div className="text-3xl mb-2 animate-paw">🐾</div>
+            <PawPrint className="w-8 h-8 text-primary mx-auto animate-paw" />
             <div className="text-sm text-gray-600">AI 正在识别中…</div>
             <div className="text-xs text-gray-400 mt-1">{message || '通常不超过 3 秒'}</div>
           </div>
@@ -140,12 +141,14 @@ export default function Scan() {
         {phase === 'confirmed' && result && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-2.5">
-              <span className="text-green-500 text-lg">✓</span>
+              <Check className="w-5 h-5 text-green-500" />
               <span className="text-sm text-green-800">识别成功 · 置信度 {Math.round(result.confidence * 100)}%</span>
             </div>
             <div className="bg-white rounded-xl border border-gray-100 p-4">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-3xl">🐱</div>
+                <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center">
+                  <Cat className="w-7 h-7 text-primary/30" />
+                </div>
                 <div>
                   <div className="text-base font-medium">{result.cat_name || '校园猫猫'}</div>
                   <div className="text-xs text-green-500 mt-0.5">高置信度匹配</div>
@@ -169,7 +172,9 @@ export default function Scan() {
             </div>
             {result.candidates?.map((candidate) => (
               <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
-                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center text-2xl">🐱</div>
+                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center">
+                  <Cat className="w-6 h-6 text-primary/30" />
+                </div>
                 <div className="flex-1">
                   <div className="text-sm font-medium">{candidate.cat_name}</div>
                   <ConfidenceBar value={candidate.confidence} />

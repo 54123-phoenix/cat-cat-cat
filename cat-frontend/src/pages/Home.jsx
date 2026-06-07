@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, MapPin, MessageSquare, Camera } from 'lucide-react'
+import { Sparkles, MapPin, MessageSquare, Camera, PawPrint, Cat } from 'lucide-react'
 import { getCats, getPosts, getSightings, getUserProfile, recognize, createSighting } from '../api'
 import ScanView from '../components/ScanView'
 import CatSpinner from '../components/CatSpinner'
@@ -57,27 +57,27 @@ export default function Home() {
           <div>
             <p className="text-sm text-text-secondary">{greeting()}</p>
             <h1 className="text-xl font-bold text-text mt-0.5">
-              {profile?.nickname || '猫猫爱好者'} 🐱
+              {profile?.nickname || '猫猫爱好者'}
             </h1>
           </div>
           {loading ? (
             <CatSpinner size={28} />
           ) : (
-            <span className="text-3xl">🐾</span>
+            <PawPrint className="w-7 h-7 text-primary/40" />
           )}
         </div>
         <div className="grid grid-cols-3 gap-3 pt-1">
           <div className="bg-primary-light rounded-xl p-3 text-center">
             <p className="text-lg font-bold text-primary">{cats.length}</p>
-            <p className="text-[10px] text-text-secondary">认识猫猫</p>
+            <p className="text-xs text-text-secondary">认识猫猫</p>
           </div>
           <div className="bg-green-50 rounded-xl p-3 text-center">
             <p className="text-lg font-bold text-green-600">{sightings.length}</p>
-            <p className="text-[10px] text-text-secondary">最新偶遇</p>
+            <p className="text-xs text-text-secondary">最新偶遇</p>
           </div>
           <div className="bg-blue-50 rounded-xl p-3 text-center">
             <p className="text-lg font-bold text-blue-600">{postCount}</p>
-            <p className="text-[10px] text-text-secondary">社区帖子</p>
+            <p className="text-xs text-text-secondary">社区帖子</p>
           </div>
         </div>
       </div>
@@ -93,12 +93,12 @@ export default function Home() {
               {featured.avatar ? (
                 <img src={featured.avatar} alt="" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-3xl">🐱</span>
+                <Cat className="w-8 h-8 text-primary/30" />
               )}
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-primary font-medium bg-primary-light px-2 py-0.5 rounded-full">今日推荐</span>
+                <span className="text-xs text-primary font-medium bg-primary-light px-2 py-0.5 rounded-full">今日推荐</span>
               </div>
               <p className="text-lg font-bold text-text mt-1">{featured.name}</p>
               {featured.location && (
@@ -158,7 +158,7 @@ export default function Home() {
                   {cat.avatar ? (
                     <img src={cat.avatar} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-2xl">🐱</span>
+                    <Cat className="w-6 h-6 text-primary/30" />
                   )}
                 </div>
                 <p className="text-xs font-medium text-text truncate">{cat.name}</p>
@@ -181,16 +181,16 @@ export default function Home() {
             {sightings.slice(0, 3).map((s) => (
               <div key={s.id} className="card p-3 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-sm shrink-0">
-                  🐱
+                  <Cat className="w-4 h-4 text-primary/40" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium text-text">
                     {s.cat?.name || '校园猫猫'} 
                     <span className="text-text-secondary font-normal"> · {s.location_name || s.location || '校园某处'}</span>
                   </p>
-                  {s.note && <p className="text-[10px] text-text-secondary mt-0.5 truncate">{s.note}</p>}
+                  {s.note && <p className="text-xs text-text-secondary mt-0.5 truncate">{s.note}</p>}
                 </div>
-                <span className="text-[10px] text-text-secondary shrink-0">{s.createdAt || ''}</span>
+                <span className="text-xs text-text-secondary shrink-0">{s.createdAt || ''}</span>
               </div>
             ))}
           </div>
