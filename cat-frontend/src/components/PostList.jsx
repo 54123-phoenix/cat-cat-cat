@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getPosts } from '../api'
 import PostCard from './PostCard'
+import { MessageCircle } from 'lucide-react'
 
 function SkeletonPost() {
   return (
@@ -52,7 +53,7 @@ export default function PostList({ topic, refreshKey = 0, onReport }) {
   if (posts.length === 0) {
     return (
       <div className="p-8 text-center space-y-3">
-        <span className="text-4xl block">🐱</span>
+        <MessageCircle className="w-10 h-10 text-text-muted mx-auto" />
         <div className="text-sm text-gray-400">还没有帖子，来发第一条吧</div>
       </div>
     )

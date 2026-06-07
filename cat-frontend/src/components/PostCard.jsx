@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { likePost, deletePost, getStoredUser } from '../api'
-import { Flag, Trash2 } from 'lucide-react'
+import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
+import CommentSection from './CommentSection'
 
 const TOPIC_LABEL = {
   find: '寻猫问猫',
@@ -14,7 +15,29 @@ const TOPIC_COLORS = {
   find: { bg: 'bg-orange-50', text: 'text-orange-600' },
   daily: { bg: 'bg-green-50', text: 'text-green-600' },
   health: { bg: 'bg-blue-50', text: 'text-blue-600' },
-  suggest: { bg: 'bg-purple-50', text: 'text-purple-600' },
+  suggest: { bg: 'bg-purple-100', text: 'text-purple-700' },
+}
+
+const AVATAR_COLORS = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-pink-100 text-pink-600']
+
+function Avatar({ user, size = 'sm' }) {
+  const colorIndex = (user?.id || 0) % AVATAR_COLORS.length
+  const sizeClass = size === 'sm' ? 'w-8 h-8 text-xs' : 'w-10 h-10 text-sm'
+
+  if (user?.avatar) {
+    return (
+      <img src={user.avatar} alt="" className={`${sizeClass} rounded-full object-cover`} />
+    )
+  }
+
+  const name = user?.nickname || `铲屎官${user?.id || ''}`
+  const initial = name[0]?.toUpperCase() || '?'
+
+  return (
+    <div className={`${sizeClass} rounded-full ${AVATAR_COLORS[colorIndex]} flex items-center justify-center font-semibold shrink-0`}>
+      {initial}
+    </div>
+  )
 }
 
 export default function PostCard({ post, onReport, onDeleted }) {
@@ -58,14 +81,8 @@ export default function PostCard({ post, onReport, onDeleted }) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3 animate-fade-up">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-base overflow-hidden">
-            {post.user?.avatar ? (
-              <img src={post.user.avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              '🧑‍💻'
-            )}
-          </div>
+        <div className="flex items-center gap-2.5">
+          <Avatar user={post.user} />
           <div>
             <div className="text-xs font-medium text-gray-700">{post.user?.nickname || `铲屎官 #${post.userId}`}</div>
             <div className="text-xs text-gray-400">{post.createdAt}</div>
@@ -94,8 +111,7 @@ export default function PostCard({ post, onReport, onDeleted }) {
 
       {post.relatedCat && (
         <Link to={`/cats/${post.relatedCat.id}`} className="flex items-center gap-2 bg-primary-light rounded-lg px-3 py-2 active:bg-orange-100">
-          <span className="text-lg">🐱</span>
-          <span className="text-xs text-orange-800 font-medium">{post.relatedCat.name}</span>
+          <span className="text-sm text-primary font-medium">{post.relatedCat.name}</span>
         </Link>
       )}
 
@@ -133,23 +149,22 @@ export default function PostCard({ post, onReport, onDeleted }) {
 
       <div className="flex items-center gap-4 pt-1 border-t border-gray-50">
         <button onClick={handleLike} className={`flex items-center gap-1.5 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
-          <span className={`text-base inline-block ${liking ? 'animate-like-pop' : ''}`}>{liked ? '🧡' : '🤍'}</span>
+          <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
         </button>
-        <button className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span className="text-base">💬</span>
-          {post.comments || 0} 条回复
-        </button>
+        <CommentSection postId={post.id} initialCount={post.comments || 0} />
       </div>
 
       {/* Delete confirmation */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
+        <div className="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-5 w-72 space-y-4 animate-scale-in">
             <div className="text-center space-y-2">
-              <span className="text-3xl block">🐱</span>
-              <p className="text-sm text-gray-700 font-medium">猫说：确定要推走吗？</p>
-              <p className="text-xs text-gray-400">推走了就再也找不到这条帖子啦</p>
+              <div className="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-400" />
+              </div>
+              <p className="text-sm text-gray-700 font-medium">确定要删除这条帖子吗？</p>
+              <p className="text-xs text-gray-400">删除后无法恢复</p>
             </div>
             <div className="flex gap-2">
               <button

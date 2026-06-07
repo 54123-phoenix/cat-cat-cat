@@ -4,10 +4,10 @@ import CatPicker from './CatPicker'
 import { Plus, X, Image as ImageIcon } from 'lucide-react'
 
 const TOPICS = [
-  { id: 'find', label: '🔍 寻猫问猫' },
-  { id: 'daily', label: '💬 铲屎日常' },
-  { id: 'health', label: '🏥 健康互助' },
-  { id: 'suggest', label: '💡 建议反馈' },
+  { id: 'find', label: '寻猫问猫' },
+  { id: 'daily', label: '铲屎日常' },
+  { id: 'health', label: '健康互助' },
+  { id: 'suggest', label: '建议反馈' },
 ]
 
 const PRESET_TAGS = [
@@ -183,7 +183,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
           disabled={!content.trim() || submitting}
           className="w-full bg-primary text-white rounded-full py-3 font-medium text-sm disabled:opacity-40 active:opacity-90"
         >
-          {submitting ? '发布中…' : '发布 🐾'}
+          {submitting ? '发布中…' : '发布'}
         </button>
       </div>
     </div>
