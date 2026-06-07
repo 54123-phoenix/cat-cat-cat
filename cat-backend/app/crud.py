@@ -312,10 +312,12 @@ def create_cat_image(db: Session, cat_id: int, image_path: str) -> models.CatIma
     return db_image
 
 
-def get_sightings(db: Session, cat_id: Optional[int] = None, skip: int = 0, limit: int = 20) -> List[models.Sighting]:
+def get_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None, skip: int = 0, limit: int = 20) -> List[models.Sighting]:
     query = db.query(models.Sighting)
     if cat_id:
         query = query.filter(models.Sighting.cat_id == cat_id)
+    if status:
+        query = query.filter(models.Sighting.status == status)
     return query.order_by(desc(models.Sighting.created_at)).offset(skip).limit(limit).all()
 
 
@@ -356,8 +358,10 @@ def get_sighting(db: Session, sighting_id: int) -> Optional[models.Sighting]:
     return db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
 
 
-def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None) -> models.Sighting:
+def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None, status: Optional[str] = None) -> models.Sighting:
     db_sighting = models.Sighting(**sighting.model_dump(), image_path=image_path, spotted_by=spotted_by)
+    if status:
+        db_sighting.status = status
     db.add(db_sighting)
     db.commit()
     db.refresh(db_sighting)

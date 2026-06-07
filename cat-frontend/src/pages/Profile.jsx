@@ -276,17 +276,17 @@ export default function Profile() {
             {followedCats.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => navigate(`/cats/${cat.id}`)}
+                onClick={() => navigate(`/cats/${cat.cat_id}`)}
                 className="flex-shrink-0 w-20 text-center space-y-1.5"
               >
                 <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center overflow-hidden mx-auto">
-                  {cat.avatar ? (
-                    <img src={cat.avatar} alt="" className="w-full h-full object-cover" />
+                  {cat.cat_avatar ? (
+                    <img src={cat.cat_avatar} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <Cat className="w-6 h-6 text-primary/30" />
                   )}
                 </div>
-                <p className="text-xs font-medium text-text truncate">{cat.name}</p>
+                <p className="text-xs font-medium text-text truncate">{cat.cat_name}</p>
               </button>
             ))}
           </div>

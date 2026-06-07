@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 from app.schemas import UserLogin, UserProfile, UserRegister, TokenResponse
+from app import schemas
+from app.services.wechat import code2session
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -88,3 +90,47 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserProfile)
 def me(user: User = Depends(require_auth)):
     return user
+
+
+@router.post("/wechat-login", response_model=schemas.WechatLoginResponse)
+async def wechat_login(payload: schemas.WechatLoginRequest, db: Session = Depends(get_db)):
+    try:
+        wx_data = await code2session(payload.code)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    openid = wx_data.get("openid")
+    if not openid:
+        raise HTTPException(status_code=400, detail="WeChat login failed")
+
+    user = db.query(User).filter(User.openid == openid).first()
+    is_new = False
+
+    if not user:
+        is_new = True
+        username = f"wx_{openid[:12]}"
+        nickname = payload.nickname or f"猫友{openid[-4:]}"
+        user = User(
+            username=username,
+            password_hash=pwd_context.hash(openid),
+            nickname=nickname,
+            role="user",
+            avatar=payload.avatar_url,
+            openid=openid,
+            session_key=wx_data.get("session_key"),
+        )
+        db.add(user)
+    else:
+        user.session_key = wx_data.get("session_key")
+        if payload.nickname:
+            user.nickname = payload.nickname
+        if payload.avatar_url:
+            user.avatar = payload.avatar_url
+
+    db.commit()
+    db.refresh(user)
+    return schemas.WechatLoginResponse(
+        token=create_token(user),
+        user=user,
+        is_new=is_new,
+    )

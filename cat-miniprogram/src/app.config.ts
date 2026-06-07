@@ -1,0 +1,66 @@
+export default defineAppConfig({
+  pages: [
+    'pages/index/index',
+    'pages/map/index',
+    'pages/scan/index',
+    'pages/community/index',
+    'pages/profile/index',
+    'pages/cat-detail/index',
+    'pages/post-detail/index',
+    'pages/feed/index',
+    'pages/gallery/index',
+    'pages/admin/index',
+    'pages/badges/index',
+    'pages/notifications/index',
+    'pages/weekly-report/index',
+  ],
+  window: {
+    backgroundTextStyle: 'light',
+    navigationBarBackgroundColor: '#FAFAF9',
+    navigationBarTitleText: '猫猫社区',
+    navigationBarTextStyle: 'black',
+    backgroundColor: '#FAFAF9',
+  },
+  tabBar: {
+    color: '#78716C',
+    selectedColor: '#F97316',
+    backgroundColor: '#FFFFFF',
+    borderStyle: 'white',
+    list: [
+      {
+        pagePath: 'pages/index/index',
+        text: '首页',
+        iconPath: 'assets/tab/home.png',
+        selectedIconPath: 'assets/tab/home-active.png',
+      },
+      {
+        pagePath: 'pages/map/index',
+        text: '地图',
+        iconPath: 'assets/tab/map.png',
+        selectedIconPath: 'assets/tab/map-active.png',
+      },
+      {
+        pagePath: 'pages/scan/index',
+        text: '识猫',
+        iconPath: 'assets/tab/scan.png',
+        selectedIconPath: 'assets/tab/scan-active.png',
+      },
+      {
+        pagePath: 'pages/community/index',
+        text: '社区',
+        iconPath: 'assets/tab/community.png',
+        selectedIconPath: 'assets/tab/community-active.png',
+      },
+      {
+        pagePath: 'pages/profile/index',
+        text: '我的',
+        iconPath: 'assets/tab/profile.png',
+        selectedIconPath: 'assets/tab/profile-active.png',
+      },
+    ],
+  },
+  permission: {
+    'scope.userLocation': { desc: '用于在地图上显示猫猫的位置' },
+  },
+  requiredPrivateInfos: ['getLocation', 'chooseLocation'],
+})

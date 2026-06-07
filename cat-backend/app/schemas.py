@@ -376,3 +376,16 @@ class FollowResponse(BaseModel):
 
 class FollowCreate(BaseModel):
     pass
+
+
+class WechatLoginRequest(BaseModel):
+    code: str
+    nickname: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+
+class WechatLoginResponse(BaseModel):
+    token: str
+    token_type: str = "bearer"
+    user: UserProfile
+    is_new: bool = False

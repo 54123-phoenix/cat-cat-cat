@@ -13,8 +13,8 @@ UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
 
 
 @router.get("", response_model=List[schemas.SightingResponse])
-def list_sightings(cat_id: Optional[int] = None, skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
-    return crud.get_sightings(db, cat_id=cat_id, skip=skip, limit=limit)
+def list_sightings(cat_id: Optional[int] = None, status: Optional[str] = "approved", skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
+    return crud.get_sightings(db, cat_id=cat_id, status=status, skip=skip, limit=limit)
 
 
 @router.get("/{sighting_id}", response_model=schemas.SightingResponse)
@@ -48,8 +48,9 @@ async def create_sighting(
 
         image_path = f"/uploads/sightings/{filename}"
 
+    sighting_status = "pending" if file else "approved"
     sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence, activity_type=activity_type, note=note)
-    db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by="铲屎官")
+    db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by="铲屎官", status=sighting_status)
 
     cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()
     if cat:

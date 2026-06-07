@@ -28,6 +28,8 @@ class User(Base):
     nickname = Column(String(50), nullable=False)
     role = Column(String(20), default="user")
     avatar = Column(String(200))
+    openid = Column(String(100), unique=True, nullable=True, index=True)
+    session_key = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=datetime.now)
 
     posts = relationship("Post", back_populates="author")
@@ -80,6 +82,7 @@ class Sighting(Base):
     confidence = Column(Float)
     activity_type = Column(String(20))
     note = Column(Text)
+    status = Column(String(20), default="approved")
     spotted_by = Column(String(50))
     created_at = Column(DateTime, default=datetime.now)
 
