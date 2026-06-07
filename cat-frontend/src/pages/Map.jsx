@@ -169,8 +169,8 @@ export default function Map() {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] -mx-4 -mt-2 relative">
-      <div ref={mapRef} className="w-full h-full" />
+    <div className="fixed inset-0 z-30 top-[52px] bottom-16">
+      <div ref={mapRef} className="w-full h-full amap-container" />
 
       {showGeoModal && (
         <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6" onClick={handleSkipLocation}>
