@@ -1,4 +1,5 @@
 export default defineAppConfig({
+  style: 'v2',
   pages: [
     'pages/index/index',
     'pages/map/index',

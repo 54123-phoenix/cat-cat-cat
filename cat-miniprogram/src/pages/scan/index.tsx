@@ -106,8 +106,14 @@ export default function Scan() {
       )}
 
       {preview && (phase === 'ready' || phase === 'loading' || phase === 'confirmed' || phase === 'uncertain' || phase === 'unknown' || phase === 'error') && (
-        <View style={{ borderRadius: '24rpx', overflow: 'hidden', marginBottom: '24rpx' }}>
+        <View style={{ borderRadius: '24rpx', overflow: 'hidden', marginBottom: '24rpx', position: 'relative' }}>
           <Image src={preview} mode='aspectFill' style={{ width: '100%', height: '500rpx' }} />
+          {phase === 'loading' && (
+            <View className='eye-scan-overlay'>
+              <View className='eye-scan-line' />
+              <View className='eye-scan-dot' />
+            </View>
+          )}
         </View>
       )}
 

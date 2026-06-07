@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import { getCats, getSightings, getPosts, getUserProfile } from '../../services/api'
 
 function greeting(): string {
@@ -37,6 +37,19 @@ export default function Index() {
       setPostCount(Array.isArray(postsData) ? postsData.length : 0)
       setProfile(userData)
     }).catch(console.error).finally(() => setLoading(false))
+  })
+
+  usePullDownRefresh(() => {
+    Promise.all([getCats(), getSightings({ limit: 5 }), getPosts(), getUserProfile().catch(() => null)])
+      .then(([catsData, sightingsData, postsData, userData]) => {
+        const arr = Array.isArray(catsData) ? catsData : []
+        setCats(arr)
+        if (arr.length > 0) setFeatured(arr[Math.floor(Math.random() * arr.length)])
+        setSightings(Array.isArray(sightingsData) ? sightingsData : [])
+        setPostCount(Array.isArray(postsData) ? postsData.length : 0)
+        setProfile(userData)
+      })
+      .finally(() => Taro.stopPullDownRefresh())
   })
 
   return (

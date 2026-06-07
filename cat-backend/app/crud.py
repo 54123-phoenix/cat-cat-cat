@@ -358,10 +358,8 @@ def get_sighting(db: Session, sighting_id: int) -> Optional[models.Sighting]:
     return db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
 
 
-def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None, status: Optional[str] = None) -> models.Sighting:
-    db_sighting = models.Sighting(**sighting.model_dump(), image_path=image_path, spotted_by=spotted_by)
-    if status:
-        db_sighting.status = status
+def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None, status: str = "approved") -> models.Sighting:
+    db_sighting = models.Sighting(**sighting.model_dump(), image_path=image_path, spotted_by=spotted_by, status=status)
     db.add(db_sighting)
     db.commit()
     db.refresh(db_sighting)

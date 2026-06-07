@@ -1,0 +1,30 @@
+.gallery-waterfall {
+  column-count: 2;
+  column-gap: 10px;
+  padding: 0 10px;
+}
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.gallery-item image {
+  width: 100%;
+  display: block;
+}
+.gallery-item-info {
+  padding: 12px 14px;
+}
+.gallery-item-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1C1917;
+}
+.gallery-item-loc {
+  font-size: 22rpx;
+  color: #78716C;
+  margin-top: 4rpx;
+}

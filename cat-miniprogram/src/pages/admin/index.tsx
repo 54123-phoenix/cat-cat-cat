@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { View, Text, Input } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import {
-  adminLogin, adminLogout, getAdminMe, getAdminToken,
+  adminLogin, adminLogout, getAdminMe,
   getCats, getCat, updateCat, createCat, uploadCatImage,
   getSightings, getReports, handleReport,
   getHealthRecords, createHealthRecord, deleteHealthRecord,
   getFeedingPoints, createFeedingPoint, deleteFeedingPoint,
 } from '../../services/api'
+import { getToken } from '../../utils/storage'
 
 const RECORD_TYPES = [
   { value: 'vaccine', label: '疫苗' }, { value: 'deworm', label: '驱虫' },
@@ -27,7 +28,7 @@ function formatTime(v: string) {
 }
 
 export default function Admin() {
-  const [authenticated, setAuthenticated] = useState(Boolean(getAdminToken()))
+  const [authenticated, setAuthenticated] = useState(Boolean(getToken()))
   const [password, setPassword] = useState('')
   const [cats, setCats] = useState<any[]>([])
   const [sightings, setSightings] = useState<any[]>([])

@@ -210,6 +210,26 @@ export function createDiscovery(data: any) {
 
 export function identifyCat(filePath: string) { return recognize(filePath) }
 
+export function deleteCat(catId: number) {
+  return request(`/cats/${catId}`, { method: 'DELETE' })
+}
+
+export function getDiscoveries(params: any = {}) {
+  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
+  return request(`/discoveries${qs ? '?' + qs : ''}`)
+}
+
+export function reviewDiscovery(id: number, data: any) {
+  return request(`/discoveries/${id}/review`, { method: 'POST', body: data })
+}
+
+export function getHeatmapData(params: any = {}) {
+  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
+  return request(`/map/heatmap${qs ? '?' + qs : ''}`)
+}
+
 export function adminLogout() {
   clearToken()
 }
+
+export { getToken, setToken, clearToken, getStoredUser, setStoredUser } from '../utils/storage'

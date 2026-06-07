@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
-import Taro, { useDidShow, useReachBottom } from '@tarojs/taro'
+import Taro, { useDidShow, useReachBottom, usePullDownRefresh } from '@tarojs/taro'
 import { getPosts, likePost, reportPost, getUserProfile } from '../../services/api'
 import { TOPICS } from '../../config'
 
@@ -30,6 +30,13 @@ export default function Community() {
   useDidShow(() => {
     setLoading(true)
     fetchPosts()
+  })
+
+  usePullDownRefresh(() => {
+    setLoading(true)
+    setPosts([])
+    fetchPosts()
+    setTimeout(() => Taro.stopPullDownRefresh(), 1000)
   })
 
   useReachBottom(() => {
@@ -147,6 +154,19 @@ export default function Community() {
             <Text style={{ fontSize: '24rpx', color: '#A8A29E', marginTop: '8rpx', display: 'block' }}>快来发布第一条吧</Text>
           </View>
         )}
+      </View>
+
+      <View onClick={() => Taro.showToast({ title: '发帖功能即将上线', icon: 'none' })}
+        style={{
+          position: 'fixed', bottom: '48rpx', right: '48rpx',
+          width: '104rpx', height: '104rpx', borderRadius: '50%',
+          backgroundColor: '#F97316', color: '#fff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '48rpx', fontWeight: 'bold',
+          boxShadow: '0 8rpx 24rpx rgba(249,115,22,0.35)',
+          zIndex: 100,
+        }}>
+        +
       </View>
     </View>
   )

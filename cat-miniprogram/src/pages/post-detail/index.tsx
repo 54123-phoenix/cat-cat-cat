@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
 import Taro, { useLoad } from '@tarojs/taro'
-import { getPost, likePost, deletePost, getStoredUser, getPostComments, createComment } from '../../services/api'
+import { getPost, likePost, deletePost, getPostComments, createComment } from '../../services/api'
+import { getStoredUser } from '../../utils/storage'
 import { TOPICS } from '../../config'
 
 const TOPIC_COLORS: Record<string, { bg: string; text: string }> = {

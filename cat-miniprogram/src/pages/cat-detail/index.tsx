@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../../services/api'
+import SharePoster from '../../components/SharePoster'
 
 const RECORD_TYPE_LABELS: Record<string, string> = {
   vaccine: '疫苗', deworm: '驱虫', sterilization: '绝育',
@@ -23,6 +24,7 @@ export default function CatDetail() {
   const [following, setFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
   const [catId, setCatId] = useState<number>(0)
+  const [showShare, setShowShare] = useState(false)
 
   useLoad((options) => {
     const id = Number(options.id)
@@ -101,6 +103,10 @@ export default function CatDetail() {
               <View onClick={toggleFollow}
                 style={{ width: '72rpx', height: '72rpx', borderRadius: '50%', backgroundColor: following ? '#FEE2E2' : '#F5F5F4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32rpx' }}>
                 {following ? '❤️' : '🤍'}
+              </View>
+              <View className='share-btn' onClick={() => setShowShare(true)}
+                style={{ width: '72rpx', height: '72rpx', borderRadius: '50%', backgroundColor: '#F5F5F4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32rpx' }}>
+                📤
               </View>
               {cat.color && (
                 <Text style={{ fontSize: '24rpx', padding: '8rpx 20rpx', borderRadius: '999rpx', backgroundColor: '#FFF7ED', color: '#F97316', fontWeight: '500' }}>{cat.color}</Text>
@@ -213,6 +219,7 @@ export default function CatDetail() {
           </View>
         )}
       </View>
+      <SharePoster cat={cat} visible={showShare} onClose={() => setShowShare(false)} />
     </View>
   )
 }

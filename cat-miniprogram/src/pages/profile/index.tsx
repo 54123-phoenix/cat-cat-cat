@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { getUserProfile, getCats, getFollowedCats, getStoredUser } from '../../services/api'
+import { getUserProfile, getCats, getFollowedCats } from '../../services/api'
+import { getStoredUser } from '../../utils/storage'
 
 const BADGE_NAMES: Record<string, string> = {
   first_sighting: '初次偶遇', cat_observer: '观察员', cat_expert: '专家',

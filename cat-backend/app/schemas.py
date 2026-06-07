@@ -78,6 +78,11 @@ class SightingCreate(SightingBase):
     pass
 
 
+class SightingReviewRequest(BaseModel):
+    action: str
+    reject_reason: Optional[str] = None
+
+
 class SightingResponse(SightingBase):
     id: int
     image_path: Optional[str]
@@ -87,6 +92,24 @@ class SightingResponse(SightingBase):
     location_name: Optional[str] = None
     created_at: datetime
     cat: Optional[CatListResponse] = None
+
+    class Config:
+        from_attributes = True
+
+
+class SightingListItem(BaseModel):
+    id: int
+    cat_id: int
+    image_path: Optional[str] = None
+    location: Optional[str] = None
+    location_name: Optional[str] = None
+    confidence: Optional[float] = None
+    activity_type: Optional[str] = None
+    note: Optional[str] = None
+    status: str = "pending"
+    created_at: datetime
+    cat: Optional[CatListResponse] = None
+    spotted_by: Optional[str] = None
 
     class Config:
         from_attributes = True
