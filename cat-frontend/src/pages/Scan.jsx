@@ -17,10 +17,12 @@ export default function Scan() {
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const [customLocation, setCustomLocation] = useState('')
   const fileRef = useRef(null)
+  const selectedFileRef = useRef(null)
 
   function onFileChange(event) {
     const file = event.target.files?.[0]
     if (!file) return
+    selectedFileRef.current = file
     if (preview) URL.revokeObjectURL(preview)
     setPreview(URL.createObjectURL(file))
     setPhase('ready')
@@ -34,7 +36,7 @@ export default function Scan() {
 
   async function saveConfirmedSighting(data) {
     if (!data.cat_id) return
-    const file = fileRef.current?.files?.[0]
+    const file = selectedFileRef.current
     await createSighting({
       catId: data.cat_id,
       location: getLocationName(),
@@ -44,7 +46,7 @@ export default function Scan() {
   }
 
   async function handleIdentify() {
-    const file = fileRef.current?.files?.[0]
+    const file = selectedFileRef.current
     if (!file) {
       setMessage('请先选择一张照片')
       return
@@ -74,7 +76,7 @@ export default function Scan() {
   }
 
   async function submitDiscovery() {
-    const file = fileRef.current?.files?.[0]
+    const file = selectedFileRef.current
     const location = findCampusLocation(selectedLocation)
     setMessage('')
     try {
@@ -97,6 +99,7 @@ export default function Scan() {
     setDiscovery(null)
     setDiscoveryNote('')
     setMessage('')
+    selectedFileRef.current = null
     if (preview) URL.revokeObjectURL(preview)
     setPreview(null)
     if (fileRef.current) fileRef.current.value = ''

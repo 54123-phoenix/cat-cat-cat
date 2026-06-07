@@ -41,7 +41,7 @@ if TORCH_AVAILABLE:
 
         def forward(self, x: torch.Tensor) -> torch.Tensor:
             B, N, C = x.shape
-            qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 2)
+            qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
             q, k, v = qkv.unbind(0)
 
             attn = (q @ k.transpose(-2, -1)) * self.scale
