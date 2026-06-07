@@ -3,16 +3,23 @@ import { useNavigate } from 'react-router-dom'
 import { User, Award, MapPin, Cat, PawPrint } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
-import { getUserProfile, getCats } from '../api'
+import { getUserProfile, getCats, getStoredUser } from '../api'
 
 export default function Profile() {
   const [user, setUser] = useState(null)
   const [cats, setCats] = useState([])
   const [badges, setBadges] = useState([])
   const [loading, setLoading] = useState(true)
+  const [authError, setAuthError] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
+    const storedUser = getStoredUser()
+    if (!storedUser) {
+      setAuthError(true)
+      setLoading(false)
+      return
+    }
     Promise.all([
       getUserProfile(),
       getCats(),
@@ -22,9 +29,33 @@ export default function Profile() {
         setCats(catsData)
         setBadges(userData.badges || [])
       })
-      .catch(console.error)
+      .catch((err) => {
+        if (err.message?.includes('401') || err.message?.includes('Not authenticated')) {
+          setAuthError(true)
+        }
+      })
       .finally(() => setLoading(false))
   }, [])
+
+  if (authError) {
+    return (
+      <div className="space-y-5 p-4">
+        <div className="card p-8 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-primary-light flex items-center justify-center">
+            <User className="w-8 h-8 text-primary" />
+          </div>
+          <h2 className="text-lg font-bold text-text">请先登录</h2>
+          <p className="text-sm text-text-secondary">登录后查看个人资料、勋章和猫档案</p>
+          <button
+            onClick={() => navigate('/login')}
+            className="px-6 py-2.5 rounded-full bg-primary text-white font-medium"
+          >
+            去登录
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   if (loading) {
     return (

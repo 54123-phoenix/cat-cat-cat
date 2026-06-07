@@ -81,6 +81,18 @@ def create_post(
     return crud.create_post(db, post_data, user.id, image_paths)
 
 
+@router.get("/{post_id}", response_model=schemas.PostResponse)
+def get_post(
+    post_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    post = crud.get_post(db, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return crud._serialize_post(post, user.id)
+
+
 @router.put("/{post_id}", response_model=schemas.PostResponse)
 def update_post(
     post_id: int,
