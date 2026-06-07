@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
 import CommentSection from './CommentSection'
+import Avatar from './Avatar'
 
 const TOPIC_LABEL = {
   find: '寻猫问猫',
@@ -16,28 +17,6 @@ const TOPIC_COLORS = {
   daily: { bg: 'bg-green-50', text: 'text-green-600' },
   health: { bg: 'bg-blue-50', text: 'text-blue-600' },
   suggest: { bg: 'bg-purple-100', text: 'text-purple-700' },
-}
-
-const AVATAR_COLORS = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-pink-100 text-pink-600']
-
-function Avatar({ user, size = 'sm' }) {
-  const colorIndex = (user?.id || 0) % AVATAR_COLORS.length
-  const sizeClass = size === 'sm' ? 'w-8 h-8 text-xs' : 'w-10 h-10 text-sm'
-
-  if (user?.avatar) {
-    return (
-      <img src={user.avatar} alt="" className={`${sizeClass} rounded-full object-cover`} />
-    )
-  }
-
-  const name = user?.nickname || `铲屎官${user?.id || ''}`
-  const initial = name[0]?.toUpperCase() || '?'
-
-  return (
-    <div className={`${sizeClass} rounded-full ${AVATAR_COLORS[colorIndex]} flex items-center justify-center font-semibold shrink-0`}>
-      {initial}
-    </div>
-  )
 }
 
 export default function PostCard({ post, onReport, onDeleted }) {

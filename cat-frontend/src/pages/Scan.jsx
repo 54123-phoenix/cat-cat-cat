@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, PawPrint, Cat, Check } from 'lucide-react'
+import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle } from 'lucide-react'
 import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
 import { createDiscovery, createSighting, identifyCat } from '../api'
@@ -44,7 +44,7 @@ export default function Scan() {
     if (!file) return
     setPhase('loading')
     setMessage('')
-    const timer = window.setTimeout(() => setMessage('网络较慢，稍等一下🐾'), 5000)
+    const timer = window.setTimeout(() => setMessage('网络较慢，稍等一下...'), 5000)
     try {
       const data = await identifyCat(file)
       window.clearTimeout(timer)
@@ -125,8 +125,8 @@ export default function Scan() {
         ) : null}
 
         {phase === 'ready' && (
-          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90">
-            开始识别 ✨
+          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-1.5">
+            <Sparkles className="w-4 h-4" />开始识别
           </button>
         )}
 
@@ -167,8 +167,9 @@ export default function Scan() {
 
         {phase === 'uncertain' && result && (
           <div className="space-y-2">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-2.5">
-              <div className="text-sm text-yellow-800">🤔 找到几个相似的猫咪，请确认是哪一只</div>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
+              <HelpCircle className="w-4 h-4 text-yellow-600" />
+              <div className="text-sm text-yellow-800">找到几个相似的猫咪，请确认是哪一只</div>
             </div>
             {result.candidates?.map((candidate) => (
               <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
@@ -189,7 +190,9 @@ export default function Scan() {
 
         {phase === 'unknown' && (
           <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <div className="text-4xl mb-3">🐾</div>
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary-light flex items-center justify-center">
+              <PawPrint className="w-6 h-6 text-primary/40" />
+            </div>
             <div className="font-medium text-gray-800">发现新朋友！</div>
             <div className="text-xs text-gray-400 mt-1 mb-4">AI 初步判断它可能还没入库，提交后将由猫协复核</div>
             {discovery ? (

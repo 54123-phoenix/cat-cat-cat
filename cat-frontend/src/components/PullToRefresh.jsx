@@ -70,7 +70,7 @@ export default function PullToRefresh({ onRefresh, children }) {
         ) : state === 'ready' ? (
           <div className="flex items-center gap-2 text-primary">
             <CatStretch progress={1} />
-            <span className="text-xs font-medium">释放刷新 ✨</span>
+            <span className="text-xs font-medium">释放刷新</span>
           </div>
         ) : pullDist.current > 10 ? (
           <div className="flex items-center gap-2 text-text-secondary">

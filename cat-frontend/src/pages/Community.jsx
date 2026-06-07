@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PostInput from '../components/PostInput'
 import PostList from '../components/PostList'
 import { reportPost } from '../api'
+import { Pencil } from 'lucide-react'
 
 const TABS = [
   { id: 'all', label: '广场' },
@@ -63,7 +64,7 @@ export default function Community() {
         onClick={() => setShowCompose(true)}
         className="fixed bottom-20 right-4 w-12 h-12 bg-primary rounded-full text-white text-2xl shadow-lg shadow-orange-200 flex items-center justify-center active:scale-95 transition-transform z-40"
       >
-        ✏️
+        <Pencil className="w-5 h-5" />
       </button>
 
       {showCompose && (

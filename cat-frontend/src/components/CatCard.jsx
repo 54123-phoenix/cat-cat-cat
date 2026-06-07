@@ -12,7 +12,7 @@ export default function CatCard({ cat }) {
           />
         ) : (
           <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-2xl">🐱</span>
+            <Cat className="w-6 h-6 text-primary/30" />
           </div>
         )}
       </div>
@@ -28,7 +28,7 @@ export default function CatCard({ cat }) {
           )}
           {cat.location && (
             <span className="text-xs text-text-secondary flex items-center gap-0.5">
-              📍 {cat.location}
+              <MapPin className="w-3 h-3" />{cat.location}
             </span>
           )}
         </div>

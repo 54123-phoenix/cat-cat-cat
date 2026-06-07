@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Camera, Cat, Check } from 'lucide-react'
+import { Camera, Cat, Check, HelpCircle } from 'lucide-react'
 import CatSpinner from './CatSpinner'
 
 export default function ScanView({ onCapture, onResultClose }) {
@@ -9,12 +9,15 @@ export default function ScanView({ onCapture, onResultClose }) {
   const [error, setError] = useState(null)
   const fileRef = useRef(null)
   const [previewUrl, setPreviewUrl] = useState(null)
+  const previewUrlRef = useRef(null)
 
   function handleFileSelected(e) {
     const f = e.target.files?.[0]
     if (!f) return
     setFile(f)
-    setPreviewUrl(URL.createObjectURL(f))
+    const url = URL.createObjectURL(f)
+    setPreviewUrl(url)
+    previewUrlRef.current = url
     setPhase('focusing')
   }
 
@@ -30,7 +33,13 @@ export default function ScanView({ onCapture, onResultClose }) {
         setPhase('idle')
       }
     }, 800)
-    return () => { clearTimeout(focusTimer); URL.revokeObjectURL(previewUrl) }
+    return () => {
+      clearTimeout(focusTimer)
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current)
+        previewUrlRef.current = null
+      }
+    }
   }, [phase, file])
 
   function handleRetake() {
@@ -177,8 +186,8 @@ function ResultView({ result, onRetake, onClose }) {
       <div className="flex flex-col items-center space-y-4 animate-scale-in">
         <div className="relative" style={{ transform: 'rotate(3deg)' }}>
           <div className="w-48 h-48 rounded-2xl bg-primary-light/50 flex items-center justify-center">
-            <span className="text-5xl">🤔</span>
-          </div>
+              <HelpCircle className="w-12 h-12 text-primary/40" />
+            </div>
         </div>
         <p className="text-text-secondary text-sm text-center">
           不太确定是哪只猫<br />
@@ -210,7 +219,7 @@ function ResultView({ result, onRetake, onClose }) {
     <div className="flex flex-col items-center space-y-4 animate-scale-in">
       <div className="relative w-48 h-48 rounded-full overflow-hidden bg-gray-100">
         <div className="w-full h-full flex items-center justify-center opacity-40">
-          <span className="text-6xl">?</span>
+          <HelpCircle className="w-16 h-16 text-gray-400" />
         </div>
       </div>
       <div className="text-center space-y-1">

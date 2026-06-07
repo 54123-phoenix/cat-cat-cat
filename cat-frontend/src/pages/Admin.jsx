@@ -29,12 +29,12 @@ function Field({ label, name, value, onChange, textarea = false }) {
 }
 
 const RECORD_TYPES = [
-  { value: 'vaccine', label: '💉 疫苗' },
-  { value: 'deworm', label: '🪱 驱虫' },
-  { value: 'sterilization', label: '✂️ 绝育' },
-  { value: 'injury', label: '🩹 伤病' },
-  { value: 'illness', label: '🤒 疾病' },
-  { value: 'checkup', label: '🏥 体检' },
+  { value: 'vaccine', label: '疫苗' },
+  { value: 'deworm', label: '驱虫' },
+  { value: 'sterilization', label: '绝育' },
+  { value: 'injury', label: '伤病' },
+  { value: 'illness', label: '疾病' },
+  { value: 'checkup', label: '体检' },
 ]
 
 export default function Admin() {
@@ -273,7 +273,7 @@ export default function Admin() {
               <div>
                 <p className="text-sm font-bold text-text">{RECORD_TYPES.find(t => t.value === r.record_type)?.label || r.record_type} · {r.title}</p>
                 {r.description && <p className="text-xs text-text-secondary">{r.description}</p>}
-                <p className="text-[10px] text-text-muted">{formatDate(r.record_date)}{r.location ? ` · ${r.location}` : ''}</p>
+                <p className="text-xs text-text-muted">{formatDate(r.record_date)}{r.location ? ` · ${r.location}` : ''}</p>
               </div>
               <button onClick={() => handleDeleteHealthRecord(r.id)} className="text-xs text-red-400 shrink-0">删除</button>
             </div>
@@ -303,7 +303,7 @@ export default function Admin() {
             <div>
               <p className="text-sm font-bold text-text">{p.name}</p>
               {p.description && <p className="text-xs text-text-secondary">{p.description}</p>}
-              <p className="text-[10px] text-text-muted">📍 {p.latitude}, {p.longitude}</p>
+              <p className="text-xs text-text-muted">{p.latitude}, {p.longitude}</p>
             </div>
             <button onClick={() => handleDeleteFeedingPoint(p.id)} className="text-xs text-red-400 shrink-0">删除</button>
           </div>

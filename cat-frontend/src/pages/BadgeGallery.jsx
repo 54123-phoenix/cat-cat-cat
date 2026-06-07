@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
 import { getBadges } from '../api'
+import { Eye, PenLine, Trophy, Sparkles, Medal } from 'lucide-react'
 
 const SERIES_LABEL = {
-  sighting: { name: '偶遇系列', icon: '👀' },
-  community: { name: '社区系列', icon: '📝' },
-  collect: { name: '收集系列', icon: '🏆' },
-  special: { name: '特殊成就', icon: '✨' },
+  sighting: { name: '偶遇系列', Icon: Eye },
+  community: { name: '社区系列', Icon: PenLine },
+  collect: { name: '收集系列', Icon: Trophy },
+  special: { name: '特殊成就', Icon: Sparkles },
 }
 
 function getBadgeFromApi(b) {
@@ -57,11 +58,12 @@ export default function BadgeGallery() {
       ) : (
         <div className="p-4 space-y-6">
           {Object.entries(grouped).map(([seriesKey, items]) => {
-            const info = SERIES_LABEL[seriesKey] || { name: seriesKey, icon: '🎖️' }
+            const info = SERIES_LABEL[seriesKey] || { name: seriesKey, Icon: Medal }
+            const SeriesIcon = info.Icon
             return (
               <section key={seriesKey} className="space-y-2">
                 <h2 className="font-bold text-text flex items-center gap-2">
-                  <span>{info.icon}</span>
+                  <SeriesIcon className="w-4 h-4 text-primary" />
                   {info.name}
                 </h2>
                 <div className="space-y-2">
@@ -78,10 +80,10 @@ export default function BadgeGallery() {
                           isEarned ? 'badge-earned' : 'opacity-60'
                         }`}
                       >
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${
-                          isEarned ? 'bg-primary-light' : 'bg-gray-100'
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                          isEarned ? 'bg-primary-light text-primary' : 'bg-gray-100 text-gray-400'
                         }`}>
-                          {badge.emoji || '🎖️'}
+                          <span className="text-base font-bold">{(badge.name || '?')[0]}</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
@@ -119,7 +121,7 @@ export default function BadgeGallery() {
 
           {badges.length === 0 && (
             <div className="card p-8 text-center space-y-2">
-              <span className="text-4xl">🏅</span>
+              <Medal className="w-10 h-10 mx-auto text-text-muted" />
               <p className="text-text-secondary text-sm">暂无勋章数据</p>
             </div>
           )}

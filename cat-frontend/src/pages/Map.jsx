@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { MapPin, Navigation } from 'lucide-react'
+import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 
 const AMAP_KEY = '8bb4b6d1e109f76821e371e059623c22'
@@ -158,9 +158,9 @@ export default function Map() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] gap-4 px-4">
-        <div className="text-4xl">🗺️</div>
-        <p className="text-stone-500 text-center">{error}</p>
+      <div className="flex flex-col items-center justify-center gap-4 px-4">
+          <HelpCircle className="w-10 h-10 text-text-muted" />
+          <p className="text-stone-500 text-center">{error}</p>
         <p className="text-stone-400 text-sm text-center">
           请前往 <a href="https://console.amap.com/dev/key/app" target="_blank" rel="noreferrer" className="text-primary underline">高德开放平台</a> 申请有效的 API Key
         </p>

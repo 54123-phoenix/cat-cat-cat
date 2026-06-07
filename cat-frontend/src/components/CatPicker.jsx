@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getCats } from '../api'
+import { PawPrint, Cat } from 'lucide-react'
 
 export default function CatPicker({ selected, onChange }) {
   const [cats, setCats] = useState([])
@@ -16,7 +17,7 @@ export default function CatPicker({ selected, onChange }) {
           !selected ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-400'
         }`}
       >
-        <span className="text-xl">🐾</span>
+        <PawPrint className="w-5 h-5" />
         <span>不指定</span>
       </button>
 
@@ -28,7 +29,7 @@ export default function CatPicker({ selected, onChange }) {
             selected?.id === cat.id ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-400'
           }`}
         >
-          <span className="text-xl">🐱</span>
+          <Cat className="w-5 h-5" />
           <span className="max-w-12 truncate">{cat.name}</span>
         </button>
       ))}

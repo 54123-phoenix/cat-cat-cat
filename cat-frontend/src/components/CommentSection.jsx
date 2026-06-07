@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { MessageCircle, Send } from 'lucide-react'
 import { getPostComments, createComment, getStoredUser } from '../api'
+import Avatar from './Avatar'
 
 const MOCK_USERS = [
   { id: 101, nickname: '橘猫守护者', avatar: null },
@@ -17,44 +18,31 @@ function getUserDisplay(user) {
   return { nickname: `铲屎官 #${user?.id || '?'}` }
 }
 
-const AVATAR_COLORS = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-pink-100 text-pink-600']
-
-function Avatar({ user, size = 'sm' }) {
-  const display = getUserDisplay(user)
-  const colorIndex = (user?.id || 0) % AVATAR_COLORS.length
-  const sizeClass = size === 'sm' ? 'w-6 h-6 text-xs' : 'w-8 h-8 text-sm'
-
-  if (user?.avatar) {
-    return (
-      <img src={user.avatar} alt="" className={`${sizeClass} rounded-full object-cover`} />
-    )
-  }
-
-  const initial = (display.nickname?.[0] || '?').toUpperCase()
-  return (
-    <div className={`${sizeClass} rounded-full ${AVATAR_COLORS[colorIndex]} flex items-center justify-center font-semibold shrink-0`}>
-      {initial}
-    </div>
-  )
-}
-
 export default function CommentSection({ postId, initialCount = 0 }) {
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const requestIdRef = useRef(0)
 
   async function loadComments() {
-    if (loading) return
+    const rid = ++requestIdRef.current
     setLoading(true)
     try {
       const data = await getPostComments(postId)
-      setComments(Array.isArray(data) ? data : [])
+      // Only update if this is still the latest request
+      if (rid === requestIdRef.current) {
+        setComments(Array.isArray(data) ? data : [])
+      }
     } catch {
-      setComments([])
+      if (rid === requestIdRef.current) {
+        setComments([])
+      }
     } finally {
-      setLoading(false)
+      if (rid === requestIdRef.current) {
+        setLoading(false)
+      }
     }
   }
 
@@ -107,7 +95,7 @@ export default function CommentSection({ postId, initialCount = 0 }) {
           ) : comments.length > 0 ? (
             comments.map((c) => (
               <div key={c.id} className="flex gap-2">
-                <Avatar user={c.user} />
+                <Avatar user={c.user} size="xs" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-text-secondary">{getUserDisplay(c.user).nickname}</span>
@@ -117,13 +105,13 @@ export default function CommentSection({ postId, initialCount = 0 }) {
                 </div>
               </div>
             ))
-          ) : !loading && (
+          ) : (
             <p className="text-xs text-text-muted text-center py-2">还没有评论，来说两句吧</p>
           )}
 
           {/* Comment input */}
           <form onSubmit={handleSubmit} className="flex gap-2 items-end pt-1">
-            <Avatar user={getStoredUser()} />
+            <Avatar user={getStoredUser()} size="xs" />
             <div className="flex-1 flex gap-2">
               <input
                 value={text}

@@ -132,7 +132,7 @@ export default function Profile() {
         {earnedBadges.length > 0 ? (
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
             {earnedBadges.slice(0, 8).map((b) => {
-              const def = BADGE_DISPLAY[b.badge_key] || { emoji: '🎖️', name: b.badge_key }
+              const def = BADGE_DISPLAY[b.badge_key] || { name: b.badge_key }
               return (
                 <BadgeCard
                   key={b.badge_key}
@@ -167,7 +167,7 @@ export default function Profile() {
         {earnedBadges.length > 0 && earnedBadges.length < totalBadges && (
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
             {badges.filter((b) => !b.earned).slice(0, 4).map((b) => {
-              const def = BADGE_DISPLAY[b.badge_key] || { emoji: '🔒', name: b.badge_key }
+              const def = BADGE_DISPLAY[b.badge_key] || { name: b.badge_key }
               return (
                 <BadgeCard
                   key={b.badge_key}
@@ -215,16 +215,16 @@ export default function Profile() {
 }
 
 const BADGE_DISPLAY = {
-  first_sighting: { emoji: '👀', name: '初次偶遇' },
-  cat_observer: { emoji: '🔭', name: '观察员' },
-  cat_expert: { emoji: '🎯', name: '专家' },
-  first_post: { emoji: '📝', name: '首帖' },
-  community_helper: { emoji: '💬', name: '热心人' },
-  community_star: { emoji: '⭐', name: '社区之星' },
-  cat_collector: { emoji: '🏆', name: '收藏家' },
-  cat_master: { emoji: '👑', name: '大师' },
-  new_cat_finder: { emoji: '🐾', name: '发现者' },
-  photography_first: { emoji: '📸', name: '摄影' },
-  map_explorer: { emoji: '🗺️', name: '探索者' },
-  collection_complete: { emoji: '✨', name: '全收集' },
+  first_sighting: { name: '初次偶遇' },
+  cat_observer: { name: '观察员' },
+  cat_expert: { name: '专家' },
+  first_post: { name: '首帖' },
+  community_helper: { name: '热心人' },
+  community_star: { name: '社区之星' },
+  cat_collector: { name: '收藏家' },
+  cat_master: { name: '大师' },
+  new_cat_finder: { name: '发现者' },
+  photography_first: { name: '摄影' },
+  map_explorer: { name: '探索者' },
+  collection_complete: { name: '全收集' },
 }

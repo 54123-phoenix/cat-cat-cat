@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Cat } from 'lucide-react'
+import { Cat, MapPin } from 'lucide-react'
 
 function formatTime(value) {
   if (!value) return '刚刚'
@@ -26,7 +26,7 @@ export default function FeedItem({ sighting }) {
           <p className="text-sm font-medium text-gray-800 truncate">{sighting.cat?.name || '校园猫猫'}</p>
           <span className="text-xs text-gray-400 shrink-0">{formatTime(sighting.created_at)}</span>
         </div>
-        <p className="text-xs text-gray-400 mt-0.5">📍 {sighting.location_name || sighting.location || '校园某处'}</p>
+        <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{sighting.location_name || sighting.location || '校园某处'}</p>
         {sighting.note && <p className="text-xs text-gray-500 mt-1 truncate">“{sighting.note}”</p>}
       </div>
     </div>

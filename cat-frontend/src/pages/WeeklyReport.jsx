@@ -68,7 +68,7 @@ export default function WeeklyReport() {
               <p className="text-xs text-text-secondary">数据说明</p>
               <p className="text-sm text-text-secondary leading-relaxed">
                 本周你共记录了 {report.total_sightings} 次偶遇，遇见了 {report.unique_cats} 只不同的猫猫。
-                {report.streak_days > 1 ? ` 连续 {report.streak_days} 天都有记录，继续保持！` : ' 明天也要去校园转转哦 🐱'}
+                {report.streak_days > 1 ? ` 连续 ${report.streak_days} 天都有记录，继续保持！` : ' 明天也要去校园转转哦'}
               </p>
             </div>
           </>

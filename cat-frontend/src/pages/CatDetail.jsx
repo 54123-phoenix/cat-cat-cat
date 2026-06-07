@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
-import { Cat, PawPrint } from 'lucide-react'
+import { Cat, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin } from 'lucide-react'
 import { getCat, getSightings, getHealthRecords } from '../api'
 
 function formatTime(value) {
@@ -19,13 +19,13 @@ function formatDate(value) {
   return new Date(value).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric' })
 }
 
-const RECORD_TYPE_LABEL = {
-  vaccine: '💉 疫苗',
-  deworm: '🪱 驱虫',
-  sterilization: '✂️ 绝育',
-  injury: '🩹 伤病',
-  illness: '🤒 疾病',
-  checkup: '🏥 体检',
+const RECORD_TYPE_ICON = {
+  vaccine: Syringe,
+  deworm: Stethoscope,
+  sterilization: Scissors,
+  injury: Bandage,
+  illness: Stethoscope,
+  checkup: Stethoscope,
 }
 
 export default function CatDetail() {
@@ -154,10 +154,12 @@ export default function CatDetail() {
         <section className="space-y-3">
           <h2 className="font-bold text-lg text-text">健康记录</h2>
           <div className="space-y-2">
-            {healthRecords.map((r) => (
+            {healthRecords.map((r) => {
+              const IconComp = RECORD_TYPE_ICON[r.record_type] || Stethoscope
+              return (
               <div key={r.id} className="card flex items-start gap-3">
-                <span className="text-lg shrink-0 mt-0.5">
-                  {RECORD_TYPE_LABEL[r.record_type]?.split(' ')[0] || '🏥'}
+                <span className="shrink-0 mt-0.5 text-primary-light">
+                  <IconComp className="w-5 h-5 text-primary/60" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
@@ -165,10 +167,11 @@ export default function CatDetail() {
                     <span className="text-xs text-text-secondary shrink-0">{formatDate(r.record_date)}</span>
                   </div>
                   {r.description && <p className="text-xs text-text-secondary mt-0.5">{r.description}</p>}
-                  {r.location && <p className="text-xs text-text-muted mt-0.5">📍 {r.location}</p>}
+                  {r.location && <p className="text-xs text-text-muted mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{r.location}</p>}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       )}
