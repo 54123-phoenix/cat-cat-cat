@@ -78,6 +78,7 @@ class Sighting(Base):
     latitude = Column(Float)
     longitude = Column(Float)
     confidence = Column(Float)
+    activity_type = Column(String(20))
     note = Column(Text)
     spotted_by = Column(String(50))
     created_at = Column(DateTime, default=datetime.now)
@@ -222,3 +223,12 @@ class AuditLog(Base):
     new_value = Column(Text)
     performed_by = Column(String(50), nullable=False)
     created_at = Column(DateTime, default=datetime.now)
+
+
+class UserCatFollow(Base):
+    __tablename__ = "user_cat_follows"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.now)
+    __table_args__ = (UniqueConstraint("user_id", "cat_id", name="uq_user_cat_follow"),)

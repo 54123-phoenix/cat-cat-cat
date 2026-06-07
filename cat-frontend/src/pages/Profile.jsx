@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { User, Award, MapPin, Cat, PawPrint } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
-import { getUserProfile, getCats, getStoredUser } from '../api'
+import { getUserProfile, getCats, getFollowedCats, getStoredUser } from '../api'
 
 const BADGE_DISPLAY = {
   first_sighting: { name: '初次偶遇' },
@@ -23,6 +23,7 @@ const BADGE_DISPLAY = {
 export default function Profile() {
   const [user, setUser] = useState(null)
   const [cats, setCats] = useState([])
+  const [followedCats, setFollowedCats] = useState([])
   const [badges, setBadges] = useState([])
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
@@ -38,10 +39,12 @@ export default function Profile() {
     Promise.all([
       getUserProfile(),
       getCats(),
+      getFollowedCats().catch(() => []),
     ])
-      .then(([userData, catsData]) => {
+      .then(([userData, catsData, followedData]) => {
         setUser(userData)
         setCats(Array.isArray(catsData) ? catsData : [])
+        setFollowedCats(Array.isArray(followedData) ? followedData : [])
         setBadges(userData.badges || [])
       })
       .catch((err) => {
@@ -252,6 +255,46 @@ export default function Profile() {
             </p>
             <p className="text-text-secondary text-xs">
               去首页拍照，发现校园里的猫吧！
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Followed Cats */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold text-text">
+            关注的猫猫
+          </h3>
+          <span className="text-sm text-text-secondary font-medium">
+            {followedCats.length}
+          </span>
+        </div>
+
+        {followedCats.length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-4 px-4 pb-2">
+            {followedCats.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(`/cats/${cat.id}`)}
+                className="flex-shrink-0 w-20 text-center space-y-1.5"
+              >
+                <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center overflow-hidden mx-auto">
+                  {cat.avatar ? (
+                    <img src={cat.avatar} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <Cat className="w-6 h-6 text-primary/30" />
+                  )}
+                </div>
+                <p className="text-xs font-medium text-text truncate">{cat.name}</p>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="card p-5 text-center space-y-2">
+            <Cat className="w-8 h-8 text-text-muted mx-auto" />
+            <p className="text-sm text-text-secondary">
+              去猫猫档案页关注你喜欢的猫吧
             </p>
           </div>
         )}

@@ -70,6 +70,8 @@ class SightingBase(BaseModel):
     cat_id: int
     location: Optional[str] = None
     confidence: Optional[float] = None
+    activity_type: Optional[str] = None
+    note: Optional[str] = None
 
 
 class SightingCreate(SightingBase):
@@ -79,6 +81,10 @@ class SightingCreate(SightingBase):
 class SightingResponse(SightingBase):
     id: int
     image_path: Optional[str]
+    activity_type: Optional[str] = None
+    note: Optional[str] = None
+    spotted_by: Optional[str] = None
+    location_name: Optional[str] = None
     created_at: datetime
     cat: Optional[CatListResponse] = None
 
@@ -357,3 +363,16 @@ class AuditLogResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class FollowResponse(BaseModel):
+    id: int
+    cat_id: int
+    cat_name: Optional[str] = None
+    cat_avatar: Optional[str] = None
+    created_at: datetime
+    class Config: from_attributes = True
+
+
+class FollowCreate(BaseModel):
+    pass

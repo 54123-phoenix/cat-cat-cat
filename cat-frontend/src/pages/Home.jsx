@@ -17,6 +17,13 @@ function greeting() {
   return '夜深了，猫猫们该休息了'
 }
 
+const ACTIVITY_TYPES = [
+  { value: 'eating', emoji: '🍽️', label: '在吃饭' },
+  { value: 'sleeping', emoji: '😴', label: '在睡觉' },
+  { value: 'fighting', emoji: '⚔️', label: '在打架' },
+  { value: 'playing', emoji: '🎾', label: '在玩耍' },
+]
+
 export default function Home() {
   const [cats, setCats] = useState([])
   const [featured, setFeatured] = useState(null)
@@ -25,6 +32,9 @@ export default function Home() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showScan, setShowScan] = useState(false)
+  const [showActivityPicker, setShowActivityPicker] = useState(false)
+  const [lastSightingCatId, setLastSightingCatId] = useState(null)
+  const [activitySuccess, setActivitySuccess] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -45,8 +55,24 @@ export default function Home() {
 
   async function handleCapture(file) {
     const res = await recognize(file)
-    try { await createSighting({ catId: res.cat_id, confidence: res.confidence, file }) } catch (e) {}
+    try {
+      await createSighting({ catId: res.cat_id, confidence: res.confidence, file })
+    } catch (e) {}
+    if (res.cat_id) {
+      setLastSightingCatId(res.cat_id)
+    }
     return res
+  }
+
+  async function handleActivityQuick(activityType) {
+    if (!lastSightingCatId) return
+    try {
+      await createSighting({ catId: lastSightingCatId, activity_type: activityType })
+      setActivitySuccess(activityType)
+      setTimeout(() => setActivitySuccess(null), 1500)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
@@ -203,14 +229,51 @@ export default function Home() {
           <div className="flex flex-col items-center pt-12 px-4">
             <ScanView
               onCapture={handleCapture}
-              onResultClose={() => setShowScan(false)}
+              onResultClose={() => { setShowScan(false); if (lastSightingCatId) setShowActivityPicker(true) }}
             />
             <button
-              onClick={() => setShowScan(false)}
+              onClick={() => { setShowScan(false); if (lastSightingCatId) setShowActivityPicker(true) }}
               className="mt-6 text-sm text-text-secondary underline underline-offset-4"
             >
               关闭
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Activity quick picker */}
+      {showActivityPicker && !showScan && (
+        <div className="fixed bottom-20 left-0 right-0 z-40 animate-slide-up">
+          <div className="max-w-[480px] mx-auto px-4">
+            {activitySuccess ? (
+              <div className="bg-primary text-white rounded-2xl px-5 py-4 shadow-lg text-center paw-trail-success">
+                <span className="text-lg font-bold">
+                  {ACTIVITY_TYPES.find(t => t.value === activitySuccess)?.emoji} 已记录！
+                </span>
+              </div>
+            ) : (
+              <div className="bg-white/95 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-primary/20">
+                <p className="text-xs text-text-secondary text-center mb-2">快速记录活动</p>
+                <div className="flex justify-center gap-3">
+                  {ACTIVITY_TYPES.map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => handleActivityQuick(t.value)}
+                      className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl bg-primary-light active:bg-primary/20 transition-colors"
+                    >
+                      <span className="text-xl">{t.emoji}</span>
+                      <span className="text-xs text-text font-medium">{t.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowActivityPicker(false)}
+                  className="w-full mt-2 text-xs text-text-secondary py-1"
+                >
+                  忽略
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

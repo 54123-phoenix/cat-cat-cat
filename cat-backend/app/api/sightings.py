@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app import crud, schemas
+from app import crud, schemas, models
 
 router = APIRouter(prefix="/api/sightings", tags=["sightings"])
 
@@ -30,6 +30,8 @@ async def create_sighting(
     cat_id: int = Form(...),
     location: Optional[str] = Form(None),
     confidence: Optional[float] = Form(None),
+    activity_type: Optional[str] = Form(None),
+    note: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
@@ -46,5 +48,21 @@ async def create_sighting(
 
         image_path = f"/uploads/sightings/{filename}"
 
-    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence)
-    return crud.create_sighting(db, sighting, image_path=image_path)
+    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence, activity_type=activity_type, note=note)
+    db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by="铲屎官")
+
+    cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()
+    if cat:
+        follows = db.query(models.UserCatFollow).filter(models.UserCatFollow.cat_id == cat_id).all()
+        for f in follows:
+            crud.create_notification(
+                db,
+                user_id=f.user_id,
+                notification_type="cat_update",
+                title=f"{cat.name} 有新动态",
+                content=f"{cat.name} 被观察到{activity_type or '出现了'}，去看看吧",
+                related_id=cat_id,
+                related_type="cat",
+            )
+
+    return db_sighting

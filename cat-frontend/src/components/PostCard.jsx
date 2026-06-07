@@ -24,6 +24,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   const [liked, setLiked] = useState(Boolean(post.liked))
   const [likes, setLikes] = useState(post.likes || 0)
   const [liking, setLiking] = useState(false)
+  const [likeBurst, setLikeBurst] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const mountedRef = useRef(true)
@@ -41,6 +42,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
     setLiked(nextLiked)
     setLikes((value) => Math.max(0, value + (nextLiked ? 1 : -1)))
     setLiking(true)
+    if (nextLiked) {
+      setLikeBurst(true)
+      setTimeout(() => { if (mountedRef.current) setLikeBurst(false) }, 500)
+    }
     try {
       await likePost(post.id)
     } catch {
@@ -144,9 +149,16 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
       )}
 
       <div className="flex items-center gap-4 pt-1 border-t border-gray-50">
-        <button onClick={handleLike} className={`flex items-center gap-1.5 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
+        <button onClick={handleLike} className={`relative flex items-center gap-1.5 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
+          {likeBurst && (
+            <>
+              <span className="absolute -top-3 left-1 animate-burst-up font-bold">🐟</span>
+              <span className="absolute -top-3 right-1 animate-burst-up" style={{ animationDelay: '0.1s' }}>🐟</span>
+              <span className="absolute -top-4 left-1/2 -translate-x-1/2 animate-burst-up" style={{ animationDelay: '0.15s' }}>❤️</span>
+            </>
+          )}
         </button>
         <button onClick={goToDetail} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors">
           <MessageCircle className="w-3.5 h-3.5" />

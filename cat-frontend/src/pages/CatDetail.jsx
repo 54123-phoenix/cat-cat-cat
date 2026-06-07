@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
-import { Cat, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin } from 'lucide-react'
-import { getCat, getSightings, getHealthRecords } from '../api'
+import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin } from 'lucide-react'
+import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../api'
 
 function formatTime(value) {
   if (!value) return ''
@@ -35,6 +35,8 @@ export default function CatDetail() {
   const [healthRecords, setHealthRecords] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [following, setFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -44,6 +46,7 @@ export default function CatDetail() {
       getCat(catId),
       getSightings({ catId, limit: 10 }),
       getHealthRecords(catId),
+      checkFollow(catId).then(r => setFollowing(r.following)).catch(() => {}),
     ])
       .then(([catData, sightingsData, healthData]) => {
         setCat(catData)
@@ -53,6 +56,21 @@ export default function CatDetail() {
       .catch((err) => setError(err.message || '猫猫档案加载失败'))
       .finally(() => setLoading(false))
   }, [catId])
+
+  async function toggleFollow() {
+    if (followLoading) return
+    setFollowLoading(true)
+    const next = !following
+    setFollowing(next)
+    try {
+      if (next) await followCat(catId)
+      else await unfollowCat(catId)
+    } catch {
+      setFollowing(!next)
+    } finally {
+      setFollowLoading(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -88,7 +106,7 @@ export default function CatDetail() {
               <img src={cat.avatar} alt={cat.name} className="w-full h-full object-cover" />
             ) : (
               <Cat className="w-12 h-12 text-primary/30" />
-            )}
+              )}
           </div>
         <div className="p-5 space-y-3">
           <div className="flex items-start justify-between gap-3">
@@ -101,11 +119,20 @@ export default function CatDetail() {
                 <p className="text-text-secondary text-sm mt-1">常出没：{cat.location}</p>
               )}
             </div>
-            {cat.color && (
-              <span className="px-3 py-1 rounded-full bg-primary-light text-primary font-bold text-sm shrink-0">
-                {cat.color}
-              </span>
-            )}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={toggleFollow}
+                disabled={followLoading}
+                className={`rounded-full p-2 transition-colors ${following ? 'bg-red-50 hover:bg-red-100' : 'bg-gray-50 hover:bg-gray-100'}`}
+              >
+                <Heart className={`w-5 h-5 ${following ? 'fill-primary text-primary' : 'text-gray-300'} ${followLoading ? 'animate-like-pop' : ''}`} />
+              </button>
+              {cat.color && (
+                <span className="px-3 py-1 rounded-full bg-primary-light text-primary font-bold text-sm">
+                  {cat.color}
+                </span>
+              )}
+            </div>
           </div>
 
           {personalityTags.length > 0 && (

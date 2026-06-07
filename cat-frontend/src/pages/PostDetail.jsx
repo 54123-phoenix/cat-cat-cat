@@ -31,6 +31,7 @@ export default function PostDetail() {
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(0)
   const [liking, setLiking] = useState(false)
+  const [likeBurst, setLikeBurst] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
@@ -53,6 +54,10 @@ export default function PostDetail() {
     setLiked(nextLiked)
     setLikes((v) => Math.max(0, v + (nextLiked ? 1 : -1)))
     setLiking(true)
+    if (nextLiked) {
+      setLikeBurst(true)
+      setTimeout(() => { if (mountedRef.current) setLikeBurst(false) }, 500)
+    }
     try {
       await likePost(post.id)
     } catch {
@@ -185,9 +190,16 @@ export default function PostDetail() {
 
         {/* Like + Comment count bar */}
         <div className="flex items-center gap-6 py-3 border-t border-b border-gray-100">
-          <button onClick={handleLike} className={`flex items-center gap-2 text-sm transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
+          <button onClick={handleLike} className={`relative flex items-center gap-2 text-sm transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
             <Heart className={`w-5 h-5 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
             <span>{likes} 赞</span>
+            {likeBurst && (
+              <>
+                <span className="absolute -top-3 left-2 animate-burst-up font-bold">🐟</span>
+                <span className="absolute -top-3 right-2 animate-burst-up" style={{ animationDelay: '0.1s' }}>🐟</span>
+                <span className="absolute -top-4 left-1/2 -translate-x-1/2 animate-burst-up" style={{ animationDelay: '0.15s' }}>❤️</span>
+              </>
+            )}
           </button>
           <span className="text-sm text-gray-400">{post.comments || 0} 条评论</span>
         </div>

@@ -1,5 +1,18 @@
 import { Link } from 'react-router-dom'
-import { Cat, MapPin } from 'lucide-react'
+import { Cat, MapPin, Utensils, Moon, Swords, Gamepad2 } from 'lucide-react'
+
+const ACTIVITY_ICON = {
+  eating: Utensils,
+  sleeping: Moon,
+  fighting: Swords,
+  playing: Gamepad2,
+}
+const ACTIVITY_LABEL = {
+  eating: '在吃饭',
+  sleeping: '在睡觉',
+  fighting: '在打架',
+  playing: '在玩耍',
+}
 
 function formatTime(value) {
   if (!value) return '刚刚'
@@ -12,6 +25,7 @@ function formatTime(value) {
 }
 
 export default function FeedItem({ sighting }) {
+  const ActivityIcon = sighting.activity_type ? ACTIVITY_ICON[sighting.activity_type] : null
   const content = (
     <div className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex gap-3 active:bg-orange-50 transition-colors animate-fade-up">
       <div className="w-12 h-12 rounded-xl bg-cat-warm flex items-center justify-center overflow-hidden shrink-0 text-2xl">
@@ -26,6 +40,12 @@ export default function FeedItem({ sighting }) {
           <p className="text-sm font-medium text-gray-800 truncate">{sighting.cat?.name || '校园猫猫'}</p>
           <span className="text-xs text-gray-400 shrink-0">{formatTime(sighting.created_at)}</span>
         </div>
+        {ActivityIcon && (
+          <p className="text-xs text-primary flex items-center gap-1 mt-0.5">
+            <ActivityIcon className="w-3 h-3" />
+            {ACTIVITY_LABEL[sighting.activity_type] || sighting.activity_type}
+          </p>
+        )}
         <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{sighting.location_name || sighting.location || '校园某处'}</p>
         {sighting.note && <p className="text-xs text-gray-500 mt-1 truncate">“{sighting.note}”</p>}
       </div>

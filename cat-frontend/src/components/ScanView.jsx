@@ -102,6 +102,7 @@ export default function ScanView({ onCapture, onResultClose }) {
                 <div className="absolute left-0 right-0 h-1 bg-primary/60 animate-pulse" style={{ top: '50%' }} />
                 <div className="absolute left-0 right-0 h-0.5 bg-primary/30" style={{ top: '30%' }} />
                 <div className="absolute left-0 right-0 h-0.5 bg-primary/30" style={{ top: '70%' }} />
+                <div className="eye-scan-dot" />
               </div>
             </div>
             {/* Pupil animation */}

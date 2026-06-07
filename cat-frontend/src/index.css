@@ -310,6 +310,15 @@
   animation: paw-print 0.4s ease-out forwards;
 }
 
+/* Eye scan dot animation */
+@keyframes eye-scan-dot-move {
+  0% { left: 10%; top: 20%; opacity: 0; }
+  20% { opacity: 1; }
+  50% { left: 70%; top: 60%; opacity: 1; }
+  80% { opacity: 1; }
+  100% { left: 90%; top: 80%; opacity: 0; }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -317,6 +326,120 @@
 ::-webkit-scrollbar-thumb:hover { background: #D6D3D1; }
 
 .amap-container { width: 100%; height: 100%; }
+
+/* === Global Paw Cursor === */
+body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='8' cy='6' r='3' fill='%23F97316'/%3E%3Ccircle cx='16' cy='6' r='3' fill='%23F97316'/%3E%3Ccircle cx='5' cy='14' r='2.5' fill='%23F97316'/%3E%3Ccircle cx='12' cy='12' r='4' fill='%23F97316'/%3E%3Ccircle cx='19' cy='14' r='2.5' fill='%23F97316'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+@media (hover: none) {
+  body { cursor: auto; }
+}
+
+.paw-ripple {
+  position: fixed;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249,115,22,0.3), transparent);
+  pointer-events: none;
+  animation: paw-ripple 0.6s ease-out forwards;
+  z-index: 9999;
+}
+@keyframes paw-ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* === Cat Dash Loading === */
+.cat-dash-loader {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+.cat-dash-silhouette {
+  position: absolute;
+  bottom: 4px;
+  animation: cat-dash-run 1.2s linear infinite;
+  opacity: 0.8;
+}
+@keyframes cat-dash-run {
+  0% { left: -60px; }
+  100% { left: calc(100% + 60px); }
+}
+
+/* === Paw Trail Success === */
+.paw-trail-success {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+@keyframes paw-step {
+  0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+  40% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+  100% { opacity: 0; transform: scale(0.8) rotate(0deg) translate(60px, -60px); }
+}
+.paw-step-dot {
+  position: absolute;
+  width: 24px; height: 24px;
+  animation: paw-step 0.7s ease-out forwards;
+  opacity: 0;
+}
+
+/* === Like Burst === */
+@keyframes like-fish-1 {
+  0% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(0.5); }
+  100% { opacity: 0; transform: translate(-20px, -40px) rotate(-30deg) scale(1.2); }
+}
+@keyframes like-fish-2 {
+  0% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(0.5); }
+  100% { opacity: 0; transform: translate(10px, -50px) rotate(20deg) scale(1.3); }
+}
+@keyframes like-fish-3 {
+  0% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(0.5); }
+  100% { opacity: 0; transform: translate(25px, -35px) rotate(-15deg) scale(1.1); }
+}
+.like-burst-item { position: absolute; font-size: 16px; pointer-events: none; }
+
+/* === Eye Scan Dot === */
+.eye-scan-dot {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #F97316;
+  box-shadow: 0 0 8px #F97316, 0 0 16px rgba(249,115,22,0.5);
+  animation: eye-dot-scan 1.5s ease-in-out infinite;
+}
+@keyframes eye-dot-scan {
+  0% { top: 30%; left: 30%; }
+  25% { top: 60%; left: 50%; }
+  50% { top: 40%; left: 70%; }
+  75% { top: 50%; left: 35%; }
+  100% { top: 30%; left: 30%; }
+}
+
+/* === Tab Slide Transition === */
+.tab-slide-in {
+  animation: tab-slide 0.2s ease-out;
+}
+@keyframes tab-slide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Activity Badges === */
+.activity-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 500;
+}
+.activity-badge-eating { background: #FEF3C7; color: #D97706; }
+.activity-badge-sleeping { background: #E0E7FF; color: #4F46E5; }
+.activity-badge-fighting { background: #FEE2E2; color: #DC2626; }
+.activity-badge-playing { background: #D1FAE5; color: #059669; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

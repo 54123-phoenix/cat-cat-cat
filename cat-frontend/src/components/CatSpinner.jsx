@@ -1,4 +1,4 @@
-export default function CatSpinner({ size = 32 }) {
+export default function CatSpinner({ size = 32, fullPage = false }) {
   const s = size
   const h = s * 0.75
 
@@ -35,6 +35,20 @@ export default function CatSpinner({ size = 32 }) {
           className="animate-tail-wag"
         />
       </svg>
+      {fullPage && (
+        <div className="cat-dash-loader">
+          <div className="cat-dash-silhouette">
+            <svg width="48" height="24" viewBox="0 0 48 24">
+              <ellipse cx="24" cy="16" rx="8" ry="5" fill="#F97316" opacity="0.6" />
+              <circle cx="24" cy="9" r="6" fill="#F97316" opacity="0.6" />
+              <polygon points="20,5 18,0 22,4" fill="#F97316" opacity="0.6" />
+              <polygon points="28,5 30,0 26,4" fill="#F97316" opacity="0.6" />
+              <path d="M32 12 Q38 10 36 6" stroke="#F97316" strokeWidth="2" fill="none" opacity="0.6" />
+              <line x1="16" y1="16" x2="32" y2="16" stroke="#F97316" strokeWidth="1.5" opacity="0.2" />
+            </svg>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

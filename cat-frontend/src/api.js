@@ -130,12 +130,13 @@ export function recognize(file) {
   return request('/recognize', { method: 'POST', body: form })
 }
 
-export function createSighting({ catId, location, confidence, file }) {
+export function createSighting({ catId, location, confidence, file, activity_type }) {
   const form = new FormData()
   form.append('cat_id', catId)
   if (location) form.append('location', location)
   if (confidence !== undefined) form.append('confidence', confidence)
   if (file) form.append('file', file)
+  if (activity_type) form.append('activity_type', activity_type)
   return request('/sightings', { method: 'POST', body: form })
 }
 
@@ -309,4 +310,17 @@ export function markAllNotificationsRead() {
 
 export function getWeeklyReport() {
   return request('/user/weekly-report')
+}
+
+export function followCat(catId) {
+  return request(`/user/follows/${catId}`, { method: 'POST' })
+}
+export function unfollowCat(catId) {
+  return request(`/user/follows/${catId}`, { method: 'DELETE' })
+}
+export function checkFollow(catId) {
+  return request(`/user/follows/${catId}`)
+}
+export function getFollowedCats() {
+  return request('/user/follows')
 }

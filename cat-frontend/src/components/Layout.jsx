@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
 import Sidebar from './Sidebar'
@@ -10,6 +10,16 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const user = useUserStore()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [tabIndex, setTabIndex] = useState(0)
+
+  useEffect(() => {
+    const path = location.pathname
+    if (path === '/') setTabIndex(0)
+    else if (path === '/map') setTabIndex(1)
+    else if (path === '/community') setTabIndex(2)
+    else if (path === '/profile') setTabIndex(3)
+  }, [location.pathname])
 
   useEffect(() => {
     const token = getToken()
@@ -59,7 +69,9 @@ export default function Layout() {
 
       {/* Main content */}
       <main className="px-4 pt-2 pb-4">
-        <Outlet />
+        <div key={location.pathname} className="tab-slide-in">
+          <Outlet />
+        </div>
       </main>
 
       {/* Bottom tab bar */}
