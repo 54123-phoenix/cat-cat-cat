@@ -21,8 +21,8 @@ export default function Feed() {
 
       <div className="p-3 space-y-2">
         {loading ? (
-          <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
-            <div className="text-3xl animate-paw mb-2">🐾</div>
+          <div className="card p-8 text-center text-gray-400">
+            <div className="text-3xl mb-2">🐾</div>
             加载动态中…
           </div>
         ) : sightings.length > 0 ? (
@@ -31,7 +31,7 @@ export default function Feed() {
           <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
             <div className="text-4xl mb-2">🐱</div>
             <p className="text-sm font-medium text-gray-700">还没有偶遇记录</p>
-            <Link to="/scan" className="inline-block mt-3 bg-cat-orange text-white rounded-full px-5 py-2 text-sm font-medium">
+            <Link to="/scan" className="inline-block mt-3 btn btn-primary">
               去拍第一张
             </Link>
           </div>

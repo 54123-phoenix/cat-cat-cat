@@ -29,14 +29,10 @@ export default function Scan() {
   async function saveConfirmedSighting(data) {
     if (!data.cat_id) return
     const file = fileRef.current?.files?.[0]
-    const location = findCampusLocation(selectedLocation)
+    const loc = findCampusLocation(selectedLocation)
     await createSighting({
       catId: data.cat_id,
-      location: location.name,
-      locationName: location.name,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      spottedBy: '猫猫爱好者',
+      location: loc?.name || selectedLocation,
       confidence: data.confidence,
       file,
     })
@@ -103,16 +99,16 @@ export default function Scan() {
           <select
             value={selectedLocation}
             onChange={(event) => setSelectedLocation(event.target.value)}
-            className="mt-1 w-full bg-cat-warm rounded-full px-3 py-2 text-sm text-gray-700 outline-none"
+            className="mt-1 w-full bg-primary-light rounded-full px-3 py-2 text-sm text-gray-700 outline-none"
           >
             {campusLocations.map((location) => <option key={location.name} value={location.name}>{location.name}</option>)}
           </select>
         </label>
 
         {phase === 'idle' ? (
-          <label className="block border-2 border-dashed border-cat-orange rounded-xl p-8 text-center cursor-pointer bg-cat-warm active:bg-orange-100">
+          <label className="block border-2 border-dashed border-primary rounded-xl p-8 text-center cursor-pointer bg-primary-light active:bg-orange-100">
             <div className="text-4xl mb-2">📷</div>
-            <div className="text-cat-orange font-medium">拍照或上传图片</div>
+            <div className="text-primary font-medium">拍照或上传图片</div>
             <div className="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</div>
             <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFileChange} />
           </label>
@@ -128,7 +124,7 @@ export default function Scan() {
         ) : null}
 
         {phase === 'ready' && (
-          <button onClick={handleIdentify} className="w-full bg-cat-orange text-white rounded-full py-3.5 font-medium text-base active:opacity-90">
+          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90">
             开始识别 ✨
           </button>
         )}
@@ -149,7 +145,7 @@ export default function Scan() {
             </div>
             <div className="bg-white rounded-xl border border-gray-100 p-4">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-14 h-14 rounded-2xl bg-cat-warm flex items-center justify-center text-3xl">🐱</div>
+                <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center text-3xl">🐱</div>
                 <div>
                   <div className="text-base font-medium">{result.cat_name || '校园猫猫'}</div>
                   <div className="text-xs text-green-500 mt-0.5">高置信度匹配</div>
@@ -157,10 +153,10 @@ export default function Scan() {
               </div>
               <ConfidenceBar value={result.confidence} />
             </div>
-            <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-cat-orange text-white rounded-full py-3 font-medium text-sm">
+            <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-primary text-white rounded-full py-3 font-medium text-sm">
               查看猫猫档案
             </button>
-            <button onClick={reset} className="w-full border border-cat-orange text-cat-orange rounded-full py-3 font-medium text-sm">
+            <button onClick={reset} className="w-full border border-primary text-primary rounded-full py-3 font-medium text-sm">
               重新识别
             </button>
           </div>
@@ -173,7 +169,7 @@ export default function Scan() {
             </div>
             {result.candidates?.map((candidate) => (
               <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
-                <div className="w-12 h-12 rounded-xl bg-cat-warm flex items-center justify-center text-2xl">🐱</div>
+                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center text-2xl">🐱</div>
                 <div className="flex-1">
                   <div className="text-sm font-medium">{candidate.cat_name}</div>
                   <ConfidenceBar value={candidate.confidence} />
@@ -204,7 +200,7 @@ export default function Scan() {
                   placeholder="补充描述：毛色、状态、你在哪里看到它..."
                   className="w-full h-24 text-sm text-gray-700 border border-gray-100 rounded-xl p-3 outline-none resize-none mb-3"
                 />
-                <button onClick={submitDiscovery} className="w-full bg-cat-orange text-white rounded-full py-3 text-sm font-medium">
+                <button onClick={submitDiscovery} className="w-full bg-primary text-white rounded-full py-3 text-sm font-medium">
                   提交给 AI 与猫协审核 →
                 </button>
               </>

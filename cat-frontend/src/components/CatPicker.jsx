@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { fetchCats } from '../api'
+import { getCats } from '../api'
 
 export default function CatPicker({ selected, onChange }) {
   const [cats, setCats] = useState([])
 
   useEffect(() => {
-    fetchCats().then(setCats).catch(console.error)
+    getCats().then(setCats).catch(console.error)
   }, [])
 
   return (
@@ -13,7 +13,7 @@ export default function CatPicker({ selected, onChange }) {
       <button
         onClick={() => onChange(null)}
         className={`flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl border text-xs transition-colors ${
-          !selected ? 'border-cat-orange bg-cat-warm text-orange-800' : 'border-gray-100 text-gray-400'
+          !selected ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-400'
         }`}
       >
         <span className="text-xl">🐾</span>
@@ -25,7 +25,7 @@ export default function CatPicker({ selected, onChange }) {
           key={cat.id}
           onClick={() => onChange(cat)}
           className={`flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl border text-xs transition-colors ${
-            selected?.id === cat.id ? 'border-cat-orange bg-cat-warm text-orange-800' : 'border-gray-100 text-gray-400'
+            selected?.id === cat.id ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-400'
           }`}
         >
           <span className="text-xl">🐱</span>

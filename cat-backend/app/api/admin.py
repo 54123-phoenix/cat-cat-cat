@@ -1,15 +1,17 @@
-import hmac
 import os
-import secrets
-import time
-from hashlib import sha256
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models import User
+from app.api.auth import require_admin, create_token
+from passlib.context import CryptContext
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
-TOKEN_TTL_SECONDS = 60 * 60 * 12
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AdminLoginRequest(BaseModel):
@@ -18,58 +20,28 @@ class AdminLoginRequest(BaseModel):
 
 class AdminLoginResponse(BaseModel):
     token: str
-
     token_type: str = "bearer"
 
 
-def _admin_password() -> str:
-    return os.getenv("ADMIN_PASSWORD", "cat-admin")
-
-
-def _admin_secret() -> str:
-    return os.getenv("ADMIN_SECRET", _admin_password())
-
-
-def _sign(payload: str) -> str:
-    return hmac.new(_admin_secret().encode("utf-8"), payload.encode("utf-8"), sha256).hexdigest()
-
-
-def _create_token() -> str:
-    expires_at = int(time.time()) + TOKEN_TTL_SECONDS
-    nonce = secrets.token_urlsafe(12)
-    payload = f"{expires_at}.{nonce}"
-    return f"{payload}.{_sign(payload)}"
-
-
-def require_admin(authorization: str = Header(default="")) -> None:
-    prefix = "Bearer "
-    if not authorization.startswith(prefix):
-        raise HTTPException(status_code=401, detail="Admin authorization required")
-
-    token = authorization[len(prefix):]
-    parts = token.split(".")
-    if len(parts) != 3:
-        raise HTTPException(status_code=401, detail="Invalid admin token")
-
-    expires_at, nonce, signature = parts
-    payload = f"{expires_at}.{nonce}"
-    if not hmac.compare_digest(signature, _sign(payload)):
-        raise HTTPException(status_code=401, detail="Invalid admin token")
-
-    try:
-        if int(expires_at) < int(time.time()):
-            raise HTTPException(status_code=401, detail="Admin token expired")
-    except ValueError as exc:
-        raise HTTPException(status_code=401, detail="Invalid admin token") from exc
-
-
 @router.post("/login", response_model=AdminLoginResponse)
-def login(payload: AdminLoginRequest):
-    if not hmac.compare_digest(payload.password, _admin_password()):
+def login(payload: AdminLoginRequest, db: Session = Depends(get_db)):
+    expected = os.getenv("ADMIN_PASSWORD", "cat-admin")
+    if payload.password != expected:
         raise HTTPException(status_code=401, detail="Invalid admin password")
-    return AdminLoginResponse(token=_create_token())
+    user = db.query(User).filter(User.role == "admin").first()
+    if not user:
+        user = User(
+            username="admin",
+            password_hash=pwd_context.hash(payload.password),
+            nickname="猫协管理员",
+            role="admin",
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    return AdminLoginResponse(token=create_token(user))
 
 
 @router.get("/me")
-def me(_: None = Depends(require_admin)):
-    return {"role": "admin"}
+def me(user: User = Depends(require_admin)):
+    return {"role": user.role, "nickname": user.nickname}

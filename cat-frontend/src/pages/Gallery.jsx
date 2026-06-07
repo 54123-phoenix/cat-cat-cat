@@ -30,7 +30,7 @@ export default function Gallery() {
       <div className="p-3">
         {loading ? (
           <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
-            <div className="text-3xl animate-paw mb-2">🐾</div>
+            <div className="text-3xl mb-2">🐾</div>
             加载照片中…
           </div>
         ) : error ? (
@@ -41,7 +41,7 @@ export default function Gallery() {
           <div className="grid grid-cols-2 gap-2.5">
             {images.map((image) => (
               <Link key={image.id} to={image.cat_id ? `/cats/${image.cat_id}` : '/gallery'} className="bg-white rounded-xl border border-gray-100 overflow-hidden active:scale-95 transition-transform">
-                <div className="aspect-square bg-cat-warm overflow-hidden flex items-center justify-center text-4xl">
+                <div className="aspect-square bg-primary-light overflow-hidden flex items-center justify-center text-4xl">
                   <img
                     src={image.image_path}
                     alt={image.cat?.name || '猫猫照片'}
@@ -63,7 +63,7 @@ export default function Gallery() {
           <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
             <div className="text-4xl mb-2">🖼️</div>
             <p className="text-sm font-medium text-gray-700">还没有参考照片</p>
-            <Link to="/admin" className="inline-block mt-3 bg-cat-orange text-white rounded-full px-5 py-2 text-sm font-medium">
+            <Link to="/admin" className="inline-block mt-3 bg-primary text-white rounded-full px-5 py-2 text-sm font-medium">
               去上传照片
             </Link>
           </div>

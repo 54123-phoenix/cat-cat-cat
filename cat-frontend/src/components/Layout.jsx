@@ -1,22 +1,37 @@
 import { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
 import Sidebar from './Sidebar'
-import { getUserProfile } from '../api'
+import { getUserProfile, getToken, clearToken, setToken, getStoredUser } from '../api'
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(getStoredUser)
+  const navigate = useNavigate()
 
   useEffect(() => {
+    const token = getToken()
+    if (!token) {
+      navigate('/login')
+      return
+    }
     getUserProfile()
-      .then(setUser)
+      .then((u) => {
+        setUser(u)
+        setToken(token, u)
+      })
       .catch(() => {
-        // Fallback user
-        setUser({ nickname: '猫猫爱好者', avatar: null })
+        clearToken()
+        navigate('/login')
       })
   }, [])
+
+  const handleLogout = () => {
+    clearToken()
+    setUser(null)
+    navigate('/login')
+  }
 
   return (
     <div className="min-h-screen max-w-[480px] mx-auto bg-warm-50 pb-16">
@@ -54,6 +69,7 @@ export default function Layout() {
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
         user={user}
+        onLogout={handleLogout}
       />
     </div>
   )

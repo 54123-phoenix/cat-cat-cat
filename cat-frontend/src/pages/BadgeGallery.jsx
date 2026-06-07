@@ -1,0 +1,139 @@
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
+import { getBadges } from '../api'
+
+const SERIES_LABEL = {
+  sighting: { name: '偶遇系列', icon: '👀' },
+  community: { name: '社区系列', icon: '📝' },
+  collect: { name: '收集系列', icon: '🏆' },
+  special: { name: '特殊成就', icon: '✨' },
+}
+
+function getBadgeFromApi(b) {
+  return b
+}
+
+export default function BadgeGallery() {
+  const [badges, setBadges] = useState([])
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    getBadges()
+      .then((data) => {
+        if (Array.isArray(data)) setBadges(data)
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
+
+  const grouped = {}
+  badges.forEach((b) => {
+    const series = b.series || 'special'
+    if (!grouped[series]) grouped[series] = []
+    grouped[series].push(b)
+  })
+
+  const earned = badges.filter((b) => b.earned).length
+  const total = badges.length
+
+  return (
+    <div className="min-h-screen bg-warm-50">
+      <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-b border-border">
+        <button onClick={() => navigate(-1)} className="p-1 -ml-1 rounded-lg hover:bg-primary-light transition-colors">
+          <ArrowLeft className="w-5 h-5 text-text" />
+        </button>
+        <div>
+          <h1 className="text-lg font-bold text-text">勋章库</h1>
+          <p className="text-xs text-text-secondary">
+            {loading ? '加载中…' : `已获得 ${earned}/${total}`}
+          </p>
+        </div>
+      </header>
+
+      {loading ? (
+        <div className="p-4 space-y-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="space-y-2">
+              <div className="h-5 w-24 skeleton" />
+              {[1, 2, 3].map((j) => (
+                <div key={j} className="h-16 skeleton" />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="p-4 space-y-6">
+          {Object.entries(grouped).map(([seriesKey, items]) => {
+            const info = SERIES_LABEL[seriesKey] || { name: seriesKey, icon: '🎖️' }
+            return (
+              <section key={seriesKey} className="space-y-2">
+                <h2 className="font-bold text-text flex items-center gap-2">
+                  <span>{info.icon}</span>
+                  {info.name}
+                </h2>
+                <div className="space-y-2">
+                  {items.map((badge) => {
+                    const isEarned = badge.earned
+                    const pct = badge.progress_total > 0
+                      ? Math.round((badge.progress_current / badge.progress_total) * 100)
+                      : 0
+
+                    return (
+                      <div
+                        key={badge.badge_key}
+                        className={`card flex items-center gap-4 ${
+                          isEarned ? 'badge-earned' : 'opacity-60'
+                        }`}
+                      >
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${
+                          isEarned ? 'bg-primary-light' : 'bg-gray-100'
+                        }`}>
+                          {badge.emoji || '🎖️'}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className={`font-semibold text-sm ${isEarned ? 'text-text' : 'text-text-secondary'}`}>
+                              {badge.name}
+                            </span>
+                            {isEarned && (
+                              <span className="text-[10px] text-success font-medium shrink-0">已获得</span>
+                            )}
+                          </div>
+                          <p className="text-xs text-text-secondary mt-0.5">
+                            {badge.condition_text}
+                          </p>
+                          {!isEarned && badge.progress_total > 1 && (
+                            <div className="mt-1.5 flex items-center gap-2">
+                              <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-primary rounded-full transition-all duration-700"
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className="text-[10px] text-text-secondary shrink-0">
+                                {badge.progress_current}/{badge.progress_total}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })}
+
+          {badges.length === 0 && (
+            <div className="card p-8 text-center space-y-2">
+              <span className="text-4xl">🏅</span>
+              <p className="text-text-secondary text-sm">暂无勋章数据</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
