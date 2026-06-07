@@ -3,7 +3,7 @@ import AMapLoader from '@amap/amap-jsapi-loader'
 import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 
-const AMAP_KEY = import.meta.env.VITE_AMAP_KEY || '8bb4b6d1e109f76821e371e059623c22'
+const AMAP_KEY = '8bb4b6d1e109f76821e371e059623c22'
 const campusCenter = [121.5068, 31.3005]
 
 // WGS-84 → GCJ-02
@@ -63,6 +63,8 @@ export default function Map() {
 
   useEffect(() => {
     let map = null
+    setError(null)
+    setLoading(true)
 
     AMapLoader.load({
       key: AMAP_KEY,
@@ -148,29 +150,26 @@ export default function Map() {
     return () => clearTimeout(timer)
   }, [showGeoModal])
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
-        <CatSpinner size={36} />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 px-4">
-          <HelpCircle className="w-10 h-10 text-text-muted" />
-          <p className="text-stone-500 text-center">{error}</p>
-        <p className="text-stone-400 text-sm text-center">
-          请前往 <a href="https://console.amap.com/dev/key/app" target="_blank" rel="noreferrer" className="text-primary underline">高德开放平台</a> 申请有效的 API Key
-        </p>
-      </div>
-    )
-  }
-
   return (
     <div className="fixed inset-0 z-30 top-[52px] bottom-16">
+      {/* Map container - always rendered so ref is always available */}
       <div ref={mapRef} className="w-full h-full amap-container" />
+
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-warm-50/80">
+          <CatSpinner size={36} />
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-4 bg-warm-50/90">
+          <HelpCircle className="w-10 h-10 text-text-muted" />
+          <p className="text-stone-500 text-center">{error}</p>
+          <p className="text-stone-400 text-sm text-center">
+            请前往 <a href="https://console.amap.com/dev/key/app" target="_blank" rel="noreferrer" className="text-primary underline">高德开放平台</a> 申请有效的 API Key
+          </p>
+        </div>
+      )}
 
       {showGeoModal && (
         <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6" onClick={handleSkipLocation}>
