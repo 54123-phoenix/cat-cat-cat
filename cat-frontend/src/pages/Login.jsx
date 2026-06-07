@@ -98,10 +98,12 @@ export default function Login({ onLogin }) {
           </button>
         </p>
 
-        <div className="text-center text-xs text-text-secondary space-y-1">
-          <p>演示账号：demo / demo123</p>
-          <p>管理员：admin / cat-admin</p>
-        </div>
+        {import.meta.env.DEV && (
+          <div className="text-center text-xs text-text-secondary space-y-1">
+            <p>演示账号：demo / demo123</p>
+            <p>管理员：admin / cat-admin</p>
+          </div>
+        )}
       </div>
     </div>
   )

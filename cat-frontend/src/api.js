@@ -28,12 +28,24 @@ async function request(url, options = {}) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }
-  const res = await fetch(`${API_BASE}${url}`, { ...options, headers })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: '请求失败' }))
-    throw new Error(err.detail || `HTTP ${res.status}`)
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 30000)
+
+  try {
+    const res = await fetch(`${API_BASE}${url}`, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: '请求失败' }))
+      throw new Error(err.detail || `HTTP ${res.status}`)
+    }
+    return res.json()
+  } finally {
+    clearTimeout(timeoutId)
   }
-  return res.json()
 }
 
 // Auth
@@ -168,24 +180,10 @@ export function getPosts(params = {}) {
 }
 
 export function createPost(data) {
-  if (data instanceof FormData) {
-    const token = getToken()
-    return fetch(`${API_BASE}/posts`, {
-      method: 'POST',
-      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
-      body: data,
-    }).then(async (res) => {
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ detail: '请求失败' }))
-        throw new Error(err.detail || `HTTP ${res.status}`)
-      }
-      return res.json()
-    })
-  }
+  // FormData 不需要手动设置 Content-Type（浏览器自动加 boundary）
   return request('/posts', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: data,
   })
 }
 

@@ -3,11 +3,12 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
 import Sidebar from './Sidebar'
-import { getUserProfile, getToken, clearToken, setToken, getStoredUser } from '../api'
+import { getUserProfile, getToken, clearToken, setToken } from '../api'
+import { useUserStore, updateUser } from '../App'
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [user, setUser] = useState(getStoredUser)
+  const user = useUserStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function Layout() {
     }
     getUserProfile()
       .then((u) => {
-        setUser(u)
+        updateUser(u)
         setToken(token, u)
       })
       .catch(() => {
@@ -29,7 +30,7 @@ export default function Layout() {
 
   const handleLogout = () => {
     clearToken()
-    setUser(null)
+    updateUser(null)
     navigate('/login')
   }
 

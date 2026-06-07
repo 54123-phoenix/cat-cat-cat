@@ -3,18 +3,8 @@ import { MessageCircle, Send } from 'lucide-react'
 import { getPostComments, createComment, getStoredUser } from '../api'
 import Avatar from './Avatar'
 
-const MOCK_USERS = [
-  { id: 101, nickname: '橘猫守护者', avatar: null },
-  { id: 102, nickname: '南区喂猫人', avatar: null },
-  { id: 103, nickname: '图书馆常客', avatar: null },
-  { id: 104, nickname: '猫协志愿者', avatar: null },
-  { id: 105, nickname: '东区散步党', avatar: null },
-]
-
 function getUserDisplay(user) {
   if (user?.nickname) return user
-  const mock = MOCK_USERS.find((m) => m.id === user?.id)
-  if (mock) return mock
   return { nickname: `铲屎官 #${user?.id || '?'}` }
 }
 

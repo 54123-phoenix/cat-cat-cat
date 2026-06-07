@@ -8,7 +8,7 @@ const AVATAR_PALETTE = [
 
 export default function Avatar({ user, size = 'sm' }) {
   const colorIndex = (user?.id || 0) % AVATAR_PALETTE.length
-  const sizeClass = size === 'sm' ? 'w-8 h-8 text-xs' : size === 'xs' ? 'w-6 h-6 text-[10px]' : 'w-10 h-14 text-sm'
+  const sizeClass = size === 'sm' ? 'w-8 h-8 text-xs' : size === 'xs' ? 'w-6 h-6 text-[11px]' : 'w-10 h-14 text-sm'
 
   if (user?.avatar) {
     return (

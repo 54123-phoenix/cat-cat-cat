@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -14,7 +14,27 @@ import Scan from './pages/Scan'
 import Gallery from './pages/Gallery'
 import Notifications from './pages/Notifications'
 import WeeklyReport from './pages/WeeklyReport'
-import { getToken, getStoredUser } from './api'
+import { getToken, getStoredUser, setToken as saveToken } from './api'
+
+// Shared user store: single source of truth for auth state
+let currentUser = getStoredUser()
+const listeners = new Set()
+
+function emitChange() {
+  listeners.forEach((fn) => fn(currentUser))
+}
+
+export function useUserStore() {
+  return useSyncExternalStore(
+    (listener) => { listeners.add(listener); return () => listeners.delete(listener) },
+    () => currentUser
+  )
+}
+
+export function updateUser(newUser) {
+  currentUser = newUser
+  emitChange()
+}
 
 function ProtectedRoute({ children }) {
   const token = getToken()
@@ -23,10 +43,8 @@ function ProtectedRoute({ children }) {
 }
 
 export default function App() {
-  const [user, setUser] = useState(getStoredUser)
-
   const handleLogin = (u) => {
-    setUser(u)
+    updateUser(u)
   }
 
   return (

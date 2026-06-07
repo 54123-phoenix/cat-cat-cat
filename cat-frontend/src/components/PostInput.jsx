@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPost } from '../api'
 import CatPicker from './CatPicker'
 import { Plus, X, Image as ImageIcon } from 'lucide-react'
@@ -27,6 +27,14 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
   const [images, setImages] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const fileRef = useRef(null)
+  const urlRefs = useRef([])
+
+  useEffect(() => {
+    return () => {
+      urlRefs.current.forEach((url) => URL.revokeObjectURL(url))
+      urlRefs.current = []
+    }
+  }, [])
 
   function toggleTag(tag) {
     setTags((prev) => (prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag]))
@@ -42,10 +50,16 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
 
   function addFiles(fileList) {
     const newFiles = Array.from(fileList).slice(0, MAX_IMAGES - images.length)
+    const newUrls = newFiles.map((f) => URL.createObjectURL(f))
+    urlRefs.current.push(...newUrls)
     setImages((prev) => [...prev, ...newFiles])
   }
 
   function removeImage(index) {
+    if (urlRefs.current[index]) {
+      URL.revokeObjectURL(urlRefs.current[index])
+      urlRefs.current.splice(index, 1)
+    }
     setImages((prev) => prev.filter((_, i) => i !== index))
   }
 
