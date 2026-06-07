@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Admin from './pages/Admin'
 import BadgeGallery from './pages/BadgeGallery'
 import CatDetail from './pages/CatDetail'
+import PostDetail from './pages/PostDetail'
 import Feed from './pages/Feed'
 import Scan from './pages/Scan'
 import Gallery from './pages/Gallery'
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="/community" element={<Community />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/cats/:catId" element={<CatDetail />} />
+          <Route path="/posts/:postId" element={<PostDetail />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/scan" element={<Scan />} />
           <Route path="/gallery" element={<Gallery />} />

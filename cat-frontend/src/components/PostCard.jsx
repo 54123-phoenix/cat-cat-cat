@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
 import CommentSection from './CommentSection'
@@ -20,14 +20,18 @@ const TOPIC_COLORS = {
 }
 
 export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
+  const navigate = useNavigate()
   const [liked, setLiked] = useState(Boolean(post.liked))
   const [likes, setLikes] = useState(post.likes || 0)
   const [liking, setLiking] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [commentsExpanded, setCommentsExpanded] = useState(false)
   const currentUser = getStoredUser()
   const canDelete = currentUser && (currentUser.id === post.userId || currentUser.role === 'admin')
+
+  function goToDetail() {
+    navigate(`/posts/${post.id}`)
+  }
 
   async function handleLike() {
     if (liking) return
@@ -95,9 +99,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         </Link>
       )}
 
+      {/* Clickable content area → navigate to detail page */}
       <div
         className="cursor-pointer active:bg-gray-50/50 -mx-1 px-1 rounded-lg"
-        onClick={() => setCommentsExpanded(true)}
+        onClick={goToDetail}
       >
         <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
 
@@ -141,7 +146,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
         </button>
-        <CommentSection postId={post.id} initialCount={post.comments || 0} expanded={commentsExpanded} onExpand={() => setCommentsExpanded(true)} />
+        <button onClick={goToDetail} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors">
+          <MessageCircle className="w-3.5 h-3.5" />
+          {post.comments || 0} 条回复 ›
+        </button>
       </div>
 
       {/* Delete confirmation */}

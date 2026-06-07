@@ -179,6 +179,10 @@ export function getPosts(params = {}) {
   return request(`/posts${qs ? '?' + qs : ''}`)
 }
 
+export function getPost(postId) {
+  return request(`/posts/${postId}`)
+}
+
 export function createPost(data) {
   // FormData 不需要手动设置 Content-Type（浏览器自动加 boundary）
   return request('/posts', {
