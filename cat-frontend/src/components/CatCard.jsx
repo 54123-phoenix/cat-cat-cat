@@ -1,5 +1,6 @@
+import { Cat, MapPin } from 'lucide-react'
+
 export default function CatCard({ cat }) {
-  const avatarUrl = cat.avatar ? cat.avatar : null
 
   return (
     <div className="card overflow-hidden">

@@ -19,7 +19,7 @@ export default function RecognizeModal({ result, onClose, onViewProfile }) {
             发现 {result.name}！
           </h2>
           <p className="text-text-secondary">
-            匹配度：{(result.confidence * 100).toFixed(0)}%
+            匹配度：{((result.confidence ?? 0) * 100).toFixed(0)}%
           </p>
         </div>
 

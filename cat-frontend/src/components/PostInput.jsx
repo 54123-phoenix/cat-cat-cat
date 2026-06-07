@@ -77,6 +77,8 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
       await createPost(form)
       onCreated?.()
       onClose()
+    } catch (err) {
+      alert(err.message || '发布失败，请重试')
     } finally {
       setSubmitting(false)
     }

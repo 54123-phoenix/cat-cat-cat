@@ -14,7 +14,7 @@ import Scan from './pages/Scan'
 import Gallery from './pages/Gallery'
 import Notifications from './pages/Notifications'
 import WeeklyReport from './pages/WeeklyReport'
-import { getToken, getStoredUser, setToken as saveToken } from './api'
+import { getToken, getStoredUser } from './api'
 
 // Shared user store: single source of truth for auth state
 let currentUser = getStoredUser()

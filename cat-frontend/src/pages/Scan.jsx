@@ -69,14 +69,18 @@ export default function Scan() {
     const file = fileRef.current?.files?.[0]
     const location = findCampusLocation(selectedLocation)
     setMessage('')
-    const created = await createDiscovery({
-      locationName: location.name,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      note: discoveryNote || '识别为未知猫，等待猫协复核',
-      file,
-    })
-    setDiscovery(created)
+    try {
+      const created = await createDiscovery({
+        locationName: location.name,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        note: discoveryNote || '识别为未知猫，等待猫协复核',
+        file,
+      })
+      setDiscovery(created)
+    } catch (err) {
+      setMessage(err.message || '提交失败，请重试')
+    }
   }
 
   function reset() {
