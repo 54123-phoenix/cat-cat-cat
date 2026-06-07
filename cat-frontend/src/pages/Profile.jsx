@@ -5,6 +5,21 @@ import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import { getUserProfile, getCats, getStoredUser } from '../api'
 
+const BADGE_DISPLAY = {
+  first_sighting: { name: '初次偶遇' },
+  cat_observer: { name: '观察员' },
+  cat_expert: { name: '专家' },
+  first_post: { name: '首帖' },
+  community_helper: { name: '热心人' },
+  community_star: { name: '社区之星' },
+  cat_collector: { name: '收藏家' },
+  cat_master: { name: '大师' },
+  new_cat_finder: { name: '发现者' },
+  photography_first: { name: '摄影' },
+  map_explorer: { name: '探索者' },
+  collection_complete: { name: '全收集' },
+}
+
 export default function Profile() {
   const [user, setUser] = useState(null)
   const [cats, setCats] = useState([])
@@ -26,7 +41,7 @@ export default function Profile() {
     ])
       .then(([userData, catsData]) => {
         setUser(userData)
-        setCats(catsData)
+        setCats(Array.isArray(catsData) ? catsData : [])
         setBadges(userData.badges || [])
       })
       .catch((err) => {
@@ -243,19 +258,4 @@ export default function Profile() {
       </div>
     </div>
   )
-}
-
-const BADGE_DISPLAY = {
-  first_sighting: { name: '初次偶遇' },
-  cat_observer: { name: '观察员' },
-  cat_expert: { name: '专家' },
-  first_post: { name: '首帖' },
-  community_helper: { name: '热心人' },
-  community_star: { name: '社区之星' },
-  cat_collector: { name: '收藏家' },
-  cat_master: { name: '大师' },
-  new_cat_finder: { name: '发现者' },
-  photography_first: { name: '摄影' },
-  map_explorer: { name: '探索者' },
-  collection_complete: { name: '全收集' },
 }

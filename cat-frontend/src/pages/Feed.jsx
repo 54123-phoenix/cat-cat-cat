@@ -11,7 +11,7 @@ export default function Feed() {
 
   useEffect(() => {
     getSightings({ limit: 30 })
-      .then(setSightings)
+      .then((data) => setSightings(Array.isArray(data) ? data : []))
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])

@@ -40,7 +40,7 @@ export default function ScanView({ onCapture, onResultClose }) {
         previewUrlRef.current = null
       }
     }
-  }, [phase, file])
+  }, [phase, file, onCapture])
 
   function handleRetake() {
     setPhase('idle')

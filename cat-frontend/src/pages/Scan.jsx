@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle } from 'lucide-react'
 import ConfidenceBar from '../components/ConfidenceBar'
@@ -18,13 +18,20 @@ export default function Scan() {
   const [customLocation, setCustomLocation] = useState('')
   const fileRef = useRef(null)
   const selectedFileRef = useRef(null)
+  const previewRef = useRef(null)
+
+  useEffect(() => {
+    return () => { if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null } }
+  }, [])
 
   function onFileChange(event) {
     const file = event.target.files?.[0]
     if (!file) return
     selectedFileRef.current = file
-    if (preview) URL.revokeObjectURL(preview)
-    setPreview(URL.createObjectURL(file))
+    if (previewRef.current) URL.revokeObjectURL(previewRef.current)
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+    previewRef.current = url
     setPhase('ready')
     setResult(null)
     setMessage('')
@@ -71,8 +78,10 @@ export default function Scan() {
   }
 
   async function confirmCandidate(candidate) {
-    await saveConfirmedSighting({ ...candidate, cat_id: candidate.cat_id, confidence: candidate.confidence })
-    navigate(`/cats/${candidate.cat_id}`)
+    const catId = candidate.cat_id || candidate.catId
+    if (!catId) return setMessage('无法确认猫咪身份')
+    await saveConfirmedSighting({ ...candidate, cat_id: catId, confidence: candidate.confidence })
+    navigate(`/cats/${catId}`)
   }
 
   async function submitDiscovery() {
@@ -100,7 +109,7 @@ export default function Scan() {
     setDiscoveryNote('')
     setMessage('')
     selectedFileRef.current = null
-    if (preview) URL.revokeObjectURL(preview)
+    if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null }
     setPreview(null)
     if (fileRef.current) fileRef.current.value = ''
   }

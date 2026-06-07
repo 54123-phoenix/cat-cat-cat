@@ -42,16 +42,22 @@ export default function Gallery() {
           <div className="grid grid-cols-2 gap-2.5">
             {images.map((image) => (
               <Link key={image.id} to={image.cat_id ? `/cats/${image.cat_id}` : '/gallery'} className="bg-white rounded-xl border border-gray-100 overflow-hidden active:scale-95 transition-transform">
-                <div className="aspect-square bg-primary-light overflow-hidden flex items-center justify-center text-4xl">
+                <div className="aspect-square bg-primary-light overflow-hidden flex items-center justify-center text-4xl relative">
                   <img
                     src={image.image_path}
                     alt={image.cat?.name || '猫猫照片'}
                     className="w-full h-full object-cover"
                     onError={(event) => {
                       event.currentTarget.style.display = 'none'
+                      event.currentTarget.nextElementSibling.style.display = 'flex'
+                    }}
+                    onLoad={(event) => {
+                      if (event.currentTarget.nextElementSibling) {
+                        event.currentTarget.nextElementSibling.style.display = 'none'
+                      }
                     }}
                   />
-                  <Cat className="w-8 h-8 text-primary/30" />
+                  <Cat className="w-8 h-8 text-primary/30 absolute inset-0 m-auto" />
                 </div>
                 <div className="p-2.5">
                   <p className="text-sm font-medium text-gray-800 truncate">{image.cat?.name || '校园猫猫'}</p>

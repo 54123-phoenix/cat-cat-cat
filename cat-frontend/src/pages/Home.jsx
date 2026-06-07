@@ -31,7 +31,7 @@ export default function Home() {
     Promise.all([
       getCats(),
       getSightings({ limit: 5 }),
-      getPosts({ limit: 1 }),
+      getPosts(),
       getUserProfile().catch(() => null),
     ]).then(([catsData, sightingsData, postsData, userData]) => {
       const arr = Array.isArray(catsData) ? catsData : []

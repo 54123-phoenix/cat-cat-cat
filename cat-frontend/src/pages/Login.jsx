@@ -38,7 +38,7 @@ export default function Login({ onLogin }) {
     <div className="min-h-screen max-w-[480px] mx-auto bg-warm-50 flex flex-col items-center justify-center px-6">
       <div className="w-full clay-card p-6 space-y-6">
         <div className="text-center space-y-1">
-          <h1 className="text-2xl font-display font-bold text-text">猫猫社区</h1>
+          <h1 className="text-2xl font-bold text-text">猫猫社区</h1>
           <p className="text-sm text-text-secondary">
             {mode === 'login' ? '登录以继续' : '注册新账号'}
           </p>

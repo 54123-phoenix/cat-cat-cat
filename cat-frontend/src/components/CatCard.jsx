@@ -5,9 +5,9 @@ export default function CatCard({ cat }) {
   return (
     <div className="card overflow-hidden">
       <div className="aspect-square bg-primary-light flex items-center justify-center overflow-hidden">
-        {avatarUrl ? (
+        {cat.avatar ? (
           <img
-            src={avatarUrl}
+            src={cat.avatar}
             alt={cat.name}
             className="w-full h-full object-cover"
           />

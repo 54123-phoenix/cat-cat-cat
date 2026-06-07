@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Heart, Flag, Trash2 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
@@ -23,6 +23,8 @@ const TOPIC_COLORS = {
 export default function PostDetail() {
   const { postId } = useParams()
   const navigate = useNavigate()
+  const mountedRef = useRef(true)
+  useEffect(() => { return () => { mountedRef.current = false } }, [])
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -57,7 +59,7 @@ export default function PostDetail() {
       setLiked(!nextLiked)
       setLikes((v) => Math.max(0, v + (nextLiked ? -1 : 1)))
     } finally {
-      setTimeout(() => setLiking(false), 300)
+      setTimeout(() => { if (mountedRef.current) setLiking(false) }, 300)
     }
   }
 

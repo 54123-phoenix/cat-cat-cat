@@ -124,7 +124,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
           <div className="flex flex-wrap gap-2">
             {images.map((img, i) => (
               <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200">
-                <img src={URL.createObjectURL(img)} alt="" className="w-full h-full object-cover" />
+                <img src={urlRefs.current[i] || ''} alt="" className="w-full h-full object-cover" />
                 <button
                   onClick={() => removeImage(i)}
                   className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center"

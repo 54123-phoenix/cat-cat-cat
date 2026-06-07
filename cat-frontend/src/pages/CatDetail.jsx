@@ -47,7 +47,7 @@ export default function CatDetail() {
     ])
       .then(([catData, sightingsData, healthData]) => {
         setCat(catData)
-        setSightings(sightingsData)
+        setSightings(Array.isArray(sightingsData) ? sightingsData : [])
         setHealthRecords(Array.isArray(healthData) ? healthData : [])
       })
       .catch((err) => setError(err.message || '猫猫档案加载失败'))

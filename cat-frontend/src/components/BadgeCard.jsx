@@ -13,7 +13,7 @@ export default function BadgeCard({ badge, earned, size = 'sm' }) {
       <div className={`${sm ? 'w-8 h-8' : 'w-10 h-10'} mx-auto rounded-full ${earned ? 'bg-primary-light text-primary' : 'bg-gray-100 text-gray-400'} flex items-center justify-center ${sm ? 'text-sm' : 'text-base'} font-bold`}>
         {initial}
       </div>
-      <div className={`${sm ? 'text-xs' : 'text-xs'} text-text-secondary mt-1 leading-tight truncate`}>
+      <div className={`${sm ? 'text-xs' : 'text-sm'} text-text-secondary mt-1 leading-tight truncate`}>
         {badge.name}
       </div>
     </div>

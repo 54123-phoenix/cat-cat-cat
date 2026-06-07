@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
@@ -26,6 +26,8 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   const [liking, setLiking] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const mountedRef = useRef(true)
+  useEffect(() => { return () => { mountedRef.current = false } }, [])
   const currentUser = getStoredUser()
   const canDelete = currentUser && (currentUser.id === post.userId || currentUser.role === 'admin')
 
@@ -45,7 +47,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
       setLiked(!nextLiked)
       setLikes((value) => Math.max(0, value + (nextLiked ? -1 : 1)))
     } finally {
-      setTimeout(() => setLiking(false), 300)
+      setTimeout(() => { if (mountedRef.current) setLiking(false) }, 300)
     }
   }
 
