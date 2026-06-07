@@ -31,7 +31,7 @@ export default function PostList({ topic, refreshKey = 0, onReport }) {
 
   useEffect(() => {
     setLoading(true)
-    getPosts({ topic: topic === 'all' ? undefined : topic })
+    getPosts({ topic })
       .then((data) => setPosts(Array.isArray(data) ? data : []))
       .catch(console.error)
       .finally(() => setLoading(false))
