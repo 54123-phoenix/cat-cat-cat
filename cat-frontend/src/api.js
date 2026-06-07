@@ -156,7 +156,9 @@ export function getDiscoveries(params = {}) {
 export function createDiscovery(data) {
   const form = new FormData()
   if (data.file) form.append('file', data.file)
-  if (data.location) form.append('location', data.location)
+  if (data.locationName) form.append('location_name', data.locationName)
+  if (data.latitude !== undefined) form.append('latitude', String(data.latitude))
+  if (data.longitude !== undefined) form.append('longitude', String(data.longitude))
   if (data.note) form.append('note', data.note)
   return request('/discoveries', { method: 'POST', body: form })
 }
