@@ -55,9 +55,9 @@ def _load_reference_embeddings() -> dict:
 
 # ─── Recognition Logic ────────────────────────────────────────────────
 
-# Thresholds from AI_INTEGRATION.md
-THRESHOLD_CONFIRMED = 0.85
-THRESHOLD_UNCERTAIN = 0.45
+# Thresholds tuned for DINOv2 ViT-S/14 with ArcFace-style embedding head
+THRESHOLD_CONFIRMED = 0.45
+THRESHOLD_UNCERTAIN = 0.30
 
 
 def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResponse:
