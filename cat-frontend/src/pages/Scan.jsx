@@ -15,6 +15,7 @@ export default function Scan() {
   const [discoveryNote, setDiscoveryNote] = useState('')
   const [discovery, setDiscovery] = useState(null)
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
+  const [customLocation, setCustomLocation] = useState('')
   const fileRef = useRef(null)
 
   function onFileChange(event) {
@@ -27,13 +28,16 @@ export default function Scan() {
     setMessage('')
   }
 
+  function getLocationName() {
+    return customLocation.trim() || selectedLocation
+  }
+
   async function saveConfirmedSighting(data) {
     if (!data.cat_id) return
     const file = fileRef.current?.files?.[0]
-    const loc = findCampusLocation(selectedLocation)
     await createSighting({
       catId: data.cat_id,
-      location: loc?.name || selectedLocation,
+      location: getLocationName(),
       confidence: data.confidence,
       file,
     })
@@ -41,21 +45,25 @@ export default function Scan() {
 
   async function handleIdentify() {
     const file = fileRef.current?.files?.[0]
-    if (!file) return
+    if (!file) {
+      setMessage('请先选择一张照片')
+      return
+    }
     setPhase('loading')
-    setMessage('')
-    const timer = window.setTimeout(() => setMessage('网络较慢，稍等一下...'), 5000)
+    setMessage('正在识别中，请稍候...')
+    const timer = window.setTimeout(() => setMessage('网络较慢，AI 还在努力识别...'), 8000)
     try {
       const data = await identifyCat(file)
       window.clearTimeout(timer)
       setResult(data)
-      setPhase(data.status)
+      setPhase(data.status || 'confirmed')
       if (data.status === 'confirmed') {
         await saveConfirmedSighting(data)
       }
     } catch (error) {
       window.clearTimeout(timer)
-      setMessage(error.message || '识别失败，请重试')
+      console.error('[Scan] identify failed:', error)
+      setMessage(error.message || '识别服务暂时不可用，请稍后重试')
       setPhase('error')
     }
   }
@@ -71,9 +79,9 @@ export default function Scan() {
     setMessage('')
     try {
       const created = await createDiscovery({
-        locationName: location.name,
-        latitude: location.latitude,
-        longitude: location.longitude,
+        locationName: getLocationName(),
+        latitude: location?.latitude,
+        longitude: location?.longitude,
         note: discoveryNote || '识别为未知猫，等待猫协复核',
         file,
       })
@@ -101,13 +109,25 @@ export default function Scan() {
       <div className="p-3 space-y-3">
         <label className="block bg-white rounded-xl border border-gray-100 p-3">
           <span className="text-xs font-medium text-gray-500">偶遇地点</span>
-          <select
-            value={selectedLocation}
-            onChange={(event) => setSelectedLocation(event.target.value)}
-            className="mt-1 w-full bg-primary-light rounded-full px-3 py-2 text-sm text-gray-700 outline-none"
-          >
-            {campusLocations.map((location) => <option key={location.name} value={location.name}>{location.name}</option>)}
-          </select>
+          <div className="relative mt-1">
+            <input
+              type="text"
+              list="location-options"
+              value={customLocation}
+              onChange={(e) => setCustomLocation(e.target.value)}
+              onBlur={(e) => {
+                if (!e.target.value.trim()) setSelectedLocation(campusLocations[0].name)
+                else setSelectedLocation(e.target.value)
+              }}
+              placeholder="搜索或输入地点..."
+              className="w-full bg-primary-light rounded-full px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            <datalist id="location-options">
+              {campusLocations.map((loc) => (
+                <option key={loc.name} value={loc.name} />
+              ))}
+            </datalist>
+          </div>
         </label>
 
         {phase === 'idle' ? (
@@ -129,17 +149,22 @@ export default function Scan() {
         ) : null}
 
         {phase === 'ready' && (
-          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-1.5">
+          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors">
             <Sparkles className="w-4 h-4" />开始识别
           </button>
         )}
 
         {phase === 'loading' && (
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <PawPrint className="w-8 h-8 text-primary mx-auto animate-paw" />
-            <div className="text-sm text-gray-600">AI 正在识别中…</div>
-            <div className="text-xs text-gray-400 mt-1">{message || '通常不超过 3 秒'}</div>
-          </div>
+          <>
+            <div className="w-full bg-primary/80 text-white rounded-full py-3.5 font-medium text-base flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              AI 正在识别中…
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+              <PawPrint className="w-6 h-6 text-primary mx-auto animate-paw mb-2" />
+              <div className="text-xs text-gray-500">{message || '通常不超过 10 秒'}</div>
+            </div>
+          </>
         )}
 
         {phase === 'confirmed' && result && (
@@ -228,11 +253,18 @@ export default function Scan() {
         )}
 
         {phase === 'idle' && (
-          <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
+          <>
+            {message && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-center text-sm text-yellow-700">
+                {message}
+              </div>
+            )}
+            <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
             <div>· 尽量拍清晰的正面或侧面照片</div>
             <div>· 光线充足识别效果更佳</div>
             <div>· 识别不确定时会展示多个候选</div>
           </div>
+          </>
         )}
       </div>
     </div>
