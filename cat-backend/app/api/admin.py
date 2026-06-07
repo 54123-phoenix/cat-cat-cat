@@ -1,5 +1,3 @@
-import os
-
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -25,20 +23,11 @@ class AdminLoginResponse(BaseModel):
 
 @router.post("/login", response_model=AdminLoginResponse)
 def login(payload: AdminLoginRequest, db: Session = Depends(get_db)):
-    expected = os.getenv("ADMIN_PASSWORD", "cat-admin")
-    if payload.password != expected:
-        raise HTTPException(status_code=401, detail="Invalid admin password")
     user = db.query(User).filter(User.role == "admin").first()
     if not user:
-        user = User(
-            username="admin",
-            password_hash=pwd_context.hash(payload.password),
-            nickname="猫协管理员",
-            role="admin",
-        )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
+        raise HTTPException(status_code=401, detail="No admin account configured. Set ADMIN_PASSWORD and restart.")
+    if not pwd_context.verify(payload.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid admin password")
     return AdminLoginResponse(token=create_token(user))
 
 

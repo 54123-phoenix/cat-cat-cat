@@ -13,7 +13,7 @@ app = FastAPI(title="猫猫社区 API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -44,13 +44,17 @@ def startup():
     db = SessionLocal()
     try:
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
-        if not db.query(User).filter(User.username == "admin").first():
-            db.add(User(
-                username="admin",
-                password_hash=pwd_ctx.hash(os.getenv("ADMIN_PASSWORD", "cat-admin")),
-                nickname="猫协管理员",
-                role="admin",
-            ))
+        admin_password = os.getenv("ADMIN_PASSWORD")
+        if admin_password:
+            if not db.query(User).filter(User.username == "admin").first():
+                db.add(User(
+                    username="admin",
+                    password_hash=pwd_ctx.hash(admin_password),
+                    nickname="猫协管理员",
+                    role="admin",
+                ))
+        else:
+            print("WARNING: ADMIN_PASSWORD not set. Admin account will not be created.")
         if not db.query(User).filter(User.username == "demo").first():
             db.add(User(
                 username="demo",

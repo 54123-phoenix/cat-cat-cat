@@ -3,7 +3,7 @@ import AMapLoader from '@amap/amap-jsapi-loader'
 import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 
-const AMAP_KEY = '8bb4b6d1e109f76821e371e059623c22'
+const AMAP_KEY = import.meta.env.VITE_AMAP_KEY || ''
 const campusCenter = [121.5068, 31.3005]
 
 // WGS-84 → GCJ-02
