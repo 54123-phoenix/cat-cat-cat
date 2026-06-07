@@ -25,7 +25,8 @@ from PIL import Image
 
 SCRAPER_CATS_DIR = Path(r"D:\Desktop\meowzart_scraper\output\cats")
 BACKEND_DIR = Path(__file__).parent.parent
-UPLOADS_DIR = BACKEND_DIR / "uploads" / "cats"
+# Use project-root uploads (Docker mounts ./uploads -> /app/uploads)
+UPLOADS_DIR = BACKEND_DIR.parent / "uploads" / "cats"
 EMBEDDINGS_DIR = BACKEND_DIR / "embeddings"
 MODEL_PATH = BACKEND_DIR / "models" / "finetuned_best.pt"
 

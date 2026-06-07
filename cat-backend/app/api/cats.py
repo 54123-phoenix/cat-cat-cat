@@ -13,7 +13,7 @@ UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
 
 
 @router.get("", response_model=List[schemas.CatListResponse])
-def list_cats(location: Optional[str] = None, skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
+def list_cats(location: Optional[str] = None, skip: int = 0, limit: int = 200, db: Session = Depends(get_db)):
     return crud.get_cats(db, location=location, skip=skip, limit=limit)
 
 
