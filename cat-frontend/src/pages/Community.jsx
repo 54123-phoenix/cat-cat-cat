@@ -12,6 +12,13 @@ const TABS = [
   { id: 'suggest', label: '建议' },
 ]
 
+const TAG_TOPIC_MAP = {
+  '#橘总': 'daily', '#小黑': 'daily', '#奶糖': 'daily', '#花花': 'daily',
+  '#图书馆': 'find', '#南区食堂': 'find', '#文科楼': 'find', '#东区草坪': 'find',
+  '#求助': 'health', '#治愈瞬间': 'daily', '#今日份猫猫': 'daily', '#喂食': 'daily',
+  '#建议': 'suggest',
+}
+
 export default function Community() {
   const [activeTab, setActiveTab] = useState('all')
   const [showCompose, setShowCompose] = useState(false)
@@ -19,6 +26,11 @@ export default function Community() {
   const [reportTarget, setReportTarget] = useState(null)
   const [reportReason, setReportReason] = useState('')
   const [reporting, setReporting] = useState(false)
+
+  function handleTagClick(tag) {
+    const topic = TAG_TOPIC_MAP[tag]
+    if (topic) setActiveTab(topic)
+  }
 
   async function handleReport() {
     if (!reportReason.trim()) return
@@ -57,7 +69,7 @@ export default function Community() {
       </div>
 
       <div className="flex-1 overflow-y-auto pb-20">
-        <PostList topic={activeTab} refreshKey={refreshKey} onReport={setReportTarget} />
+        <PostList topic={activeTab} refreshKey={refreshKey} onReport={setReportTarget} onTagClick={handleTagClick} />
       </div>
 
       <button

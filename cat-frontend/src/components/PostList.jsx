@@ -26,7 +26,7 @@ function SkeletonPost() {
   )
 }
 
-export default function PostList({ topic, refreshKey = 0, onReport }) {
+export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }) {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -61,7 +61,7 @@ export default function PostList({ topic, refreshKey = 0, onReport }) {
 
   return (
     <div className="p-3 space-y-3">
-      {posts.map((post) => <PostCard key={post.id} post={post} onReport={onReport} onDeleted={handleDeleted} />)}
+      {posts.map((post) => <PostCard key={post.id} post={post} onReport={onReport} onDeleted={handleDeleted} onTagClick={onTagClick} />)}
     </div>
   )
 }

@@ -8,13 +8,15 @@ function getUserDisplay(user) {
   return { nickname: `铲屎官 #${user?.id || '?'}` }
 }
 
-export default function CommentSection({ postId, initialCount = 0 }) {
+export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand }) {
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [expanded, setExpanded] = useState(false)
+  const [internalExpanded, setInternalExpanded] = useState(false)
   const requestIdRef = useRef(0)
+
+  const expanded = expandedProp ?? internalExpanded
 
   async function loadComments() {
     const rid = ++requestIdRef.current
@@ -38,7 +40,8 @@ export default function CommentSection({ postId, initialCount = 0 }) {
 
   function toggleExpanded() {
     if (!expanded) loadComments()
-    setExpanded(!expanded)
+    if (onExpand) onExpand()
+    else setInternalExpanded(true)
   }
 
   async function handleSubmit(e) {

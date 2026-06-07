@@ -19,12 +19,13 @@ const TOPIC_COLORS = {
   suggest: { bg: 'bg-purple-100', text: 'text-purple-700' },
 }
 
-export default function PostCard({ post, onReport, onDeleted }) {
+export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   const [liked, setLiked] = useState(Boolean(post.liked))
   const [likes, setLikes] = useState(post.likes || 0)
   const [liking, setLiking] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [commentsExpanded, setCommentsExpanded] = useState(false)
   const currentUser = getStoredUser()
   const canDelete = currentUser && (currentUser.id === post.userId || currentUser.role === 'admin')
 
@@ -94,34 +95,43 @@ export default function PostCard({ post, onReport, onDeleted }) {
         </Link>
       )}
 
-      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+      <div
+        className="cursor-pointer active:bg-gray-50/50 -mx-1 px-1 rounded-lg"
+        onClick={() => setCommentsExpanded(true)}
+      >
+        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
 
-      {post.images?.length > 0 && (
-        <div className={`grid gap-1.5 ${
-          post.images.length === 1 ? 'grid-cols-1' :
-          post.images.length === 2 ? 'grid-cols-2' :
-          post.images.length === 3 ? 'grid-cols-2' :
-          'grid-cols-3'
-        }`}>
-          {post.images.map((img, i) => (
-            <div
-              key={i}
-              className={`rounded-xl overflow-hidden bg-gray-100 ${
-                post.images.length === 3 && i === 0 ? 'row-span-2' : ''
-              }`}
-            >
-              <img src={img} alt="" className="w-full h-full object-cover" style={{ minHeight: 120 }} />
-            </div>
-          ))}
-        </div>
-      )}
+        {post.images?.length > 0 && (
+          <div className={`grid gap-1.5 mt-3 ${
+            post.images.length === 1 ? 'grid-cols-1' :
+            post.images.length === 2 ? 'grid-cols-2' :
+            post.images.length === 3 ? 'grid-cols-2' :
+            'grid-cols-3'
+          }`}>
+            {post.images.map((img, i) => (
+              <div
+                key={i}
+                className={`rounded-xl overflow-hidden bg-gray-100 ${
+                  post.images.length === 3 && i === 0 ? 'row-span-2' : ''
+                }`}
+              >
+                <img src={img} alt="" className="w-full h-full object-cover" style={{ minHeight: 120 }} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {post.tags?.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {post.tags.map((tag) => (
-            <span key={tag} className="text-xs text-primary bg-primary-light px-2 py-0.5 rounded-full">
+            <button
+              key={tag}
+              onClick={() => onTagClick?.(tag)}
+              className="text-xs text-primary bg-primary-light px-2 py-0.5 rounded-full active:bg-orange-200 transition-colors"
+            >
               {tag}
-            </span>
+            </button>
           ))}
         </div>
       )}
@@ -131,7 +141,7 @@ export default function PostCard({ post, onReport, onDeleted }) {
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
         </button>
-        <CommentSection postId={post.id} initialCount={post.comments || 0} />
+        <CommentSection postId={post.id} initialCount={post.comments || 0} expanded={commentsExpanded} onExpand={() => setCommentsExpanded(true)} />
       </div>
 
       {/* Delete confirmation */}
