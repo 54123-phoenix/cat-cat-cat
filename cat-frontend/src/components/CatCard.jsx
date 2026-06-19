@@ -3,7 +3,7 @@ import { Cat, MapPin } from 'lucide-react'
 export default function CatCard({ cat }) {
 
   return (
-    <div className="card overflow-hidden">
+    <div className="card card-hoverable overflow-hidden">
       <div className="aspect-square bg-primary-light flex items-center justify-center overflow-hidden">
         {cat.avatar ? (
           <img

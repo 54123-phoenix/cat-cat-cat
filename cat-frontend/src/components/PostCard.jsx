@@ -24,7 +24,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   const [liked, setLiked] = useState(Boolean(post.liked))
   const [likes, setLikes] = useState(post.likes || 0)
   const [liking, setLiking] = useState(false)
-  const [likeBurst, setLikeBurst] = useState(false)
+  const [burst, setBurst] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const mountedRef = useRef(true)
@@ -43,8 +43,8 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
     setLikes((value) => Math.max(0, value + (nextLiked ? 1 : -1)))
     setLiking(true)
     if (nextLiked) {
-      setLikeBurst(true)
-      setTimeout(() => { if (mountedRef.current) setLikeBurst(false) }, 500)
+      setBurst({ id: Math.random().toString(36).slice(2) })
+      setTimeout(() => { if (mountedRef.current) setBurst(null) }, 600)
     }
     try {
       await likePost(post.id)
@@ -152,11 +152,11 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         <button onClick={handleLike} className={`relative flex items-center gap-1.5 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
-          {likeBurst && (
+          {burst && (
             <>
-              <span className="absolute -top-3 left-1 animate-burst-up font-bold">🐟</span>
-              <span className="absolute -top-3 right-1 animate-burst-up" style={{ animationDelay: '0.1s' }}>🐟</span>
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 animate-burst-up" style={{ animationDelay: '0.15s' }}>❤️</span>
+              <span key={`${burst.id}-1`} className="like-burst-item" style={{ top: '-4px', left: '0px', animation: 'like-fish-1 0.6s ease-out forwards' }}>🐟</span>
+              <span key={`${burst.id}-2`} className="like-burst-item" style={{ top: '-4px', left: '8px', animation: 'like-fish-2 0.6s ease-out forwards' }}>🐠</span>
+              <span key={`${burst.id}-3`} className="like-burst-item" style={{ top: '-4px', left: '16px', animation: 'like-fish-3 0.6s ease-out forwards' }}>🐡</span>
             </>
           )}
         </button>

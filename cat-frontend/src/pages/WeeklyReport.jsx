@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
 import { getWeeklyReport } from '../api'
 
 export default function WeeklyReport() {
@@ -73,9 +74,7 @@ export default function WeeklyReport() {
             </div>
           </>
         ) : (
-          <div className="card p-8 text-center text-sm text-text-secondary">
-            暂无本周数据
-          </div>
+          <EmptyState icon={TrendingUp} title="暂无本周数据" />
         )}
       </div>
     </div>

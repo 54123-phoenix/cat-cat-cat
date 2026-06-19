@@ -651,7 +651,99 @@ def get_audit_logs(db: Session, action: str = None, entity_type: str = None, lim
     return query.order_by(desc(models.AuditLog.created_at)).limit(limit).all()
 
 
+
+# ─── Discovery ─────────────────────────────────────────────────
+
+def create_discovery(db, image_path=None, location_name=None, latitude=None, longitude=None, note=None):
+    from app import schemas
+    now = datetime.now()
+    discovery = models.Discovery(
+        image_path=image_path,
+        location_name=location_name,
+        latitude=latitude,
+        longitude=longitude,
+        note=note or "",
+        status="pending",
+        created_at=now,
+    )
+    db.add(discovery)
+    db.commit()
+    db.refresh(discovery)
+    return schemas.DiscoveryResponse(
+        id=discovery.id,
+        image_path=discovery.image_path,
+        location_name=discovery.location_name,
+        latitude=discovery.latitude,
+        longitude=discovery.longitude,
+        note=discovery.note,
+        status=discovery.status,
+        created_at=discovery.created_at,
+    )
+
+
+def get_discoveries(db, status=None, skip=0, limit=50):
+    from app import schemas
+    query = db.query(models.Discovery)
+    if status:
+        query = query.filter(models.Discovery.status == status)
+    discoveries = query.order_by(desc(models.Discovery.created_at)).offset(skip).limit(limit).all()
+    return [
+        schemas.DiscoveryResponse(
+            id=d.id,
+            image_path=d.image_path,
+            location_name=d.location_name,
+            latitude=d.latitude,
+            longitude=d.longitude,
+            note=d.note,
+            status=d.status,
+            created_at=d.created_at,
+        )
+        for d in discoveries
+    ]
+
+
+def review_discovery(db, discovery_id, review):
+    from app import schemas
+    discovery = db.query(models.Discovery).filter(models.Discovery.id == discovery_id).first()
+    if not discovery:
+        return None
+    if review.action == "approve":
+        discovery.status = "approved"
+        if review.name:
+            cat = db.query(models.Cat).filter(models.Cat.name == review.name).first()
+            if not cat:
+                cat = models.Cat(
+                    name=review.name,
+                    color=review.color or "待确认",
+                    personality="校园猫猫，暂缺详细描述",
+                    story="通过新发现线索创建",
+                    location=discovery.location_name or "校园某处",
+                )
+                db.add(cat)
+                db.flush()
+            if discovery.image_path:
+                db.add(models.CatImage(cat_id=cat.id, image_path=discovery.image_path))
+    elif review.action == "reject":
+        discovery.status = "rejected"
+    else:
+        raise ValueError(f"Invalid action: {review.action}")
+    db.commit()
+    db.refresh(discovery)
+    return schemas.DiscoveryResponse(
+        id=discovery.id,
+        image_path=discovery.image_path,
+        location_name=discovery.location_name,
+        latitude=discovery.latitude,
+        longitude=discovery.longitude,
+        note=discovery.note,
+        status=discovery.status,
+        created_at=discovery.created_at,
+    )
+
+
 # ─── Weekly Report ─────────────────────────────────────────────────
+
+
 
 def get_weekly_report(db: Session, user_id: int = 1):
     now = datetime.now()

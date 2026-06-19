@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Sparkles, MapPin, MessageSquare, Camera, PawPrint, Cat } from 'lucide-react'
-import { getCats, getPosts, getSightings, getUserProfile, recognize, createSighting } from '../api'
+import { useNavigate, Link } from 'react-router-dom'
+import { Sparkles, MapPin, MessageSquare, Camera, PawPrint, Cat, TrendingUp, ChevronRight } from 'lucide-react'
+import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, recognize, createSighting } from '../api'
 import ScanView from '../components/ScanView'
 import CatSpinner from '../components/CatSpinner'
+import CatCard from '../components/CatCard'
 
 function greeting() {
   const h = new Date().getHours()
@@ -35,6 +36,7 @@ export default function Home() {
   const [showActivityPicker, setShowActivityPicker] = useState(false)
   const [lastSightingCatId, setLastSightingCatId] = useState(null)
   const [activitySuccess, setActivitySuccess] = useState(null)
+  const [weeklyReport, setWeeklyReport] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -43,13 +45,15 @@ export default function Home() {
       getSightings({ limit: 5 }),
       getPosts(),
       getUserProfile().catch(() => null),
-    ]).then(([catsData, sightingsData, postsData, userData]) => {
+      getWeeklyReport().catch(() => null),
+    ]).then(([catsData, sightingsData, postsData, userData, reportData]) => {
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       if (arr.length > 0) setFeatured(arr[Math.floor(Math.random() * arr.length)])
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
       setPostCount(Array.isArray(postsData) ? postsData.length : 0)
       setProfile(userData)
+      setWeeklyReport(reportData)
     }).catch(console.error).finally(() => setLoading(false))
   }, [])
 
@@ -107,6 +111,55 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Weekly report summary */}
+      {weeklyReport && (
+        <section
+          onClick={() => navigate('/weekly-report')}
+          className="card p-4 cursor-pointer active:scale-[0.99] transition-transform"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-text flex items-center gap-1.5">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              本周猫猫动态
+            </h2>
+            <ChevronRight className="w-4 h-4 text-text-muted" />
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-primary-light rounded-xl p-2.5 text-center">
+              <p className="text-lg font-bold text-primary">{weeklyReport.total_sightings || 0}</p>
+              <p className="text-xs text-text-secondary">本周偶遇</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-2.5 text-center">
+              <p className="text-lg font-bold text-green-600">{weeklyReport.unique_cats || 0}</p>
+              <p className="text-xs text-text-secondary">不同猫猫</p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-2.5 text-center">
+              <p className="text-lg font-bold text-blue-600 truncate">
+                {weeklyReport.top_location || '—'}
+              </p>
+              <p className="text-xs text-text-secondary">热门地点</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Popular cats */}
+      {cats.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-text">热门猫猫</h2>
+            <span className="text-xs text-text-secondary">{Math.min(6, cats.length)} 只</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {cats.slice(0, 6).map((cat) => (
+              <Link key={cat.id} to={`/cats/${cat.id}`}>
+                <CatCard cat={cat} />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Featured cat hero */}
       {featured && (

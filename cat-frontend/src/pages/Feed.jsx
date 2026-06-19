@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import FeedItem from '../components/FeedItem'
 import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
 import { getSightings } from '../api'
 import { PawPrint, Cat } from 'lucide-react'
 
 export default function Feed() {
   const [sightings, setSightings] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     getSightings({ limit: 30 })
@@ -29,13 +31,12 @@ export default function Feed() {
         ) : sightings.length > 0 ? (
           sightings.map((sighting) => <FeedItem key={sighting.id} sighting={sighting} />)
         ) : (
-          <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
-            <Cat className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-            <p className="text-sm font-medium text-gray-700">还没有偶遇记录</p>
-            <Link to="/scan" className="inline-block mt-3 btn btn-primary">
-              去拍第一张
-            </Link>
-          </div>
+          <EmptyState
+            icon={Cat}
+            title="还没有偶遇记录"
+            description="去拍照识别页发现校园里的猫猫吧"
+            action={{ label: '去拍第一张', onClick: () => navigate('/scan') }}
+          />
         )}
       </div>
     </div>

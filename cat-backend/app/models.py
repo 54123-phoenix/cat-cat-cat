@@ -6,6 +6,20 @@ from sqlalchemy import UniqueConstraint
 from app.database import Base
 
 
+
+class Discovery(Base):
+    __tablename__ = "discoveries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    image_path = Column(String(200))
+    location_name = Column(String(100))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    note = Column(Text)
+    status = Column(String(20), default="pending")
+    created_at = Column(DateTime, default=datetime.now)
+
+
 class UserBadge(Base):
     __tablename__ = "user_badges"
 

@@ -294,6 +294,20 @@ class DiscoveryReview(BaseModel):
     cat_id: Optional[int] = None
 
 
+class DiscoveryResponse(BaseModel):
+    id: int
+    image_path: Optional[str] = None
+    location_name: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    note: Optional[str] = None
+    status: str = "pending"
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class HealthRecordCreate(BaseModel):
     record_type: str
     title: str

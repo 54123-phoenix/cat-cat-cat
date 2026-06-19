@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
 import { getBadges } from '../api'
 import { Eye, PenLine, Trophy, Sparkles, Medal } from 'lucide-react'
 
@@ -120,10 +121,7 @@ export default function BadgeGallery() {
           })}
 
           {badges.length === 0 && (
-            <div className="card p-8 text-center space-y-2">
-              <Medal className="w-10 h-10 mx-auto text-text-muted" />
-              <p className="text-text-secondary text-sm">暂无勋章数据</p>
-            </div>
+            <EmptyState icon={Medal} title="暂无勋章数据" />
           )}
         </div>
       )}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { View, Text, Map, Image } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { CONFIG } from '../../config'
-import { getFeedingPoints, getSightings, getCats } from '../../services/api'
+import { getHeatmapData, getCats } from '../../services/api'
 import './index.scss'
 
 interface Marker {
@@ -17,6 +17,15 @@ interface Marker {
   _cat?: any
 }
 
+const FALLBACK_CATS: { name: string; latitude: number; longitude: number }[] = [
+  { name: '皮球', latitude: 31.302, longitude: 121.504 },
+  { name: '尔康', latitude: 31.299, longitude: 121.505 },
+  { name: '可可', latitude: 31.303, longitude: 121.503 },
+  { name: '橙子', latitude: 31.301, longitude: 121.501 },
+  { name: '米线', latitude: 31.300, longitude: 121.500 },
+  { name: '小小灰', latitude: 31.300, longitude: 121.506 },
+]
+
 export default function MapPage() {
   const [markers, setMarkers] = useState<Marker[]>([])
   const [latitude, setLatitude] = useState(CONFIG.mapCenter.latitude)
@@ -26,34 +35,28 @@ export default function MapPage() {
 
   useDidShow(() => {
     Promise.all([
-      getFeedingPoints().catch(() => []),
-      getSightings({ limit: 20 }).catch(() => []),
+      getHeatmapData({ days: 0, limit: 100 }).catch(() => []),
       getCats().catch(() => []),
-    ]).then(([points, sightings, cats]) => {
-      const pts: Marker[] = (Array.isArray(points) ? points : []).map((p: any) => ({
-        id: p.id,
-        latitude: p.latitude,
-        longitude: p.longitude,
-        iconPath: '/assets/map/food.png',
-        width: 28,
-        height: 28,
-        title: p.name,
-        callout: { content: p.name || '喂食点', fontSize: 12, borderRadius: 8, padding: 6 },
-      }))
-      const sights: Marker[] = (Array.isArray(sightings) ? sightings : []).map((s: any, i: number) => {
-        const cat = s.cat
-        return {
-          id: 10000 + i,
-          latitude: s.latitude || CONFIG.mapCenter.latitude + (Math.random() - 0.5) * 0.005,
-          longitude: s.longitude || CONFIG.mapCenter.longitude + (Math.random() - 0.5) * 0.005,
-          iconPath: '/assets/map/cat.png',
-          width: 32,
-          height: 32,
-          title: cat?.name || '猫猫',
-          callout: { content: cat?.name || '猫猫出没', fontSize: 12, borderRadius: 8, padding: 6 },
-          _cat: cat || null,
-        }
-      })
+    ]).then(([heatmap, cats]) => {
+      const heatArr = Array.isArray(heatmap) ? heatmap : (heatmap as any)?.points || []
+      const heatMarkers: Marker[] = heatArr
+        .filter((h: any) => h && (h.latitude || h.lat) && (h.longitude || h.lng))
+        .map((h: any, i: number) => {
+          const cat = h.cat || h.cat_info || null
+          const name = cat?.name || h.name || h.location_name || '猫猫出没'
+          return {
+            id: 10000 + i,
+            latitude: h.latitude || h.lat,
+            longitude: h.longitude || h.lng,
+            iconPath: '/assets/map/cat.png',
+            width: 32,
+            height: 32,
+            title: name,
+            callout: { content: name, fontSize: 12, borderRadius: 8, padding: 6 },
+            _cat: cat,
+          }
+        })
+
       const catMarkers: Marker[] = (Array.isArray(cats) ? cats : [])
         .filter((c: any) => c.latitude && c.longitude)
         .map((c: any) => ({
@@ -67,7 +70,22 @@ export default function MapPage() {
           callout: { content: c.name || '猫猫', fontSize: 12, borderRadius: 8, padding: 6 },
           _cat: c,
         }))
-      setMarkers([...pts, ...sights, ...catMarkers])
+
+      let combined = [...heatMarkers, ...catMarkers]
+      if (combined.length === 0) {
+        combined = FALLBACK_CATS.map((c, i) => ({
+          id: 30000 + i,
+          latitude: c.latitude,
+          longitude: c.longitude,
+          iconPath: '/assets/map/cat.png',
+          width: 32,
+          height: 32,
+          title: c.name,
+          callout: { content: c.name, fontSize: 12, borderRadius: 8, padding: 6 },
+          _cat: { name: c.name, latitude: c.latitude, longitude: c.longitude, location: '复旦大学' },
+        }))
+      }
+      setMarkers(combined)
     }).catch(console.error).finally(() => setLoading(false))
 
     Taro.getLocation({ type: 'gcj02' }).then((res) => {

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
-import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin } from 'lucide-react'
+import EmptyState from '../components/EmptyState'
+import PhotoViewer from '../components/PhotoViewer'
+import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff } from 'lucide-react'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../api'
 
 function formatTime(value) {
@@ -37,6 +39,7 @@ export default function CatDetail() {
   const [error, setError] = useState(null)
   const [following, setFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
+  const [viewerIndex, setViewerIndex] = useState(null)
 
   useEffect(() => {
     setLoading(true)
@@ -207,16 +210,22 @@ export default function CatDetail() {
         <h2 className="font-bold text-lg text-text">照片墙</h2>
         {cat.images?.length > 0 ? (
           <div className="grid grid-cols-3 gap-3">
-            {cat.images.map((image) => (
-              <div key={image.id} className="aspect-square card p-0 overflow-hidden">
+            {cat.images.map((image, i) => (
+              <button
+                key={image.id}
+                onClick={() => setViewerIndex(i)}
+                className="aspect-square card p-0 overflow-hidden active:scale-95 transition-transform"
+              >
                 <img src={image.image_path} alt={cat.name} className="w-full h-full object-cover" />
-              </div>
+              </button>
             ))}
           </div>
         ) : (
-          <div className="card p-5 text-text-secondary text-sm text-center">
-            暂时还没有参考照片
-          </div>
+          <EmptyState
+            icon={ImageOff}
+            title="暂时还没有参考照片"
+            description="去校园里拍下这只猫，上传给猫协吧"
+          />
         )}
       </section>
 
@@ -248,12 +257,22 @@ export default function CatDetail() {
             ))}
           </div>
         ) : (
-          <div className="card p-5 text-text-secondary text-sm text-center">
-            还没有偶遇记录，去首页拍下它吧
-          </div>
+          <EmptyState
+            icon={PawPrint}
+            title="还没有偶遇记录"
+            description="去首页拍下它吧"
+          />
         )}
       </section>
       </div>
+
+      {viewerIndex !== null && cat?.images?.length > 0 && (
+        <PhotoViewer
+          images={cat.images.map((img) => ({ url: img.image_path, alt: cat.name }))}
+          initialIndex={viewerIndex}
+          onClose={() => setViewerIndex(null)}
+        />
+      )}
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
+import { getHeatmapData, getCats } from '../api'
 
 const AMAP_KEY = '8bb4b6d1e109f76821e371e059623c22'
 const campusCenter = [121.5068, 31.3005]
@@ -45,12 +47,17 @@ function wgs84ToGcj02(wgsLng, wgsLat) {
 }
 
 export default function Map() {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showGeoModal, setShowGeoModal] = useState(true)
   const [geoLoading, setGeoLoading] = useState(false)
+  const [days, setDays] = useState(0)
+  const [mapReady, setMapReady] = useState(false)
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
+  const AMapRef = useRef(null)
+  const catMarkersRef = useRef([])
 
   const handleAllowLocation = useCallback(() => {
     setGeoLoading(true)
@@ -72,6 +79,7 @@ export default function Map() {
       plugins: ['AMap.Scale', 'AMap.Marker', 'AMap.Geolocation'],
     })
       .then((AMap) => {
+        AMapRef.current = AMap
         map = new AMap.Map(mapRef.current, {
           zoom: 16,
           center: campusCenter,
@@ -80,6 +88,7 @@ export default function Map() {
         })
         map.addControl(new AMap.Scale())
         mapInstanceRef.current = map
+        setMapReady(true)
       })
       .catch((e) => {
         console.error('高德地图加载失败:', e)
@@ -150,10 +159,107 @@ export default function Map() {
     return () => clearTimeout(timer)
   }, [showGeoModal])
 
+  useEffect(() => {
+    const map = mapInstanceRef.current
+    const AMap = AMapRef.current
+    if (!map || !AMap) return
+
+    let cancelled = false
+
+    async function loadMarkers() {
+      try {
+        const [heatmap, cats] = await Promise.all([
+          getHeatmapData({ days, limit: 100 }),
+          getCats().catch(() => []),
+        ])
+        if (cancelled) return
+
+        const catByName = new Map()
+        for (const c of cats) {
+          if (c.name) catByName.set(c.name, c.id)
+        }
+
+        catMarkersRef.current.forEach((m) => map.remove(m))
+        catMarkersRef.current = []
+
+        for (const point of heatmap) {
+          if (!point.latitude || !point.longitude) continue
+          const catId = catByName.get(point.name)
+          const markerContent = document.createElement('div')
+          markerContent.innerHTML = `<div style="
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; line-height: 1;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #F97316;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            cursor: pointer;
+          ">🐱</div>`
+
+          const marker = new AMap.Marker({
+            position: new AMap.LngLat(point.longitude, point.latitude),
+            content: markerContent,
+            offset: new AMap.Pixel(-16, -16),
+            zIndex: 110,
+          })
+
+          const infoWindow = new AMap.InfoWindow({
+            content: `<div style="padding:6px 10px;font-size:14px;font-weight:600;">${point.name}${point.count ? ` · 目击 ${point.count} 次` : ''}</div>`,
+            offset: new AMap.Pixel(0, -20),
+          })
+
+          marker.on('click', () => {
+            infoWindow.open(map, marker.getPosition())
+            if (catId) {
+              setTimeout(() => navigate(`/cats/${catId}`), 600)
+            }
+          })
+
+          map.add(marker)
+          catMarkersRef.current.push(marker)
+        }
+      } catch (e) {
+        console.error('加载热力数据失败:', e)
+      }
+    }
+
+    loadMarkers()
+
+    return () => {
+      cancelled = true
+      if (map) {
+        catMarkersRef.current.forEach((m) => map.remove(m))
+        catMarkersRef.current = []
+      }
+    }
+  }, [days, navigate, mapReady])
+
   return (
     <div className="fixed inset-0 z-30 top-[52px] bottom-16">
       {/* Map container - always rendered so ref is always available */}
       <div ref={mapRef} className="w-full h-full amap-container" />
+
+      {/* Time filter row */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-40 flex gap-2 bg-white/90 backdrop-blur rounded-full px-2 py-1.5 shadow-md">
+        {[
+          { label: '24小时', value: 1 },
+          { label: '7天', value: 7 },
+          { label: '全部', value: 0 },
+        ].map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => setDays(opt.value)}
+            className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
+              days === opt.value
+                ? 'bg-primary text-white'
+                : 'text-text-secondary hover:bg-gray-100'
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
 
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-warm-50/80">

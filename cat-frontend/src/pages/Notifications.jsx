@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CheckCheck, Heart, MessageCircle, Eye, PawPrint, Award } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api'
 
 const TYPE_ICONS = {
@@ -78,11 +79,11 @@ export default function Notifications() {
           )
           })
         ) : (
-          <div className="card p-8 text-center space-y-2">
-            <MessageCircle className="w-10 h-10 text-text-muted mx-auto" />
-            <p className="text-sm text-text-secondary">还没有通知</p>
-            <p className="text-xs text-text-muted">当有人点赞或评论你的帖子时会通知你</p>
-          </div>
+          <EmptyState
+            icon={MessageCircle}
+            title="还没有通知"
+            description="当有人点赞或评论你的帖子时会通知你"
+          />
         )}
       </div>
     </div>

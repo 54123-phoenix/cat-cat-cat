@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Award, MapPin, Cat, PawPrint } from 'lucide-react'
+import { User, Award, MapPin, Cat, PawPrint, Heart } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
+import EmptyState from '../components/EmptyState'
 import { getUserProfile, getCats, getFollowedCats, getStoredUser } from '../api'
 
 const BADGE_DISPLAY = {
@@ -201,15 +202,11 @@ export default function Profile() {
             )}
           </div>
         ) : (
-          <div className="card p-6 text-center space-y-2">
-            <PawPrint className="w-8 h-8 text-text-muted mx-auto" />
-            <p className="text-sm text-text-secondary">
-              还没有获得勋章
-            </p>
-            <p className="text-xs text-text-secondary">
-              去社区发帖或记录偶遇来获取吧
-            </p>
-          </div>
+          <EmptyState
+            icon={PawPrint}
+            title="还没有获得勋章"
+            description="去社区发帖或记录偶遇来获取吧"
+          />
         )}
 
         {/* Unearned preview */}
@@ -248,15 +245,11 @@ export default function Profile() {
             ))}
           </div>
         ) : (
-          <div className="card p-8 text-center space-y-2">
-            <Cat className="w-10 h-10 text-text-muted mx-auto" />
-            <p className="text-text-secondary text-sm">
-              还没有解锁猫猫
-            </p>
-            <p className="text-text-secondary text-xs">
-              去首页拍照，发现校园里的猫吧！
-            </p>
-          </div>
+          <EmptyState
+            icon={Cat}
+            title="还没有解锁猫猫"
+            description="去首页拍照，发现校园里的猫吧！"
+          />
         )}
       </div>
 
@@ -291,12 +284,11 @@ export default function Profile() {
             ))}
           </div>
         ) : (
-          <div className="card p-5 text-center space-y-2">
-            <Cat className="w-8 h-8 text-text-muted mx-auto" />
-            <p className="text-sm text-text-secondary">
-              去猫猫档案页关注你喜欢的猫吧
-            </p>
-          </div>
+          <EmptyState
+            icon={Heart}
+            title="还没有关注的猫猫"
+            description="去猫猫档案页关注你喜欢的猫吧"
+          />
         )}
       </div>
     </div>
