@@ -47,3 +47,4 @@ models/
 
 # Pre-computed embeddings
 cat-backend/embeddings/
+update_main.py

@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
 from app.database import engine, SessionLocal, Base
-from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications
+from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit
 from app.crud import init_mock_data
 from app.models import User
 from passlib.context import CryptContext
@@ -37,6 +40,9 @@ app.include_router(posts.router)
 app.include_router(health.router)
 app.include_router(feeding.router)
 app.include_router(notifications.router)
+app.include_router(discoveries.router)
+app.include_router(map.router)
+app.include_router(audit.router)
 
 
 @app.on_event("startup")
