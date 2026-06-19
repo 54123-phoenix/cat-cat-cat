@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { X, Home, Map, Camera, MessageSquare, User, Shield, LogOut } from 'lucide-react'
+import { X, Bell, Award, Images, TrendingUp, Shield, LogOut } from 'lucide-react'
 
 export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   const navigate = useNavigate()
@@ -13,11 +13,10 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   }, [isOpen, onClose])
 
   const navItems = [
-    { label: '首页', icon: Home, path: '/' },
-    { label: '地图', icon: Map, path: '/map' },
-    { label: '拍照识别', icon: Camera, path: '/scan' },
-    { label: '社区', icon: MessageSquare, path: '/community' },
-    { label: '个人', icon: User, path: '/profile' },
+    { label: '通知中心', icon: Bell, path: '/notifications' },
+    { label: '勋章墙', icon: Award, path: '/badges' },
+    { label: '猫猫图库', icon: Images, path: '/gallery' },
+    { label: '周报', icon: TrendingUp, path: '/weekly-report' },
     ...(user?.role === 'admin'
       ? [{ label: '管理端', icon: Shield, path: '/admin' }]
       : []),
@@ -46,9 +45,16 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
                 <span className="text-lg">{user?.nickname?.[0] || '猫'}</span>
               )}
             </div>
-            <span className="font-semibold text-text">
-              {user?.nickname || '猫猫爱好者'}
-            </span>
+            <div>
+              <span className="font-semibold text-text block">
+                {user?.nickname || '猫猫爱好者'}
+              </span>
+              {user?.role && (
+                <span className="text-xs text-text-secondary">
+                  {user.role === 'admin' ? '管理员' : '猫友'}
+                </span>
+              )}
+            </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100">
             <X className="w-5 h-5 text-text-secondary" />

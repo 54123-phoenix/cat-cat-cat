@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Camera, MapPin, MessageSquare, User } from 'lucide-react'
+import { Home, MapPin, MessageSquare, User, Camera } from 'lucide-react'
 
 const tabs = [
-  { to: '/', label: '首页', icon: Camera },
+  { to: '/', label: '首页', icon: Home },
   { to: '/map', label: '地图', icon: MapPin },
   { to: '/community', label: '社区', icon: MessageSquare },
   { to: '/profile', label: '我的', icon: User },

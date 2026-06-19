@@ -6,12 +6,30 @@ import Sidebar from './Sidebar'
 import { getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
 
+const routeTitles = {
+  '/': '猫猫社区',
+  '/map': '猫猫地图',
+  '/scan': '拍照识猫',
+  '/community': '猫猫社区',
+  '/profile': '个人中心',
+  '/feed': '偶遇动态',
+  '/gallery': '猫猫图库',
+}
+
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const user = useUserStore()
   const navigate = useNavigate()
   const location = useLocation()
   const [tabIndex, setTabIndex] = useState(0)
+
+  const getTitle = () => {
+    const exact = routeTitles[location.pathname]
+    if (exact) return exact
+    if (location.pathname.startsWith('/cats/')) return '猫猫档案'
+    if (location.pathname.startsWith('/posts/')) return '帖子详情'
+    return '猫猫社区'
+  }
 
   useEffect(() => {
     const path = location.pathname
@@ -27,15 +45,21 @@ export default function Layout() {
       navigate('/login')
       return
     }
+    let cancelled = false
     getUserProfile()
       .then((u) => {
-        updateUser(u)
-        setToken(token, u)
+        if (!cancelled) {
+          updateUser(u)
+          setToken(token, u)
+        }
       })
       .catch(() => {
-        clearToken()
-        navigate('/login')
+        if (!cancelled) {
+          clearToken()
+          navigate('/login')
+        }
       })
+    return () => { cancelled = true }
   }, [])
 
   const handleLogout = () => {
@@ -46,7 +70,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen max-w-[480px] mx-auto bg-warm-50 pb-16">
-      {/* Top bar with avatar */}
+      {/* Top bar */}
       <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
         <button
           onClick={() => setSidebarOpen(true)}
@@ -61,10 +85,10 @@ export default function Layout() {
             )}
           </div>
         </button>
-        
-        <h1 className="text-lg font-bold text-text">猫猫社区</h1>
-        
-        <div className="w-9" /> {/* Spacer for centering */}
+
+        <h1 className="text-lg font-bold text-text">{getTitle()}</h1>
+
+        <div className="w-9" />
       </header>
 
       {/* Main content */}
@@ -74,16 +98,8 @@ export default function Layout() {
         </div>
       </main>
 
-      {/* Bottom tab bar */}
       <TabBar />
-
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-        user={user}
-        onLogout={handleLogout}
-      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} onLogout={handleLogout} />
     </div>
   )
 }
