@@ -115,7 +115,7 @@ export default function CatDetail() {
         <div className="p-5 space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-text">{cat.name}</h1>
+              <h1 className="text-display-lg text-text">{cat.name}</h1>
               {cat.nickname && (
                 <p className="text-primary font-bold text-sm mt-1">{cat.nickname}</p>
               )}

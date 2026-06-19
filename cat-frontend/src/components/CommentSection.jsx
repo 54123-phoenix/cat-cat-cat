@@ -65,14 +65,14 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
     <div className="border-t border-gray-50 pt-2 mt-1">
       <button
         onClick={toggleExpanded}
-        className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors py-1"
+        className="flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition-colors py-1"
       >
         <MessageCircle className="w-3.5 h-3.5" />
         {total} 条回复{!expanded ? ' ›' : ' ∧'}
       </button>
 
       {expanded && (
-        <div className="mt-2 space-y-2.5 animate-fade-up">
+        <div className="mt-2 space-y-2 animate-fade-up">
           {loading ? (
             <div className="space-y-2">
               {[1, 2].map((i) => (

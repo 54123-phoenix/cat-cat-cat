@@ -19,7 +19,7 @@ export default function TabBar() {
       className={({ isActive }) =>
         `flex flex-col items-center gap-0.5 transition-all duration-300 px-3 py-1 rounded-full ${
           isActive
-            ? 'text-primary bg-orange-50'
+            ? 'text-primary bg-primary-light'
             : 'text-text-muted opacity-50'
         }`
       }
@@ -40,7 +40,7 @@ export default function TabBar() {
       {/* Center scan button */}
       <button
         onClick={() => navigate('/scan')}
-        className="flex flex-col items-center -mt-5 focus-ring rounded-full"
+        className="flex flex-col items-center -mt-5 focus-ring rounded-full btn-sweep"
         aria-label="拍照识猫"
       >
         <div className="relative">

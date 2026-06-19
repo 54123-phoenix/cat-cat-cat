@@ -35,7 +35,7 @@ export default function Gallery() {
 
       <div className="p-3">
         {loading ? (
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="aspect-square rounded-xl skeleton" />
             ))}
@@ -45,12 +45,12 @@ export default function Gallery() {
             {error}
           </div>
         ) : images.length > 0 ? (
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {images.map((image, i) => (
               <button
                 key={image.id}
                 onClick={() => openViewer(i)}
-                className="bg-white rounded-xl border border-gray-100 overflow-hidden active:scale-95 transition-transform text-left"
+                className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card overflow-hidden active:scale-95 transition-transform text-left"
               >
                 <div className="aspect-square bg-primary-light overflow-hidden flex items-center justify-center relative">
                   <img
@@ -70,7 +70,7 @@ export default function Gallery() {
                   />
                   <Cat className="w-8 h-8 text-primary/30 absolute inset-0 m-auto" />
                 </div>
-                <div className="p-2.5">
+                <div className="p-2">
                   <p className="text-sm font-medium text-gray-800 truncate">{image.cat?.name || '校园猫猫'}</p>
                   <p className="text-xs text-gray-400 truncate">{image.cat?.location || '参考照片'}</p>
                 </div>

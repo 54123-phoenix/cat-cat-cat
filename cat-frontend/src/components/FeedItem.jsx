@@ -27,8 +27,8 @@ function formatTime(value) {
 export default function FeedItem({ sighting }) {
   const ActivityIcon = sighting.activity_type ? ACTIVITY_ICON[sighting.activity_type] : null
   const content = (
-    <div className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex gap-3 active:bg-orange-50 transition-colors animate-fade-up">
-      <div className="w-12 h-12 rounded-xl bg-cat-warm flex items-center justify-center overflow-hidden shrink-0 text-2xl">
+    <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card px-4 py-3 flex gap-3 active:bg-orange-50 transition-colors animate-fade-up">
+      <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center overflow-hidden shrink-0 text-2xl">
         {sighting.image_path ? (
           <img src={sighting.image_path} alt="偶遇照片" className="w-full h-full object-cover" />
         ) : (

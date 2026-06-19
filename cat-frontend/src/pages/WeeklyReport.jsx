@@ -35,25 +35,25 @@ export default function WeeklyReport() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="card p-4 text-center space-y-1">
-                <p className="text-2xl font-bold text-text">{report.total_sightings || 0}</p>
-                <p className="text-xs text-text-secondary">本周偶遇</p>
+                <p className="text-display-xl text-text">{report.total_sightings || 0}</p>
+                <p className="text-caption text-text-muted">本周偶遇</p>
               </div>
               <div className="card p-4 text-center space-y-1">
-                <p className="text-2xl font-bold text-text">{report.unique_cats || 0}</p>
-                <p className="text-xs text-text-secondary">遇到不同猫</p>
+                <p className="text-display-xl text-text">{report.unique_cats || 0}</p>
+                <p className="text-caption text-text-muted">遇到不同猫</p>
               </div>
               <div className="card p-4 text-center space-y-1">
-                <p className="text-2xl font-bold text-text">{report.streak_days || 0}</p>
-                <p className="text-xs text-text-secondary">连续天数</p>
+                <p className="text-display-xl text-text">{report.streak_days || 0}</p>
+                <p className="text-caption text-text-muted">连续天数</p>
               </div>
               <div className="card p-4 text-center space-y-1">
                 <div className="flex items-center justify-center gap-1">
-                  <p className="text-2xl font-bold text-text">{report.last_week_count || 0}</p>
+                  <p className="text-display-xl text-text">{report.last_week_count || 0}</p>
                   {report.trend === 'up' ? <TrendingUp className="w-5 h-5 text-green-500" /> :
                    report.trend === 'down' ? <TrendingDown className="w-5 h-5 text-red-500" /> :
                    <Minus className="w-5 h-5 text-gray-400" />}
                 </div>
-                <p className="text-xs text-text-secondary">上周对比</p>
+                <p className="text-caption text-text-muted">上周对比</p>
               </div>
             </div>
 

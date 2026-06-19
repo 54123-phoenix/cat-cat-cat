@@ -160,7 +160,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
 
         <div>
           <div className="text-xs text-gray-400 mb-2">添加标签</div>
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <div className="flex flex-wrap gap-2 mb-2">
             {PRESET_TAGS.map((tag) => (
               <button
                 key={tag}
@@ -184,7 +184,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
             <button onClick={addCustomTag} className="text-xs text-primary px-3">添加</button>
           </div>
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               {tags.map((tag) => (
                 <span key={tag} onClick={() => toggleTag(tag)} className="bg-primary-light text-orange-800 text-xs px-2.5 py-1 rounded-full cursor-pointer">
                   {tag} ×

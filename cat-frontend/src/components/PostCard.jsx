@@ -13,10 +13,10 @@ const TOPIC_LABEL = {
 }
 
 const TOPIC_COLORS = {
-  find: { bg: 'bg-orange-50', text: 'text-orange-600' },
-  daily: { bg: 'bg-green-50', text: 'text-green-600' },
-  health: { bg: 'bg-blue-50', text: 'text-blue-600' },
-  suggest: { bg: 'bg-purple-100', text: 'text-purple-700' },
+  find: { bg: 'bg-primary-light', text: 'text-primary' },
+  daily: { bg: 'bg-mint-light', text: 'text-mint' },
+  health: { bg: 'bg-info/10', text: 'text-info' },
+  suggest: { bg: 'bg-warning/10', text: 'text-warning' },
 }
 
 export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
@@ -70,17 +70,17 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3 animate-fade-up">
+    <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card p-4 space-y-3 animate-fade-up">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <Avatar user={post.user} />
           <div>
-            <div className="text-xs font-medium text-gray-700">{post.user?.nickname || `铲屎官 #${post.userId}`}</div>
-            <div className="text-xs text-gray-400">{post.createdAt}</div>
+            <div className="text-body-sm font-medium text-text">{post.user?.nickname || `铲屎官 #${post.userId}`}</div>
+            <div className="text-caption text-text-muted">{post.createdAt}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+          <span className={`text-caption px-2 py-0.5 rounded-full font-medium ${
             TOPIC_COLORS[post.topic]?.bg || 'bg-gray-50'
           } ${
             TOPIC_COLORS[post.topic]?.text || 'text-gray-400'
@@ -111,10 +111,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         className="cursor-pointer active:bg-gray-50/50 -mx-1 px-1 rounded-lg"
         onClick={goToDetail}
       >
-        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+        <p className="text-body text-text leading-relaxed whitespace-pre-wrap">{post.content}</p>
 
         {post.images?.length > 0 && (
-          <div className={`grid gap-1.5 mt-3 ${
+          <div className={`grid gap-2 mt-3 ${
             post.images.length === 1 ? 'grid-cols-1' :
             post.images.length === 2 ? 'grid-cols-2' :
             post.images.length === 3 ? 'grid-cols-2' :
@@ -135,7 +135,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
       </div>
 
       {post.tags?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {post.tags.map((tag) => (
             <button
               key={tag}
@@ -149,7 +149,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
       )}
 
       <div className="flex items-center gap-4 pt-1 border-t border-gray-50">
-        <button onClick={handleLike} className={`relative flex items-center gap-1.5 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
+        <button onClick={handleLike} className={`relative flex items-center gap-2 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
           {burst && (
@@ -160,7 +160,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             </>
           )}
         </button>
-        <button onClick={goToDetail} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors">
+        <button onClick={goToDetail} className="flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition-colors">
           <MessageCircle className="w-3.5 h-3.5" />
           {post.comments || 0} 条回复 ›
         </button>

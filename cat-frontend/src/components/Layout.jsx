@@ -69,9 +69,9 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen max-w-[480px] mx-auto bg-warm-50 pb-16">
+    <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16">
       {/* Top bar */}
-      <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-surface-0/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
         <button
           onClick={() => setSidebarOpen(true)}
           className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors"

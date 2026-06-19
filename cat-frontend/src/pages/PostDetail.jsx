@@ -124,7 +124,7 @@ export default function PostDetail() {
       <div className="p-4 space-y-4">
         {/* Author info */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <Avatar user={post.user} />
             <div>
               <div className="text-sm font-medium text-gray-800">{post.user?.nickname || `铲屎官 #${post.userId}`}</div>

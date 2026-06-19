@@ -80,16 +80,16 @@ export default function Home() {
         <div className="card p-4">
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-primary-light rounded-xl p-3 text-center">
-              <p className="text-lg font-bold text-primary">{cats.length}</p>
-              <p className="text-xs text-text-secondary">认识猫猫</p>
+              <p className="text-display-xl text-primary">{cats.length}</p>
+              <p className="text-caption text-text-muted">认识猫猫</p>
             </div>
-            <div className="bg-green-50 rounded-xl p-3 text-center">
-              <p className="text-lg font-bold text-green-600">{sightings.length}</p>
-              <p className="text-xs text-text-secondary">最新偶遇</p>
+            <div className="bg-mint-light rounded-xl p-3 text-center">
+              <p className="text-lg font-bold text-mint">{sightings.length}</p>
+              <p className="text-caption text-text-muted">最新偶遇</p>
             </div>
-            <div className="bg-blue-50 rounded-xl p-3 text-center">
-              <p className="text-lg font-bold text-blue-600">{postCount}</p>
-              <p className="text-xs text-text-secondary">社区帖子</p>
+            <div className="bg-info/10 rounded-xl p-3 text-center">
+              <p className="text-lg font-bold text-info">{postCount}</p>
+              <p className="text-caption text-text-muted">社区帖子</p>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function Home() {
       <div className="grid grid-cols-3 gap-3">
         <button
           onClick={() => navigate('/scan')}
-          className="col-span-2 bg-gradient-to-br from-primary to-[#EA580C] rounded-2xl p-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform"
+          className="col-span-2 bg-gradient-to-br from-primary to-[#EA580C] rounded-2xl p-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform btn-sweep"
         >
           <Camera className="w-6 h-6 text-white" />
           <span className="text-white font-bold text-base">拍照识猫</span>
@@ -109,14 +109,14 @@ export default function Home() {
             onClick={() => navigate('/community')}
             className="card p-3 flex flex-col items-center gap-1 w-full active:scale-95 transition-transform"
           >
-            <MessageSquare className="w-5 h-5 text-blue-500" />
+            <MessageSquare className="w-5 h-5 text-info" />
             <span className="text-xs font-medium text-text">社区</span>
           </button>
           <button
             onClick={() => navigate('/map')}
             className="card p-3 flex flex-col items-center gap-1 w-full active:scale-95 transition-transform"
           >
-            <MapPin className="w-5 h-5 text-green-500" />
+            <MapPin className="w-5 h-5 text-mint" />
             <span className="text-xs font-medium text-text">地图</span>
           </button>
         </div>
@@ -134,7 +134,7 @@ export default function Home() {
               <button
                 key={cat.id}
                 onClick={() => navigate(`/cats/${cat.id}`)}
-                className="flex-shrink-0 w-24 text-center space-y-1.5"
+                className="flex-shrink-0 w-24 text-center space-y-2"
               >
                 <div className="w-24 h-24 rounded-2xl bg-primary-light overflow-hidden mx-auto shadow-sm">
                   <ImageWithShimmer

@@ -146,22 +146,22 @@ export default function Profile() {
               <div className="flex justify-center mb-1">
                 <Award className="w-4 h-4 text-primary" />
               </div>
-              <p className="font-bold text-text text-base">{badgeStats.sightings || 0}</p>
-              <p className="text-xs text-text-secondary">偶遇次数</p>
+              <p className="font-bold text-text text-display-lg">{badgeStats.sightings || 0}</p>
+              <p className="text-caption text-text-muted">偶遇次数</p>
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-1">
                 <MapPin className="w-4 h-4 text-primary" />
               </div>
-              <p className="font-bold text-text text-base">{badgeStats.locations_count || 0}</p>
-              <p className="text-xs text-text-secondary">出没地点</p>
+              <p className="font-bold text-text text-display-lg">{badgeStats.locations_count || 0}</p>
+              <p className="text-caption text-text-muted">出没地点</p>
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-1">
                 <Award className="w-4 h-4 text-primary" />
               </div>
-              <p className="font-bold text-text text-base">{badgeStats.badges_count || 0}</p>
-              <p className="text-xs text-text-secondary">勋章</p>
+              <p className="font-bold text-text text-display-lg">{badgeStats.badges_count || 0}</p>
+              <p className="text-caption text-text-muted">勋章</p>
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function Profile() {
           onClick={() => navigate('/badges')}
           className="w-full flex items-center justify-between"
         >
-          <h3 className="text-lg font-bold text-text flex items-center gap-1.5">
+          <h3 className="text-lg font-bold text-text flex items-center gap-2">
             <Award className="w-5 h-5 text-primary" />
             勋章墙
           </h3>
@@ -273,7 +273,7 @@ export default function Profile() {
               <button
                 key={cat.id}
                 onClick={() => navigate(`/cats/${cat.cat_id}`)}
-                className="flex-shrink-0 w-20 text-center space-y-1.5"
+                className="flex-shrink-0 w-20 text-center space-y-2"
               >
                 <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center overflow-hidden mx-auto">
                   {cat.cat_avatar ? (

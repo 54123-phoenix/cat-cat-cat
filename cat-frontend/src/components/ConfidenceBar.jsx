@@ -1,6 +1,6 @@
 export default function ConfidenceBar({ value = 0 }) {
   const pct = Math.max(0, Math.min(100, Math.round(value * 100)))
-  const color = pct >= 80 ? 'bg-green-400' : pct >= 50 ? 'bg-yellow-400' : 'bg-red-400'
+  const color = pct >= 80 ? 'bg-success' : pct >= 50 ? 'bg-warning' : 'bg-danger'
 
   return (
     <div className="flex items-center gap-2 mt-1">

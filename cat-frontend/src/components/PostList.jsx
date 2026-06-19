@@ -6,10 +6,10 @@ import { MessageCircle } from 'lucide-react'
 
 function SkeletonPost() {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3 animate-fade-in">
+    <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card p-4 space-y-3 animate-fade-in">
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-full skeleton" />
-        <div className="space-y-1.5 flex-1">
+        <div className="space-y-2 flex-1">
           <div className="h-3 w-24 skeleton" />
           <div className="h-2.5 w-16 skeleton" />
         </div>
@@ -18,7 +18,7 @@ function SkeletonPost() {
         <div className="h-3 w-full skeleton" />
         <div className="h-3 w-3/4 skeleton" />
       </div>
-      <div className="h-32 rounded-xl skeleton" />
+      <div className="h-32 rounded-tile skeleton" />
       <div className="flex gap-4 pt-1">
         <div className="h-4 w-12 skeleton" />
         <div className="h-4 w-20 skeleton" />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
+import BadgeIcon from '../components/BadgeIcon'
 import { getBadges } from '../api'
 import { Eye, PenLine, Trophy, Sparkles, Medal } from 'lucide-react'
 
@@ -84,7 +85,7 @@ export default function BadgeGallery() {
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
                           isEarned ? 'bg-primary-light text-primary' : 'bg-gray-100 text-gray-400'
                         }`}>
-                          <span className="text-base font-bold">{(badge.name || '?')[0]}</span>
+                          <BadgeIcon badge={badge} size={20} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">

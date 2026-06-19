@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle } from 'lucide-react'
+import SadCat from '../components/illustrations/SadCat'
 import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
 import { createDiscovery, createSighting, identifyCat } from '../api'
@@ -161,7 +162,7 @@ export default function Scan() {
         ) : null}
 
         {phase === 'ready' && (
-          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors">
+          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
             <Sparkles className="w-4 h-4" />开始识别
           </button>
         )}
@@ -272,6 +273,13 @@ export default function Scan() {
               </div>
             )}
             <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
+              <div className="flex items-center gap-3 mb-3">
+                <SadCat size={48} className="text-gray-300 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-gray-500">来认识新的猫咪朋友吧</p>
+                  <p className="text-xs text-gray-400 mt-0.5">拍一张照片，AI 帮你识别</p>
+                </div>
+              </div>
             <div>· 尽量拍清晰的正面或侧面照片</div>
             <div>· 光线充足识别效果更佳</div>
             <div>· 识别不确定时会展示多个候选</div>

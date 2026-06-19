@@ -1,23 +1,23 @@
-import { PawPrint } from 'lucide-react'
+import SadCat from './illustrations/SadCat'
 
 /**
  * Reusable empty state placeholder.
  * Props:
- *   - icon: lucide-react icon component (defaults to PawPrint)
+ *   - icon: lucide-react icon component (defaults to SadCat)
  *   - title: short headline
  *   - description: optional supporting text
  *   - action: optional { label, onClick }
  */
 export default function EmptyState({
-  icon: Icon = PawPrint,
+  icon: Icon = SadCat,
   title,
   description,
   action,
 }) {
   return (
-    <div className="card p-8 text-center space-y-3 animate-fade-in">
+    <div className="card p-10 text-center space-y-3 animate-fade-in">
       <div className="flex justify-center">
-        <Icon className="w-10 h-10 text-text-muted" />
+        <Icon className="w-16 h-16 text-text-muted/40" />
       </div>
       {title && (
         <p className="text-sm font-medium text-text">{title}</p>

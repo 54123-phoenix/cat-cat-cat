@@ -10,7 +10,7 @@ export default function PageHeader({ title, subtitle, action, onBack }) {
   const navigate = useNavigate()
 
   return (
-    <header className="sticky top-0 z-40 bg-warm-50/80 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-b border-border">
+    <header className="sticky top-0 z-40 bg-surface-0/80 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-b border-border">
       <button
         onClick={onBack || (() => navigate(-1))}
         className="p-1 -ml-1 rounded-lg hover:bg-primary-light transition-colors focus-ring"

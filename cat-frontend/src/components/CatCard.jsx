@@ -3,7 +3,7 @@ import ImageWithShimmer from './ImageWithShimmer'
 
 export default function CatCard({ cat }) {
   return (
-    <div className="card overflow-hidden rounded-2xl group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg p-0">
+    <div className="card overflow-hidden rounded-card group ring-1 ring-stone-900/5 shadow-e1 transition-all duration-300 hover:shadow-e2 hover:-translate-y-0.5 p-0">
       <div className="aspect-square relative bg-primary-light">
         {cat.avatar ? (
           <ImageWithShimmer
