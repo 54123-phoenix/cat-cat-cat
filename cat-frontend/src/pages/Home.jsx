@@ -18,6 +18,14 @@ function greeting() {
   return '夜深了，猫猫们该休息了'
 }
 
+function greetingGradient() {
+  const h = new Date().getHours()
+  if (h >= 6 && h < 12) return { grad: 'from-[#FFF7ED] to-[#FED7AA]', dark: false }
+  if (h >= 12 && h < 17) return { grad: 'from-[#FEF3C7] to-[#FFF7ED]', dark: false }
+  if (h >= 17 && h < 20) return { grad: 'from-[#FFEDD5] to-[#FED7AA]', dark: false }
+  return { grad: 'from-[#292524] to-[#1C1917]', dark: true }
+}
+
 const ACTIVITY_TYPES = [
   { value: 'eating', emoji: '🍽️', label: '在吃饭' },
   { value: 'sleeping', emoji: '😴', label: '在睡觉' },
@@ -79,35 +87,43 @@ export default function Home() {
     }
   }
 
+  const { grad: greetingGrad, dark: greetingDark } = greetingGradient()
+  const greetingText = greetingDark ? 'text-white' : 'text-text'
+  const greetingSubText = greetingDark ? 'text-white/70' : 'text-text-secondary'
+
   return (
     <div className="space-y-5">
       {/* Greeting + stats */}
-      <div className="card p-5 space-y-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-text-secondary">{greeting()}</p>
-            <h1 className="text-xl font-bold text-text mt-0.5">
-              {profile?.nickname || '猫猫爱好者'}
-            </h1>
+      <div className="space-y-3">
+        <div className={`rounded-2xl p-5 bg-gradient-to-br ${greetingGrad}`}>
+          <div className="flex items-start justify-between">
+            <div>
+              <p className={`text-sm ${greetingSubText}`}>{greeting()}</p>
+              <h1 className={`text-xl font-bold ${greetingText} mt-0.5`}>
+                {profile?.nickname || '猫猫爱好者'}
+              </h1>
+            </div>
+            {loading ? (
+              <CatSpinner size={28} />
+            ) : (
+              <PawPrint className={`w-7 h-7 animate-breathe ${greetingDark ? 'text-white/60' : 'text-primary/40'}`} />
+            )}
           </div>
-          {loading ? (
-            <CatSpinner size={28} />
-          ) : (
-            <PawPrint className="w-7 h-7 text-primary/40" />
-          )}
         </div>
-        <div className="grid grid-cols-3 gap-3 pt-1">
-          <div className="bg-primary-light rounded-xl p-3 text-center">
-            <p className="text-lg font-bold text-primary">{cats.length}</p>
-            <p className="text-xs text-text-secondary">认识猫猫</p>
-          </div>
-          <div className="bg-green-50 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold text-green-600">{sightings.length}</p>
-            <p className="text-xs text-text-secondary">最新偶遇</p>
-          </div>
-          <div className="bg-blue-50 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold text-blue-600">{postCount}</p>
-            <p className="text-xs text-text-secondary">社区帖子</p>
+        <div className="card p-4">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-primary-light rounded-xl p-3 text-center">
+              <p className="text-lg font-bold text-primary">{cats.length}</p>
+              <p className="text-xs text-text-secondary">认识猫猫</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-3 text-center">
+              <p className="text-lg font-bold text-green-600">{sightings.length}</p>
+              <p className="text-xs text-text-secondary">最新偶遇</p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-3 text-center">
+              <p className="text-lg font-bold text-blue-600">{postCount}</p>
+              <p className="text-xs text-text-secondary">社区帖子</p>
+            </div>
           </div>
         </div>
       </div>

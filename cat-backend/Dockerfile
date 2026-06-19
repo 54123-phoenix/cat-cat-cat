@@ -4,9 +4,12 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 COPY . .
+
+# Copy local SQLite database and uploads at build time
+COPY cat_community.db /app/cat_community.db
+COPY uploads/ /app/uploads/
 
 RUN mkdir -p uploads/cats uploads/sightings embeddings
 

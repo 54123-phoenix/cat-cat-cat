@@ -9,8 +9,7 @@ services:
     environment:
       - VITE_API_TARGET=http://backend:8000
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     restart: on-failure
 
   backend:
@@ -18,39 +17,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./cat-backend:/app
-      - ./uploads:/app/uploads
+      - ./cat-backend/uploads:/app/uploads
+      - ./cat-backend/cat_community.db:/app/cat_community.db
     environment:
-      - DATABASE_URL=mysql+pymysql://root:***@db:3306/cat_community
+      - DATABASE_URL=sqlite:///./cat_community.db
       - UPLOAD_DIR=./uploads
-    depends_on:
-      db:
-        condition: service_healthy
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: cat_community
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
-
-volumes:
-  mysql_data:

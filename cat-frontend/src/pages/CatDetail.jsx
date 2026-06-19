@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
+import ImageWithShimmer from '../components/ImageWithShimmer'
 import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff } from 'lucide-react'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../api'
 
@@ -106,10 +107,10 @@ export default function CatDetail() {
         <section className="card overflow-hidden p-0">
           <div className="aspect-[4/3] bg-primary-light flex items-center justify-center overflow-hidden">
             {cat.avatar ? (
-              <img src={cat.avatar} alt={cat.name} className="w-full h-full object-cover" />
+              <ImageWithShimmer src={cat.avatar} alt={cat.name} className="w-full h-full" />
             ) : (
               <Cat className="w-12 h-12 text-primary/30" />
-              )}
+            )}
           </div>
         <div className="p-5 space-y-3">
           <div className="flex items-start justify-between gap-3">
@@ -216,7 +217,7 @@ export default function CatDetail() {
                 onClick={() => setViewerIndex(i)}
                 className="aspect-square card p-0 overflow-hidden active:scale-95 transition-transform"
               >
-                <img src={image.image_path} alt={cat.name} className="w-full h-full object-cover" />
+                <ImageWithShimmer src={image.image_path} alt={cat.name} className="w-full h-full" />
               </button>
             ))}
           </div>

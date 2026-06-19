@@ -117,49 +117,52 @@ export default function Profile() {
   return (
     <div className="space-y-5">
       {/* User Info */}
-      <div className="card p-5">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden">
-            {user?.avatar ? (
-              <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <User className="w-8 h-8 text-primary" />
-            )}
+      <div className="card p-0 overflow-hidden">
+        <div className="h-28 bg-gradient-to-r from-primary to-[#EA580C] rounded-b-3xl" />
+        <div className="px-5 pb-5">
+          <div className="flex items-end gap-4 -mt-10">
+            <div className="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden ring-4 ring-white shadow-md">
+              {user?.avatar ? (
+                <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-8 h-8 text-primary" />
+              )}
+            </div>
+            <div className="min-w-0 pb-1">
+              <h2 className="text-2xl font-extrabold text-text truncate">
+                {user?.nickname || '猫猫爱好者'}
+              </h2>
+              <p className="text-text-secondary text-sm">
+                {cats.length > 0
+                  ? `已经认识了 ${cats.length} 只校园猫猫`
+                  : '还没有认识的猫猫'}
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <h2 className="text-xl font-bold text-text truncate">
-              {user?.nickname || '猫猫爱好者'}
-            </h2>
-            <p className="text-text-secondary text-sm">
-              {cats.length > 0
-                ? `已经认识了 ${cats.length} 只校园猫猫`
-                : '还没有认识的猫猫'}
-            </p>
-          </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mt-5 pt-4 border-t border-border">
-          <div className="text-center">
-            <div className="flex justify-center mb-1">
-              <Award className="w-5 h-5 text-primary" />
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-border">
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Award className="w-4 h-4 text-primary" />
+              </div>
+              <p className="font-bold text-text text-base">{badgeStats.sightings || 0}</p>
+              <p className="text-xs text-text-secondary">偶遇次数</p>
             </div>
-            <p className="font-bold text-text text-lg">{badgeStats.sightings || 0}</p>
-            <p className="text-xs text-text-secondary">偶遇次数</p>
-          </div>
-          <div className="text-center">
-            <div className="flex justify-center mb-1">
-              <MapPin className="w-5 h-5 text-primary" />
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <MapPin className="w-4 h-4 text-primary" />
+              </div>
+              <p className="font-bold text-text text-base">{badgeStats.locations_count || 0}</p>
+              <p className="text-xs text-text-secondary">出没地点</p>
             </div>
-            <p className="font-bold text-text text-lg">{badgeStats.locations_count || 0}</p>
-            <p className="text-xs text-text-secondary">出没地点</p>
-          </div>
-          <div className="text-center">
-            <div className="flex justify-center mb-1">
-              <Award className="w-5 h-5 text-primary" />
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Award className="w-4 h-4 text-primary" />
+              </div>
+              <p className="font-bold text-text text-base">{badgeStats.badges_count || 0}</p>
+              <p className="text-xs text-text-secondary">勋章</p>
             </div>
-            <p className="font-bold text-text text-lg">{badgeStats.badges_count || 0}</p>
-            <p className="text-xs text-text-secondary">勋章</p>
           </div>
         </div>
       </div>
