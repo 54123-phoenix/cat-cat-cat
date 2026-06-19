@@ -818,73 +818,14 @@ def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, curr
 
 
 def init_mock_data(db: Session):
-    demo_cats = [
-        {"name": "Amber", "color": "橘白", "personality": "亲人", "story": "", "location": "图书馆附近", "avatar": "/uploads/cats/Amber/avatar.jpg"},
-        {"name": "Awu", "color": "黑白", "personality": "活泼", "story": "", "location": "树下", "avatar": "/uploads/cats/Awu/avatar.jpg"},
-        {"name": "Baguette", "color": "橘色", "personality": "温和", "story": "", "location": "花园", "avatar": "/uploads/cats/Baguette/avatar.jpg"},
-        {"name": "Chewy", "color": "狸花", "personality": "胆小", "story": "", "location": "", "avatar": "/uploads/cats/Chewy/avatar.jpg"},
-        {"name": "Coco", "color": "三花", "personality": "粘人", "story": "", "location": "草坪", "avatar": "/uploads/cats/Coco/avatar.jpg"},
-        {"name": "Curry", "color": "橘色", "personality": "慵懒", "story": "", "location": "长椅", "avatar": "/uploads/cats/Curry/avatar.jpg"},
-        {"name": "DarkChocolate", "color": "深棕", "personality": "神秘", "story": "", "location": "", "avatar": "/uploads/cats/DarkChocolate/avatar.jpg"},
-        {"name": "Glaze", "color": "白色", "personality": "优雅", "story": "", "location": "食堂附近", "avatar": "/uploads/cats/Glaze/avatar.jpg"},
-        {"name": "LittleStick", "color": "条纹", "personality": "好奇", "story": "", "location": "", "avatar": "/uploads/cats/LittleStick/avatar.jpg"},
-        {"name": "Meimei", "color": "三花", "personality": "温柔", "story": "", "location": "", "avatar": "/uploads/cats/Meimei/avatar.jpg"},
-        {"name": "Nana", "color": "黑白", "personality": "亲人", "story": "", "location": "", "avatar": "/uploads/cats/Nana/avatar.jpg"},
-        {"name": "Naonao", "color": "橘色", "personality": "调皮", "story": "", "location": "", "avatar": "/uploads/cats/Naonao/avatar.jpg"},
-        {"name": "osmanthus", "color": "橘白", "personality": "安静", "story": "", "location": "桂花树下", "avatar": "/uploads/cats/osmanthus/avatar.jpg"},
-        {"name": "PeanutCandy", "color": "狸花", "personality": "贪吃", "story": "", "location": "", "avatar": "/uploads/cats/PeanutCandy/avatar.jpg"},
-        {"name": "Roll", "color": "橘色", "personality": "爱滚", "story": "", "location": "", "avatar": "/uploads/cats/Roll/avatar.jpg"},
-        {"name": "Salmon", "color": "橘白", "personality": "好奇", "story": "", "location": "喷泉旁", "avatar": "/uploads/cats/Salmon/avatar.jpg"},
-        {"name": "Shasha", "color": "狸花", "personality": "优雅", "story": "", "location": "喷泉旁", "avatar": "/uploads/cats/Shasha/avatar.jpg"},
-    ]
-
     cat_ids = {}
-    for cat_data in demo_cats:
-        cat = db.query(models.Cat).filter(models.Cat.name == cat_data["name"]).first()
-        if not cat:
-            cat = models.Cat(**cat_data)
-            db.add(cat)
-            db.flush()
-        else:
-            for key, value in cat_data.items():
-                if getattr(cat, key, None) in (None, ""):
-                    setattr(cat, key, value)
-        cat_ids[cat_data["name"]] = cat.id
+    real_cats = db.query(models.Cat).all()
+    for cat in real_cats:
+        cat_ids[cat.name] = cat.id
 
     db.commit()
 
-    # Add reference images for each cat
-    import os
-    uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads", "cats")
-    for cat_name, cat_id in cat_ids.items():
-        if db.query(models.CatImage).filter(models.CatImage.cat_id == cat_id).count() == 0:
-            cat_dir = os.path.join(uploads_dir, cat_name)
-            if os.path.isdir(cat_dir):
-                images = [f for f in os.listdir(cat_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
-                for img in images:
-                    db.add(models.CatImage(cat_id=cat_id, image_path=f"/uploads/cats/{cat_name}/{img}"))
-
-    # Create sample sightings
-    demo_sightings = [
-        ("Amber", "Campus", 31.3009, 121.5037, "Spotted near the library", 0.95),
-        ("Awu", "Campus", 31.2996, 121.5018, "Resting under a tree", 0.88),
-        ("Baguette", "Campus", 31.3013, 121.5043, "Walking around the garden", 0.92),
-        ("Coco", "Campus", 31.3001, 121.5005, "Playing with leaves", 0.86),
-        ("Curry", "Campus", 31.3021, 121.5012, "Sleeping on a bench", 0.81),
-        ("Glaze", "Campus", 31.2991, 121.5049, "Looking for food", 0.9),
-        ("Salmon", "Campus", 31.3013, 121.5043, "Chasing butterflies", 0.84),
-        ("Shasha", "Campus", 31.3013, 121.5043, "Sitting by the fountain", 0.79),
-    ]
-
-    for name, location, latitude, longitude, note, confidence in demo_sightings:
-        cat_id = cat_ids[name]
-        existing = db.query(models.Sighting).filter(
-            models.Sighting.cat_id == cat_id,
-            models.Sighting.note == note,
-        ).first()
-        if not existing:
-            db.add(models.Sighting(cat_id=cat_id, location=location, location_name=location, latitude=latitude, longitude=longitude, spotted_by="Cat Lover", note=note, confidence=confidence))
-
+    # Create demo user if not exists
     demo_user = db.query(models.User).filter(models.User.username == "demo").first()
     if not demo_user:
         from passlib.context import CryptContext
@@ -894,89 +835,8 @@ def init_mock_data(db: Session):
             password_hash=pwd_ctx.hash("demo123"),
             nickname="Cat Lover",
             role="user",
-            avatar="/uploads/avatar/default.jpg",
         )
         db.add(demo_user)
-        db.flush()
-
-    # Attach post images from uploaded files
-    post_images = []
-    posts_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads", "posts")
-    if os.path.isdir(posts_dir):
-        post_images = sorted([
-            f"/uploads/posts/{f}" for f in os.listdir(posts_dir)
-            if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))
-        ])
-
-    # Seed community posts
-    if db.query(models.Post).count() == 0:
-        seed_posts = [
-            {
-                "topic": "daily",
-                "content": "今天在图书馆附近又看到 Amber 了！它正趴在台阶上晒太阳，眯着眼睛特别享受。路过的人都忍不住停下来摸两下 🐱",
-                "cat_name": "Amber",
-            },
-            {
-                "topic": "daily",
-                "content": "Coco 今天在草坪上追蝴蝶，跑得飞快！拍了十几张照片才抓到一张清晰的。它好像又胖了一点 😅",
-                "cat_name": "Coco",
-            },
-            {
-                "topic": "find",
-                "content": "请问有人最近在食堂附近看到 Glaze 吗？它白色的毛特别显眼，已经两天没见到它了，有点担心 🤔",
-                "cat_name": "Glaze",
-            },
-            {
-                "topic": "daily",
-                "content": "Curry 还是老样子，躺在长椅上晒太阳。路过的同学说它已经在那睡了三个小时了 🛌 实名羡慕",
-                "cat_name": "Curry",
-            },
-            {
-                "topic": "health",
-                "content": "Salmon 右前爪好像有点受伤，走路的时候不太敢着地。已经在联系猫协的同学了，希望没什么大问题 🙏",
-                "cat_name": "Salmon",
-            },
-            {
-                "topic": "suggest",
-                "content": "建议在校园地图上标注一下每个喂食点的位置，方便大家去添粮。每次都要找半天才知道哪里可以喂 🗺️",
-            },
-            {
-                "topic": "daily",
-                "content": "Shasha 今天在喷泉旁边喝水，画面太治愈了！它真的是校园里最优雅的猫，走路都带着气质 ✨",
-                "cat_name": "Shasha",
-            },
-            {
-                "topic": "find",
-                "content": "Baguette 好像找到新据点了——文科楼后面的小花园！今天看到它从那边的灌木丛里钻出来，估计以后那里也是常驻地了 🏠",
-                "cat_name": "Baguette",
-            },
-            {
-                "topic": "daily",
-                "content": "今天带同学去看 Awu，结果它一路跟着我们走了小半个校园，最后还送我们到宿舍楼下。这猫是社牛吧 😂",
-                "cat_name": "Awu",
-            },
-        ]
-        for i, post_data in enumerate(seed_posts):
-            cat_id = cat_ids.get(post_data.get("cat_name"))
-            tags = [f"#{post_data['cat_name']}"] if post_data.get("cat_name") else []
-            db_post = models.Post(
-                user_id=demo_user.id,
-                topic=post_data["topic"],
-                content=post_data["content"],
-                tags=json.dumps(tags, ensure_ascii=False),
-                related_cat_id=cat_id,
-                likes_count=0,
-                comments_count=0,
-            )
-            db.add(db_post)
-            db.flush()
-            # Attach image to first few posts
-            if i < len(post_images) and post_images[i]:
-                db.add(models.PostImage(
-                    post_id=db_post.id,
-                    image_path=post_images[i],
-                    sort_order=0,
-                ))
         db.flush()
 
     db.commit()
