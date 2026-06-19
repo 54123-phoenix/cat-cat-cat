@@ -1,4 +1,0 @@
-  return (
-    <div className="space-y-0 p-4">
-      <header className="card p-5 space-y-2 mb-4">
-        <Link to="/profile" className="text-sm font-bold text-text-secondary">← 返回普通模式</Link>

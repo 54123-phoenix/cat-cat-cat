@@ -1,1 +1,0 @@
-{"1": "    <div className=\"space-y-5 p-4\">", "2": "      <header className=\"card p-5 space-y-2\">", "3": "        <Link to=\"/profile\" className=\"text-sm font-bold text-text-secondary\">\u2190 \u8fd4\u56de\u666e\u901a\u6a21\u5f0f</Link>", "4": "        <div className=\"flex items-center justify-between gap-3\">", "5": "          <div>"}
