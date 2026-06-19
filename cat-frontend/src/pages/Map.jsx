@@ -54,6 +54,7 @@ export default function Map() {
   const [geoLoading, setGeoLoading] = useState(false)
   const [days, setDays] = useState(0)
   const [mapReady, setMapReady] = useState(false)
+  const [nearbyCats, setNearbyCats] = useState([])
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const AMapRef = useRef(null)
@@ -186,16 +187,15 @@ export default function Map() {
           if (!point.latitude || !point.longitude) continue
           const catId = catByName.get(point.name)
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; line-height: 1;
-            background: rgba(255,255,255,0.9);
-            border: 2px solid #F97316;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            cursor: pointer;
-          ">🐱</div>`
+          markerContent.innerHTML = `<div style="width:32px;height:32px;cursor:pointer">
+            <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" fill="white" stroke="#F97316" stroke-width="2"/>
+              <circle cx="11" cy="14" r="2" fill="#F97316"/>
+              <circle cx="21" cy="14" r="2" fill="#F97316"/>
+              <path d="M9 20 Q16 26 23 20" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
+              <polygon points="16,5 14,10 18,10" fill="#F97316" opacity="0.8"/>
+            </svg>
+          </div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
@@ -225,6 +225,11 @@ export default function Map() {
     }
 
     loadMarkers()
+    
+    // Fetch nearby cats for bottom sheet
+    getCats().then(cats => {
+      if (!cancelled) setNearbyCats(cats.slice(0, 8))
+    }).catch(() => {})
 
     return () => {
       cancelled = true
@@ -294,6 +299,26 @@ export default function Map() {
               </button>
               <button onClick={handleSkipLocation} className="w-full py-3 rounded-xl border border-border font-semibold text-text-secondary bg-white hover:bg-gray-50 transition-colors">暂不开启</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom sheet - nearby cats */}
+      {nearbyCats.length > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 z-40 bg-surface-1/95 backdrop-blur-md rounded-t-container shadow-e3 p-4 pb-20">
+          <div className="w-10 h-1 bg-border rounded-full mx-auto mb-3" />
+          <h3 className="text-h3 font-bold text-text mb-3">附近猫咪</h3>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-4 px-4 pb-1">
+            {nearbyCats.map((cat) => (
+              <button key={cat.id} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
+                <div className="w-16 h-16 rounded-full bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20">
+                  {cat.avatar ? <img src={cat.avatar} alt="" className="w-full h-full object-cover" /> : 
+                    <div className="w-full h-full flex items-center justify-center text-xl">🐱</div>}
+                </div>
+                <p className="text-xs font-medium text-text truncate">{cat.name}</p>
+                {cat.location && <p className="text-[10px] text-text-muted truncate">{cat.location}</p>}
+              </button>
+            ))}
           </div>
         </div>
       )}
