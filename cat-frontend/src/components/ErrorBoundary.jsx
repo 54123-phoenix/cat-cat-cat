@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import MascotCat from './MascotCat'
+import LostCat from './illustrations/LostCat'
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class ErrorBoundary extends Component {
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-warm-50 p-6">
           <div className="card clay-card max-w-sm w-full text-center space-y-5 animate-scale-in">
             <div className="flex justify-center">
-              <MascotCat mood="sad" size={88} />
+              <LostCat size={88} />
             </div>
             <div className="space-y-2">
               <h2 className="text-lg font-bold text-text">喵呜～页面出了点小状况</h2>

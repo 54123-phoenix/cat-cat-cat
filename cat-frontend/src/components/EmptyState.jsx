@@ -1,5 +1,14 @@
 import SadCat from './illustrations/SadCat'
 import MascotCat from './MascotCat'
+import EmptyCat from './illustrations/EmptyCat'
+import LostCat from './illustrations/LostCat'
+import EmptyBox from './illustrations/EmptyBox'
+
+const VARIANT_ILLUSTRATIONS = {
+  empty: EmptyCat,
+  lost: LostCat,
+  box: EmptyBox,
+}
 
 /**
  * Reusable empty state placeholder.
@@ -7,6 +16,7 @@ import MascotCat from './MascotCat'
  *   - icon: lucide-react icon component (defaults to MascotCat)
  *   - useMascot: when true (default) render MascotCat instead of icon
  *   - mood: MascotCat mood (default 'curious')
+ *   - variant: 'empty' | 'lost' | 'box' — render a dedicated illustration
  *   - title: short headline
  *   - description: optional supporting text
  *   - action: optional { label, onClick }
@@ -15,14 +25,19 @@ export default function EmptyState({
   icon: Icon,
   useMascot = true,
   mood = 'curious',
+  variant,
   title,
   description,
   action,
 }) {
+  const VariantIllustration = variant ? VARIANT_ILLUSTRATIONS[variant] : null
+
   return (
     <div className="card p-10 text-center space-y-3 animate-fade-in">
-      <div className="flex justify-center">
-        {useMascot && !Icon ? (
+      <div className="flex justify-center text-text-muted/40">
+        {VariantIllustration && !useMascot ? (
+          <VariantIllustration size={64} />
+        ) : useMascot && !Icon ? (
           <MascotCat mood={mood} size={80} />
         ) : Icon ? (
           <Icon className="w-16 h-16 text-text-muted/40" />
