@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { getPosts } from '../api'
+import { useEffect, useState, useRef } from 'react'
+import { useInfinitePosts } from '../hooks/useApi'
 import PostCard from './PostCard'
 import EmptyState from './EmptyState'
 import { MessageCircle } from 'lucide-react'
@@ -28,22 +28,39 @@ function SkeletonPost() {
 }
 
 export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }) {
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfinitePosts({ topic })
+  const sentinelRef = useRef(null)
 
   useEffect(() => {
-    setLoading(true)
-    getPosts({ topic })
-      .then((data) => setPosts(Array.isArray(data) ? data : []))
-      .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [topic, refreshKey])
+    refetch()
+  }, [refreshKey])
+
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el || !hasNextPage) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { rootMargin: '200px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  const posts = data?.pages?.flatMap((page) => {
+    if (Array.isArray(page)) return page
+    if (page?.items) return page.items
+    return []
+  }) ?? []
 
   function handleDeleted(postId) {
-    setPosts((prev) => prev.filter((p) => p.id !== postId))
+    refetch()
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-3 space-y-3">
         {[1, 2, 3].map((i) => <SkeletonPost key={i} />)}
@@ -66,6 +83,13 @@ export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }
   return (
     <div className="p-3 space-y-3">
       {posts.map((post) => <PostCard key={post.id} post={post} onReport={onReport} onDeleted={handleDeleted} onTagClick={onTagClick} />)}
+      <div ref={sentinelRef} />
+      {isFetchingNextPage && (
+        <div className="py-4 text-center text-sm text-text-muted">加载更多…</div>
+      )}
+      {!hasNextPage && posts.length > 0 && (
+        <div className="py-4 text-center text-xs text-text-muted">— 已经到底了 —</div>
+      )}
     </div>
   )
 }

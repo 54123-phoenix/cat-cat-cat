@@ -9,6 +9,17 @@
   --color-muted: #78716C;
   --color-border: #E7E5E4;
   --color-accent: #FED7AA;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #FFF7ED;
+  --color-surface-0: #FFF9F5;
+  --color-text-secondary: #57534E;
+  --color-skeleton-from: #F5F5F4;
+  --color-skeleton-to: #E7E5E4;
+  --color-gray-50: #FAFAF9;
+  --color-gray-100: #F5F5F4;
 }
 
 /* === Theme: original (default warm orange, same as :root) === */
@@ -21,6 +32,17 @@
   --color-muted: #78716C;
   --color-border: #E7E5E4;
   --color-accent: #FED7AA;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #FFF7ED;
+  --color-surface-0: #FFF9F5;
+  --color-text-secondary: #57534E;
+  --color-skeleton-from: #F5F5F4;
+  --color-skeleton-to: #E7E5E4;
+  --color-gray-50: #FAFAF9;
+  --color-gray-100: #F5F5F4;
 }
 
 /* === Theme: zen (禅意青灰) === */
@@ -33,6 +55,17 @@
   --color-muted: #6B7280;
   --color-border: #D6D3D1;
   --color-accent: #CCFBF1;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #F0FDFA;
+  --color-surface-0: #F8FAFC;
+  --color-text-secondary: #4B5563;
+  --color-skeleton-from: #E5E7EB;
+  --color-skeleton-to: #D1D5DB;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
 }
 
 /* === Theme: rustic (田园棕) === */
@@ -45,6 +78,17 @@
   --color-muted: #78716C;
   --color-border: #E7E5E4;
   --color-accent: #FDE68A;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #FEF3C7;
+  --color-surface-0: #FFFBEB;
+  --color-text-secondary: #57534E;
+  --color-skeleton-from: #F5F5F4;
+  --color-skeleton-to: #E7E5E4;
+  --color-gray-50: #FAFAF9;
+  --color-gray-100: #F5F5F4;
 }
 
 /* === Theme: modern (现代蓝) === */
@@ -57,6 +101,17 @@
   --color-muted: #64748B;
   --color-border: #E2E8F0;
   --color-accent: #DBEAFE;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #EFF6FF;
+  --color-surface-0: #F8FAFC;
+  --color-text-secondary: #475569;
+  --color-skeleton-from: #E2E8F0;
+  --color-skeleton-to: #CBD5E1;
+  --color-gray-50: #F8FAFC;
+  --color-gray-100: #F1F5F9;
 }
 
 /* === Theme: sugary (糖果粉) === */
@@ -69,6 +124,17 @@
   --color-muted: #9D8B96;
   --color-border: #FBCFE8;
   --color-accent: #FCE7F3;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #FDF2F8;
+  --color-surface-0: #FDF2F8;
+  --color-text-secondary: #704F5E;
+  --color-skeleton-from: #FCE7F3;
+  --color-skeleton-to: #FBCFE8;
+  --color-gray-50: #FDF2F8;
+  --color-gray-100: #FCE7F3;
 }
 
 /* === Theme: cafe (咖啡馆深棕) === */
@@ -81,6 +147,17 @@
   --color-muted: #8B7355;
   --color-border: #DCC9B8;
   --color-accent: #EAD9C6;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: #F59E0B;
+  --color-primary-light: #FEF3C7;
+  --color-surface-0: #FBF6F0;
+  --color-text-secondary: #5C4A3A;
+  --color-skeleton-from: #EAD9C6;
+  --color-skeleton-to: #DCC9B8;
+  --color-gray-50: #F3EBE3;
+  --color-gray-100: #EAD9C6;
 }
 
 /* === Theme: dark (深色) === */
@@ -93,6 +170,17 @@
   --color-muted: #A8A29E;
   --color-border: #44403C;
   --color-accent: #7C2D12;
+  --color-success: #4ADE80;
+  --color-danger: #F87171;
+  --color-info: #60A5FA;
+  --color-warning: #FBBF24;
+  --color-primary-light: #431407;
+  --color-surface-0: #1C1917;
+  --color-text-secondary: #D6D3D1;
+  --color-skeleton-from: #292524;
+  --color-skeleton-to: #44403C;
+  --color-gray-50: #1C1917;
+  --color-gray-100: #292524;
 }
 
 @tailwind base;
@@ -149,7 +237,7 @@
     font-size: 15px;
     cursor: pointer;
     border: none;
-    background: #F97316;
+    background: var(--color-primary);
     color: white;
     box-shadow:
       0 2px 4px rgb(249 115 22 / 0.2),
@@ -161,7 +249,7 @@
   }
 
   .clay-btn:hover:not(:disabled) {
-    background: #EA580C;
+    background: var(--color-primary-dark);
     box-shadow:
       0 4px 8px rgb(249 115 22 / 0.25),
       0 6px 16px rgb(249 115 22 / 0.2),
@@ -204,26 +292,26 @@
   }
 
   .btn-primary {
-    background: #F97316;
+    background: var(--color-primary);
     color: white;
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: #EA580C;
+    background: var(--color-primary-dark);
   }
 
   .btn-ghost {
     background: transparent;
-    color: #78716C;
-    border: 1.5px solid #E7E5E4;
+    color: var(--color-muted);
+    border: 1.5px solid var(--color-border);
   }
 
   .btn-ghost:hover:not(:disabled) {
-    background: #F5F5F4;
+    background: var(--color-gray-50);
   }
 
   .btn-danger {
-    background: #EF4444;
+    background: var(--color-danger);
     color: white;
   }
 
@@ -241,7 +329,7 @@
     width: 180px;
     height: 180px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #F97316, #EA580C);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     border: none;
     box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
     cursor: pointer;
@@ -256,7 +344,7 @@
   }
 
   .tab-bar {
-    background: #FFFFFF;
+    background: var(--color-surface);
     box-shadow: 0 -2px 8px -2px rgb(17 12 9 / 0.08), 0 -1px 2px rgb(17 12 9 / 0.04);
   }
 
@@ -271,7 +359,7 @@
   }
 
   .skeleton {
-    background: linear-gradient(90deg, #F5F5F4 25%, #E7E5E4 50%, #F5F5F4 75%);
+    background: linear-gradient(90deg, var(--color-skeleton-from) 25%, var(--color-skeleton-to) 50%, var(--color-skeleton-from) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s ease-in-out infinite;
     border-radius: 8px;
@@ -282,9 +370,8 @@
     animation: badge-glow 2s ease-in-out infinite;
   }
 
-  /* Focus ring for accessibility */
   .focus-ring:focus-visible {
-    outline: 2px solid #F97316;
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 }
@@ -421,8 +508,8 @@
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #E7E5E4; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #D6D3D1; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
 
 .amap-container { width: 100%; height: 100%; }
 
@@ -516,8 +603,8 @@
   position: absolute;
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: #F97316;
-  box-shadow: 0 0 8px #F97316, 0 0 16px rgba(249,115,22,0.5);
+  background: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary), 0 0 16px rgba(249,115,22,0.5);
   animation: eye-dot-scan 1.5s ease-in-out infinite;
 }
 @keyframes eye-dot-scan {
@@ -664,6 +751,6 @@
   }
   .skeleton {
     animation: none;
-    background: #F5F5F4;
+    background: var(--color-skeleton-from);
   }
 }

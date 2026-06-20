@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { PawPrint, QrCode, X, Download } from 'lucide-react'
+import QRCode from 'qrcode'
 import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
 
 const emptyForm = {
@@ -67,6 +68,7 @@ export default function Admin() {
   const [error, setError] = useState('')
   const [adminTab, setAdminTab] = useState('cats')
   const [qrPoint, setQrPoint] = useState(null)
+  const [qrDataUrl, setQrDataUrl] = useState('')
 
   const loadCats = () => getCats().then(setCats).catch(e => setError(e.message))
   const loadSightings = () => getSightings({ limit: 20 }).then(data => setSightings(Array.isArray(data) ? data : [])).catch(e => setError(e.message))
@@ -90,6 +92,12 @@ export default function Admin() {
     if (!healthCatId) { setHealthRecords([]); return }
     getHealthRecords(healthCatId).then(setHealthRecords).catch(() => setHealthRecords([]))
   }, [healthCatId])
+
+  useEffect(() => {
+    if (!qrPoint) { setQrDataUrl(''); return }
+    const url = `${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`
+    QRCode.toDataURL(url, { width: 240, margin: 2 }).then(setQrDataUrl).catch(() => setQrDataUrl(''))
+  }, [qrPoint])
 
   const handleLogin = async (e) => {
     e.preventDefault(); setSaving(true); setError('')
@@ -154,7 +162,6 @@ export default function Admin() {
   }
 
   async function handleDeleteHealthRecord(recordId) {
-    if (!confirm('确定删除这条健康记录？')) return
     try {
       await deleteHealthRecord(healthCatId, recordId)
       const health = await getHealthRecords(healthCatId)
@@ -181,7 +188,6 @@ export default function Admin() {
   }
 
   async function handleDeleteFeedingPoint(id) {
-    if (!confirm('确定删除这个喂食点？')) return
     try {
       await deleteFeedingPoint(id)
       const pts = await getFeedingPoints()
@@ -401,20 +407,26 @@ export default function Admin() {
             </div>
             <p className="text-sm text-text-secondary">{qrPoint.name}</p>
             <div className="flex justify-center">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(`${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`)}`}
-                alt="二维码"
-                className="w-60 h-60 rounded-xl border border-border"
-              />
+              {qrDataUrl ? (
+                <img
+                  src={qrDataUrl}
+                  alt="二维码"
+                  className="w-60 h-60 rounded-xl border border-border"
+                />
+              ) : (
+                <div className="w-60 h-60 rounded-xl border border-border flex items-center justify-center text-text-muted text-sm">生成中…</div>
+              )}
             </div>
             <div className="flex gap-2">
-              <a
-                href={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(`${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`)}`}
-                download={`qr-${qrPoint.name}.png`}
-                className="btn btn-primary btn-sm flex-1 flex items-center justify-center gap-1"
-              >
-                <Download className="w-4 h-4" />下载
-              </a>
+              {qrDataUrl ? (
+                <a
+                  href={qrDataUrl}
+                  download={`qr-${qrPoint.name}.png`}
+                  className="btn btn-primary btn-sm flex-1 flex items-center justify-center gap-1"
+                >
+                  <Download className="w-4 h-4" />下载
+                </a>
+              ) : null}
               <button onClick={() => window.print()} className="btn btn-ghost btn-sm flex-1">打印</button>
             </div>
             <p className="text-xs text-text-muted text-center">贴在喂食点供扫码打卡</p>

@@ -1,10 +1,21 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { getToken } from '../api'
 
+const MAX_RETRIES = 5
+const MAX_DELAY = 30000
+
+function getDelay(retryCount: number): number {
+  const base = 1000
+  const delay = base * Math.pow(2, retryCount)
+  return Math.min(delay, MAX_DELAY)
+}
+
 export function useEventStream(onEvent) {
   const onEventRef = useRef(onEvent)
   onEventRef.current = onEvent
-  const sourceRef = useRef(null)
+  const sourceRef = useRef<EventSource | null>(null)
+  const retryRef = useRef(0)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const connect = useCallback(() => {
     const token = getToken()
@@ -25,6 +36,16 @@ export function useEventStream(onEvent) {
       es.onerror = () => {
         es.close()
         sourceRef.current = null
+        if (retryRef.current < MAX_RETRIES) {
+          const delay = getDelay(retryRef.current)
+          retryRef.current++
+          timerRef.current = setTimeout(() => {
+            connect()
+          }, delay)
+        }
+      }
+      es.onopen = () => {
+        retryRef.current = 0
       }
     } catch {
       // EventSource unsupported
@@ -34,6 +55,10 @@ export function useEventStream(onEvent) {
   useEffect(() => {
     connect()
     return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
       if (sourceRef.current) {
         sourceRef.current.close()
         sourceRef.current = null

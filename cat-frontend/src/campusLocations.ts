@@ -7,7 +7,9 @@ export const campusLocations = [
   { name: '宿舍区', latitude: 31.3021, longitude: 121.5012 },
 ]
 
-export const campusCenter = [121.503, 31.3005]
+export const CAMPUS_CENTER: [number, number] = [121.5068, 31.3005]
+
+export const campusCenter = CAMPUS_CENTER
 
 export function findCampusLocation(name) {
   return campusLocations.find((location) => location.name === name) || campusLocations[0]

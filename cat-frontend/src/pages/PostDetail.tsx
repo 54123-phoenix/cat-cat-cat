@@ -4,54 +4,15 @@ import { Heart, Flag, Trash2, CheckCircle2 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import CommentSection from '../components/CommentSection'
 import Avatar from '../components/Avatar'
-import { getPost, likePost, deletePost, pollVote, acceptAnswer, getStoredUser } from '../api'
+import { getPost, likePost, deletePost, acceptAnswer, getStoredUser } from '../api'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
+import { toast } from '../components/Toast'
+import PollView from '../components/PollView'
 
 const POST_TYPE_BADGE = {
   poll: { label: '投票', cls: 'bg-purple-50 text-purple-500' },
   question: { label: '求助', cls: 'bg-blue-50 text-blue-500' },
   discussion: { label: '', cls: '' },
-}
-
-function PollView({ post }) {
-  const [pollData, setPollData] = useState(post.pollData || [])
-  const [voting, setVoting] = useState(false)
-  const total = pollData.reduce((a, b) => a + b, 0)
-  async function handleVote(idx) {
-    if (voting) return
-    setVoting(true)
-    try {
-      const res = await pollVote(post.id, idx)
-      setPollData(res.pollData || [])
-    } catch (e) {
-      alert(e.message || '投票失败')
-    } finally {
-      setVoting(false)
-    }
-  }
-  return (
-    <div className="space-y-2">
-      {post.pollOptions?.map((opt, i) => {
-        const count = pollData[i] || 0
-        const pct = total > 0 ? Math.round((count / total) * 100) : 0
-        return (
-          <button
-            key={i}
-            onClick={() => handleVote(i)}
-            disabled={voting}
-            className="w-full text-left relative overflow-hidden rounded-lg border border-gray-200 px-3 py-2.5 active:bg-gray-50"
-          >
-            <div className="absolute inset-y-0 left-0 bg-primary/10" style={{ width: `${pct}%` }} />
-            <div className="relative flex items-center justify-between text-sm">
-              <span className="text-text">{opt}</span>
-              <span className="text-text-secondary text-xs">{count} 票 · {pct}%</span>
-            </div>
-          </button>
-        )
-      })}
-      <p className="text-xs text-text-muted">共 {total} 票，点击选项投票</p>
-    </div>
-  )
 }
 
 export default function PostDetail() {

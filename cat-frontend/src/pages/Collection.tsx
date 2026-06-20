@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Cat, Star, Heart, PawPrint } from 'lucide-react'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import EmptyState from '../components/EmptyState'
-import { getCats, getFollowedCats } from '../api'
+import { getCats, getFollowedCats, getSightings } from '../api'
 
 const RARE_CHARS = ['稀', '珍', '白', '黑', '三花', '玳瑁']
 
@@ -26,6 +26,7 @@ function StatusPill({ status }) {
 export default function Collection() {
   const [cats, setCats] = useState([])
   const [followed, setFollowed] = useState([])
+  const [sightings, setSightings] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
@@ -33,10 +34,12 @@ export default function Collection() {
     Promise.all([
       getCats(),
       getFollowedCats().catch(() => []),
+      getSightings({ limit: 200 }).catch(() => []),
     ])
-      .then(([catsData, followedData]) => {
+      .then(([catsData, followedData, sightingsData]) => {
         setCats(Array.isArray(catsData) ? catsData : [])
         setFollowed(Array.isArray(followedData) ? followedData : [])
+        setSightings(Array.isArray(sightingsData) ? sightingsData : [])
       })
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -53,7 +56,7 @@ export default function Collection() {
   }
 
   const followedIds = new Set(followed.map((f) => f.cat_id))
-  const metIds = followedIds
+  const metIds = new Set(sightings.map((s) => s.cat_id).filter(Boolean))
   const metCount = cats.filter((c) => metIds.has(c.id)).length
   const total = cats.length
   const pct = total > 0 ? metCount / total : 0
@@ -94,7 +97,7 @@ export default function Collection() {
             已遇见 <span className="font-bold text-primary">{metCount}</span> / {total} 只校园猫
           </p>
           <p className="text-[11px] text-text-muted mt-1">
-            * 已相遇以关注状态近似标记
+            * 已相遇以偶遇记录标记
           </p>
         </div>
       </div>

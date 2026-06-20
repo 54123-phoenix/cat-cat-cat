@@ -6,10 +6,16 @@ import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
 import { getToken, getStoredUser, getAdminToken } from './api'
 import { ROUTES } from './constants/routes'
+import { toast } from './components/Toast'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { staleTime: 30000, retry: 1 },
+    mutations: {
+      onError: (error: Error) => {
+        toast(error.message || '操作失败', { emoji: '⚠️' })
+      },
+    },
   },
 })
 

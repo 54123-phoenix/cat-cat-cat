@@ -4,6 +4,7 @@ import PostList from '../components/PostList'
 import { reportPost } from '../api'
 import { Pencil } from 'lucide-react'
 import { TOPICS as TABS, TAG_TOPIC_MAP } from '../constants/topics'
+import { toast } from '../components/Toast'
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState('all')
@@ -27,7 +28,7 @@ export default function Community() {
       setReportReason('')
       setRefreshKey((v) => v + 1)
     } catch (e) {
-      alert(e.message)
+      toast(e.message, { emoji: '⚠️' })
     } finally {
       setReporting(false)
     }

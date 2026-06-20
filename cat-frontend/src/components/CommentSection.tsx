@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { MessageCircle, Send, CheckCircle2 } from 'lucide-react'
 import { getPostComments, createComment, acceptAnswer, getStoredUser } from '../api'
 import Avatar from './Avatar'
+import { toast } from './Toast'
 
 function getUserDisplay(user) {
   if (user?.nickname) return user
@@ -77,7 +78,7 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
       await acceptAnswer(postId, commentId)
       setAcceptedId(commentId)
     } catch (e) {
-      alert(e.message || '采纳失败')
+      toast(e.message || '采纳失败', { emoji: '⚠️' })
     } finally {
       setAccepting(false)
     }

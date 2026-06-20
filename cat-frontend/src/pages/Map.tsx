@@ -6,12 +6,12 @@ import CatSpinner from '../components/CatSpinner'
 import CatMarker from '../components/illustrations/CatMarker'
 import { catMarkerString } from '../components/illustrations/CatMarker'
 import { getHeatmapData, getCats, getNearbyCats } from '../api'
+import { campusCenter } from '../campusLocations'
 
 declare const AMap: any
 
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
 if (!AMAP_KEY) console.warn('VITE_AMAP_KEY 未设置，地图可能无法加载')
-const campusCenter = [121.5068, 31.3005]
 
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 
@@ -66,6 +66,7 @@ export default function Map() {
   const mapInstanceRef = useRef(null)
   const AMapRef = useRef(null)
   const catMarkersRef = useRef([])
+  const clusterRef = useRef(null)
 
   const handleAllowLocation = useCallback(() => {
     setGeoLoading(true)
@@ -84,7 +85,7 @@ export default function Map() {
     AMapLoader.load({
       key: AMAP_KEY,
       version: '1.4.15',
-      plugins: ['AMap.Scale', 'AMap.Marker', 'AMap.Geolocation'],
+      plugins: ['AMap.Scale', 'AMap.Marker', 'AMap.Geolocation', 'AMap.MarkerCluster'],
     })
       .then((AMap) => {
         AMapRef.current = AMap
@@ -183,17 +184,22 @@ export default function Map() {
         ])
         if (cancelled) return
 
-        const catByName = new globalThis.Map<string, any>()
+        const catById = new globalThis.Map<number, any>()
         for (const c of cats) {
-          if (c.name) catByName.set(c.name, c.id)
+          if (c.id) catById.set(c.id, c)
         }
 
+        if (clusterRef.current) {
+          clusterRef.current.setMap(null)
+          clusterRef.current = null
+        }
         catMarkersRef.current.forEach((m) => map.remove(m))
         catMarkersRef.current = []
 
+        const markers = []
         for (const point of heatmap) {
           if (!point.latitude || !point.longitude) continue
-          const catId = catByName.get(point.name)
+          const catId = point.cat_id || catById.get(point.name)?.id
           const markerContent = document.createElement('div')
           markerContent.innerHTML = `<div style="width:32px;height:32px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25))">${catMarkerString()}</div>`
 
@@ -216,8 +222,17 @@ export default function Map() {
             }
           })
 
-          map.add(marker)
+          markers.push(marker)
           catMarkersRef.current.push(marker)
+        }
+
+        if (markers.length > 0 && AMap.MarkerCluster) {
+          clusterRef.current = new AMap.MarkerCluster(map, markers, {
+            gridSize: 60,
+            maxZoom: 16,
+          })
+        } else {
+          map.add(markers)
         }
       } catch (e) {
         console.error('加载热力数据失败:', e)
@@ -234,6 +249,10 @@ export default function Map() {
     return () => {
       cancelled = true
       if (map) {
+        if (clusterRef.current) {
+          clusterRef.current.setMap(null)
+          clusterRef.current = null
+        }
         catMarkersRef.current.forEach((m) => map.remove(m))
         catMarkersRef.current = []
       }

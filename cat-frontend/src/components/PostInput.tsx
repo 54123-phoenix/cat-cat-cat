@@ -3,6 +3,7 @@ import { createPost } from '../api'
 import CatPicker from './CatPicker'
 import { Plus, X, Image as ImageIcon } from 'lucide-react'
 import { TOPIC_LABEL, PRESET_TAGS } from '../constants/topics'
+import { toast } from './Toast'
 
 const TOPICS = Object.entries(TOPIC_LABEL).map(([id, label]) => ({ id, label }))
 
@@ -79,7 +80,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
       onCreated?.()
       onClose()
     } catch (err) {
-      alert(err.message || '发布失败，请重试')
+      toast(err.message || '发布失败，请重试', { emoji: '⚠️' })
     } finally {
       setSubmitting(false)
     }

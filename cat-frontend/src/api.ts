@@ -206,16 +206,8 @@ export function reviewDiscovery(id, data) {
 }
 
 export function getGalleryImages(params = {}) {
-  // Fetch all cats and transform into image objects for the gallery
-  return getCats().then(cats =>
-    cats
-      .filter(cat => cat.avatar)
-      .map(cat => ({
-        id: cat.id,
-        image_path: cat.avatar,
-        cat: { name: cat.name, location: cat.location }
-      }))
-  )
+  const qs = new URLSearchParams(params).toString()
+  return request(`/gallery${qs ? '?' + qs : ''}`)
 }
 
 export function getPosts(params = {}) {

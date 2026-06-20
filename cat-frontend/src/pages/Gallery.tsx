@@ -1,10 +1,10 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
 import { Cat, PawPrint, Image as ImageIcon } from 'lucide-react'
-import { getGalleryImages } from '../api'
+import { useInfiniteGallery } from '../hooks/useApi'
 import { campusLocations } from '../campusLocations'
 
 const COLOR_CHIPS = ['全部', '橘', '黑', '白', '狸花', '三花']
@@ -20,19 +20,32 @@ function catColor(cat) {
 }
 
 export default function Gallery() {
-  const [images, setImages] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteGallery({ limit: 20 })
   const [viewerIndex, setViewerIndex] = useState(null)
   const [colorFilter, setColorFilter] = useState('全部')
   const [locFilter, setLocFilter] = useState('全部')
+  const sentinelRef = useRef(null)
+
+  const images = data?.pages?.flatMap((page) => {
+    if (Array.isArray(page)) return page
+    if (page?.items) return page.items
+    return []
+  }) ?? []
 
   useEffect(() => {
-    getGalleryImages({ limit: 80 })
-      .then(setImages)
-      .catch((err) => setError(err.message || '照片墙加载失败'))
-      .finally(() => setLoading(false))
-  }, [])
+    const el = sentinelRef.current
+    if (!el || !hasNextPage) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { rootMargin: '200px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const locChips = useMemo(() => {
     const set = new Set(['全部'])
@@ -64,7 +77,6 @@ export default function Gallery() {
       />
 
       <div className="p-3">
-        {/* Filter chips */}
         <div className="space-y-2 mb-3">
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
             {COLOR_CHIPS.map((c) => (
@@ -92,7 +104,7 @@ export default function Gallery() {
           </div>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="columns-2 gap-2">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="mb-2 break-inside-avoid aspect-square rounded-xl skeleton" />
@@ -100,41 +112,46 @@ export default function Gallery() {
           </div>
         ) : error ? (
           <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center text-sm text-red-500">
-            {error}
+            {String(error)}
           </div>
         ) : filtered.length > 0 ? (
-          <div className="columns-2 gap-2 min-[480px]:columns-3">
-            {filtered.map((image, i) => (
-              <button
-                key={image.id}
-                onClick={() => openViewer(i)}
-                className="mb-2 break-inside-avoid w-full bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card overflow-hidden active:scale-95 transition-transform text-left animate-pop-in"
-              >
-                <div className="bg-primary-light overflow-hidden flex items-center justify-center relative">
-                  <img
-                    src={image.image_path}
-                    alt={image.cat?.name || '猫猫照片'}
-                    loading="lazy"
-                    className="w-full h-auto object-cover"
-                    onError={(event) => {
-                      event.currentTarget.style.display = 'none'
-                      const sib = event.currentTarget.nextElementSibling as HTMLElement | null
-                      if (sib) sib.style.display = 'flex'
-                    }}
-                    onLoad={(event) => {
-                      const sib = event.currentTarget.nextElementSibling as HTMLElement | null
-                      if (sib) sib.style.display = 'none'
-                    }}
-                  />
-                  <Cat className="w-8 h-8 text-primary/30 absolute inset-0 m-auto" style={{ display: 'none' }} />
-                </div>
-                <div className="p-2">
-                  <p className="text-sm font-medium text-gray-800 truncate">{image.cat?.name || '校园猫猫'}</p>
-                  <p className="text-xs text-gray-400 truncate">{image.cat?.location || '参考照片'}</p>
-                </div>
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="columns-2 gap-2 min-[480px]:columns-3">
+              {filtered.map((image, i) => (
+                <button
+                  key={image.id}
+                  onClick={() => openViewer(i)}
+                  className="mb-2 break-inside-avoid w-full bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card overflow-hidden active:scale-95 transition-transform text-left animate-pop-in"
+                >
+                  <div className="bg-primary-light overflow-hidden flex items-center justify-center relative">
+                    <img
+                      src={image.image_path}
+                      alt={image.cat?.name || '猫猫照片'}
+                      loading="lazy"
+                      className="w-full h-auto object-cover"
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none'
+                        const sib = event.currentTarget.nextElementSibling as HTMLElement | null
+                        if (sib) sib.style.display = 'flex'
+                      }}
+                      onLoad={(event) => {
+                        const sib = event.currentTarget.nextElementSibling as HTMLElement | null
+                        if (sib) sib.style.display = 'none'
+                      }}
+                    />
+                    <Cat className="w-8 h-8 text-primary/30 absolute inset-0 m-auto" style={{ display: 'none' }} />
+                  </div>
+                  <div className="p-2">
+                    <p className="text-sm font-medium text-gray-800 truncate">{image.cat?.name || '校园猫猫'}</p>
+                    <p className="text-xs text-gray-400 truncate">{image.cat?.location || '参考照片'}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div ref={sentinelRef} />
+            {isFetchingNextPage && <div className="py-4 text-center text-sm text-text-muted">加载更多…</div>}
+            {!hasNextPage && <div className="py-4 text-center text-xs text-text-muted">— 已经到底了 —</div>}
+          </>
         ) : (
           <EmptyState
             mood="curious"

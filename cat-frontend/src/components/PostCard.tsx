@@ -1,56 +1,17 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { likePost, deletePost, pollVote, getStoredUser } from '../api'
+import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
 import CommentSection from './CommentSection'
 import Avatar from './Avatar'
+import PollView from './PollView'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
+import { toast } from './Toast'
 
 const POST_TYPE_BADGE = {
   poll: { label: '投票', cls: 'bg-warning/10 text-warning' },
   question: { label: '求助', cls: 'bg-info/10 text-info' },
   discussion: { label: '', cls: '' },
-}
-
-function PollView({ post }) {
-  const [pollData, setPollData] = useState(post.pollData || [])
-  const [voting, setVoting] = useState(false)
-  const total = pollData.reduce((a, b) => a + b, 0)
-  async function handleVote(idx) {
-    if (voting) return
-    setVoting(true)
-    try {
-      const res = await pollVote(post.id, idx)
-      setPollData(res.pollData || [])
-    } catch (e) {
-      alert(e.message || '投票失败')
-    } finally {
-      setVoting(false)
-    }
-  }
-  return (
-    <div className="space-y-2 mt-2">
-      {post.pollOptions?.map((opt, i) => {
-        const count = pollData[i] || 0
-        const pct = total > 0 ? Math.round((count / total) * 100) : 0
-        return (
-          <button
-            key={i}
-            onClick={() => handleVote(i)}
-            disabled={voting}
-            className="w-full text-left relative overflow-hidden rounded-lg border border-border px-3 py-2 active:bg-surface-3"
-          >
-            <div className="absolute inset-y-0 left-0 bg-primary/10" style={{ width: `${pct}%` }} />
-            <div className="relative flex items-center justify-between text-sm">
-              <span className="text-text">{opt}</span>
-              <span className="text-text-secondary text-xs">{count} 票 · {pct}%</span>
-            </div>
-          </button>
-        )
-      })}
-      <p className="text-xs text-text-muted">共 {total} 票，点击选项投票</p>
-    </div>
-  )
 }
 
 export default function PostCard({ post, onReport, onDeleted, onTagClick }) {

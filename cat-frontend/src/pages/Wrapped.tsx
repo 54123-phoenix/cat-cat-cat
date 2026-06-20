@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Download, Sparkles } from 'lucide-react'
+import QRCode from 'qrcode'
 import MascotCat from '../components/MascotCat'
 import PageHeader from '../components/PageHeader'
 import { getWrapped, getStoredUser } from '../api'
-
-const QR_API = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='
 
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -83,7 +82,8 @@ async function buildShareCanvas(data, user) {
 
   const shareUrl = `${window.location.origin}/#/wrapped?user=${user?.id || ''}`
   try {
-    const qr = await loadImage(QR_API + encodeURIComponent(shareUrl))
+    const qrDataUrl = await QRCode.toDataURL(shareUrl, { width: 180, margin: 1 })
+    const qr = await loadImage(qrDataUrl)
     ctx.drawImage(qr, W / 2 - 90, 1080, 180, 180)
   } catch {}
   ctx.font = '22px sans-serif'
