@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, Image, ScrollView, Textarea } from '@tarojs/components'
 import Taro, { useDidShow, useReachBottom, usePullDownRefresh } from '@tarojs/taro'
-import { getPosts, likePost, reportPost, getUserProfile } from '../../services/api'
+import { getPosts, likePost, reportPost, getUserProfile, createPost } from '../../services/api'
 import { TOPICS } from '../../config'
 
 const TOPIC_COLORS: Record<string, { bg: string; text: string }> = {
@@ -15,7 +15,11 @@ export default function Community() {
   const [activeTab, setActiveTab] = useState('all')
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [_user, setUser] = useState<any>(null)
+  const [showCompose, setShowCompose] = useState(false)
+  const [composeTopic, setComposeTopic] = useState('daily')
+  const [composeText, setComposeText] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   function fetchPosts() {
     const params: any = { limit: 30 }
@@ -57,10 +61,10 @@ export default function Community() {
   }
 
   async function handleReport(post: any) {
-    const res = await Taro.showModal({ title: '举报帖子', editable: true, placeholderText: '请说明举报原因' })
-    if (res.confirm && res.content) {
+    const res = await Taro.showModal({ title: '举报帖子', editable: true, placeholderText: '请说明举报原因' } as any)
+    if (res.confirm && (res as any).content) {
       try {
-        await reportPost(post.id, { reason: res.content })
+        await reportPost(post.id, { reason: (res as any).content })
         Taro.showToast({ title: '举报已提交', icon: 'success' })
       } catch (err: any) {
         Taro.showToast({ title: err.message || '举报失败', icon: 'none' })
@@ -156,7 +160,7 @@ export default function Community() {
         )}
       </View>
 
-      <View onClick={() => Taro.showToast({ title: '发帖功能即将上线', icon: 'none' })}
+      <View onClick={() => setShowCompose(true)}
         style={{
           position: 'fixed', bottom: '48rpx', right: '48rpx',
           width: '104rpx', height: '104rpx', borderRadius: '50%',
@@ -168,6 +172,67 @@ export default function Community() {
         }}>
         +
       </View>
+
+      {showCompose && (
+        <View style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 200, display: 'flex', alignItems: 'flex-end' }}
+          onClick={() => setShowCompose(false)}>
+          <View style={{ width: '100%', backgroundColor: '#fff', borderRadius: '32rpx 32rpx 0 0', padding: '32rpx 24rpx', maxHeight: '80vh' }}
+            onClick={(e) => e.stopPropagation()}>
+            <Text style={{ fontSize: '32rpx', fontWeight: 'bold', display: 'block', marginBottom: '24rpx' }}>发帖</Text>
+            <Text style={{ fontSize: '24rpx', color: '#78716C', marginBottom: '12rpx', display: 'block' }}>选择话题</Text>
+            <View style={{ display: 'flex', flexWrap: 'wrap', gap: '12rpx', marginBottom: '24rpx' }}>
+              {TOPICS.map((t) => (
+                <Text key={t.id}
+                  onClick={() => setComposeTopic(t.id)}
+                  style={{
+                    fontSize: '24rpx', padding: '12rpx 24rpx', borderRadius: '999rpx',
+                    backgroundColor: composeTopic === t.id ? '#FFF7ED' : '#F5F5F4',
+                    color: composeTopic === t.id ? '#F97316' : '#78716C',
+                    fontWeight: composeTopic === t.id ? '500' : 'normal',
+                  }}>
+                  {t.label}
+                </Text>
+              ))}
+            </View>
+            <Textarea
+              value={composeText}
+              onInput={(e) => setComposeText(e.detail.value)}
+              placeholder='分享你和猫猫的故事...'
+              style={{ width: '100%', height: '240rpx', borderRadius: '16rpx', backgroundColor: '#F5F5F4', padding: '20rpx', fontSize: '28rpx', marginBottom: '24rpx' }}
+              maxlength={500}
+            />
+            <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: '22rpx', color: '#A8A29E' }}>{composeText.length}/500</Text>
+              <View onClick={async () => {
+                if (!composeText.trim() || submitting) return
+                setSubmitting(true)
+                try {
+                  const form = new FormData()
+                  form.append('topic', composeTopic)
+                  form.append('content', composeText.trim())
+                  await createPost(form)
+                  setShowCompose(false)
+                  setComposeText('')
+                  setComposeTopic('daily')
+                  Taro.showToast({ title: '发布成功', icon: 'success' })
+                  setLoading(true)
+                  fetchPosts()
+                } catch (err: any) {
+                  Taro.showToast({ title: err.message || '发布失败', icon: 'none' })
+                } finally {
+                  setSubmitting(false)
+                }
+              }}
+                style={{
+                  backgroundColor: (composeText.trim() && !submitting) ? '#F97316' : '#E7E5E4',
+                  color: '#fff', borderRadius: '999rpx', padding: '20rpx 48rpx', fontSize: '28rpx', fontWeight: '500',
+                }}>
+                {submitting ? '发布中...' : '发布'}
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   )
 }

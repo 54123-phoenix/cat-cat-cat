@@ -113,9 +113,10 @@ export default function MapPage() {
         latitude={latitude}
         longitude={longitude}
         scale={15}
-        markers={markers}
+        markers={markers as any}
         showLocation
         onMarkerTap={onMarkerTap}
+        onError={() => {}}
       />
 
       {selectedCat && (

@@ -21,7 +21,7 @@ export default function Index() {
   const [sightings, setSightings] = useState<any[]>([])
   const [postCount, setPostCount] = useState(0)
   const [profile, setProfile] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [_loading, setLoading] = useState(true)
 
   useDidShow(() => {
     Promise.all([

@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { View, Text, Input } from '@tarojs/components'
+import { View, Text, Input, Textarea } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import {
-  adminLogin, adminLogout, getAdminMe,
-  getCats, getCat, updateCat, createCat, uploadCatImage,
+  adminLogin, adminLogout,
+  getCats, getCat, updateCat, createCat,
   getSightings, getReports, handleReport,
   getHealthRecords, createHealthRecord, deleteHealthRecord,
   getFeedingPoints, createFeedingPoint, deleteFeedingPoint,
@@ -132,7 +132,7 @@ export default function Admin() {
     setMessage('')
     try {
       if (!form.name.trim()) throw new Error('猫猫名字不能为空')
-      const saved = selectedCatId ? await updateCat(selectedCatId, form) : await createCat(form)
+      if (selectedCatId) await updateCat(selectedCatId, form); else await createCat(form)
       setMessage(selectedCatId ? '猫档案已更新' : '新猫档案已创建')
       resetForm()
       loadData()
@@ -248,7 +248,6 @@ export default function Admin() {
         <View className='card'>
           <Text style={{ fontSize: '24rpx', color: '#78716C', marginBottom: '12rpx', display: 'block' }}>管理员口令</Text>
           <Input
-            type='password'
             password
             value={password}
             onInput={(e) => setPassword(e.detail.value)}
@@ -365,9 +364,9 @@ export default function Admin() {
         </View>
         <View style={{ marginBottom: '20rpx' }}>
           <Text style={{ fontSize: '22rpx', color: '#78716C', marginBottom: '4rpx', display: 'block' }}>故事</Text>
-          <textarea
+          <Textarea
             value={form.story}
-            onInput={(e) => setForm({ ...form, story: (e.target as any).value })}
+            onInput={(e) => setForm({ ...form, story: e.detail.value })}
             placeholder='猫猫故事'
             style={{ width: '100%', height: '120rpx', borderRadius: '12rpx', backgroundColor: '#F5F5F4', padding: '12rpx 16rpx', fontSize: '26rpx' }}
           />
@@ -425,7 +424,6 @@ export default function Admin() {
             />
             <View style={{ display: 'flex', gap: '12rpx', marginTop: '12rpx' }}>
               <Input
-                type='date'
                 value={catHealthForm.record_date ? catHealthForm.record_date.substring(0, 10) : ''}
                 onInput={(e) => setCatHealthForm({ ...catHealthForm, record_date: e.detail.value })}
                 placeholder='日期'

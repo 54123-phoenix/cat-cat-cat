@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import { useDidShow } from '@tarojs/taro'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../../services/api'
 
 const TYPE_ICONS: Record<string, string> = {

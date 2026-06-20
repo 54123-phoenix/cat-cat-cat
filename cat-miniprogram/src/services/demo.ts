@@ -25,6 +25,20 @@ const MOCK_DATA: Record<string, any> = {
   },
   'POST /posts/1/like': { ok: true },
   'POST /user/follows/1': { ok: true },
+  'GET /leaderboard': [
+    { rank: 1, nickname: '猫协会长', avatar: null, xp: 2580, tier: '大师' },
+    { rank: 2, nickname: '橘总铁粉', avatar: null, xp: 1890, tier: '专家' },
+    { rank: 3, nickname: '校园猫探', avatar: null, xp: 1200, tier: '观察员' },
+    { rank: 4, nickname: '铲屎新手', avatar: null, xp: 560, tier: '新手' },
+  ],
+  'GET /users/me/daily-quest': {
+    quests: [
+      { id: 'sighting', title: '偶遇一只猫', progress: 1, target: 1, reward: 20 },
+      { id: 'post', title: '发一条帖子', progress: 0, target: 1, reward: 15 },
+      { id: 'like', title: '点赞3条帖子', progress: 1, target: 3, reward: 10 },
+      { id: 'follow', title: '关注一只猫', progress: 0, target: 1, reward: 10 },
+    ],
+  },
 }
 
 export function demoApi(url: string, options: any = {}): any {

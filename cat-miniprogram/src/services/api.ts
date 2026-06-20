@@ -167,6 +167,13 @@ export function getGalleryImages(params: any = {}) {
 
 export function getFollowedCats() { return request('/user/follows') }
 
+export function getLeaderboard(params: any = {}) {
+  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
+  return request(`/leaderboard${qs ? '?' + qs : ''}`)
+}
+
+export function getDailyQuest() { return request('/users/me/daily-quest') }
+
 export function adminLogin(password: string) {
   return request('/admin/login', { method: 'POST', body: { password } }).then((res: any) => {
     setToken(res.token)

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, Input } from '@tarojs/components'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getPost, likePost, deletePost, getPostComments, createComment } from '../../services/api'
 import { getStoredUser } from '../../utils/storage'
@@ -188,7 +188,7 @@ export default function PostDetail() {
       </View>
 
       <View style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '16rpx 24rpx', backgroundColor: '#fff', borderTop: '1rpx solid #E7E5E4', display: 'flex', alignItems: 'center', gap: '16rpx', zIndex: 10 }}>
-        <input value={commentText} onInput={(e) => setCommentText(e.detail.value)}
+        <Input value={commentText} onInput={(e) => setCommentText(e.detail.value)}
           placeholder='写下你的评论...'
           style={{ flex: 1, height: '72rpx', borderRadius: '36rpx', backgroundColor: '#F5F5F4', padding: '0 24rpx', fontSize: '26rpx' }}
           confirmType='send'

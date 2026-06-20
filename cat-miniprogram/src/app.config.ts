@@ -14,6 +14,9 @@ export default defineAppConfig({
     'pages/badges/index',
     'pages/notifications/index',
     'pages/weekly-report/index',
+    'pages/league/index',
+    'pages/daily-quest/index',
+    'pages/collection/index',
   ],
   window: {
     backgroundTextStyle: 'light',

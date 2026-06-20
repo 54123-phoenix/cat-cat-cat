@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
-import Taro, { useLoad } from '@tarojs/taro'
+import { useLoad, useShareAppMessage } from '@tarojs/taro'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../../services/api'
 import SharePoster from '../../components/SharePoster'
 
@@ -22,7 +22,7 @@ export default function CatDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [following, setFollowing] = useState(false)
-  const [followLoading, setFollowLoading] = useState(false)
+  const [_followLoading, setFollowLoading] = useState(false)
   const [catId, setCatId] = useState<number>(0)
   const [showShare, setShowShare] = useState(false)
 
@@ -48,8 +48,12 @@ export default function CatDetail() {
       .finally(() => setLoading(false))
   })
 
+  useShareAppMessage(() => ({
+    title: cat ? `${cat.name} - 猫猫社区` : '猫猫社区',
+    path: `/pages/cat-detail/index?id=${catId}`,
+  }))
+
   async function toggleFollow() {
-    if (followLoading) return
     setFollowLoading(true)
     const next = !following
     setFollowing(next)
