@@ -1,0 +1,29 @@
+{
+  "id": "P4b",
+  "title": "品牌资产 · 勋章语义图标集",
+  "priority": "P1",
+  "estimate": "1.5h",
+  "goal": "5 系列勋章语义 SVG 图标（鱼干/毛线球/猫爪/小鱼/火花），替换 BadgeCard 首字母",
+  "allowEdit": [
+    "cat-frontend/src/components/illustrations/FishJerky.jsx",
+    "cat-frontend/src/components/illustrations/YarnBall.jsx",
+    "cat-frontend/src/components/illustrations/PawIcon.jsx",
+    "cat-frontend/src/components/illustrations/LittleFish.jsx",
+    "cat-frontend/src/components/illustrations/SparkleIcon.jsx",
+    "cat-frontend/src/components/BadgeIcon.jsx",
+    "cat-frontend/src/components/BadgeCard.jsx",
+    "cat-frontend/src/pages/BadgeGallery.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/components/illustrations/*.jsx", "action": "新建 5 个 SVG 组件，均 viewBox 0 0 24 24，stroke=currentColor fill=none strokeWidth 1.8，接受 {size,className}" },
+    { "file": "cat-frontend/src/components/BadgeIcon.jsx", "action": "新建映射组件：按 badge.series 映射 sighting→PawIcon、community→LittleFish(MessageSquare 退路)、collect→FishJerky、special→SparkleIcon、default→YarnBall；props {series, size, className}" },
+    { "file": "cat-frontend/src/components/BadgeCard.jsx", "action": "首字母替换为 BadgeIcon；容器 w-16 → w-20，图标 w-8 h-8 → w-10 h-10" },
+    { "file": "cat-frontend/src/pages/BadgeGallery.jsx", "action": "同上换 BadgeIcon，w-12 h-12 保留" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "BadgeCard/BadgeGallery 无首字母渲染，改用 SVG 图标",
+    "5 个 illustration 组件存在且可 import"
+  ],
+  "constraints": ["所有 SVG 线描风格 stroke=currentColor fill=none，与 MascotCat/Logo 统一", "不换容器形状，只换图标语义"]
+}

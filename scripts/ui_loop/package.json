@@ -1,0 +1,16 @@
+{
+  "name": "cat-ui-loop",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "snapshot": "node snapshot.mjs",
+    "lighthouse": "node lighthouse.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0",
+    "pixelmatch": "^6.0.0",
+    "pngjs": "^7.0.0",
+    "lighthouse": "^12.2.0"
+  }
+}

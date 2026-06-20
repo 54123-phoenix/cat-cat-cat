@@ -27,6 +27,10 @@ uploads/
 .omo/
 .opencode/
 
+# UI Loop runtime artifacts
+.loop/
+scripts/ui_loop/node_modules/
+
 # OS/editor files
 .DS_Store
 Thumbs.db

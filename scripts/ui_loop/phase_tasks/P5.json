@@ -1,0 +1,21 @@
+{
+  "id": "P5",
+  "title": "地图底部 Sheet + 附近列表",
+  "priority": "P1",
+  "estimate": "3h",
+  "goal": "地图下缘加半圆弧浮卡列附近猫咪，对齐大众点评/高德肌肉记忆",
+  "allowEdit": [
+    "cat-frontend/src/pages/Map.jsx",
+    "cat-frontend/src/api.js"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/pages/Map.jsx", "action": "新增底部 sheet：absolute bottom-0 inset-x-0 z-40 bg-surface-1/95 backdrop-blur rounded-t-container shadow-e3 p-4 pb-20；顶部 w-10 h-1 bg-border rounded-full 拖拽指示；h3 '附近猫咪'；横滑卡片 overflow-x-auto scrollbar-none：头像+名+距离" },
+    { "file": "cat-frontend/src/api.js", "action": "若后端无附近接口，前端用现有 getHeatmapData 结果按距离排序取前 8，导出 getNearbyCats(lat,lng,n=8)" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "地图页底部出现 sheet 含'附近猫咪'标题",
+    "sheet 内有横滑猫卡片"
+  ],
+  "constraints": ["backdrop-blur 仅此 sheet 一处新增（Phase 2 已限定）", "sheet 不遮挡地图上半部分，z-index 40"]
+}

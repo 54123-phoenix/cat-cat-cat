@@ -1,0 +1,36 @@
+{
+  "id": "P4a",
+  "title": "品牌资产 · Logo + 字标",
+  "priority": "P1",
+  "estimate": "1.5h",
+  "goal": "猫头剪影 + 橙色圆底 Logo SVG + 字标 + favicon + og:image，建立首屏身份感",
+  "allowEdit": [
+    "cat-frontend/src/components/illustrations/Logo.jsx",
+    "cat-frontend/src/components/illustrations/Wordmark.jsx",
+    "cat-frontend/src/pages/Login.jsx",
+    "cat-frontend/src/components/Layout.jsx",
+    "cat-frontend/index.html",
+    "cat-frontend/public/logo.svg",
+    "cat-frontend/public/favicon-32.png",
+    "cat-frontend/public/favicon-16.png",
+    "cat-frontend/public/apple-touch-180.png",
+    "cat-frontend/public/og-image.png"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/components/illustrations/Logo.jsx", "action": "新建：猫头剪影 SVG，viewBox 0 0 48 48，圆形橙底 bg-primary 容器包裹，单色 currentColor 描线，与 MascotCat 线描风格统一。导出 props {size, withWordmark}" },
+    { "file": "cat-frontend/src/components/illustrations/Wordmark.jsx", "action": "新建：字标 '猫猫档案' Inter 700，可配 fontSize" },
+    { "file": "cat-frontend/public/logo.svg", "action": "新建独立 logo.svg 文件（同 Logo.jsx 的 SVG 内容）供 favicon/og 引用" },
+    { "file": "cat-frontend/index.html", "action": "加 link rel icon favicon-32.png、apple-touch-icon apple-touch-180.png、meta property og:image og-image.png、meta og:title" },
+    { "file": "cat-frontend/src/pages/Login.jsx", "action": "顶部 hero 区插入 Logo size=64 + Wordmark，替代纯文字标题" },
+    { "file": "cat-frontend/src/components/Layout.jsx", "action": "header 左侧加 Logo size=28（紧凑态）" },
+    { "file": "PNG 生成", "action": "用 sharp 从 logo.svg 转 favicon-32/16/apple-touch-180/og-image(1200x630) 四尺寸 PNG，脚本内联在 run.ps1 的 P4a 后置步骤" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "浏览器 tab 显示 favicon",
+    "Login 顶部可见 Logo + 字标",
+    "Layout header 左侧可见小 Logo",
+    "public/ 下存在 4 个 PNG + logo.svg"
+  ],
+  "constraints": ["SVG 用 stroke=currentColor fill=none 线描风格，与 MascotCat 一致", "Logo 在 16px 尺寸仍可辨识（favicon 测试）", "og-image 1200x630"]
+}

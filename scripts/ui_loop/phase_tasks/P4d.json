@@ -1,0 +1,21 @@
+{
+  "id": "P4d",
+  "title": "品牌资产 · CatMarker",
+  "priority": "P1",
+  "estimate": "1h",
+  "goal": "圆形猫头 SVG marker 替代地图 🐱 emoji，跨平台渲染一致",
+  "allowEdit": [
+    "cat-frontend/src/components/illustrations/CatMarker.jsx",
+    "cat-frontend/src/pages/Map.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/components/illustrations/CatMarker.jsx", "action": "新建：32x32 圆形 marker SVG，白底 + #F97316 描边 + 简化猫头剪影，接受 {avatar} 可选传入猫照片 URL 做圆形头像贴图。导出 toMarkerString() 静态方法返回纯 SVG 字符串供高德 markerContent.innerHTML 用" },
+    { "file": "cat-frontend/src/pages/Map.jsx", "action": "markerContent.innerHTML = 🐱 → 用 CatMarker.toMarkerString() 或拼 SVG 字符串；时间筛选 pill bg-white/90 → bg-surface-1/90，shadow-md → shadow-e2" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "Map.jsx 中无 🐱 emoji 字符",
+    "地图 marker 渲染为 SVG 猫头"
+  ],
+  "constraints": ["高德 markerContent 只接受 HTML 字符串，需 ReactDOMServer.renderToStaticMarkup 或手拼 SVG 字符串", "marker 尺寸 32x32 不变"]
+}

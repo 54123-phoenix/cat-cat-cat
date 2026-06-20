@@ -1,0 +1,31 @@
+{
+  "id": "P1",
+  "title": "排版层级",
+  "priority": "P0",
+  "estimate": "2h",
+  "goal": "数字放大到 36px/800，caption 收到 12px/muted，建立字号 token 阶梯",
+  "allowEdit": [
+    "cat-frontend/tailwind.config.js",
+    "cat-frontend/src/index.css",
+    "cat-frontend/src/pages/Home.jsx",
+    "cat-frontend/src/pages/Profile.jsx",
+    "cat-frontend/src/pages/WeeklyReport.jsx",
+    "cat-frontend/src/pages/CatDetail.jsx",
+    "cat-frontend/src/components/BadgeCard.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/tailwind.config.js", "action": "新增 theme.extend.fontSize 全套 token：display-xl[36/1.1/800]、display-lg[28/1.15/800]、h1[22/1.25/700]、h2[18/1.3/700]、h3[16/1.4/600]、body[15/1.6/400]、body-sm[14/1.5/400]、caption[12/1.4/500]、overline[11/1.2/600]" },
+    { "file": "cat-frontend/src/index.css", "action": "body font-size 改 15px" },
+    { "file": "cat-frontend/src/pages/Home.jsx", "action": "三个统计数字 text-lg font-bold → text-display-xl；标签 text-xs text-text-secondary → text-caption text-text-muted" },
+    { "file": "cat-frontend/src/pages/Profile.jsx", "action": "统计数字 text-base → text-display-lg" },
+    { "file": "cat-frontend/src/pages/WeeklyReport.jsx", "action": "text-2xl → text-display-xl，标签 → text-caption text-text-muted" },
+    { "file": "cat-frontend/src/pages/CatDetail.jsx", "action": "猫名 text-3xl → text-display-lg" },
+    { "file": "cat-frontend/src/components/BadgeCard.jsx", "action": "勋章首字母 text-sm → text-h3，图标容器 w-8 h-8 → w-12 h-12" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "首页三个统计数字渲染为 36px/800",
+    "无 text-xs/text-lg 残留在统计数字处"
+  ],
+  "constraints": ["tailwind.config.js 只增 key 不删，删 key 需 grep 确认零引用"]
+}

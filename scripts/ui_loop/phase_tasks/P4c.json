@@ -1,0 +1,27 @@
+{
+  "id": "P4c",
+  "title": "品牌资产 · EmptyState 插画",
+  "priority": "P1",
+  "estimate": "1h",
+  "goal": "3 态空状态 SVG 插画（失落猫/空盒子/迷路猫），替换 EmptyState 默认图标",
+  "allowEdit": [
+    "cat-frontend/src/components/illustrations/EmptyCat.jsx",
+    "cat-frontend/src/components/illustrations/LostCat.jsx",
+    "cat-frontend/src/components/illustrations/EmptyBox.jsx",
+    "cat-frontend/src/components/EmptyState.jsx",
+    "cat-frontend/src/components/ErrorBoundary.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/components/illustrations/EmptyCat.jsx", "action": "新建：失落小猫 SVG，viewBox 0 0 120 120，线描+橙色调，接受 {size,className}" },
+    { "file": "cat-frontend/src/components/illustrations/LostCat.jsx", "action": "新建：迷路猫（问号+猫），同规格" },
+    { "file": "cat-frontend/src/components/illustrations/EmptyBox.jsx", "action": "新建：空打开纸箱，同规格" },
+    { "file": "cat-frontend/src/components/EmptyState.jsx", "action": "新增 variant prop：'empty'→EmptyCat、'lost'→LostCat、'box'→EmptyBox；默认 empty；图标 w-10 h-10 → w-16 h-16，容器 p-8 → p-10，text-text-muted/40" },
+    { "file": "cat-frontend/src/components/ErrorBoundary.jsx", "action": "MascotCat mood=sad → LostCat" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "EmptyState 默认渲染 EmptyCat 而非 MascotCat",
+    "3 个 illustration 组件存在"
+  ],
+  "constraints": ["SVG 线描风格统一", "保留 MascotCat 在加载/庆祝/引导处的现有用法不动"]
+}

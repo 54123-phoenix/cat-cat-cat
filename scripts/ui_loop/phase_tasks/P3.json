@@ -1,0 +1,32 @@
+{
+  "id": "P3",
+  "title": "颜色系统 + Token 纪律",
+  "priority": "P0",
+  "estimate": "2.5h",
+  "goal": "引入薄荷 secondary，清理所有裸 gray-*/green-50/blue-50/purple-*，统一到 token",
+  "allowEdit": [
+    "cat-frontend/tailwind.config.js",
+    "cat-frontend/src/pages/Home.jsx",
+    "cat-frontend/src/components/PostCard.jsx",
+    "cat-frontend/src/components/Avatar.jsx",
+    "cat-frontend/src/components/FeedItem.jsx",
+    "cat-frontend/src/pages/Community.jsx",
+    "cat-frontend/src/components/TabBar.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/tailwind.config.js", "action": "新增 mint/mint-light/mint-hover、success/warning/danger/info 语义色、surface-*；删 cat-orange/cat-warm 别名（先 grep 确认零引用）" },
+    { "file": "cat-frontend/src/pages/Home.jsx", "action": "bg-green-50 text-green-600 → bg-mint-light text-mint；bg-blue-50 text-blue-600 → bg-info/10 text-info" },
+    { "file": "cat-frontend/src/components/PostCard.jsx", "action": "TOPIC_COLORS 改 token：find→primary-light/primary、daily→mint-light/mint、health→info/10+info、suggest→warning/10+warning" },
+    { "file": "cat-frontend/src/components/Avatar.jsx", "action": "调色盘改 primary-light/mint-light/info/10/warning/10 + 对应深色" },
+    { "file": "cat-frontend/src/components/FeedItem.jsx", "action": "bg-cat-warm → bg-primary-light" },
+    { "file": "cat-frontend/src/pages/Community.jsx", "action": "顶部 bg-primary banner 圆角统一 rounded-b-container" },
+    { "file": "cat-frontend/src/components/TabBar.jsx", "action": "激活态 bg-orange-50 → bg-primary-light" },
+    { "file": "GLOBAL", "action": "grep gray-50/100/200/300/400 → 替换为 surface-3/border/text-muted/text-disabled token" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "grep 'gray-50\\|gray-100\\|green-50\\|blue-50\\|purple-' 在 src/ 下零命中（除注释）",
+    "mint 色出现在 Home/PostCard 至少一处"
+  ],
+  "constraints": ["删 cat-orange/cat-warm 前必须 grep 确认零引用，有引用先迁移再删"]
+}

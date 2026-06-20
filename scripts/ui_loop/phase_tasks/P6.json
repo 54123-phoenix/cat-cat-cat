@@ -1,0 +1,28 @@
+{
+  "id": "P6",
+  "title": "动效删减 + 微交互点睛",
+  "priority": "P2",
+  "estimate": "1.5h",
+  "goal": "删全局爪子光标，保留组件级微交互，主 CTA 加光影扫过",
+  "allowEdit": [
+    "cat-frontend/src/index.css",
+    "cat-frontend/src/components/TabBar.jsx",
+    "cat-frontend/src/components/PostCard.jsx",
+    "cat-frontend/src/pages/Home.jsx",
+    "cat-frontend/src/components/Gallery.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/src/index.css", "action": "删除全局 body cursor paw 及 @media (hover:none) 兜底（约 331-337 行）；新增 .btn-sweep 伪元素光影扫过（::after linear-gradient 110deg transparent→white/25→transparent，:active translateX 100%）" },
+    { "file": "cat-frontend/src/components/TabBar.jsx", "action": "animate-scan-ring 保留；主 CTA 加 btn-sweep" },
+    { "file": "cat-frontend/src/components/PostCard.jsx", "action": "like-fish 爆裂保留；清理 gap-2.5/p-3.5 半档间距 → gap-2 或 gap-3" },
+    { "file": "cat-frontend/src/pages/Home.jsx", "action": "主 CTA 加 btn-sweep" },
+    { "file": "cat-frontend/src/components/Gallery.jsx", "action": "清理半档间距" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "index.css 中无 body { cursor 自定义爪子",
+    "主 CTA 有 btn-sweep class",
+    "无 gap-2.5/p-3.5 半档间距残留"
+  ],
+  "constraints": ["paw-ripple/scan-ring/like-fish 保留，只删全局光标", "不新增触发点"]
+}

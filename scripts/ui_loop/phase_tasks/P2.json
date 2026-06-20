@@ -1,0 +1,35 @@
+{
+  "id": "P2",
+  "title": "空间感 / Elevation",
+  "priority": "P0",
+  "estimate": "3h",
+  "goal": "页面底变暖渐变，卡片去边框换 ring+真阴影，圆角统一到 16/20/pill",
+  "allowEdit": [
+    "cat-frontend/tailwind.config.js",
+    "cat-frontend/src/index.css",
+    "cat-frontend/src/components/Layout.jsx",
+    "cat-frontend/src/components/CatCard.jsx",
+    "cat-frontend/src/components/PostCard.jsx",
+    "cat-frontend/src/components/FeedItem.jsx",
+    "cat-frontend/src/pages/Gallery.jsx",
+    "cat-frontend/src/components/TabBar.jsx"
+  ],
+  "changes": [
+    { "file": "cat-frontend/tailwind.config.js", "action": "新增 boxShadow(e0/e1/e2/e3/e4/primary-glow)、borderRadius(tile12/card16/container20/pill)、backgroundImage(page-warm/hero-morning)、colors.surface-0/1/2/3" },
+    { "file": "cat-frontend/src/index.css", "action": ".card 去 border 改 ring-1 ring-stone-900/5 + shadow-e1，圆角 16px；.tab-bar 去 border-top 改 shadow-e2 + ring；body 背景交给 Layout 渐变" },
+    { "file": "cat-frontend/src/components/Layout.jsx", "action": "根容器 bg-warm-50 → bg-page-warm；header bg-warm-50/80 → bg-surface-0/80" },
+    { "file": "cat-frontend/src/components/CatCard.jsx", "action": "card rounded-2xl → rounded-card shadow-e1 ring-1 ring-stone-900/5，hover shadow-e2 -translate-y-0.5" },
+    { "file": "cat-frontend/src/components/PostCard.jsx", "action": "border border-gray-100 → ring-1 ring-stone-900/5 shadow-e1，rounded-xl → rounded-card" },
+    { "file": "cat-frontend/src/components/FeedItem.jsx", "action": "同 PostCard" },
+    { "file": "cat-frontend/src/pages/Gallery.jsx", "action": "同 PostCard" },
+    { "file": "cat-frontend/src/components/TabBar.jsx", "action": "底部加 1px bg-gradient 顶边替代纯灰边" },
+    { "file": "GLOBAL", "action": "卡片上 rounded-xl/2xl/3xl 收敛到 rounded-card/rounded-container" }
+  ],
+  "acceptance": [
+    "npm run build 通过",
+    "页面底为暖渐变而非纯色",
+    "卡片无 1px border，改用 ring+shadow",
+    "同层卡片圆角一致 16px"
+  ],
+  "constraints": ["tailwind.config.js 只增 key 不删", "backdrop-blur 只保留 sticky header 和 modal overlay 两处，不扩散"]
+}

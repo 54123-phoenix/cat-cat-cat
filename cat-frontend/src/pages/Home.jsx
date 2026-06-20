@@ -108,11 +108,11 @@ export default function Home() {
               <p className="text-caption text-text-muted">认识猫猫</p>
             </div>
             <div className="bg-mint-light rounded-xl p-3 text-center">
-              <p className="text-lg font-bold text-mint">{sightings.length}</p>
+              <p className="text-display-xl text-mint">{sightings.length}</p>
               <p className="text-caption text-text-muted">最新偶遇</p>
             </div>
             <div className="bg-info/10 rounded-xl p-3 text-center">
-              <p className="text-lg font-bold text-info">{postCount}</p>
+              <p className="text-display-xl text-info">{postCount}</p>
               <p className="text-caption text-text-muted">社区帖子</p>
             </div>
           </div>

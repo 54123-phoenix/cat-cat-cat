@@ -22,5 +22,10 @@ services:
     environment:
       - DATABASE_URL=sqlite:///./cat_community.db
       - UPLOAD_DIR=./uploads
+      - JWT_SECRET=dev-secret-change-in-prod-9f2a7c4e
+      - ADMIN_PASSWORD=admin123
+      - INIT_DEMO_USER=1
+      - DEMO_PASSWORD=demo123
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:4173
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     restart: on-failure
