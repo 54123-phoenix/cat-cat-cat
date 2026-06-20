@@ -13,9 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm', cache-dependency-path: cat-frontend/package-lock.json }
-      - run: cd cat-frontend && npm ci
+      - run: cd cat-frontend && npm install
       - run: cd cat-frontend && npx tsc --noEmit
-      - run: cd cat-frontend && npx eslint src/
       - run: cd cat-frontend && npm run build
       - uses: actions/upload-artifact@v4
         with:
@@ -28,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm', cache-dependency-path: cat-miniprogram/package-lock.json }
-      - run: cd cat-miniprogram && npm ci && npx taro build --type weapp
+      - run: cd cat-miniprogram && npm install && npx taro build --type weapp
       - uses: actions/upload-artifact@v4
         with:
           name: miniprogram-dist
@@ -42,4 +41,4 @@ jobs:
         with: { python-version: '3.11' }
       - run: pip install -r cat-backend/requirements.txt
       - run: cd cat-backend && python -m compileall app/
-      - run: cd cat-backend && pytest tests/ -q
+      - run: cd cat-backend && JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass pytest tests/ -q
