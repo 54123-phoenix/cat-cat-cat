@@ -34,5 +34,14 @@ services:
       - RATE_SIGHTING_PER_MIN=${RATE_SIGHTING_PER_MIN:-20}
       - RATE_REGISTER_PER_MIN=${RATE_REGISTER_PER_MIN:-10}
       - RATE_LOGIN_PER_MIN=${RATE_LOGIN_PER_MIN:-5}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
     command: gunicorn app.main:app -c gunicorn.conf.py
+    restart: on-failure
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
     restart: on-failure

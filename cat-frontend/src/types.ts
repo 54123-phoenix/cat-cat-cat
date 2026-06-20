@@ -1,0 +1,223 @@
+export interface Cat {
+  id: number
+  name: string
+  nickname?: string
+  gender?: string
+  neutered?: string
+  age_estimate?: string
+  color?: string
+  personality?: string
+  story?: string
+  location?: string
+  avatar?: string
+  personality_radar?: number[]
+  quote?: string
+  aliases?: string
+  aliases_list?: string[]
+  relationships?: string
+  relationships_list?: Relationship[]
+  created_at: string
+  images: CatImage[]
+  health_records: HealthRecord[]
+}
+
+export interface Relationship {
+  cat_id: number
+  cat_name: string
+  type: string
+}
+
+export interface CatImage {
+  id: number
+  cat_id: number
+  image_path: string
+  created_at: string
+}
+
+export interface CatListItem {
+  id: number
+  name: string
+  nickname?: string
+  gender?: string
+  age_estimate?: string
+  color?: string
+  location?: string
+  avatar?: string
+  created_at: string
+}
+
+export interface Sighting {
+  id: number
+  cat_id: number
+  location?: string
+  latitude?: number
+  longitude?: number
+  confidence?: number
+  activity_type?: string
+  note?: string
+  weather?: string
+  mood?: string
+  image_path?: string
+  spotted_by?: string
+  location_name?: string
+  confirmations: number
+  grade: string
+  status?: string
+  created_at: string
+  cat?: CatListItem
+}
+
+export interface Post {
+  id: number
+  userId: number
+  user?: UserBrief
+  topic: string
+  content: string
+  tags: string[]
+  images: string[]
+  relatedCat?: { id: number; name: string }
+  likes: number
+  liked: boolean
+  comments: number
+  status: string
+  createdAt: string
+  postType: string
+  pollOptions: string[]
+  pollData: number[]
+  acceptedCommentId?: number
+}
+
+export interface Comment {
+  id: number
+  postId: number
+  userId: number
+  user?: UserBrief
+  content: string
+  createdAt: string
+  accepted: boolean
+}
+
+export interface UserBrief {
+  id: number
+  nickname: string
+  avatar?: string
+}
+
+export interface UserProfile {
+  id: number
+  username: string
+  nickname: string
+  role: string
+  avatar?: string
+  created_at: string
+  stats: UserStats
+  badges: UserBadgeItem[]
+}
+
+export interface UserStats {
+  sightings: number
+  posts: number
+  discoveries: number
+  approved_discoveries: number
+  cats_known: number
+  badges_count: number
+  total_badges: number
+  locations_count: number
+  photos_count: number
+}
+
+export interface UserBadgeItem {
+  badge_key: string
+  earned: boolean
+  earned_at?: string
+}
+
+export interface BadgeDetail {
+  badge_key: string
+  name: string
+  emoji: string
+  description: string
+  series: string
+  series_name: string
+  color: string
+  condition_text: string
+  order: number
+  type: string
+  earned: boolean
+  earned_at?: string
+  progress_current: number
+  progress_total: number
+}
+
+export interface Notification {
+  id: number
+  user_id: number
+  type: string
+  title: string
+  content?: string
+  related_id?: number
+  related_type?: string
+  is_read: string
+  created_at: string
+}
+
+export interface HealthRecord {
+  id: number
+  cat_id: number
+  record_type: string
+  title: string
+  description?: string
+  record_date: string
+  location?: string
+  status: string
+  created_at: string
+}
+
+export interface FeedingPoint {
+  id: number
+  name: string
+  description?: string
+  latitude: number
+  longitude: number
+  is_active: string
+  created_at: string
+}
+
+export interface Discovery {
+  id: number
+  image_path?: string
+  location_name?: string
+  latitude?: number
+  longitude?: number
+  note?: string
+  status: string
+  created_at: string
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  has_more: boolean
+}
+
+export interface RecognizeResult {
+  status: string
+  cat_id?: number
+  cat_name?: string
+  name?: string
+  confidence: number
+  candidates: RecognizeCandidate[]
+}
+
+export interface RecognizeCandidate {
+  cat_id: number
+  cat_name: string
+  confidence: number
+}
+
+export interface HeatmapPoint {
+  name: string
+  latitude: number
+  longitude: number
+  count: number
+}

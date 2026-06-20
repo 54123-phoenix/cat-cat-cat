@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from fastapi import APIRouter, Depends, Query, Header, HTTPException
 from fastapi.responses import StreamingResponse
@@ -36,18 +37,30 @@ async def event_stream(
     authorization: str = Header(default=""),
 ):
     _resolve_user(authorization, token)
-    queue = await events.subscribe()
+    sub = await events.subscribe()
 
-    async def generator():
+    if hasattr(sub, "listen"):
+        async def redis_generator():
+            try:
+                async for msg in sub.listen():
+                    if msg["type"] == "message":
+                        yield f"data: {msg['data']}\n\n"
+            except asyncio.CancelledError:
+                pass
+            finally:
+                await events.unsubscribe(sub)
+
+        return StreamingResponse(redis_generator(), media_type="text/event-stream")
+
+    async def in_memory_generator():
         try:
             while True:
                 try:
-                    message = await asyncio.wait_for(queue.get(), timeout=15.0)
+                    message = await asyncio.wait_for(sub.get(), timeout=15.0)
                     yield f"data: {message}\n\n"
                 except asyncio.TimeoutError:
                     yield ": ping\n\n"
         finally:
-            events.unsubscribe(queue)
+            events.unsubscribe(sub)
 
-    return StreamingResponse(generator(), media_type="text/event-stream")
-
+    return StreamingResponse(in_memory_generator(), media_type="text/event-stream")

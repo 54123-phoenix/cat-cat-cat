@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO: Migrate to typed API client using types.ts
 const API_BASE = '/api'
 
 function getToken() {

@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Optional, List
 import json
-from pydantic import BaseModel, field_validator, model_validator, constr
+from pydantic import BaseModel, field_validator, model_validator, constr, confloat
+from typing import Literal
 
 
 class CatImageBase(BaseModel):
@@ -39,7 +40,10 @@ class CatBase(BaseModel):
 
 
 class CatCreate(CatBase):
-    pass
+    name: constr(min_length=1, max_length=50)
+    personality: Optional[constr(max_length=200)] = None
+    story: Optional[constr(max_length=2000)] = None
+    location: Optional[constr(max_length=100)] = None
 
 
 class CatUpdate(CatBase):
@@ -127,11 +131,13 @@ class SightingBase(BaseModel):
 
 
 class SightingCreate(SightingBase):
-    pass
+    latitude: Optional[confloat(ge=-90, le=90)] = None
+    longitude: Optional[confloat(ge=-180, le=180)] = None
+    note: Optional[constr(max_length=500)] = None
 
 
 class SightingReviewRequest(BaseModel):
-    action: str
+    action: Literal["approve", "reject"]
     reject_reason: Optional[str] = None
 
 
@@ -279,7 +285,7 @@ class RelatedCatResponse(BaseModel):
 
 class PostCreate(BaseModel):
     topic: str = "daily"
-    content: str
+    content: constr(min_length=1, max_length=500)
     tags: List[str] = []
     relatedCatId: Optional[int] = None
     postType: str = "discussion"
@@ -313,7 +319,7 @@ class PostUpdate(BaseModel):
 
 
 class CommentCreate(BaseModel):
-    content: str
+    content: constr(min_length=1, max_length=300)
 
 
 class CommentResponse(BaseModel):
@@ -327,7 +333,7 @@ class CommentResponse(BaseModel):
 
 
 class ReportCreate(BaseModel):
-    reason: str
+    reason: constr(min_length=1, max_length=200)
 
 
 class ReportResponse(BaseModel):
@@ -371,10 +377,10 @@ class BadgeDetail(BaseModel):
 
 
 class DiscoveryReview(BaseModel):
-    action: str
-    name: Optional[str] = None
-    color: Optional[str] = None
-    note: Optional[str] = None
+    action: Literal["approve", "reject"]
+    name: Optional[constr(max_length=50)] = None
+    color: Optional[constr(max_length=50)] = None
+    note: Optional[constr(max_length=500)] = None
     cat_id: Optional[int] = None
 
 
@@ -393,11 +399,11 @@ class DiscoveryResponse(BaseModel):
 
 
 class HealthRecordCreate(BaseModel):
-    record_type: str
-    title: str
-    description: Optional[str] = None
+    record_type: constr(min_length=1, max_length=20)
+    title: constr(min_length=1, max_length=100)
+    description: Optional[constr(max_length=1000)] = None
     record_date: datetime
-    location: Optional[str] = None
+    location: Optional[constr(max_length=100)] = None
     status: str = "completed"
 
 
@@ -417,10 +423,10 @@ class HealthRecordResponse(BaseModel):
 
 
 class FeedingPointCreate(BaseModel):
-    name: str
-    description: Optional[str] = None
-    latitude: float
-    longitude: float
+    name: constr(min_length=1, max_length=50)
+    description: Optional[constr(max_length=500)] = None
+    latitude: confloat(ge=-90, le=90)
+    longitude: confloat(ge=-180, le=180)
     is_active: bool = True
 
 

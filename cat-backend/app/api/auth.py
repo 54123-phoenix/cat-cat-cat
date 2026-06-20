@@ -1,4 +1,4 @@
-import os
+import logging
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
@@ -16,6 +16,8 @@ from app.ratelimit import limit
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+logger = logging.getLogger("cat_community.auth")
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = settings.JWT_SECRET
@@ -29,6 +31,7 @@ def create_token(user: User) -> str:
     payload = {
         "sub": str(user.id),
         "role": user.role,
+        "tv": user.token_version,
         "exp": datetime.now(timezone.utc) + timedelta(minutes=TOKEN_TTL_MINUTES),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -50,6 +53,9 @@ def get_current_user_from_header(authorization: str = Header(default=""), db: Se
     user = db.query(User).filter(User.id == int(payload["sub"])).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+    token_version = payload.get("tv", 0)
+    if token_version != user.token_version:
+        raise HTTPException(status_code=401, detail="Token has been revoked")
     return user
 
 
@@ -101,8 +107,8 @@ def me(user: User = Depends(require_auth)):
 async def wechat_login(request: Request, payload: schemas.WechatLoginRequest, db: Session = Depends(get_db)):
     try:
         wx_data = await code2session(payload.code)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=400, detail="微信登录失败，请稍后重试")
 
     openid = wx_data.get("openid")
     if not openid:

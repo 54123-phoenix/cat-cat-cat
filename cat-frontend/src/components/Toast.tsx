@@ -47,7 +47,7 @@ export default function Toast() {
   if (items.length === 0) return null
 
   return (
-    <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-[90%] max-w-sm">
+    <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-[90%] max-w-sm" aria-live="polite" aria-atomic="true">
       {items.map((it) => (
         <div
           key={it.id}

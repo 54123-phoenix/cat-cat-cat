@@ -119,6 +119,7 @@ export default function Layout() {
           onClick={() => setSidebarOpen(true)}
           className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors"
           aria-label="打开菜单"
+          aria-expanded={sidebarOpen}
         >
           <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
             {user?.avatar ? (

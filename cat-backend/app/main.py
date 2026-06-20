@@ -1,10 +1,19 @@
+import logging
+
 from dotenv import load_dotenv
 load_dotenv()
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 import os
 
 from app.config import settings
@@ -14,10 +23,15 @@ from app.crud import init_mock_data
 from app.models import User
 from passlib.context import CryptContext
 from app.ratelimit import limiter, _SLOWAPI_AVAILABLE
+from app.middleware.security_headers import SecurityHeadersMiddleware
+from app import events
+
+logger = logging.getLogger("cat_community")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await events.init_redis(os.getenv("REDIS_URL"))
     db = SessionLocal()
     try:
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -31,10 +45,10 @@ async def lifespan(app: FastAPI):
                     role="admin",
                 ))
         else:
-            print("WARNING: ADMIN_PASSWORD not set. Admin account will not be created.")
+            logger.warning("ADMIN_PASSWORD not set. Admin account will not be created.")
         if settings.INIT_DEMO_USER:
             if not settings.DEMO_PASSWORD:
-                print("WARNING: INIT_DEMO_USER=1 but DEMO_PASSWORD is empty. Skipping demo user creation.")
+                logger.warning("INIT_DEMO_USER=1 but DEMO_PASSWORD is empty. Skipping demo user creation.")
             elif not db.query(User).filter(User.username == "demo").first():
                 db.add(User(
                     username="demo",
@@ -47,9 +61,12 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
     yield
+    await events.close_redis()
 
 
 app = FastAPI(title="猫猫社区 API", version="1.0.0", lifespan=lifespan)
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 if _SLOWAPI_AVAILABLE:
     from slowapi.middleware import SlowAPIMiddleware
@@ -63,9 +80,18 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "内部服务器错误，请稍后重试"},
+    )
 
 Base.metadata.create_all(bind=engine)
 
@@ -74,7 +100,16 @@ os.makedirs(os.path.join(UPLOAD_DIR, "cats"), exist_ok=True)
 os.makedirs(os.path.join(UPLOAD_DIR, "sightings"), exist_ok=True)
 os.makedirs(os.path.join(UPLOAD_DIR, "posts"), exist_ok=True)
 os.makedirs(os.path.join(UPLOAD_DIR, "discoveries"), exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+
+@app.get("/uploads/{filepath:path}")
+async def serve_upload(filepath: str, user: User = Depends(auth.require_auth)):
+    full_path = os.path.normpath(os.path.join(UPLOAD_DIR, filepath))
+    if not full_path.startswith(os.path.normpath(UPLOAD_DIR)):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(full_path)
 
 app.include_router(auth.router)
 app.include_router(admin.router)

@@ -1,5 +1,3 @@
-import os
-import uuid
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -7,11 +5,10 @@ from sqlalchemy.orm import Session
 
 from app import crud, schemas
 from app.api.admin import require_admin
+from app.api.upload import save_upload
 from app.database import get_db
 
 router = APIRouter(prefix="/api/discoveries", tags=["discoveries"])
-
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
 
 
 @router.post("", response_model=schemas.DiscoveryResponse)
@@ -25,13 +22,7 @@ async def create_discovery(
 ):
     image_path = None
     if file:
-        ext = os.path.splitext(file.filename)[1]
-        filename = f"{uuid.uuid4()}{ext}"
-        filepath = os.path.join(UPLOAD_DIR, "discoveries", filename)
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        with open(filepath, "wb") as f:
-            f.write(await file.read())
-        image_path = f"/uploads/discoveries/{filename}"
+        image_path = await save_upload(file, "discoveries")
 
     return crud.create_discovery(db, image_path=image_path, location_name=location_name, latitude=latitude, longitude=longitude, note=note)
 

@@ -8,21 +8,13 @@ from sqlalchemy import func
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth
+from app.api.upload import save_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
 from app.models import User
 from app.ratelimit import limit
 from app.config import settings
 from app import events
 
 router = APIRouter(prefix="/api/sightings", tags=["sightings"])
-
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
-MAX_UPLOAD_SIZE = 10 * 1024 * 1024
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
-
-
-def _validate_upload(file: UploadFile):
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
-        raise HTTPException(status_code=400, detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}")
 
 
 @router.get("", response_model=schemas.PaginatedSightingsResponse)
@@ -58,19 +50,7 @@ async def create_sighting(
 ):
     image_path = None
     if file:
-        _validate_upload(file)
-        ext = os.path.splitext(file.filename)[1]
-        filename = f"{uuid.uuid4()}{ext}"
-        filepath = os.path.join(UPLOAD_DIR, "sightings", filename)
-
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        content = await file.read()
-        if len(content) > MAX_UPLOAD_SIZE:
-            raise HTTPException(status_code=400, detail=f"File too large. Max size: {MAX_UPLOAD_SIZE // (1024 * 1024)}MB")
-        with open(filepath, "wb") as f:
-            f.write(content)
-
-        image_path = f"/uploads/sightings/{filename}"
+        image_path = await save_upload(file, "sightings")
 
     sighting_status = "pending"
     sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)

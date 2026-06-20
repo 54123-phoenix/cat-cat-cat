@@ -26,8 +26,9 @@ export default function TabBar() {
     >
       {({ isActive }) => (
         <>
-          <Icon className={`transition-all duration-300 ${isActive ? 'w-[22px] h-[22px]' : 'w-5 h-5'}`} />
+          <Icon className={`transition-all duration-300 ${isActive ? 'w-[22px] h-[22px]' : 'w-5 h-5'}`} aria-hidden="true" />
           <span className="text-xs font-medium">{label}</span>
+          <span className="sr-only" aria-selected={isActive} />
         </>
       )}
     </NavLink>

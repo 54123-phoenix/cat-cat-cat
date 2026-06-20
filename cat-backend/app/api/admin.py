@@ -88,3 +88,17 @@ def review_sighting(
     db.commit()
 
     return {"ok": True, "status": sighting.status}
+
+
+@router.post("/users/{user_id}/revoke")
+def revoke_user_tokens(
+    user_id: int,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.token_version = (user.token_version or 0) + 1
+    db.commit()
+    return {"ok": True, "token_version": user.token_version}

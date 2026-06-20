@@ -1,5 +1,5 @@
+import json
 import os
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, File, Request
@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth
+from app.api.upload import validate_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
 from app.models import User
 from app.ratelimit import limit
 from app.config import settings
@@ -19,29 +20,18 @@ router = APIRouter(prefix="/api/posts", tags=["posts"])
 class HandleAction(BaseModel):
     action: str = "dismiss"
 
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
+
 POSTS_UPLOAD = os.path.join(UPLOAD_DIR, "posts")
 os.makedirs(POSTS_UPLOAD, exist_ok=True)
 
-MAX_UPLOAD_SIZE = 10 * 1024 * 1024
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 
-
-def _validate_upload(file: UploadFile):
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
-        raise HTTPException(status_code=400, detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}")
-
-
-def _save_images(files: List[UploadFile]) -> List[str]:
+async def _save_images(files: List[UploadFile]) -> List[str]:
     paths = []
     for file in files:
-        _validate_upload(file)
+        content = await validate_upload(file)
         ext = os.path.splitext(file.filename or ".jpg")[1] or ".jpg"
-        name = f"{uuid.uuid4().hex}{ext}"
+        name = f"{os.urandom(16).hex()}{ext}"
         dest = os.path.join(POSTS_UPLOAD, name)
-        content = file.file.read()
-        if len(content) > MAX_UPLOAD_SIZE:
-            raise HTTPException(status_code=400, detail=f"File too large. Max size: {MAX_UPLOAD_SIZE // (1024 * 1024)}MB")
         with open(dest, "wb") as f:
             f.write(content)
         paths.append(f"/uploads/posts/{name}")
@@ -70,7 +60,7 @@ def list_posts(
 
 @router.post("", response_model=schemas.PostResponse)
 @limit(f"{settings.RATE_POST_PER_MIN}/minute")
-def create_post(
+async def create_post(
     request: Request,
     topic: str = Form("daily"),
     content: str = Form(...),
@@ -87,12 +77,17 @@ def create_post(
     if len(content) > 500:
         raise HTTPException(status_code=400, detail="Content is too long")
 
-    import json
-    tag_list = json.loads(tags) if tags else []
+    try:
+        tag_list = json.loads(tags) if tags else []
+    except (json.JSONDecodeError, TypeError):
+        raise HTTPException(status_code=400, detail="Invalid tags format: must be valid JSON array")
     rel_id = int(relatedCatId) if relatedCatId and relatedCatId != "null" else None
-    poll_option_list = json.loads(pollOptions) if pollOptions else []
+    try:
+        poll_option_list = json.loads(pollOptions) if pollOptions else []
+    except (json.JSONDecodeError, TypeError):
+        raise HTTPException(status_code=400, detail="Invalid poll options format: must be valid JSON array")
 
-    image_paths = _save_images(files) if files else []
+    image_paths = await _save_images(files) if files else []
 
     post_data = schemas.PostCreate(
         topic=topic,
@@ -155,7 +150,6 @@ def like_post(
     post = crud.toggle_post_like(db, post_id, user.id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    # Notify post author if someone else liked
     db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
     if db_post and db_post.user_id != user.id:
         like_record = db.query(models.PostLike).filter(

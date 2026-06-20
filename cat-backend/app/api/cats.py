@@ -1,5 +1,3 @@
-import os
-import uuid
 import math
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
@@ -8,18 +6,10 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import crud, schemas
 from app.api.auth import require_admin
+from app.api.upload import validate_upload, save_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
 from app.models import User, Cat, Sighting
 
 router = APIRouter(prefix="/api/cats", tags=["cats"])
-
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
-MAX_UPLOAD_SIZE = 10 * 1024 * 1024
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
-
-
-def _validate_upload(file: UploadFile):
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
-        raise HTTPException(status_code=400, detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}")
 
 
 @router.get("", response_model=schemas.PaginatedCatsResponse)
@@ -70,21 +60,7 @@ async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Sessio
     if not cat:
         raise HTTPException(status_code=404, detail="Cat not found")
 
-    _validate_upload(file)
-
-    content = await file.read()
-    if len(content) > MAX_UPLOAD_SIZE:
-        raise HTTPException(status_code=400, detail=f"File too large. Max size: {MAX_UPLOAD_SIZE // (1024 * 1024)}MB")
-
-    ext = os.path.splitext(file.filename)[1]
-    filename = f"{uuid.uuid4()}{ext}"
-    filepath = os.path.join(UPLOAD_DIR, "cats", filename)
-
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    with open(filepath, "wb") as f:
-        f.write(content)
-
-    image_path = f"/uploads/cats/{filename}"
+    image_path = await save_upload(file, "cats")
     return crud.create_cat_image(db, cat_id, image_path)
 
 

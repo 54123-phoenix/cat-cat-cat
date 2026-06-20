@@ -1,5 +1,9 @@
+import logging
+
 from sqlalchemy import inspect as _inspect
 from app.database import engine
+
+logger = logging.getLogger("cat_community.migrate")
 
 
 def ensure_users_columns():
@@ -12,12 +16,13 @@ def ensure_users_columns():
             ("xp", "xp INTEGER DEFAULT 0"),
             ("level", "level INTEGER DEFAULT 1"),
             ("longest_streak", "longest_streak INTEGER DEFAULT 0"),
+            ("token_version", "token_version INTEGER DEFAULT 1"),
         ]:
             if col not in existing:
                 with engine.begin() as conn:
                     conn.exec_driver_sql(f"ALTER TABLE users ADD COLUMN {ddl}")
     except Exception as e:
-        print(f"WARNING: schema migration for users failed: {e}")
+        logger.warning("Schema migration for users failed: %s", e)
 
 
 def ensure_sightings_columns():
@@ -37,7 +42,7 @@ def ensure_sightings_columns():
                 with engine.begin() as conn:
                     conn.exec_driver_sql(f"ALTER TABLE sightings ADD COLUMN {ddl}")
     except Exception as e:
-        print(f"WARNING: schema migration for sightings failed: {e}")
+        logger.warning("Schema migration for sightings failed: %s", e)
 
 
 def ensure_cats_columns():
@@ -56,7 +61,7 @@ def ensure_cats_columns():
                 with engine.begin() as conn:
                     conn.exec_driver_sql(f"ALTER TABLE cats ADD COLUMN {ddl}")
     except Exception as e:
-        print(f"WARNING: schema migration for cats failed: {e}")
+        logger.warning("Schema migration for cats failed: %s", e)
 
 
 def ensure_posts_columns():
@@ -75,4 +80,4 @@ def ensure_posts_columns():
                 with engine.begin() as conn:
                     conn.exec_driver_sql(f"ALTER TABLE posts ADD COLUMN {ddl}")
     except Exception as e:
-        print(f"WARNING: schema migration for posts failed: {e}")
+        logger.warning("Schema migration for posts failed: %s", e)

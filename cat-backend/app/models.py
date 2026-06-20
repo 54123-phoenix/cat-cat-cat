@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy import UniqueConstraint
 from app.database import Base
@@ -17,7 +17,7 @@ class Discovery(Base):
     longitude = Column(Float)
     note = Column(Text)
     status = Column(String(20), default="pending")
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class UserBadge(Base):
@@ -44,10 +44,11 @@ class User(Base):
     avatar = Column(String(200))
     openid = Column(String(100), unique=True, nullable=True, index=True)
     session_key = Column(String(100), nullable=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
     xp = Column(Integer, default=0)
     level = Column(Integer, default=1)
     longest_streak = Column(Integer, default=0)
+    token_version = Column(Integer, default=1)
 
     posts = relationship("Post", back_populates="author")
     comments = relationship("Comment", back_populates="author")
@@ -71,7 +72,7 @@ class Cat(Base):
     quote = Column(String(120))
     aliases = Column(String(120))
     relationships = Column(Text)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     images = relationship("CatImage", back_populates="cat")
     sightings = relationship("Sighting", back_populates="cat")
@@ -85,7 +86,7 @@ class CatImage(Base):
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
     image_path = Column(String(200), nullable=False)
     embedding_path = Column(String(200))
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     cat = relationship("Cat", back_populates="images")
 
@@ -110,7 +111,7 @@ class Sighting(Base):
     grade = Column(String(20), default="casual")
     weather = Column(String(20))
     mood = Column(String(20))
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     cat = relationship("Cat", back_populates="sightings")
 
@@ -121,7 +122,7 @@ class SightingConfirmation(Base):
     id = Column(Integer, primary_key=True, index=True)
     sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
         UniqueConstraint("sighting_id", "user_id", name="uq_sighting_confirmation"),
@@ -135,7 +136,7 @@ class SightingVote(Base):
     sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
         UniqueConstraint("sighting_id", "user_id", name="uq_sighting_vote"),
@@ -158,8 +159,8 @@ class Post(Base):
     poll_options = Column(Text)
     poll_data = Column(Text)
     accepted_comment_id = Column(Integer)
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     author = relationship("User", back_populates="posts")
     images = relationship("PostImage", back_populates="post", order_by="PostImage.sort_order")
@@ -171,7 +172,7 @@ class PostImage(Base):
     __tablename__ = "post_images"
 
     id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
     image_path = Column(String(200), nullable=False)
     sort_order = Column(Integer, default=0)
 
@@ -195,7 +196,7 @@ class PostPollVote(Base):
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     option_index = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
         UniqueConstraint("post_id", "user_id", name="uq_post_poll_vote"),
@@ -207,9 +208,9 @@ class Comment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     post = relationship("Post", back_populates="comment_list")
     author = relationship("User", back_populates="comments")
@@ -219,12 +220,12 @@ class Report(Base):
     __tablename__ = "reports"
 
     id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
     reported_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     reason = Column(String(200), nullable=False)
     status = Column(String(20), default="pending")
     handled_by = Column(Integer, ForeignKey("users.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class HealthRecord(Base):
@@ -238,7 +239,7 @@ class HealthRecord(Base):
     record_date = Column(DateTime, nullable=False)
     location = Column(String(100))
     status = Column(String(20), nullable=False, default="completed")
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
 
     cat = relationship("Cat", back_populates="health_records")
@@ -253,7 +254,7 @@ class FeedingPoint(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     check_ins = relationship("FeedingCheckIn", back_populates="point", cascade="all, delete-orphan", order_by="FeedingCheckIn.created_at.desc()")
 
@@ -263,11 +264,11 @@ class FeedingCheckIn(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     point_id = Column(Integer, ForeignKey("feeding_points.id"), nullable=False, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1, index=True)
     food_remaining = Column(String(20))
     cats_seen = Column(Integer, default=0)
     note = Column(Text)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     point = relationship("FeedingPoint", back_populates="check_ins")
 
@@ -283,7 +284,7 @@ class Notification(Base):
     related_id = Column(Integer)
     related_type = Column(String(20))
     is_read = Column(Boolean, nullable=False, default=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class AuditLog(Base):
@@ -296,7 +297,7 @@ class AuditLog(Base):
     old_value = Column(Text)
     new_value = Column(Text)
     performed_by = Column(String(50), nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class UserCatFollow(Base):
@@ -304,5 +305,5 @@ class UserCatFollow(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
     __table_args__ = (UniqueConstraint("user_id", "cat_id", name="uq_user_cat_follow"),)
