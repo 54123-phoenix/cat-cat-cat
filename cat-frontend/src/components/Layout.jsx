@@ -9,6 +9,7 @@ import Onboarding, { isOnboarded } from './Onboarding'
 import { useEventStream } from '../hooks/useEventStream'
 import { getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
+import Logo from './illustrations/Logo'
 
 const routeTitles = {
   '/': '猫猫社区',
@@ -125,7 +126,10 @@ export default function Layout() {
           </div>
         </button>
 
-        <h1 className="text-lg font-bold text-text">{getTitle()}</h1>
+        <div className="flex items-center gap-2">
+          <Logo size={28} />
+          <h1 className="text-lg font-bold text-text">{getTitle()}</h1>
+        </div>
 
         <div className="w-9" />
       </header>

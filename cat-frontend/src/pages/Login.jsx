@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PawPrint } from 'lucide-react'
 import { login, register, setToken } from '../api'
+import Logo from '../components/illustrations/Logo'
+import Wordmark from '../components/illustrations/Wordmark'
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate()
@@ -43,7 +45,13 @@ export default function Login({ onLogin }) {
           <PawPrint className="w-32 h-32 text-white" />
         </div>
         <div className="relative z-10">
-          <h1 className="text-3xl font-extrabold text-white">猫猫社区</h1>
+          <div className="flex items-center gap-3">
+            <Logo size={64} />
+            <div>
+              <Wordmark size={28} className="block text-white" />
+              <h1 className="text-3xl font-extrabold text-white mt-1">猫猫社区</h1>
+            </div>
+          </div>
           <p className="text-white/70 text-sm mt-2">
             {mode === 'login' ? '让每一只校园猫被看见' : '加入猫猫社区，开始记录'}
           </p>
