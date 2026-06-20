@@ -436,7 +436,7 @@ class FeedingPointResponse(BaseModel):
     description: Optional[str]
     latitude: float
     longitude: float
-    is_active: str
+    is_active: bool
     created_at: datetime
 
     class Config:
