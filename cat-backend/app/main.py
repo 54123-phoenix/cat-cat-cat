@@ -18,7 +18,8 @@ import os
 
 from app.config import settings
 from app.database import engine, SessionLocal, Base
-from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, events, gallery
+from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, gallery
+from app.api import events as events_api
 from app.crud import init_mock_data
 from app.models import User
 from passlib.context import CryptContext
@@ -78,7 +79,7 @@ if _SLOWAPI_AVAILABLE:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
@@ -126,7 +127,7 @@ app.include_router(notifications.router)
 app.include_router(discoveries.router)
 app.include_router(map.router)
 app.include_router(audit.router)
-app.include_router(events.router)
+app.include_router(events_api.router)
 app.include_router(gallery.router)
 
 

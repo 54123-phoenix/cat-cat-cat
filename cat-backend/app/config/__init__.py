@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     ALGORITHM: str = "HS256"
     TOKEN_TTL_MINUTES: int = 60 * 24 * 7
-    CORS_ORIGINS: list[str] = ["http://localhost:5173"]
+    CORS_ORIGINS: str = "http://localhost:5173"
     UPLOAD_DIR: str = "./uploads"
     DATABASE_URL: str = "sqlite:///./cat_community.db"
     ADMIN_PASSWORD: str
@@ -30,6 +30,10 @@ class Settings(BaseSettings):
         if self.RECOGNIZE_THRESHOLD_UNCERTAIN >= self.RECOGNIZE_THRESHOLD_CONFIRMED:
             raise ValueError("RECOGNIZE_THRESHOLD_UNCERTAIN must be less than RECOGNIZE_THRESHOLD_CONFIRMED")
         return self
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 

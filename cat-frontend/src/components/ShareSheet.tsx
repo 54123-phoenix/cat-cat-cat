@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { X, Download, Link2, Share2 } from 'lucide-react'
+import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 
 interface ShareSheetProps {
   posterRef: React.RefObject<HTMLDivElement>
@@ -12,7 +14,6 @@ export default function ShareSheet({ posterRef, onClose }: ShareSheetProps) {
   async function handleSave() {
     if (!posterRef.current) return
     try {
-      const html2canvas = (await import('html2canvas')).default
       const canvas = await html2canvas(posterRef.current, {
         scale: 2,
         useCORS: true,
@@ -24,7 +25,6 @@ export default function ShareSheet({ posterRef, onClose }: ShareSheetProps) {
       link.click()
     } catch {
       try {
-        const { toPng } = await import('html-to-image')
         const dataUrl = await toPng(posterRef.current, { pixelRatio: 2 })
         const link = document.createElement('a')
         link.download = `猫猫社区_${Date.now()}.png`
