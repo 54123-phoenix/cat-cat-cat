@@ -109,8 +109,9 @@ export function getAdminMe() {
   return request('/admin/me')
 }
 
-export function getCats() {
-  return request('/cats')
+export function getCats(params = {}) {
+  const qs = new URLSearchParams(params).toString()
+  return request(`/cats${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
 }
 
 export function getCat(catId) {
@@ -163,7 +164,7 @@ export function createSighting({ catId, location, confidence, file, activity_typ
 
 export function getSightings(params = {}) {
   const qs = new URLSearchParams(params).toString()
-  return request(`/sightings${qs ? '?' + qs : ''}`)
+  return request(`/sightings${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
 }
 
 export function confirmSighting(id) {
@@ -212,7 +213,7 @@ export function getGalleryImages(params = {}) {
 
 export function getPosts(params = {}) {
   const qs = new URLSearchParams(params).toString()
-  return request(`/posts${qs ? '?' + qs : ''}`)
+  return request(`/posts${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
 }
 
 export function getPost(postId) {
@@ -270,7 +271,7 @@ export function handleReport(reportId, action) {
 
 export function getHeatmapData(params = {}) {
   const qs = new URLSearchParams(params).toString()
-  return request(`/map/heatmap${qs ? '?' + qs : ''}`)
+  return request(`/map/heatmap${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
 }
 
 export function getNearbyCats(lat, lng, n = 8) {
