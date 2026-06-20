@@ -35,18 +35,18 @@ export default function Community() {
 
   return (
     <div className="flex flex-col h-full pb-6">
-      <div className="bg-primary px-4 pt-4 pb-3 text-white rounded-b-2xl">
+      <div className="bg-primary px-4 pt-4 pb-3 text-white rounded-b-container">
         <h1 className="text-lg font-bold">社区</h1>
         <p className="text-xs opacity-80 mt-0.5">和其他铲屎官一起聊聊</p>
       </div>
 
-      <div className="flex overflow-x-auto scrollbar-none bg-white border-b border-gray-100 px-2 sticky top-0 z-20">
+      <div className="flex overflow-x-auto scrollbar-none bg-white border-b border-border-light px-2 sticky top-0 z-20">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex-shrink-0 px-3 py-3 text-xs font-medium border-b-2 transition-colors ${
-              activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-gray-400'
+              activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-text-muted'
             }`}
           >
             {tab.label}
@@ -77,19 +77,19 @@ export default function Community() {
       {reportTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
           <div className="bg-white rounded-2xl p-5 w-80 space-y-4">
-            <h3 className="font-medium text-gray-800">举报帖子</h3>
+            <h3 className="font-medium text-text">举报帖子</h3>
             <textarea
               value={reportReason}
               onChange={(e) => setReportReason(e.target.value)}
               placeholder="请说明举报原因…"
-              className="w-full h-24 text-sm border border-gray-200 rounded-xl p-3 outline-none resize-none"
+              className="w-full h-24 text-sm border border-border rounded-xl p-3 outline-none resize-none"
               maxLength={200}
             />
             <div className="flex gap-2">
-              <button onClick={() => { setReportTarget(null); setReportReason('') }} className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm text-gray-500">
+              <button onClick={() => { setReportTarget(null); setReportReason('') }} className="flex-1 py-2.5 rounded-full border border-border text-sm text-text-muted">
                 取消
               </button>
-              <button onClick={handleReport} disabled={!reportReason.trim() || reporting} className="flex-1 py-2.5 rounded-full bg-red-500 text-white text-sm disabled:opacity-40">
+              <button onClick={handleReport} disabled={!reportReason.trim() || reporting} className="flex-1 py-2.5 rounded-full bg-danger text-white text-sm disabled:opacity-40">
                 {reporting ? '提交中…' : '提交举报'}
               </button>
             </div>

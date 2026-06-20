@@ -7,8 +7,8 @@ import Avatar from './Avatar'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 
 const POST_TYPE_BADGE = {
-  poll: { label: '投票', cls: 'bg-purple-50 text-purple-500' },
-  question: { label: '求助', cls: 'bg-blue-50 text-blue-500' },
+  poll: { label: '投票', cls: 'bg-warning/10 text-warning' },
+  question: { label: '求助', cls: 'bg-info/10 text-info' },
   discussion: { label: '', cls: '' },
 }
 
@@ -38,7 +38,7 @@ function PollView({ post }) {
             key={i}
             onClick={() => handleVote(i)}
             disabled={voting}
-            className="w-full text-left relative overflow-hidden rounded-lg border border-gray-200 px-3 py-2 active:bg-gray-50"
+            className="w-full text-left relative overflow-hidden rounded-lg border border-border px-3 py-2 active:bg-surface-3"
           >
             <div className="absolute inset-y-0 left-0 bg-primary/10" style={{ width: `${pct}%` }} />
             <div className="relative flex items-center justify-between text-sm">
@@ -115,9 +115,9 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         </div>
         <div className="flex items-center gap-2">
           <span className={`text-caption px-2 py-0.5 rounded-full font-medium ${
-            TOPIC_COLORS[post.topic]?.bg || 'bg-gray-50'
+            TOPIC_COLORS[post.topic]?.bg || 'bg-surface-3'
           } ${
-            TOPIC_COLORS[post.topic]?.text || 'text-gray-400'
+            TOPIC_COLORS[post.topic]?.text || 'text-text-muted'
           }`}>
             {TOPIC_LABEL[post.topic] || '铲屎日常'}
           </span>
@@ -127,12 +127,12 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             </span>
           )}
           {canDelete && (
-            <button onClick={() => setShowDeleteConfirm(true)} className="text-gray-300 hover:text-red-400 transition-colors">
+            <button onClick={() => setShowDeleteConfirm(true)} className="text-text-muted hover:text-danger transition-colors">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           )}
           {onReport && (
-            <button onClick={() => onReport(post)} className="text-gray-300 hover:text-red-400 transition-colors">
+            <button onClick={() => onReport(post)} className="text-text-muted hover:text-danger transition-colors">
               <Flag className="w-3.5 h-3.5" />
             </button>
           )}
@@ -147,7 +147,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
 
       {/* Clickable content area → navigate to detail page */}
       <div
-        className="cursor-pointer active:bg-gray-50/50 -mx-1 px-1 rounded-lg"
+        className="cursor-pointer active:bg-surface-3/50 -mx-1 px-1 rounded-lg"
         onClick={goToDetail}
       >
         <p className="text-body text-text leading-relaxed whitespace-pre-wrap">{post.content}</p>
@@ -162,7 +162,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             {post.images.map((img, i) => (
               <div
                 key={i}
-                className={`rounded-xl overflow-hidden bg-gray-100 ${
+                className={`rounded-xl overflow-hidden bg-surface-3 ${
                   post.images.length === 3 && i === 0 ? 'row-span-2' : ''
                 }`}
               >
@@ -191,8 +191,8 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         </div>
       )}
 
-      <div className="flex items-center gap-4 pt-1 border-t border-gray-50">
-        <button onClick={handleLike} className={`relative flex items-center gap-2 text-xs transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
+      <div className="flex items-center gap-4 pt-1 border-t border-border-light">
+        <button onClick={handleLike} className={`relative flex items-center gap-2 text-xs transition-colors ${liked ? 'text-primary' : 'text-text-muted'}`}>
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
           {burst && (
@@ -203,7 +203,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             </>
           )}
         </button>
-        <button onClick={goToDetail} className="flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition-colors">
+        <button onClick={goToDetail} className="flex items-center gap-2 text-xs text-text-muted hover:text-primary transition-colors">
           <MessageCircle className="w-3.5 h-3.5" />
           {post.comments || 0} 条回复 ›
         </button>
@@ -214,23 +214,23 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
         <div className="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-5 w-72 space-y-4 animate-scale-in">
             <div className="text-center space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center">
-                <Trash2 className="w-6 h-6 text-red-400" />
+              <div className="w-12 h-12 mx-auto rounded-full bg-danger/10 flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-danger" />
               </div>
-              <p className="text-sm text-gray-700 font-medium">确定要删除这条帖子吗？</p>
-              <p className="text-xs text-gray-400">删除后无法恢复</p>
+              <p className="text-sm text-text font-medium">确定要删除这条帖子吗？</p>
+              <p className="text-xs text-text-muted">删除后无法恢复</p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm text-gray-500 btn-ghost"
+                className="flex-1 py-2.5 rounded-full border border-border text-sm text-text-muted btn-ghost"
               >
                 算了
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 py-2.5 rounded-full bg-red-500 text-white text-sm disabled:opacity-40"
+                className="flex-1 py-2.5 rounded-full bg-danger text-white text-sm disabled:opacity-40"
               >
                 {deleting ? '推走中…' : '推走'}
               </button>

@@ -27,7 +27,7 @@ function formatTime(value) {
 export default function FeedItem({ sighting }) {
   const ActivityIcon = sighting.activity_type ? ACTIVITY_ICON[sighting.activity_type] : null
   const content = (
-    <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card px-4 py-3 flex gap-3 active:bg-orange-50 transition-colors animate-fade-up">
+    <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card px-4 py-3 flex gap-3 active:bg-primary-light transition-colors animate-fade-up">
       <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center overflow-hidden shrink-0 text-2xl">
         {sighting.image_path ? (
           <img src={sighting.image_path} alt="偶遇照片" className="w-full h-full object-cover" />
@@ -37,8 +37,8 @@ export default function FeedItem({ sighting }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-medium text-gray-800 truncate">{sighting.cat?.name || '校园猫猫'}</p>
-          <span className="text-xs text-gray-400 shrink-0">{formatTime(sighting.created_at)}</span>
+          <p className="text-sm font-medium text-text truncate">{sighting.cat?.name || '校园猫猫'}</p>
+          <span className="text-xs text-text-muted shrink-0">{formatTime(sighting.created_at)}</span>
         </div>
         {ActivityIcon && (
           <p className="text-xs text-primary flex items-center gap-1 mt-0.5">
@@ -46,8 +46,8 @@ export default function FeedItem({ sighting }) {
             {ACTIVITY_LABEL[sighting.activity_type] || sighting.activity_type}
           </p>
         )}
-        <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{sighting.location_name || sighting.location || '校园某处'}</p>
-        {sighting.note && <p className="text-xs text-gray-500 mt-1 truncate">“{sighting.note}”</p>}
+        <p className="text-xs text-text-muted mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{sighting.location_name || sighting.location || '校园某处'}</p>
+        {sighting.note && <p className="text-xs text-text-muted mt-1 truncate">“{sighting.note}”</p>}
       </div>
     </div>
   )

@@ -16,7 +16,6 @@ export default {
         'warm-50': '#FAFAF9',
         'warm-100': '#FFF1E6',
         'cat-orange': '#F97316',
-        'cat-warm': '#FFF7ED',
         card: '#FFFFFF',
         text: '#1C1917',
         'text-secondary': '#57534E',
