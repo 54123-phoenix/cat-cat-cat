@@ -7,7 +7,7 @@ import { getWrapped, getStoredUser } from '../api'
 
 const QR_API = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='
 
-function loadImage(src) {
+function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'

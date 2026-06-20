@@ -23,7 +23,7 @@ export default function BadgeGallery() {
       .finally(() => setLoading(false))
   }, [])
 
-  const grouped = {}
+  const grouped: Record<string, any[]> = {}
   badges.forEach((b) => {
     const series = b.series || 'special'
     if (!grouped[series]) grouped[series] = []

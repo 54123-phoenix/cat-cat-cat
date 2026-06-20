@@ -7,6 +7,8 @@ import CatMarker from '../components/illustrations/CatMarker'
 import { catMarkerString } from '../components/illustrations/CatMarker'
 import { getHeatmapData, getCats, getNearbyCats } from '../api'
 
+declare const AMap: any
+
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
 if (!AMAP_KEY) console.warn('VITE_AMAP_KEY 未设置，地图可能无法加载')
 const campusCenter = [121.5068, 31.3005]
@@ -181,7 +183,7 @@ export default function Map() {
         ])
         if (cancelled) return
 
-        const catByName = new Map()
+        const catByName = new globalThis.Map<string, any>()
         for (const c of cats) {
           if (c.name) catByName.set(c.name, c.id)
         }

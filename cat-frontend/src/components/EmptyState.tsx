@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import SadCat from './illustrations/SadCat'
 import MascotCat from './MascotCat'
 import EmptyCat from './illustrations/EmptyCat'
@@ -10,17 +11,16 @@ const VARIANT_ILLUSTRATIONS = {
   box: EmptyBox,
 }
 
-/**
- * Reusable empty state placeholder.
- * Props:
- *   - icon: lucide-react icon component (defaults to MascotCat)
- *   - useMascot: when true (default) render MascotCat instead of icon
- *   - mood: MascotCat mood (default 'curious')
- *   - variant: 'empty' | 'lost' | 'box' — render a dedicated illustration
- *   - title: short headline
- *   - description: optional supporting text
- *   - action: optional { label, onClick }
- */
+interface EmptyStateProps {
+  icon?: any
+  useMascot?: boolean
+  mood?: string
+  variant?: string
+  title: string
+  description?: string
+  action?: { label: string; onClick: () => void }
+}
+
 export default function EmptyState({
   icon: Icon,
   useMascot = true,
@@ -29,7 +29,7 @@ export default function EmptyState({
   title,
   description,
   action,
-}) {
+}: EmptyStateProps) {
   const VariantIllustration = variant ? VARIANT_ILLUSTRATIONS[variant] : null
 
   return (

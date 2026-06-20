@@ -8,7 +8,17 @@ function getUserDisplay(user) {
   return { nickname: `铲屎官 #${user?.id || '?'}` }
 }
 
-export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand, isQuestion, acceptedCommentId, canAccept }) {
+interface CommentSectionProps {
+  postId: any
+  initialCount?: number
+  expanded?: any
+  onExpand?: () => void
+  isQuestion?: any
+  acceptedCommentId?: any
+  canAccept?: any
+}
+
+export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand, isQuestion, acceptedCommentId, canAccept }: CommentSectionProps) {
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')

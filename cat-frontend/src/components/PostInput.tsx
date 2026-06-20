@@ -46,7 +46,8 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
     setCustomTag('')
   }
 
-  function addFiles(fileList) {
+  function addFiles(fileList: FileList | null) {
+    if (!fileList) return
     const newFiles = Array.from(fileList).slice(0, MAX_IMAGES - images.length)
     const newUrls = newFiles.map((f) => URL.createObjectURL(f))
     urlRefs.current.push(...newUrls)

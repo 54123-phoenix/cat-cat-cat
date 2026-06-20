@@ -1,8 +1,16 @@
-import { useId } from 'react'
+import { useId, type CSSProperties } from 'react'
 
 const MOODS = ['happy', 'sleep', 'sad', 'curious']
 
-export default function MascotCat({ mood = 'happy', size = 96, className = '', style, breathe = true }) {
+interface MascotCatProps {
+  mood?: string
+  size?: number
+  className?: string
+  style?: CSSProperties
+  breathe?: boolean
+}
+
+export default function MascotCat({ mood = 'happy', size = 96, className = '', style, breathe = true }: MascotCatProps) {
   const id = useId().replace(/:/g, '')
   const safeMood = MOODS.includes(mood) ? mood : 'happy'
   const w = size

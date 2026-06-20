@@ -1,10 +1,17 @@
 import { useState, useSyncExternalStore, Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
 import { getToken, getStoredUser, getAdminToken } from './api'
 import { ROUTES } from './constants/routes'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 30000, retry: 1 },
+  },
+})
 
 const Home = lazy(() => import('./pages/Home'))
 const Map = lazy(() => import('./pages/Map'))
@@ -37,7 +44,7 @@ function FullScreenLoader() {
 
 // Shared user store: single source of truth for auth state
 let currentUser = getStoredUser()
-const listeners = new Set()
+const listeners = new Set<(user: any) => void>()
 
 function emitChange() {
   listeners.forEach((fn) => fn(currentUser))
@@ -55,18 +62,19 @@ export function updateUser(newUser) {
   emitChange()
 }
 
-function ProtectedRoute({ children, adminOnly = false }) {
+function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   const token = adminOnly ? getAdminToken() : getToken()
   if (!token) return <Navigate to={adminOnly ? "/admin/login" : "/login"} replace />
   return children
 }
 
 export default function App() {
-  const handleLogin = (u) => {
+  const handleLogin = (u: any) => {
     updateUser(u)
   }
 
   return (
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Suspense fallback={<FullScreenLoader />}>
         <Routes>
@@ -127,5 +135,6 @@ export default function App() {
         </Routes>
       </Suspense>
     </BrowserRouter>
+    </QueryClientProvider>
   )
 }

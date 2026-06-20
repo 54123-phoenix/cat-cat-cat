@@ -77,7 +77,7 @@ function HourlyHeatmap({ sightings }) {
   const hours = new Array(24).fill(0)
   sightings.forEach((s) => {
     const d = new Date(s.created_at)
-    if (!isNaN(d)) hours[d.getHours()]++
+    if (!isNaN(d.getTime())) hours[d.getHours()]++
   })
   const max = Math.max(1, ...hours)
   return (

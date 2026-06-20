@@ -5,6 +5,8 @@ import PageHeader from '../components/PageHeader'
 import { catRoutes } from '../constants/catRoutes'
 import { getVisitedLocations } from '../api'
 
+declare const AMap: any
+
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
 const campusCenter = [121.503, 31.3005]
 

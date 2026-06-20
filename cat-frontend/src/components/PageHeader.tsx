@@ -1,12 +1,15 @@
+import { type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 
-/**
- * Unified page header for sub-pages.
- * - Main tabs (Home/Map/Community/Profile) use Layout's header.
- * - Sub-pages use this component with back navigation.
- */
-export default function PageHeader({ title, subtitle, action, onBack }) {
+interface PageHeaderProps {
+  title: string
+  subtitle?: string
+  action?: ReactNode
+  onBack?: () => void
+}
+
+export default function PageHeader({ title, subtitle, action, onBack }: PageHeaderProps) {
   const navigate = useNavigate()
 
   return (

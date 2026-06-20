@@ -34,10 +34,10 @@ function clearAdminToken() {
   localStorage.removeItem('admin_token')
 }
 
-async function request(url, options = {}) {
+async function request(url: string, options: RequestInit = {}): Promise<any> {
   const isAdminUrl = url.startsWith('/admin')
   const token = isAdminUrl ? getAdminToken() : getToken()
-  const headers = { ...options.headers }
+  const headers: Record<string, string> = { ...(options.headers as Record<string, string>) }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }

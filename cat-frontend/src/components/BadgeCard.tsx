@@ -1,6 +1,13 @@
 import BadgeIcon from './BadgeIcon'
 
-export default function BadgeCard({ badge, earned, size = 'sm' }) {
+interface BadgeCardProps {
+  badge?: any
+  earned?: boolean
+  size?: string
+  className?: string
+}
+
+export default function BadgeCard({ badge = {}, earned, size = 'sm' }: BadgeCardProps) {
   const sm = size === 'sm'
 
   return (

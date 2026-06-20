@@ -4,7 +4,14 @@ import FishJerky from './illustrations/FishJerky'
 import SparkleIcon from './illustrations/SparkleIcon'
 import YarnBall from './illustrations/YarnBall'
 
-export default function BadgeIcon({ series, badge, size = 24, className = '' }) {
+interface BadgeIconProps {
+  series?: string
+  badge?: any
+  size?: number
+  className?: string
+}
+
+export default function BadgeIcon({ series, badge, size = 24, className = '' }: BadgeIconProps) {
   const s = series || badge?.series || badge?.type || badge?.category || 'default'
 
   switch (s) {

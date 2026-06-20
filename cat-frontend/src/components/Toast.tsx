@@ -1,12 +1,26 @@
 import { useEffect, useState } from 'react'
 
-let pushFn = null
+interface ToastItem {
+  id: number
+  message: string
+  emoji: string
+  avatar?: string
+}
 
-export function toast(message, opts = {}) {
+interface ToastOpts {
+  emoji?: string
+  type?: string
+  avatar?: string
+  duration?: number
+}
+
+let pushFn: ((message: string, opts: ToastOpts) => void) | null = null
+
+export function toast(message: string, opts: ToastOpts = {}) {
   if (pushFn) pushFn(message, opts)
 }
 
-const TYPE_EMOJI = {
+const TYPE_EMOJI: Record<string, string> = {
   post_new: '📝',
   comment_new: '💬',
   like_new: '❤️',
@@ -16,12 +30,12 @@ const TYPE_EMOJI = {
 }
 
 export default function Toast() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState<ToastItem[]>([])
 
   useEffect(() => {
     pushFn = (message, opts = {}) => {
       const id = Date.now() + Math.random()
-      const emoji = opts.emoji || TYPE_EMOJI[opts.type] || '🔔'
+      const emoji = opts.emoji || TYPE_EMOJI[opts.type || ''] || '🔔'
       setItems((prev) => [...prev, { id, message, emoji, avatar: opts.avatar }])
       setTimeout(() => {
         setItems((prev) => prev.filter((it) => it.id !== id))

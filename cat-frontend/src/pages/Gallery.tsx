@@ -118,11 +118,11 @@ export default function Gallery() {
                     className="w-full h-auto object-cover"
                     onError={(event) => {
                       event.currentTarget.style.display = 'none'
-                      const sib = event.currentTarget.nextElementSibling
+                      const sib = event.currentTarget.nextElementSibling as HTMLElement | null
                       if (sib) sib.style.display = 'flex'
                     }}
                     onLoad={(event) => {
-                      const sib = event.currentTarget.nextElementSibling
+                      const sib = event.currentTarget.nextElementSibling as HTMLElement | null
                       if (sib) sib.style.display = 'none'
                     }}
                   />
