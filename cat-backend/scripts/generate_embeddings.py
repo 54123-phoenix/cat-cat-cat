@@ -1,8 +1,7 @@
 """Generate cat_embeddings.json for ALL cats that have scraper photo data."""
 import os
 
-# Must set DB URL before importing app modules
-os.environ["DATABASE_URL"] = "mysql+pymysql://root:root123@localhost:3306/cat_community"
+# DATABASE_URL must be set in the environment before running
 
 import sys, json, shutil
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

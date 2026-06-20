@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
@@ -22,6 +22,81 @@ function formatDate(value) {
   return new Date(value).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric' })
 }
 
+const RADAR_DIMS = ['亲人', '活跃', '胆小', '贪吃', '独立']
+const RELATION_LABEL = { '朋友': '朋友', '敌对': '敌对', '情侣': '情侣', '亲子': '亲子' }
+
+function PersonalityRadar({ values }) {
+  const size = 160
+  const cx = size / 2
+  const cy = size / 2
+  const maxR = 60
+  const n = 5
+  const points = values.map((v, i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+    const r = (Math.max(0, Math.min(5, v)) / 5) * maxR
+    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)]
+  })
+  const axisPoints = RADAR_DIMS.map((_, i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+    return [cx + maxR * Math.cos(angle), cy + maxR * Math.sin(angle)]
+  })
+  const labelPoints = RADAR_DIMS.map((_, i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+    return [cx + (maxR + 14) * Math.cos(angle), cy + (maxR + 14) * Math.sin(angle)]
+  })
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="mx-auto">
+      {[1, 2, 3, 4, 5].map((lvl) => {
+        const r = (lvl / 5) * maxR
+        const pts = RADAR_DIMS.map((_, i) => {
+          const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+          return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`
+        }).join(' ')
+        return <polygon key={lvl} points={pts} fill="none" stroke="#f0d9b5" strokeWidth="0.5" />
+      })}
+      {axisPoints.map((p, i) => (
+        <line key={i} x1={cx} y1={cy} x2={p[0]} y2={p[1]} stroke="#f0d9b5" strokeWidth="0.5" />
+      ))}
+      <polygon
+        points={points.map((p) => `${p[0]},${p[1]}`).join(' ')}
+        fill="rgba(251,146,60,0.25)"
+        stroke="#fb923c"
+        strokeWidth="1.5"
+      />
+      {points.map((p, i) => (
+        <circle key={i} cx={p[0]} cy={p[1]} r="2.5" fill="#fb923c" />
+      ))}
+      {RADAR_DIMS.map((dim, i) => (
+        <text key={dim} x={labelPoints[i][0]} y={labelPoints[i][1]} textAnchor="middle" dominantBaseline="middle" fontSize="10" fill="#78716c">{dim}</text>
+      ))}
+    </svg>
+  )
+}
+
+function HourlyHeatmap({ sightings }) {
+  const hours = new Array(24).fill(0)
+  sightings.forEach((s) => {
+    const d = new Date(s.created_at)
+    if (!isNaN(d)) hours[d.getHours()]++
+  })
+  const max = Math.max(1, ...hours)
+  return (
+    <div className="flex items-end gap-[2px] h-16">
+      {hours.map((count, h) => (
+        <div key={h} className="flex-1 flex flex-col items-center justify-end" title={`${h}时: ${count}次`}>
+          <div
+            className="w-full rounded-sm transition-all"
+            style={{
+              height: `${Math.max(2, (count / max) * 100)}%`,
+              background: count > 0 ? `rgba(251,146,60,${0.3 + 0.7 * (count / max)})` : '#f5f5f4',
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const RECORD_TYPE_ICON = {
   vaccine: Syringe,
   deworm: Stethoscope,
@@ -33,6 +108,7 @@ const RECORD_TYPE_ICON = {
 
 export default function CatDetail() {
   const { catId } = useParams()
+  const navigate = useNavigate()
   const [cat, setCat] = useState(null)
   const [sightings, setSightings] = useState([])
   const [healthRecords, setHealthRecords] = useState([])
@@ -48,7 +124,7 @@ export default function CatDetail() {
 
     Promise.all([
       getCat(catId),
-      getSightings({ catId, limit: 10 }),
+      getSightings({ catId, limit: 100 }),
       getHealthRecords(catId),
       checkFollow(catId).then(r => setFollowing(r.following)).catch(() => {}),
     ])
@@ -171,8 +247,58 @@ export default function CatDetail() {
               )}
             </div>
           )}
+
+          {cat.aliases_list?.length > 0 && (
+            <div className="flex flex-wrap gap-2 items-center pt-1">
+              <span className="text-xs text-text-secondary">别名：</span>
+              {cat.aliases_list.map((alias) => (
+                <span key={alias} className="px-2.5 py-0.5 rounded-full bg-gray-50 text-text-secondary text-xs">{alias}</span>
+              ))}
+            </div>
+          )}
+
+          {cat.quote && (
+            <blockquote className="border-l-4 border-primary/40 bg-primary-light/50 rounded-r-lg pl-3 pr-2 py-2 text-text-secondary text-sm italic">
+              “{cat.quote}”
+            </blockquote>
+          )}
         </div>
       </section>
+
+      {cat.personality_radar?.length > 0 && (
+        <section className="card p-5 space-y-2">
+          <h2 className="font-bold text-lg text-text">性格雷达</h2>
+          <PersonalityRadar values={cat.personality_radar} />
+        </section>
+      )}
+
+      {cat.relationships_list?.length > 0 && (
+        <section className="card p-5 space-y-2">
+          <h2 className="font-bold text-lg text-text">关系链</h2>
+          <div className="space-y-2">
+            {cat.relationships_list.map((rel, i) => (
+              <button
+                key={i}
+                onClick={() => rel.cat_id && navigate(`/cats/${rel.cat_id}`)}
+                className="w-full flex items-center justify-between bg-primary-light rounded-lg px-3 py-2 active:bg-orange-100 text-left"
+              >
+                <span className="text-sm text-primary font-medium">#{rel.cat_id} 号猫猫</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-white text-text-secondary">{RELATION_LABEL[rel.relation] || rel.relation}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {sightings.length > 0 && (
+        <section className="card p-5 space-y-2">
+          <h2 className="font-bold text-lg text-text">24h 出没热力</h2>
+          <HourlyHeatmap sightings={sightings} />
+          <div className="flex justify-between text-xs text-text-muted px-1">
+            <span>0时</span><span>6时</span><span>12时</span><span>18时</span><span>23时</span>
+          </div>
+        </section>
+      )}
 
       {cat.story && (
         <section className="card p-5 space-y-2">

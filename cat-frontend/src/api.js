@@ -22,8 +22,20 @@ function getStoredUser() {
   }
 }
 
+function getAdminToken() {
+  return localStorage.getItem('admin_token')
+}
+
+function setAdminToken(token) {
+  localStorage.setItem('admin_token', token)
+}
+
+function clearAdminToken() {
+  localStorage.removeItem('admin_token')
+}
+
 async function request(url, options = {}) {
-  const token = getToken()
+  const token = url.startsWith('/admin') ? getAdminToken() : getToken()
   const headers = { ...options.headers }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
@@ -42,7 +54,10 @@ async function request(url, options = {}) {
       const err = await res.json().catch(() => ({ detail: '请求失败' }))
       throw new Error(Array.isArray(err.detail) ? err.detail.map(e => e.msg || JSON.stringify(e)).join("; ") : (err.detail || `HTTP ${res.status}`))
     }
-    return res.json()
+    if (res.status === 204 || res.headers.get('content-length') === '0') return null
+    const text = await res.text()
+    if (!text) return null
+    return JSON.parse(text)
   } finally {
     clearTimeout(timeoutId)
   }
@@ -69,11 +84,7 @@ export function getMe() {
   return request('/auth/me')
 }
 
-export { getToken, setToken, clearToken, getStoredUser }
-
-// Backward compat aliases for Admin.jsx
-export const getAdminToken = getToken
-export const clearAdminToken = clearToken
+export { getToken, setToken, clearToken, getStoredUser, getAdminToken, setAdminToken, clearAdminToken }
 
 export function adminLogin(password) {
   return request('/admin/login', {
@@ -81,7 +92,7 @@ export function adminLogin(password) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password }),
   }).then((res) => {
-    setToken(res.token)
+    setAdminToken(res.token)
     return res
   })
 }
@@ -130,19 +141,33 @@ export function recognize(file) {
   return request('/recognize', { method: 'POST', body: form })
 }
 
-export function createSighting({ catId, location, confidence, file, activity_type }) {
+export function createSighting({ catId, location, confidence, file, activity_type, weather, mood }) {
   const form = new FormData()
   form.append('cat_id', catId)
   if (location) form.append('location', location)
   if (confidence !== undefined) form.append('confidence', confidence)
   if (file) form.append('file', file)
   if (activity_type) form.append('activity_type', activity_type)
+  if (weather) form.append('weather', weather)
+  if (mood) form.append('mood', mood)
   return request('/sightings', { method: 'POST', body: form })
 }
 
 export function getSightings(params = {}) {
   const qs = new URLSearchParams(params).toString()
   return request(`/sightings${qs ? '?' + qs : ''}`)
+}
+
+export function confirmSighting(id) {
+  return request(`/sightings/${id}/confirm`, { method: 'POST' })
+}
+
+export function voteSighting(id, catId) {
+  return request(`/sightings/${id}/vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cat_id: catId }),
+  })
 }
 
 export function getUserProfile() {
@@ -320,6 +345,14 @@ export function getWeeklyReport() {
   return request('/user/weekly-report')
 }
 
+export function getWrapped() {
+  return request('/users/me/wrapped')
+}
+
+export function getVisitedLocations() {
+  return request('/users/me/visited-locations')
+}
+
 export function followCat(catId) {
   return request(`/user/follows/${catId}`, { method: 'POST' })
 }
@@ -331,4 +364,32 @@ export function checkFollow(catId) {
 }
 export function getFollowedCats() {
   return request('/user/follows')
+}
+
+export function getLeaderboard() {
+  return request('/leaderboard')
+}
+
+export function getDailyQuest() {
+  return request('/users/me/daily-quest')
+}
+
+export function getMyStats() {
+  return request('/users/me')
+}
+
+export function pollVote(postId, optionIndex) {
+  return request(`/posts/${postId}/poll-vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ option_index: optionIndex }),
+  })
+}
+
+export function acceptAnswer(postId, commentId) {
+  return request(`/posts/${postId}/accept-answer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comment_id: commentId }),
+  })
 }

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
-import { MessageCircle, Send } from 'lucide-react'
-import { getPostComments, createComment, getStoredUser } from '../api'
+import { MessageCircle, Send, CheckCircle2 } from 'lucide-react'
+import { getPostComments, createComment, acceptAnswer, getStoredUser } from '../api'
 import Avatar from './Avatar'
 
 function getUserDisplay(user) {
@@ -8,12 +8,14 @@ function getUserDisplay(user) {
   return { nickname: `铲屎官 #${user?.id || '?'}` }
 }
 
-export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand }) {
+export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand, isQuestion, acceptedCommentId, canAccept }) {
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [internalExpanded, setInternalExpanded] = useState(false)
+  const [accepting, setAccepting] = useState(false)
+  const [acceptedId, setAcceptedId] = useState(acceptedCommentId || null)
   const requestIdRef = useRef(0)
 
   const expanded = expandedProp ?? internalExpanded
@@ -23,7 +25,6 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
     setLoading(true)
     try {
       const data = await getPostComments(postId)
-      // Only update if this is still the latest request
       if (rid === requestIdRef.current) {
         setComments(Array.isArray(data) ? data : [])
       }
@@ -59,7 +60,25 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
     }
   }
 
+  async function handleAccept(commentId) {
+    if (accepting) return
+    setAccepting(true)
+    try {
+      await acceptAnswer(postId, commentId)
+      setAcceptedId(commentId)
+    } catch (e) {
+      alert(e.message || '采纳失败')
+    } finally {
+      setAccepting(false)
+    }
+  }
+
   const total = Math.max(initialCount, comments.length)
+  const sortedComments = [...comments].sort((a, b) => {
+    if (a.id === acceptedId) return -1
+    if (b.id === acceptedId) return 1
+    return 0
+  })
 
   return (
     <div className="border-t border-gray-50 pt-2 mt-1">
@@ -86,18 +105,35 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
               ))}
             </div>
           ) : comments.length > 0 ? (
-            comments.map((c) => (
-              <div key={c.id} className="flex gap-2">
+            sortedComments.map((c) => {
+              const isAccepted = c.id === acceptedId
+              return (
+              <div key={c.id} className={`flex gap-2 ${isAccepted ? 'bg-green-50 rounded-lg p-2 -m-1' : ''}`}>
                 <Avatar user={c.user} size="xs" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-text-secondary">{getUserDisplay(c.user).nickname}</span>
                     <span className="text-xs text-gray-300">{c.createdAt}</span>
+                    {isAccepted && (
+                      <span className="text-xs text-green-600 flex items-center gap-0.5 font-medium">
+                        <CheckCircle2 className="w-3 h-3" />已采纳
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-text leading-relaxed mt-0.5">{c.content}</p>
+                  {isQuestion && canAccept && !isAccepted && (
+                    <button
+                      onClick={() => handleAccept(c.id)}
+                      disabled={accepting}
+                      className="mt-1 text-xs text-green-600 flex items-center gap-0.5 hover:text-green-700"
+                    >
+                      <CheckCircle2 className="w-3 h-3" />采纳为最佳答案
+                    </button>
+                  )}
                 </div>
               </div>
-            ))
+              )
+            })
           ) : (
             <p className="text-xs text-text-muted text-center py-2">还没有评论，来说两句吧</p>
           )}

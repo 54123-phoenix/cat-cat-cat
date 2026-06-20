@@ -48,3 +48,9 @@ models/
 # Pre-computed embeddings
 cat-backend/embeddings/
 update_main.py
+
+# P0-A 安全清理
+*.txt
+*.b64
+cat-backend/demo_token.txt
+cat-frontend/_admin_script.b64

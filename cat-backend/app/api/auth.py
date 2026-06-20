@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.models import User
 from app.schemas import UserLogin, UserProfile, UserRegister, TokenResponse
@@ -16,9 +17,9 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = os.getenv("JWT_SECRET", "cat-community-jwt-secret-change-in-production")
-ALGORITHM = "HS256"
-TOKEN_TTL_MINUTES = 60 * 24 * 7
+SECRET_KEY = settings.JWT_SECRET
+ALGORITHM = settings.ALGORITHM
+TOKEN_TTL_MINUTES = settings.TOKEN_TTL_MINUTES
 
 
 def create_token(user: User) -> str:

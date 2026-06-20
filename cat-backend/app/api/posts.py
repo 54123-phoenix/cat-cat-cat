@@ -2,14 +2,16 @@ import os
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, File, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app import crud, schemas
+from app import crud, schemas, models
 from app.api.auth import require_auth
 from app.models import User
+from app.ratelimit import limit
+from app.config import settings
 
 router = APIRouter(prefix="/api/posts", tags=["posts"])
 
@@ -52,11 +54,15 @@ def list_posts(
 
 
 @router.post("", response_model=schemas.PostResponse)
+@limit(f"{settings.RATE_POST_PER_MIN}/minute")
 def create_post(
+    request: Request,
     topic: str = Form("daily"),
     content: str = Form(...),
     tags: str = Form("[]"),
     relatedCatId: str = Form(None),
+    postType: str = Form("discussion"),
+    pollOptions: str = Form("[]"),
     files: List[UploadFile] = File(default=[]),
     db: Session = Depends(get_db),
     user: User = Depends(require_auth),
@@ -69,6 +75,7 @@ def create_post(
     import json
     tag_list = json.loads(tags) if tags else []
     rel_id = int(relatedCatId) if relatedCatId and relatedCatId != "null" else None
+    poll_option_list = json.loads(pollOptions) if pollOptions else []
 
     image_paths = _save_images(files) if files else []
 
@@ -77,8 +84,13 @@ def create_post(
         content=content.strip(),
         tags=tag_list,
         relatedCatId=rel_id,
+        postType=postType,
+        pollOptions=poll_option_list,
     )
-    return crud.create_post(db, post_data, user.id, image_paths)
+    try:
+        return crud.create_post(db, post_data, user.id, image_paths)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/{post_id}", response_model=schemas.PostResponse)
@@ -211,3 +223,38 @@ def handle_report(
     if not ok:
         raise HTTPException(status_code=404, detail="Report not found")
     return {"ok": True}
+
+
+class PollVoteRequest(BaseModel):
+    option_index: int
+
+
+@router.post("/{post_id}/poll-vote", response_model=schemas.PostResponse)
+def poll_vote(
+    post_id: int,
+    body: PollVoteRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    result = crud.poll_vote(db, post_id, user.id, body.option_index)
+    if not result:
+        raise HTTPException(status_code=400, detail="投票失败：帖子不存在、非投票帖或选项无效")
+    return result
+
+
+class AcceptAnswerRequest(BaseModel):
+    comment_id: int
+
+
+@router.post("/{post_id}/accept-answer", response_model=schemas.PostResponse)
+def accept_answer(
+    post_id: int,
+    body: AcceptAnswerRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    is_admin = user.role == "admin"
+    result = crud.accept_answer(db, post_id, body.comment_id, user.id, is_admin)
+    if not result:
+        raise HTTPException(status_code=403, detail="无法采纳：权限不足或帖子/评论不存在")
+    return result

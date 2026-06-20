@@ -2,19 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import { createPost } from '../api'
 import CatPicker from './CatPicker'
 import { Plus, X, Image as ImageIcon } from 'lucide-react'
+import { TOPIC_LABEL, PRESET_TAGS } from '../constants/topics'
 
-const TOPICS = [
-  { id: 'find', label: '寻猫问猫' },
-  { id: 'daily', label: '铲屎日常' },
-  { id: 'health', label: '健康互助' },
-  { id: 'suggest', label: '建议反馈' },
-]
-
-const PRESET_TAGS = [
-  '#橘总', '#小黑', '#奶糖', '#花花',
-  '#图书馆', '#南区食堂', '#文科楼', '#东区草坪',
-  '#求助', '#治愈瞬间', '#今日份猫猫', '#喂食',
-]
+const TOPICS = Object.entries(TOPIC_LABEL).map(([id, label]) => ({ id, label }))
 
 const MAX_IMAGES = 9
 
@@ -26,8 +16,16 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
   const [relatedCat, setRelatedCat] = useState(null)
   const [images, setImages] = useState([])
   const [submitting, setSubmitting] = useState(false)
+  const [postType, setPostType] = useState('discussion')
+  const [pollOptions, setPollOptions] = useState(['', ''])
   const fileRef = useRef(null)
   const urlRefs = useRef([])
+
+  const POST_TYPES = [
+    { id: 'discussion', label: '讨论' },
+    { id: 'poll', label: '投票' },
+    { id: 'question', label: '求助' },
+  ]
 
   useEffect(() => {
     return () => {
@@ -71,6 +69,8 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
       form.append('content', content.trim())
       form.append('topic', topic)
       form.append('tags', JSON.stringify(tags))
+      form.append('postType', postType)
+      form.append('pollOptions', JSON.stringify(postType === 'poll' ? pollOptions.filter((o) => o.trim()) : []))
       if (relatedCat?.id) form.append('relatedCatId', relatedCat.id)
       images.forEach((img) => form.append('files', img))
 
@@ -108,6 +108,59 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
             ))}
           </div>
         </div>
+
+        <div>
+          <div className="text-xs text-gray-400 mb-2">帖子类型</div>
+          <div className="flex flex-wrap gap-2">
+            {POST_TYPES.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setPostType(item.id)}
+                className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                  postType === item.id ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {postType === 'poll' && (
+          <div>
+            <div className="text-xs text-gray-400 mb-2">投票选项（2-5 个）</div>
+            <div className="space-y-2">
+              {pollOptions.map((opt, i) => (
+                <div key={i} className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400 w-5 shrink-0">{i + 1}.</span>
+                  <input
+                    value={opt}
+                    onChange={(e) => setPollOptions((prev) => prev.map((o, j) => (j === i ? e.target.value : o)))}
+                    placeholder={`选项 ${i + 1}`}
+                    className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-primary"
+                  />
+                  {pollOptions.length > 2 && (
+                    <button onClick={() => setPollOptions((prev) => prev.filter((_, j) => j !== i))} className="text-gray-300 hover:text-red-400 text-lg shrink-0">×</button>
+                  )}
+                </div>
+              ))}
+              {pollOptions.length < 5 && (
+                <button
+                  onClick={() => setPollOptions((prev) => [...prev, ''])}
+                  className="text-xs text-primary px-3 py-1 border border-dashed border-primary/40 rounded-lg"
+                >
+                  + 添加选项
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {postType === 'question' && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 text-xs text-yellow-700">
+            求助帖使用评论回答，作者可采纳最佳答案。
+          </div>
+        )}
 
         <textarea
           value={content}

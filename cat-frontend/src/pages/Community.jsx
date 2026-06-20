@@ -3,21 +3,7 @@ import PostInput from '../components/PostInput'
 import PostList from '../components/PostList'
 import { reportPost } from '../api'
 import { Pencil } from 'lucide-react'
-
-const TABS = [
-  { id: 'all', label: '广场' },
-  { id: 'find', label: '寻猫' },
-  { id: 'daily', label: '日常' },
-  { id: 'health', label: '健康' },
-  { id: 'suggest', label: '建议' },
-]
-
-const TAG_TOPIC_MAP = {
-  '#橘总': 'daily', '#小黑': 'daily', '#奶糖': 'daily', '#花花': 'daily',
-  '#图书馆': 'find', '#南区食堂': 'find', '#文科楼': 'find', '#东区草坪': 'find',
-  '#求助': 'health', '#治愈瞬间': 'daily', '#今日份猫猫': 'daily', '#喂食': 'daily',
-  '#建议': 'suggest',
-}
+import { TOPICS as TABS, TAG_TOPIC_MAP } from '../constants/topics'
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState('all')

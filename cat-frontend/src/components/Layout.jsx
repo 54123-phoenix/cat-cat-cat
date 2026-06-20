@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
 import Sidebar from './Sidebar'
+import Toast, { toast } from './Toast'
+import CelebrationOverlay from './CelebrationOverlay'
+import Onboarding, { isOnboarded } from './Onboarding'
+import { useEventStream } from '../hooks/useEventStream'
 import { getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
 
@@ -14,10 +18,14 @@ const routeTitles = {
   '/profile': '个人中心',
   '/feed': '偶遇动态',
   '/gallery': '猫猫图库',
+  '/collection': '猫猫图鉴',
+  '/league': '联赛季榜',
 }
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [celebration, setCelebration] = useState(null)
+  const [showOnboarding, setShowOnboarding] = useState(() => !isOnboarded())
   const user = useUserStore()
   const navigate = useNavigate()
   const location = useLocation()
@@ -68,8 +76,39 @@ export default function Layout() {
     navigate('/login')
   }
 
+  const handleEvent = useCallback((payload) => {
+    if (!payload || !payload.type) return
+    const data = payload.data || {}
+    const nick = data.user_nickname || '有人'
+    switch (payload.type) {
+      case 'post_new':
+        toast(`${nick} 发布了新动态`, { type: 'post_new' })
+        break
+      case 'comment_new':
+        toast(`${nick} 评论了动态`, { type: 'comment_new' })
+        break
+      case 'like_new':
+        toast(`${nick} 赞了动态`, { type: 'like_new' })
+        break
+      case 'badge_unlock':
+        toast(`解锁新勋章！`, { type: 'badge_unlock' })
+        setCelebration({ name: data.badge_name || data.name || '新勋章' })
+        break
+      case 'sighting_confirmed':
+        toast(`偶遇记录被确认，等级 ${data.grade || ''}`, { type: 'sighting_confirmed' })
+        break
+      case 'discovery_reviewed':
+        toast(`发现线索已审核`, { type: 'discovery_reviewed' })
+        break
+      default:
+        toast('收到新通知', {})
+    }
+  }, [])
+
+  useEventStream(handleEvent)
+
   return (
-    <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16">
+    <div className="min-h-screen max-w-[480px] mx-auto theme-bg pb-16">
       {/* Top bar */}
       <header className="sticky top-0 z-40 bg-surface-0/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
         <button
@@ -93,13 +132,23 @@ export default function Layout() {
 
       {/* Main content */}
       <main className="px-4 pt-2 pb-4">
-        <div key={location.pathname} className="tab-slide-in">
+        <div key={location.pathname} className="animate-fade-up">
           <Outlet />
         </div>
       </main>
 
       <TabBar />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} onLogout={handleLogout} />
+      <Toast />
+      {celebration && (
+        <CelebrationOverlay
+          badgeName={celebration.name}
+          onClose={() => setCelebration(null)}
+        />
+      )}
+      {showOnboarding && (
+        <Onboarding onClose={() => setShowOnboarding(false)} />
+      )}
     </div>
   )
 }

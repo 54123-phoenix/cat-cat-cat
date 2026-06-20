@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PawPrint } from 'lucide-react'
+import { PawPrint, QrCode, X, Download } from 'lucide-react'
 import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
 
 const emptyForm = {
@@ -66,6 +66,7 @@ export default function Admin() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [adminTab, setAdminTab] = useState('cats')
+  const [qrPoint, setQrPoint] = useState(null)
 
   const loadCats = () => getCats().then(setCats).catch(e => setError(e.message))
   const loadSightings = () => getSightings({ limit: 20 }).then(data => setSightings(Array.isArray(data) ? data : [])).catch(e => setError(e.message))
@@ -203,7 +204,7 @@ export default function Admin() {
         <form onSubmit={handleLogin} className="card p-5 space-y-4">
           <label className="space-y-1 block">
             <span className="block text-xs font-bold text-text-secondary">管理员口令</span>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-2xl border-2 border-border bg-card px-3 py-3 text-sm text-text outline-none" placeholder="默认 cat-admin" />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-2xl border-2 border-border bg-card px-3 py-3 text-sm text-text outline-none" placeholder="管理员口令" />
           </label>
           <button type="submit" disabled={saving || !password.trim()} className="btn btn-primary w-full disabled:opacity-60">{saving ? '登录中...' : '进入管理台'}</button>
         </form>
@@ -329,12 +330,17 @@ export default function Admin() {
             <h2 className="font-bold text-lg text-text">喂食点管理</h2>
             {feedingPoints.length > 0 ? feedingPoints.map((p) => (
               <div key={p.id} className="flex items-start justify-between gap-3 border-b border-border pb-2 last:border-0">
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-bold text-text">{p.name}</p>
                   {p.description && <p className="text-xs text-text-secondary">{p.description}</p>}
                   <p className="text-xs text-text-muted">{p.latitude}, {p.longitude}</p>
                 </div>
-                <button onClick={() => handleDeleteFeedingPoint(p.id)} className="text-xs text-red-400 shrink-0">删除</button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button onClick={() => setQrPoint(p)} className="text-xs text-primary font-medium flex items-center gap-1">
+                    <QrCode className="w-4 h-4" />二维码
+                  </button>
+                  <button onClick={() => handleDeleteFeedingPoint(p.id)} className="text-xs text-red-400">删除</button>
+                </div>
               </div>
             )) : <p className="text-sm text-text-secondary">暂无喂食点</p>}
 
@@ -385,6 +391,36 @@ export default function Admin() {
           </section>
         )}
       </div>
+
+      {qrPoint && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setQrPoint(null)}>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-text">喂食点二维码</h3>
+              <button onClick={() => setQrPoint(null)} className="p-1 rounded-lg hover:bg-gray-100"><X className="w-5 h-5 text-text-secondary" /></button>
+            </div>
+            <p className="text-sm text-text-secondary">{qrPoint.name}</p>
+            <div className="flex justify-center">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(`${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`)}`}
+                alt="二维码"
+                className="w-60 h-60 rounded-xl border border-border"
+              />
+            </div>
+            <div className="flex gap-2">
+              <a
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(`${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`)}`}
+                download={`qr-${qrPoint.name}.png`}
+                className="btn btn-primary btn-sm flex-1 flex items-center justify-center gap-1"
+              >
+                <Download className="w-4 h-4" />下载
+              </a>
+              <button onClick={() => window.print()} className="btn btn-ghost btn-sm flex-1">打印</button>
+            </div>
+            <p className="text-xs text-text-muted text-center">贴在喂食点供扫码打卡</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

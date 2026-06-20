@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, MessageSquare, Camera, PawPrint, Cat } from 'lucide-react'
-import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport } from '../api'
+import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
 import ImageWithShimmer from '../components/ImageWithShimmer'
+import DailyQuestCard from '../components/DailyQuestCard'
+import StreakBadge from '../components/StreakBadge'
+import { getPrefs } from '../components/Onboarding'
 
 function greeting() {
   const h = new Date().getHours()
@@ -31,6 +34,7 @@ export default function Home() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [weeklyReport, setWeeklyReport] = useState(null)
+  const [myStats, setMyStats] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -40,19 +44,34 @@ export default function Home() {
       getPosts(),
       getUserProfile().catch(() => null),
       getWeeklyReport().catch(() => null),
-    ]).then(([catsData, sightingsData, postsData, userData, reportData]) => {
+      getMyStats().catch(() => null),
+    ]).then(([catsData, sightingsData, postsData, userData, reportData, statsData]) => {
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
       setPostCount(Array.isArray(postsData) ? postsData.length : 0)
       setProfile(userData)
       setWeeklyReport(reportData)
+      setMyStats(statsData)
     }).catch(console.error).finally(() => setLoading(false))
   }, [])
 
   const { grad: greetingGrad, dark: greetingDark } = greetingGradient()
   const greetingText = greetingDark ? 'text-white' : 'text-text'
   const greetingSubText = greetingDark ? 'text-white/70' : 'text-text-secondary'
+
+  const prefs = getPrefs()
+  const prefColors = prefs?.colors || []
+  const prefLocations = prefs?.locations || []
+  const recommendedCats = prefColors.length || prefLocations.length
+    ? cats.filter((c) => {
+        const text = (c.name || '') + (c.color || '') + (c.description || '') + (c.location || '')
+        const colorMatch = prefColors.length === 0 || prefColors.some((col) => text.includes(col))
+        const locMatch = prefLocations.length === 0 || prefLocations.some((loc) => text.includes(loc) || (c.location || '').includes(loc))
+        return colorMatch && locMatch
+      })
+    : cats
+  const displayCats = recommendedCats.length > 0 ? recommendedCats : cats
 
   return (
     <div className="space-y-5">
@@ -65,6 +84,11 @@ export default function Home() {
               <h1 className={`text-xl font-bold ${greetingText} mt-0.5`}>
                 {profile?.nickname || '猫猫爱好者'}
               </h1>
+              {myStats && (
+                <div className="mt-1">
+                  <StreakBadge streak={myStats.streak || 0} />
+                </div>
+              )}
             </div>
             <PawPrint className={`w-7 h-7 animate-breathe ${greetingDark ? 'text-white/60' : 'text-primary/40'}`} />
           </div>
@@ -95,6 +119,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Daily quest */}
+      <DailyQuestCard />
+
       {/* Layer 2: Quick actions */}
       <div className="grid grid-cols-3 gap-3">
         <button
@@ -123,18 +150,18 @@ export default function Home() {
       </div>
 
       {/* Layer 3: Cat horizontal scroll */}
-      {cats.length > 0 && (
+      {displayCats.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold text-text">校园猫猫</h2>
-            <span className="text-xs text-text-secondary">{cats.length} 只</span>
+            <h2 className="text-base font-bold text-text">{prefColors.length || prefLocations.length ? '为你推荐' : '校园猫猫'}</h2>
+            <span className="text-xs text-text-secondary">{displayCats.length} 只</span>
           </div>
           <div className="flex gap-4 overflow-x-auto scrollbar-none -mx-4 px-4 pb-2">
-            {cats.map((cat) => (
+            {displayCats.map((cat, idx) => (
               <button
                 key={cat.id}
                 onClick={() => navigate(`/cats/${cat.id}`)}
-                className="flex-shrink-0 w-24 text-center space-y-2"
+                className={`flex-shrink-0 w-24 text-center space-y-2 animate-pop-in stagger-${(idx % 6) + 1}`}
               >
                 <div className="w-24 h-24 rounded-2xl bg-primary-light overflow-hidden mx-auto shadow-sm">
                   <ImageWithShimmer

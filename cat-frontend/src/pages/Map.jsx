@@ -5,8 +5,11 @@ import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 import { getHeatmapData, getCats } from '../api'
 
-const AMAP_KEY = '8bb4b6d1e109f76821e371e059623c22'
+const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
+if (!AMAP_KEY) console.warn('VITE_AMAP_KEY 未设置，地图可能无法加载')
 const campusCenter = [121.5068, 31.3005]
+
+const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 
 // WGS-84 → GCJ-02
 const PI = Math.PI
@@ -81,10 +84,11 @@ export default function Map() {
     })
       .then((AMap) => {
         AMapRef.current = AMap
+        const isDark = document.documentElement.dataset.theme === 'dark'
         map = new AMap.Map(mapRef.current, {
           zoom: 16,
           center: campusCenter,
-          mapStyle: 'amap://styles/whitesmoke',
+          mapStyle: isDark ? 'amap://styles/dark' : 'amap://styles/whitesmoke',
           resizeEnable: true,
         })
         map.addControl(new AMap.Scale())
@@ -187,25 +191,28 @@ export default function Map() {
           if (!point.latitude || !point.longitude) continue
           const catId = catByName.get(point.name)
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="width:32px;height:32px;cursor:pointer">
-            <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="14" fill="white" stroke="#F97316" stroke-width="2"/>
-              <circle cx="11" cy="14" r="2" fill="#F97316"/>
-              <circle cx="21" cy="14" r="2" fill="#F97316"/>
-              <path d="M9 20 Q16 26 23 20" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
-              <polygon points="16,5 14,10 18,10" fill="#F97316" opacity="0.8"/>
+          markerContent.innerHTML = `<div style="width:36px;height:36px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25))">
+            <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="18" r="16" fill="white" opacity="0.92"/>
+              <g fill="#F97316">
+                <ellipse cx="18" cy="22" rx="6" ry="5"/>
+                <ellipse cx="11" cy="14" rx="2.4" ry="3"/>
+                <ellipse cx="25" cy="14" rx="2.4" ry="3"/>
+                <ellipse cx="8" cy="20" rx="2" ry="2.6"/>
+                <ellipse cx="28" cy="20" rx="2" ry="2.6"/>
+              </g>
             </svg>
           </div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
             content: markerContent,
-            offset: new AMap.Pixel(-16, -16),
+            offset: new AMap.Pixel(-18, -18),
             zIndex: 110,
           })
 
           const infoWindow = new AMap.InfoWindow({
-            content: `<div style="padding:6px 10px;font-size:14px;font-weight:600;">${point.name}${point.count ? ` · 目击 ${point.count} 次` : ''}</div>`,
+            content: `<div style="padding:6px 10px;font-size:14px;font-weight:600;">${escapeHtml(point.name)}${point.count ? ` · 目击 ${point.count} 次` : ''}</div>`,
             offset: new AMap.Pixel(0, -20),
           })
 
@@ -311,7 +318,7 @@ export default function Map() {
           <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-4 px-4 pb-1">
             {nearbyCats.map((cat) => (
               <button key={cat.id} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
-                <div className="w-16 h-16 rounded-full bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20">
+                <div className="w-16 h-16 rounded-2xl bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20 shadow-e2">
                   {cat.avatar ? <img src={cat.avatar} alt="" className="w-full h-full object-cover" /> : 
                     <div className="w-full h-full flex items-center justify-center text-xl">🐱</div>}
                 </div>

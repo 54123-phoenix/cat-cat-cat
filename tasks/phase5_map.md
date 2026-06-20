@@ -3,7 +3,7 @@ Task: Phase 5 - Map bottom sheet + SVG cat markers
 Context: React + Vite app at D:/Desktop/cat/cat-frontend
 Backend API at http://localhost:8000 (20 real cats, heatmap endpoint)
 Map page: D:/Desktop/cat/cat-frontend/src/pages/Map.jsx
-Uses AMap (高德地图 JS API v1.4.15, key: 8bb4b6d1e109f76821e371e059623c22)
+Uses AMap (高德地图 JS API v1.4.15, key: VITE_AMAP_KEY（见 cat-frontend/.env.example，勿提交明文）)
 
 Changes:
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { X, Bell, Award, Images, TrendingUp, Shield, LogOut } from 'lucide-react'
+import { X, Bell, Award, Images, TrendingUp, Shield, LogOut, BookOpen, Trophy, Sparkles, Route as RouteIcon } from 'lucide-react'
 
 export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   const navigate = useNavigate()
@@ -14,6 +14,10 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
 
   const navItems = [
     { label: '通知中心', icon: Bell, path: '/notifications' },
+    { label: '猫猫图鉴', icon: BookOpen, path: '/collection' },
+    { label: '联赛', icon: Trophy, path: '/league' },
+    { label: '年度报告', icon: Sparkles, path: '/wrapped' },
+    { label: '猫猫路线', icon: RouteIcon, path: '/routes' },
     { label: '勋章墙', icon: Award, path: '/badges' },
     { label: '猫猫图库', icon: Images, path: '/gallery' },
     { label: '周报', icon: TrendingUp, path: '/weekly-report' },
@@ -35,6 +39,9 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
         className={`fixed top-0 left-0 h-full w-64 bg-warm-50 z-50 shadow-xl transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="侧边菜单"
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -56,7 +63,7 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
               )}
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100">
+          <button onClick={onClose} aria-label="关闭菜单" className="p-1 rounded-lg hover:bg-gray-100">
             <X className="w-5 h-5 text-text-secondary" />
           </button>
         </div>

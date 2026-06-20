@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional
 import io
 import json
@@ -133,29 +132,3 @@ def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResp
     except Exception as e:
         logger.error("Recognition failed: %s", e)
         return RecognizeResponse(status="unknown", confidence=0.0)
-
-
-@dataclass
-class DiscoveryAIReview:
-    ai_status: str
-    ai_confidence: float
-    ai_summary: str
-    suggested_name: str
-    suggested_color: str
-
-
-def review_new_cat_discovery(image_path: Optional[str], note: Optional[str]) -> DiscoveryAIReview:
-    """Swappable AI-assisted new-cat review adapter.
-
-    This is an initial AI screening step only. Human admin review remains the
-    source of truth for creating or rejecting cat records.
-    """
-    text = note or ""
-    color = "橘白" if "橘" in text else "待确认"
-    return DiscoveryAIReview(
-        ai_status="needs_review",
-        ai_confidence=0.72,
-        ai_summary="AI 初审：疑似未入库校园猫，建议猫协结合地点与照片复核。",
-        suggested_name="新朋友",
-        suggested_color=color,
-    )

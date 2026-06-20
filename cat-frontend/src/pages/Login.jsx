@@ -118,8 +118,8 @@ export default function Login({ onLogin }) {
 
           {import.meta.env.DEV && (
             <div className="text-center text-xs text-text-secondary space-y-1 pt-2 border-t border-border">
-              <p>演示账号：demo / demo123</p>
-              <p>管理员：admin / cat-admin</p>
+              <p>演示账号：demo（口令见后端 DEMO_PASSWORD 环境变量）</p>
+              <p>管理员：admin（口令见后端 ADMIN_PASSWORD 环境变量）</p>
             </div>
           )}
         </div>

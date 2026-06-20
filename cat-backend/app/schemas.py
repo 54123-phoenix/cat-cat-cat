@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+import json
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class CatImageBase(BaseModel):
@@ -31,6 +32,10 @@ class CatBase(BaseModel):
     story: Optional[str] = None
     location: Optional[str] = None
     avatar: Optional[str] = None
+    personality_radar: Optional[str] = None
+    quote: Optional[str] = None
+    aliases: Optional[str] = None
+    relationships: Optional[str] = None
 
 
 class CatCreate(CatBase):
@@ -46,9 +51,52 @@ class CatResponse(CatBase):
     created_at: datetime
     images: List[CatImageResponse] = []
     health_records: List = []
+    personality_radar: Optional[List[int]] = None
+    aliases_list: List[str] = []
+    relationships_list: List[dict] = []
 
     class Config:
         from_attributes = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def _from_orm_cat(cls, data):
+        if hasattr(data, "aliases"):
+            aliases_raw = getattr(data, "aliases", None) or ""
+            rel_raw = getattr(data, "relationships", None) or ""
+            radar_raw = getattr(data, "personality_radar", None)
+            d = {
+                "id": data.id,
+                "name": data.name,
+                "nickname": data.nickname,
+                "gender": data.gender,
+                "neutered": data.neutered,
+                "age_estimate": data.age_estimate,
+                "color": data.color,
+                "personality": data.personality,
+                "story": data.story,
+                "location": data.location,
+                "avatar": data.avatar,
+                "personality_radar": radar_raw,
+                "quote": getattr(data, "quote", None),
+                "aliases": aliases_raw,
+                "relationships": rel_raw,
+                "created_at": data.created_at,
+            }
+            try:
+                d["personality_radar"] = json.loads(radar_raw) if radar_raw else None
+            except (json.JSONDecodeError, TypeError):
+                d["personality_radar"] = None
+            d["aliases_list"] = [a for a in aliases_raw.split(",") if a.strip()] if aliases_raw else []
+            try:
+                d["relationships_list"] = json.loads(rel_raw) if rel_raw else []
+            except (json.JSONDecodeError, TypeError):
+                d["relationships_list"] = []
+            images = getattr(data, "images", None) or []
+            d["images"] = images
+            d["health_records"] = getattr(data, "health_records", []) or []
+            return d
+        return data
 
 
 class CatListResponse(BaseModel):
@@ -72,6 +120,8 @@ class SightingBase(BaseModel):
     confidence: Optional[float] = None
     activity_type: Optional[str] = None
     note: Optional[str] = None
+    weather: Optional[str] = None
+    mood: Optional[str] = None
 
 
 class SightingCreate(SightingBase):
@@ -90,6 +140,10 @@ class SightingResponse(SightingBase):
     note: Optional[str] = None
     spotted_by: Optional[str] = None
     location_name: Optional[str] = None
+    confirmations: int = 0
+    grade: str = "casual"
+    weather: Optional[str] = None
+    mood: Optional[str] = None
     created_at: datetime
     cat: Optional[CatListResponse] = None
 
@@ -107,12 +161,33 @@ class SightingListItem(BaseModel):
     activity_type: Optional[str] = None
     note: Optional[str] = None
     status: str = "pending"
+    confirmations: int = 0
+    grade: str = "casual"
+    weather: Optional[str] = None
+    mood: Optional[str] = None
     created_at: datetime
     cat: Optional[CatListResponse] = None
     spotted_by: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+
+class SightingVoteRequest(BaseModel):
+    cat_id: int
+
+
+class SightingConfirmResponse(BaseModel):
+    sighting_id: int
+    confirmations: int
+    grade: str
+
+
+class SightingVoteResponse(BaseModel):
+    sighting_id: int
+    votes: dict
+    auto_confirmed: bool = False
+    grade: str = "casual"
 
 
 class RecognizeCandidate(BaseModel):
@@ -205,6 +280,8 @@ class PostCreate(BaseModel):
     content: str
     tags: List[str] = []
     relatedCatId: Optional[int] = None
+    postType: str = "discussion"
+    pollOptions: List[str] = []
 
 
 class PostResponse(BaseModel):
@@ -221,6 +298,10 @@ class PostResponse(BaseModel):
     comments: int = 0
     status: str = "normal"
     createdAt: str
+    postType: str = "discussion"
+    pollOptions: List[str] = []
+    pollData: List[int] = []
+    acceptedCommentId: Optional[int] = None
 
 
 class PostUpdate(BaseModel):
@@ -240,6 +321,7 @@ class CommentResponse(BaseModel):
     user: Optional[UserBrief] = None
     content: str
     createdAt: str
+    accepted: bool = False
 
 
 class ReportCreate(BaseModel):

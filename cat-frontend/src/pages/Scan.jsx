@@ -1,25 +1,46 @@
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle } from 'lucide-react'
-import SadCat from '../components/illustrations/SadCat'
+import MascotCat from '../components/MascotCat'
+import PawRain from '../components/PawRain'
 import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
 import { createDiscovery, createSighting, identifyCat } from '../api'
 import { campusLocations, findCampusLocation } from '../campusLocations'
+import { ACTIVITY_OPTIONS, WEATHER_OPTIONS, MOOD_OPTIONS } from '../constants/activities'
 
 export default function Scan() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [phase, setPhase] = useState('idle')
   const [preview, setPreview] = useState(null)
   const [result, setResult] = useState(null)
   const [message, setMessage] = useState('')
   const [discoveryNote, setDiscoveryNote] = useState('')
   const [discovery, setDiscovery] = useState(null)
+  const [showPawRain, setShowPawRain] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const [customLocation, setCustomLocation] = useState('')
+  const [activity, setActivity] = useState('')
+  const [weather, setWeather] = useState('')
+  const [mood, setMood] = useState('')
   const fileRef = useRef(null)
   const selectedFileRef = useRef(null)
   const previewRef = useRef(null)
+
+  useEffect(() => {
+    const point = searchParams.get('point')
+    const lat = searchParams.get('lat')
+    const lng = searchParams.get('lng')
+    if (point) {
+      setCustomLocation(point)
+      setSelectedLocation(point)
+      const matched = campusLocations.find((l) => l.name === point)
+      if (!matched && lat && lng) {
+        setMessage(`已预选地点：${point}（${lat}, ${lng}）`)
+      }
+    }
+  }, [searchParams])
 
   useEffect(() => {
     return () => { if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null } }
@@ -49,6 +70,9 @@ export default function Scan() {
       catId: data.cat_id,
       location: getLocationName(),
       confidence: data.confidence,
+      activity_type: activity || undefined,
+      weather: weather || undefined,
+      mood: mood || undefined,
       file,
     })
   }
@@ -69,6 +93,7 @@ export default function Scan() {
       setPhase(data.status || 'confirmed')
       if (data.status === 'confirmed') {
         await saveConfirmedSighting(data)
+        setShowPawRain(true)
       }
     } catch (error) {
       window.clearTimeout(timer)
@@ -109,6 +134,9 @@ export default function Scan() {
     setDiscovery(null)
     setDiscoveryNote('')
     setMessage('')
+    setActivity('')
+    setWeather('')
+    setMood('')
     selectedFileRef.current = null
     if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null }
     setPreview(null)
@@ -117,6 +145,7 @@ export default function Scan() {
 
   return (
     <div className="pb-6">
+      {showPawRain && <PawRain onDone={() => setShowPawRain(false)} />}
       <PageHeader title="拍照识别" subtitle="拍一张照片，认识这只猫" />
 
       <div className="p-3 space-y-3">
@@ -143,13 +172,69 @@ export default function Scan() {
           </div>
         </label>
 
+        <div className="bg-white rounded-xl border border-gray-100 p-3 space-y-3">
+          <div>
+            <span className="text-xs font-medium text-gray-500">活动状态</span>
+            <div className="grid grid-cols-4 gap-2 mt-2">
+              {ACTIVITY_OPTIONS.map((a) => (
+                <button
+                  key={a.value}
+                  onClick={() => setActivity(activity === a.value ? '' : a.value)}
+                  className={`flex flex-col items-center py-2 rounded-lg border text-xs transition-colors ${
+                    activity === a.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
+                  }`}
+                >
+                  <span className="text-lg">{a.emoji}</span>
+                  <span className="mt-0.5">{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <span className="text-xs font-medium text-gray-500">天气</span>
+              <div className="flex gap-1.5 mt-2">
+                {WEATHER_OPTIONS.map((w) => (
+                  <button
+                    key={w.value}
+                    onClick={() => setWeather(weather === w.value ? '' : w.value)}
+                    className={`flex-1 flex flex-col items-center py-1.5 rounded-lg border text-xs transition-colors ${
+                      weather === w.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
+                    }`}
+                  >
+                    <span className="text-base">{w.emoji}</span>
+                    <span className="mt-0.5">{w.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="text-xs font-medium text-gray-500">心情</span>
+              <div className="flex gap-1.5 mt-2">
+                {MOOD_OPTIONS.map((m) => (
+                  <button
+                    key={m.value}
+                    onClick={() => setMood(mood === m.value ? '' : m.value)}
+                    className={`flex-1 flex flex-col items-center py-1.5 rounded-lg border text-xs transition-colors ${
+                      mood === m.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
+                    }`}
+                  >
+                    <span className="text-base">{m.emoji}</span>
+                    <span className="mt-0.5">{m.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {phase === 'idle' ? (
           <label className="block border-2 border-dashed border-primary rounded-xl p-8 text-center cursor-pointer bg-primary-light active:bg-orange-100">
             <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
             <div className="text-primary font-medium">拍照或上传图片</div>
             <div className="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</div>
             <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFileChange} />
-          </label>
+        </label>
         ) : preview ? (
           <div className="relative rounded-xl overflow-hidden aspect-square bg-gray-100">
             <img src={preview} alt="预览" className="w-full h-full object-cover" />
@@ -274,7 +359,7 @@ export default function Scan() {
             )}
             <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
               <div className="flex items-center gap-3 mb-3">
-                <SadCat size={48} className="text-gray-300 shrink-0" />
+                <MascotCat mood="curious" size={56} className="shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-gray-500">来认识新的猫咪朋友吧</p>
                   <p className="text-xs text-gray-400 mt-0.5">拍一张照片，AI 帮你识别</p>

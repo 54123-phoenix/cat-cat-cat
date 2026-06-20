@@ -41,7 +41,7 @@
    ```
 4. 编辑 `.env`，填入你的值：
    ```ini
-   DATABASE_URL=mysql+pymysql://root:root123@db:3306/cat_community
+    DATABASE_URL=sqlite:///./cat_community.db
    UPLOAD_DIR=./uploads
    VITE_API_TARGET=http://backend:8000
    ADMIN_PASSWORD=你的管理员密码

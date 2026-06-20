@@ -3,14 +3,8 @@ import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import BadgeIcon from '../components/BadgeIcon'
 import { getBadges } from '../api'
-import { Eye, PenLine, Trophy, Sparkles, Medal } from 'lucide-react'
-
-const SERIES_LABEL = {
-  sighting: { name: '偶遇系列', Icon: Eye },
-  community: { name: '社区系列', Icon: PenLine },
-  collect: { name: '收集系列', Icon: Trophy },
-  special: { name: '特殊成就', Icon: Sparkles },
-}
+import { Medal } from 'lucide-react'
+import { SERIES_LABEL } from '../constants/badges'
 
 function getBadgeFromApi(b) {
   return b

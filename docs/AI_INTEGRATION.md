@@ -33,6 +33,8 @@ POST /api/recognize
 review_new_cat_discovery(image_path: Optional[str], note: Optional[str]) -> DiscoveryAIReview
 ```
 
+> 未接入，预留。当前 `review_new_cat_discovery` 与 `DiscoveryAIReview` 已从 `app/services/ai.py` 移除（死代码清理）。AI 初审待后续里程碑接入审核流程。
+
 Used by:
 
 ```text
@@ -75,11 +77,11 @@ Status semantics:
 
 Suggested thresholds:
 
-- `confirmed`: top1 confidence >= 0.85 and margin to top2 >= 0.12.
-- `uncertain`: top1 confidence >= 0.45 but below confirmed threshold.
-- `unknown`: no candidate above 0.45 or image quality is insufficient.
+- `confirmed`: top1 confidence >= 0.45 (THRESHOLD_CONFIRMED).
+- `uncertain`: top1 confidence >= 0.30 (THRESHOLD_UNCERTAIN) but below confirmed threshold.
+- `unknown`: no candidate above 0.30 or image quality is insufficient.
 
-These thresholds are initial recommendations and can be tuned with real data.
+These thresholds are defined in `cat-backend/app/services/ai.py` (THRESHOLD_CONFIRMED=0.45, THRESHOLD_UNCERTAIN=0.30) and can be tuned with real data.
 
 ## New-Cat Discovery AI Contract
 

@@ -45,6 +45,9 @@ class User(Base):
     openid = Column(String(100), unique=True, nullable=True, index=True)
     session_key = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=datetime.now)
+    xp = Column(Integer, default=0)
+    level = Column(Integer, default=1)
+    longest_streak = Column(Integer, default=0)
 
     posts = relationship("Post", back_populates="author")
     comments = relationship("Comment", back_populates="author")
@@ -64,6 +67,10 @@ class Cat(Base):
     story = Column(Text)
     location = Column(String(100), index=True)
     avatar = Column(String(200))
+    personality_radar = Column(Text)
+    quote = Column(String(120))
+    aliases = Column(String(120))
+    relationships = Column(Text)
     created_at = Column(DateTime, default=datetime.now)
 
     images = relationship("CatImage", back_populates="cat")
@@ -75,7 +82,7 @@ class CatImage(Base):
     __tablename__ = "cat_images"
 
     id = Column(Integer, primary_key=True, index=True)
-    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
     image_path = Column(String(200), nullable=False)
     embedding_path = Column(String(200))
     created_at = Column(DateTime, default=datetime.now)
@@ -87,7 +94,8 @@ class Sighting(Base):
     __tablename__ = "sightings"
 
     id = Column(Integer, primary_key=True, index=True)
-    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     image_path = Column(String(200))
     location = Column(String(100))
     location_name = Column(String(100))
@@ -98,16 +106,47 @@ class Sighting(Base):
     note = Column(Text)
     status = Column(String(20), default="approved")
     spotted_by = Column(String(50))
+    confirmations = Column(Integer, default=0)
+    grade = Column(String(20), default="casual")
+    weather = Column(String(20))
+    mood = Column(String(20))
     created_at = Column(DateTime, default=datetime.now)
 
     cat = relationship("Cat", back_populates="sightings")
+
+
+class SightingConfirmation(Base):
+    __tablename__ = "sighting_confirmations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.now)
+
+    __table_args__ = (
+        UniqueConstraint("sighting_id", "user_id", name="uq_sighting_confirmation"),
+    )
+
+
+class SightingVote(Base):
+    __tablename__ = "sighting_votes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.now)
+
+    __table_args__ = (
+        UniqueConstraint("sighting_id", "user_id", name="uq_sighting_vote"),
+    )
 
 
 class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     topic = Column(String(20), nullable=False, default="daily")
     content = Column(Text, nullable=False)
     tags = Column(Text, default="[]")
@@ -115,6 +154,10 @@ class Post(Base):
     status = Column(String(20), default="normal")
     likes_count = Column(Integer, default=0)
     comments_count = Column(Integer, default=0)
+    post_type = Column(String(20), default="discussion")
+    poll_options = Column(Text)
+    poll_data = Column(Text)
+    accepted_comment_id = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -139,17 +182,31 @@ class PostLike(Base):
     __tablename__ = "post_likes"
 
     id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
 
     post = relationship("Post", back_populates="likes")
+
+
+class PostPollVote(Base):
+    __tablename__ = "post_poll_votes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    option_index = Column(Integer, nullable=False)
+    created_at = Column(DateTime, default=datetime.now)
+
+    __table_args__ = (
+        UniqueConstraint("post_id", "user_id", name="uq_post_poll_vote"),
+    )
 
 
 class Comment(Base):
     __tablename__ = "post_comments"
 
     id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.now)

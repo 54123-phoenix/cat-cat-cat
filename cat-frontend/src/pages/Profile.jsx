@@ -1,31 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Award, MapPin, Cat, PawPrint, Heart } from 'lucide-react'
+import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import EmptyState from '../components/EmptyState'
-import { getUserProfile, getCats, getFollowedCats, getStoredUser } from '../api'
-
-const BADGE_DISPLAY = {
-  first_sighting: { name: '初次偶遇' },
-  cat_observer: { name: '观察员' },
-  cat_expert: { name: '专家' },
-  first_post: { name: '首帖' },
-  community_helper: { name: '热心人' },
-  community_star: { name: '社区之星' },
-  cat_collector: { name: '收藏家' },
-  cat_master: { name: '大师' },
-  new_cat_finder: { name: '发现者' },
-  photography_first: { name: '摄影' },
-  map_explorer: { name: '探索者' },
-  collection_complete: { name: '全收集' },
-}
+import ThemeSwitcher from '../components/ThemeSwitcher'
+import { getUserProfile, getCats, getFollowedCats, getStoredUser, getMyStats } from '../api'
+import { BADGE_DISPLAY } from '../constants/badges'
+import StreakBadge from '../components/StreakBadge'
 
 export default function Profile() {
   const [user, setUser] = useState(null)
   const [cats, setCats] = useState([])
   const [followedCats, setFollowedCats] = useState([])
   const [badges, setBadges] = useState([])
+  const [myStats, setMyStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
   const navigate = useNavigate()
@@ -41,12 +30,14 @@ export default function Profile() {
       getUserProfile(),
       getCats(),
       getFollowedCats().catch(() => []),
+      getMyStats().catch(() => null),
     ])
-      .then(([userData, catsData, followedData]) => {
+      .then(([userData, catsData, followedData, statsData]) => {
         setUser(userData)
         setCats(Array.isArray(catsData) ? catsData : [])
         setFollowedCats(Array.isArray(followedData) ? followedData : [])
         setBadges(userData.badges || [])
+        setMyStats(statsData)
       })
       .catch((err) => {
         if (err.message?.includes('401') || err.message?.includes('Not authenticated')) {
@@ -137,6 +128,11 @@ export default function Profile() {
                   ? `已经认识了 ${cats.length} 只校园猫猫`
                   : '还没有认识的猫猫'}
               </p>
+              {myStats && (
+                <div className="mt-1.5">
+                  <StreakBadge streak={myStats.streak || 0} />
+                </div>
+              )}
             </div>
           </div>
 
@@ -166,6 +162,25 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      {/* Settings: theme */}
+      <div className="card p-4">
+        <ThemeSwitcher />
+      </div>
+
+      <button
+        onClick={() => navigate('/wrapped')}
+        className="w-full card p-4 flex items-center gap-3 active:scale-95 transition-transform"
+      >
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-[#EA580C] flex items-center justify-center">
+          <Sparkles className="w-6 h-6 text-white" />
+        </div>
+        <div className="flex-1 text-left">
+          <p className="font-bold text-text">年度猫猫报告</p>
+          <p className="text-xs text-text-secondary">查看你的年度寻猫总结</p>
+        </div>
+        <span className="text-primary">›</span>
+      </button>
 
       {/* Badge Wall */}
       <div className="space-y-3">

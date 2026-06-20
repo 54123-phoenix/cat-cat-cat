@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas
+from app.api.auth import require_admin
+from app.models import User
 
 router = APIRouter(prefix="/api/cats", tags=["cats"])
 
@@ -26,12 +28,12 @@ def get_cat(cat_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("", response_model=schemas.CatResponse)
-def create_cat(cat: schemas.CatCreate, db: Session = Depends(get_db)):
+def create_cat(cat: schemas.CatCreate, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     return crud.create_cat(db, cat)
 
 
 @router.put("/{cat_id}", response_model=schemas.CatResponse)
-def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db)):
+def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     updated = crud.update_cat(db, cat_id, cat)
     if not updated:
         raise HTTPException(status_code=404, detail="Cat not found")
@@ -39,7 +41,7 @@ def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db
 
 
 @router.delete("/{cat_id}")
-def delete_cat(cat_id: int, db: Session = Depends(get_db)):
+def delete_cat(cat_id: int, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     success = crud.delete_cat(db, cat_id)
     if not success:
         raise HTTPException(status_code=404, detail="Cat not found")
@@ -52,7 +54,7 @@ def list_cat_images(cat_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{cat_id}/images", response_model=schemas.CatImageResponse)
-async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Session = Depends(get_db), user: User = Depends(require_admin)):
     cat = crud.get_cat(db, cat_id)
     if not cat:
         raise HTTPException(status_code=404, detail="Cat not found")

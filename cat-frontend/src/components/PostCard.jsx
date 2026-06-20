@@ -1,22 +1,56 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { likePost, deletePost, getStoredUser } from '../api'
+import { likePost, deletePost, pollVote, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
 import CommentSection from './CommentSection'
 import Avatar from './Avatar'
+import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 
-const TOPIC_LABEL = {
-  find: '寻猫问猫',
-  daily: '铲屎日常',
-  health: '健康互助',
-  suggest: '建议反馈',
+const POST_TYPE_BADGE = {
+  poll: { label: '投票', cls: 'bg-purple-50 text-purple-500' },
+  question: { label: '求助', cls: 'bg-blue-50 text-blue-500' },
+  discussion: { label: '', cls: '' },
 }
 
-const TOPIC_COLORS = {
-  find: { bg: 'bg-primary-light', text: 'text-primary' },
-  daily: { bg: 'bg-mint-light', text: 'text-mint' },
-  health: { bg: 'bg-info/10', text: 'text-info' },
-  suggest: { bg: 'bg-warning/10', text: 'text-warning' },
+function PollView({ post }) {
+  const [pollData, setPollData] = useState(post.pollData || [])
+  const [voting, setVoting] = useState(false)
+  const total = pollData.reduce((a, b) => a + b, 0)
+  async function handleVote(idx) {
+    if (voting) return
+    setVoting(true)
+    try {
+      const res = await pollVote(post.id, idx)
+      setPollData(res.pollData || [])
+    } catch (e) {
+      alert(e.message || '投票失败')
+    } finally {
+      setVoting(false)
+    }
+  }
+  return (
+    <div className="space-y-2 mt-2">
+      {post.pollOptions?.map((opt, i) => {
+        const count = pollData[i] || 0
+        const pct = total > 0 ? Math.round((count / total) * 100) : 0
+        return (
+          <button
+            key={i}
+            onClick={() => handleVote(i)}
+            disabled={voting}
+            className="w-full text-left relative overflow-hidden rounded-lg border border-gray-200 px-3 py-2 active:bg-gray-50"
+          >
+            <div className="absolute inset-y-0 left-0 bg-primary/10" style={{ width: `${pct}%` }} />
+            <div className="relative flex items-center justify-between text-sm">
+              <span className="text-text">{opt}</span>
+              <span className="text-text-secondary text-xs">{count} 票 · {pct}%</span>
+            </div>
+          </button>
+        )
+      })}
+      <p className="text-xs text-text-muted">共 {total} 票，点击选项投票</p>
+    </div>
+  )
 }
 
 export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
@@ -87,6 +121,11 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
           }`}>
             {TOPIC_LABEL[post.topic] || '铲屎日常'}
           </span>
+          {POST_TYPE_BADGE[post.postType]?.label && (
+            <span className={`text-caption px-2 py-0.5 rounded-full font-medium ${POST_TYPE_BADGE[post.postType].cls}`}>
+              {POST_TYPE_BADGE[post.postType].label}
+            </span>
+          )}
           {canDelete && (
             <button onClick={() => setShowDeleteConfirm(true)} className="text-gray-300 hover:text-red-400 transition-colors">
               <Trash2 className="w-3.5 h-3.5" />
@@ -133,6 +172,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
           </div>
         )}
       </div>
+
+      {post.postType === 'poll' && post.pollOptions?.length > 0 && (
+        <PollView post={post} />
+      )}
 
       {post.tags?.length > 0 && (
         <div className="flex flex-wrap gap-2">

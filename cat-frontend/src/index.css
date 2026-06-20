@@ -1,5 +1,100 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+:root {
+  --color-ink: #1C1917;
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-primary: #F97316;
+  --color-primary-dark: #EA580C;
+  --color-muted: #78716C;
+  --color-border: #E7E5E4;
+  --color-accent: #FED7AA;
+}
+
+/* === Theme: original (default warm orange, same as :root) === */
+[data-theme="original"] {
+  --color-ink: #1C1917;
+  --color-bg: #FFFFFF;
+  --color-surface: #FFF9F5;
+  --color-primary: #F97316;
+  --color-primary-dark: #EA580C;
+  --color-muted: #78716C;
+  --color-border: #E7E5E4;
+  --color-accent: #FED7AA;
+}
+
+/* === Theme: zen (禅意青灰) === */
+[data-theme="zen"] {
+  --color-ink: #1F2937;
+  --color-bg: #F5F5F4;
+  --color-surface: #FFFFFF;
+  --color-primary: #0D9488;
+  --color-primary-dark: #0F766E;
+  --color-muted: #6B7280;
+  --color-border: #D6D3D1;
+  --color-accent: #CCFBF1;
+}
+
+/* === Theme: rustic (田园棕) === */
+[data-theme="rustic"] {
+  --color-ink: #44403C;
+  --color-bg: #FAF7F2;
+  --color-surface: #FFFFFF;
+  --color-primary: #B45309;
+  --color-primary-dark: #92400E;
+  --color-muted: #78716C;
+  --color-border: #E7E5E4;
+  --color-accent: #FDE68A;
+}
+
+/* === Theme: modern (现代蓝) === */
+[data-theme="modern"] {
+  --color-ink: #0F172A;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-primary: #2563EB;
+  --color-primary-dark: #1D4ED8;
+  --color-muted: #64748B;
+  --color-border: #E2E8F0;
+  --color-accent: #DBEAFE;
+}
+
+/* === Theme: sugary (糖果粉) === */
+[data-theme="sugary"] {
+  --color-ink: #4C1D2D;
+  --color-bg: #FDF2F8;
+  --color-surface: #FFFFFF;
+  --color-primary: #DB2777;
+  --color-primary-dark: #BE185D;
+  --color-muted: #9D8B96;
+  --color-border: #FBCFE8;
+  --color-accent: #FCE7F3;
+}
+
+/* === Theme: cafe (咖啡馆深棕) === */
+[data-theme="cafe"] {
+  --color-ink: #2A1A0F;
+  --color-bg: #F3EBE3;
+  --color-surface: #FBF6F0;
+  --color-primary: #92400E;
+  --color-primary-dark: #78350F;
+  --color-muted: #8B7355;
+  --color-border: #DCC9B8;
+  --color-accent: #EAD9C6;
+}
+
+/* === Theme: dark (深色) === */
+[data-theme="dark"] {
+  --color-ink: #F5F5F4;
+  --color-bg: #1C1917;
+  --color-surface: #292524;
+  --color-primary: #FB923C;
+  --color-primary-dark: #F97316;
+  --color-muted: #A8A29E;
+  --color-border: #44403C;
+  --color-accent: #7C2D12;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,15 +103,21 @@
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 15px;
-    color: #1C1917;
+    color: var(--color-ink);
+    background: var(--color-bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  /* Global focus ring for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
 @layer components {
   .card {
-    background: #FFFFFF;
+    background: var(--color-surface);
     border-radius: 16px;
     padding: 16px;
     box-shadow: 0 1px 2px rgb(17 12 9 / 0.04);
@@ -28,8 +129,8 @@
   }
 
   .clay-card {
-    background: #FFFFFF;
-    border: 1px solid #E7E5E4;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 20px;
     padding: 24px;
     box-shadow:
@@ -446,6 +547,113 @@
 .activity-badge-sleeping { background: #E0E7FF; color: #4F46E5; }
 .activity-badge-fighting { background: #FEE2E2; color: #DC2626; }
 .activity-badge-playing { background: #D1FAE5; color: #059669; }
+
+/* === Streak Flame === */
+.streak-flame {
+  animation: streak-flicker 1.6s ease-in-out infinite;
+  transform-origin: center bottom;
+  display: inline-block;
+}
+@keyframes streak-flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  25% { transform: scale(1.12) rotate(2deg); }
+  50% { transform: scale(0.95) rotate(-1deg); }
+  75% { transform: scale(1.08) rotate(1deg); }
+}
+
+/* === Mascot Cat breathing === */
+.mascot-breathe {
+  animation: mascot-breathe 3.2s ease-in-out infinite;
+  transform-origin: center 80%;
+}
+@keyframes mascot-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+.mascot-zzz {
+  animation: mascot-zzz 1.8s ease-in-out infinite;
+  transform-origin: 78px 16px;
+}
+@keyframes mascot-zzz {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* === Theme background helper === */
+.theme-bg { background: var(--color-bg); }
+.theme-surface { background: var(--color-surface); color: var(--color-ink); }
+.theme-text { color: var(--color-ink); }
+.theme-muted { color: var(--color-muted); }
+.theme-border { border-color: var(--color-border); }
+.theme-primary { color: var(--color-primary); }
+
+/* === Card entrance: pop === */
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in { animation: pop-in 0.35s ease-out both; }
+
+/* === Stagger delays === */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+/* === Confetti fall (badge unlock) === */
+@keyframes confetti-fall {
+  0% { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  width: 8px; height: 12px;
+  border-radius: 2px;
+  animation: confetti-fall 2s linear forwards;
+}
+
+/* === Paw rain (scan success) === */
+@keyframes paw-rain {
+  0% { opacity: 0; transform: translateY(-30px) rotate(0deg) scale(0.6); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(90vh) rotate(360deg) scale(1.1); }
+}
+.paw-rain-piece {
+  position: fixed;
+  top: 0;
+  font-size: 28px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: paw-rain 1.5s ease-in forwards;
+}
+
+/* === Celebration overlay === */
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  animation: fade-in 0.2s ease-out;
+}
+.celebration-card {
+  background: var(--color-surface);
+  border-radius: 24px;
+  padding: 32px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 20px 50px -12px rgba(0,0,0,0.4);
+  animation: pop-in 0.4s ease-out both;
+}
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

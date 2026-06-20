@@ -142,8 +142,8 @@ npm install
 npm run dev
 ```
 
-演示账号：`demo / demo123`  
-管理员口令：`cat-admin`
+演示账号：`demo`（口令由环境变量 `DEMO_PASSWORD` 提供，需设 `INIT_DEMO_USER=1`）  
+管理员口令：由环境变量 `ADMIN_PASSWORD` 提供
 
 ---
 

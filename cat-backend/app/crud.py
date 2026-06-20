@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session, joinedload
@@ -6,10 +7,42 @@ from sqlalchemy import desc, func, or_
 from typing import Optional, List
 
 from app import models, schemas
+from app import events
 
 
 def _tags_to_json(tags: List[str]) -> str:
     return json.dumps(tags, ensure_ascii=False)
+
+
+def compute_level(xp: int) -> int:
+    xp = xp or 0
+    if xp < 0:
+        xp = 0
+    n = 1
+    while xp >= 50 * n * (n - 1):
+        n += 1
+    return n - 1
+
+
+def level_progress(xp: int) -> float:
+    xp = xp or 0
+    lvl = compute_level(xp)
+    lower = 50 * lvl * (lvl - 1)
+    upper = 50 * (lvl + 1) * lvl
+    if upper <= lower:
+        return 0.0
+    return max(0.0, min(1.0, (xp - lower) / (upper - lower)))
+
+
+def add_xp(db: Session, user, amount: int):
+    if user is None or amount is None or amount == 0:
+        return
+    try:
+        user.xp = (user.xp or 0) + amount
+        user.level = compute_level(user.xp)
+        db.commit()
+    except Exception:
+        db.rollback()
 
 
 def _tags_from_json(value: str) -> List[str]:
@@ -36,13 +69,23 @@ def _relative_time(value: datetime) -> str:
     return f"{days}天前"
 
 
-def _serialize_post(post, current_user_id: int) -> schemas.PostResponse:
-    liked = any(like.user_id == current_user_id for like in post.likes) if post.likes else False
+def _serialize_post(post, current_user_id: int, liked_ids: Optional[set] = None) -> schemas.PostResponse:
+    if liked_ids is not None:
+        liked = post.id in liked_ids
+    else:
+        liked = any(like.user_id == current_user_id for like in (post.likes or [])) if current_user_id else False
     images = [img.image_path for img in (post.images or [])]
     related_cat = None
     if hasattr(post, 'related_cat') and post.related_cat:
         related_cat = schemas.RelatedCatResponse(id=post.related_cat.id, name=post.related_cat.name)
     user = schemas.UserBrief(id=post.author.id, nickname=post.author.nickname, avatar=post.author.avatar) if post.author else None
+    poll_options = _tags_from_json(post.poll_options) if post.poll_options else []
+    try:
+        poll_data = json.loads(post.poll_data) if post.poll_data else []
+    except (json.JSONDecodeError, TypeError):
+        poll_data = []
+    if not poll_data and poll_options:
+        poll_data = [0] * len(poll_options)
     return schemas.PostResponse(
         id=post.id,
         userId=post.user_id,
@@ -57,6 +100,10 @@ def _serialize_post(post, current_user_id: int) -> schemas.PostResponse:
         comments=post.comments_count or 0,
         status=post.status,
         createdAt=_relative_time(post.created_at),
+        postType=getattr(post, 'post_type', 'discussion') or 'discussion',
+        pollOptions=poll_options,
+        pollData=poll_data,
+        acceptedCommentId=getattr(post, 'accepted_comment_id', None),
     )
 
 
@@ -64,14 +111,23 @@ def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, c
     query = db.query(models.Post).options(
         joinedload(models.Post.author),
         joinedload(models.Post.images),
-        joinedload(models.Post.likes),
         joinedload(models.Post.comment_list),
     )
     if topic != "all":
         query = query.filter(models.Post.topic == topic)
     query = query.filter(models.Post.status.in_(["normal", "reported"]))
     posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
-    return [_serialize_post(p, current_user_id) for p in posts]
+    liked_ids = set()
+    if current_user_id and posts:
+        post_ids = [p.id for p in posts]
+        liked_ids = {
+            pl.post_id
+            for pl in db.query(models.PostLike).filter(
+                models.PostLike.user_id == current_user_id,
+                models.PostLike.post_id.in_(post_ids),
+            ).all()
+        }
+    return [_serialize_post(p, current_user_id, liked_ids) for p in posts]
 
 
 def get_post(db: Session, post_id: int) -> Optional[models.Post]:
@@ -83,12 +139,24 @@ def get_post(db: Session, post_id: int) -> Optional[models.Post]:
 
 
 def create_post(db: Session, post: schemas.PostCreate, user_id: int, image_paths: List[str] = None) -> schemas.PostResponse:
+    post_type = (post.postType or "discussion").strip()
+    poll_options_json = None
+    poll_data_json = None
+    if post_type == "poll":
+        options = [o.strip() for o in (post.pollOptions or []) if o.strip()]
+        if len(options) < 2:
+            raise ValueError("投票帖至少需要 2 个选项")
+        poll_options_json = json.dumps(options, ensure_ascii=False)
+        poll_data_json = json.dumps([0] * len(options))
     db_post = models.Post(
         user_id=user_id,
         topic=post.topic,
         content=post.content.strip(),
         tags=_tags_to_json(post.tags),
         related_cat_id=post.relatedCatId,
+        post_type=post_type,
+        poll_options=poll_options_json,
+        poll_data=poll_data_json,
     )
     db.add(db_post)
     db.flush()
@@ -102,6 +170,14 @@ def create_post(db: Session, post: schemas.PostCreate, user_id: int, image_paths
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == db_post.id).first()
+    author = post_with_rels.author if post_with_rels else None
+    if author is not None:
+        add_xp(db, author, 5)
+    events.publish("post_new", {
+        "post_id": db_post.id,
+        "user_id": user_id,
+        "topic": db_post.topic,
+    })
     return _serialize_post(post_with_rels, user_id)
 
 
@@ -150,6 +226,7 @@ def toggle_post_like(db: Session, post_id: int, user_id: int) -> Optional[schema
     else:
         db.add(models.PostLike(post_id=post_id, user_id=user_id))
         post.likes_count = (post.likes_count or 0) + 1
+        events.publish("like_new", {"post_id": post_id, "user_id": user_id})
     db.commit()
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
@@ -160,6 +237,8 @@ def toggle_post_like(db: Session, post_id: int, user_id: int) -> Optional[schema
 
 
 def get_comments(db: Session, post_id: int, skip: int = 0, limit: int = 50) -> List[schemas.CommentResponse]:
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    accepted_id = getattr(post, "accepted_comment_id", None) if post else None
     comments = db.query(models.Comment).options(
         joinedload(models.Comment.author),
     ).filter(
@@ -173,6 +252,7 @@ def get_comments(db: Session, post_id: int, skip: int = 0, limit: int = 50) -> L
             user=schemas.UserBrief(id=c.author.id, nickname=c.author.nickname, avatar=c.author.avatar) if c.author else None,
             content=c.content,
             createdAt=_relative_time(c.created_at),
+            accepted=(c.id == accepted_id),
         )
         for c in comments
     ]
@@ -188,6 +268,15 @@ def create_comment(db: Session, post_id: int, comment: schemas.CommentCreate, us
     db.commit()
     db.refresh(db_comment)
     author = db.query(models.User).filter(models.User.id == user_id).first()
+    if author is not None:
+        add_xp(db, author, 2)
+    events.publish("comment_new", {
+        "post_id": post_id,
+        "comment_id": db_comment.id,
+        "user_id": user_id,
+        "user_nickname": author.nickname if author else None,
+    })
+    accepted_id = getattr(post, "accepted_comment_id", None)
     return schemas.CommentResponse(
         id=db_comment.id,
         postId=db_comment.post_id,
@@ -195,7 +284,64 @@ def create_comment(db: Session, post_id: int, comment: schemas.CommentCreate, us
         user=schemas.UserBrief(id=author.id, nickname=author.nickname, avatar=author.avatar) if author else None,
         content=db_comment.content,
         createdAt=_relative_time(db_comment.created_at),
+        accepted=(db_comment.id == accepted_id),
     )
+
+
+def poll_vote(db: Session, post_id: int, user_id: int, option_index: int) -> Optional[schemas.PostResponse]:
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not post or (post.post_type or "discussion") != "poll":
+        return None
+    options = _tags_from_json(post.poll_options) if post.poll_options else []
+    if option_index < 0 or option_index >= len(options):
+        return None
+    existing = db.query(models.PostPollVote).filter(
+        models.PostPollVote.post_id == post_id,
+        models.PostPollVote.user_id == user_id,
+    ).first()
+    if existing:
+        existing.option_index = option_index
+    else:
+        db.add(models.PostPollVote(post_id=post_id, user_id=user_id, option_index=option_index))
+    db.flush()
+    rows = db.query(
+        models.PostPollVote.option_index,
+        func.count(models.PostPollVote.id),
+    ).filter(models.PostPollVote.post_id == post_id).group_by(models.PostPollVote.option_index).all()
+    counts = {idx: cnt for idx, cnt in rows}
+    poll_data = [counts.get(i, 0) for i in range(len(options))]
+    post.poll_data = json.dumps(poll_data)
+    db.commit()
+    events.publish("poll_voted", {"post_id": post_id, "user_id": user_id, "option_index": option_index})
+    post_with_rels = db.query(models.Post).options(
+        joinedload(models.Post.author),
+        joinedload(models.Post.images),
+        joinedload(models.Post.likes),
+    ).filter(models.Post.id == post_id).first()
+    return _serialize_post(post_with_rels, user_id)
+
+
+def accept_answer(db: Session, post_id: int, comment_id: int, user_id: int, is_admin: bool = False) -> Optional[schemas.PostResponse]:
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not post:
+        return None
+    if not is_admin and post.user_id != user_id:
+        return None
+    comment = db.query(models.Comment).filter(
+        models.Comment.id == comment_id,
+        models.Comment.post_id == post_id,
+    ).first()
+    if not comment:
+        return None
+    post.accepted_comment_id = comment_id
+    db.commit()
+    events.publish("answer_accepted", {"post_id": post_id, "comment_id": comment_id})
+    post_with_rels = db.query(models.Post).options(
+        joinedload(models.Post.author),
+        joinedload(models.Post.images),
+        joinedload(models.Post.likes),
+    ).filter(models.Post.id == post_id).first()
+    return _serialize_post(post_with_rels, user_id)
 
 
 def report_post(db: Session, post_id: int, user_id: int, reason: str) -> bool:
@@ -358,11 +504,15 @@ def get_sighting(db: Session, sighting_id: int) -> Optional[models.Sighting]:
     return db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
 
 
-def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None, status: str = "approved") -> models.Sighting:
-    db_sighting = models.Sighting(**sighting.model_dump(), image_path=image_path, spotted_by=spotted_by, status=status)
+def create_sighting(db: Session, sighting: schemas.SightingCreate, image_path: Optional[str] = None, spotted_by: Optional[str] = None, user_id: Optional[int] = None, status: str = "approved") -> models.Sighting:
+    db_sighting = models.Sighting(**sighting.model_dump(), image_path=image_path, spotted_by=spotted_by, user_id=user_id, status=status)
     db.add(db_sighting)
     db.commit()
     db.refresh(db_sighting)
+    if user_id is not None:
+        _u = db.query(models.User).filter(models.User.id == user_id).first()
+        if _u is not None:
+            add_xp(db, _u, 10)
     return db_sighting
 
 
@@ -386,19 +536,56 @@ def award_event_badge(db: Session, user_id: int, badge_key: str) -> bool:
         return False
     db.add(models.UserBadge(user_id=user_id, badge_key=badge_key))
     db.commit()
+    events.publish("badge_unlock", {"user_id": user_id, "badge_key": badge_key})
     return True
 
 
 def get_user_stats_full(db: Session, user_id: int) -> dict:
     from app.config.badges import BADGE_CATALOG
-    sightings = db.query(models.Sighting).count()
+    sightings = db.query(models.Sighting).filter(models.Sighting.user_id == user_id).count()
     posts = db.query(models.Post).filter(models.Post.user_id == user_id).count()
-    cats_known = db.query(models.Cat).count()
-    locations = db.query(models.Sighting.location).distinct().count()
-    photos = db.query(models.CatImage).count()
+    cats_known = db.query(models.UserCatFollow).filter(models.UserCatFollow.user_id == user_id).count()
+    locations = db.query(models.Sighting.location).filter(models.Sighting.user_id == user_id).distinct().count()
+    photos = db.query(models.Sighting).filter(
+        models.Sighting.user_id == user_id,
+        models.Sighting.image_path.isnot(None),
+    ).count()
     discoveries = 0
     approved = 0
     event_badges = get_event_badges(db, user_id)
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    xp = (user.xp or 0) if user else 0
+    level = compute_level(xp)
+    progress = level_progress(xp)
+
+    sighting_dates = sorted({
+        s.created_at.date()
+        for s in db.query(models.Sighting.created_at).filter(models.Sighting.user_id == user_id).all()
+        if s.created_at is not None
+    })
+    streak = 0
+    if sighting_dates:
+        today = datetime.now().date()
+        if sighting_dates[-1] == today:
+            streak = 1
+            for i in range(len(sighting_dates) - 1, 0, -1):
+                if (sighting_dates[i] - sighting_dates[i - 1]).days == 1:
+                    streak += 1
+                else:
+                    break
+        else:
+            streak = 0
+    longest = streak
+    if user is not None:
+        try:
+            longest = max((user.longest_streak or 0), streak)
+            if (user.longest_streak or 0) < longest:
+                user.longest_streak = longest
+                db.commit()
+        except Exception:
+            db.rollback()
+
     return {
         "sightings": sightings,
         "posts": posts,
@@ -409,6 +596,11 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
         "discoveries": discoveries,
         "approved_discoveries": approved,
         "event_badges": event_badges,
+        "streak": streak,
+        "longest_streak": longest,
+        "xp": xp,
+        "level": level,
+        "level_progress": progress,
     }
 
 
@@ -729,6 +921,10 @@ def review_discovery(db, discovery_id, review):
         raise ValueError(f"Invalid action: {review.action}")
     db.commit()
     db.refresh(discovery)
+    events.publish("discovery_reviewed", {
+        "discovery_id": discovery.id,
+        "status": discovery.status,
+    })
     return schemas.DiscoveryResponse(
         id=discovery.id,
         image_path=discovery.image_path,
@@ -751,11 +947,11 @@ def get_weekly_report(db: Session, user_id: int = 1):
 
     week_sightings = db.query(models.Sighting).filter(
         models.Sighting.created_at >= week_start,
+        models.Sighting.user_id == user_id,
     ).all()
 
     user = db.query(models.User).filter(models.User.id == user_id).first()
-    user_nickname = user.nickname if user else "猫猫爱好者"
-    user_sightings = [s for s in week_sightings if s.spotted_by == user_nickname]
+    user_sightings = week_sightings
 
     unique_cats = len(set(s.cat_id for s in user_sightings))
     total_sightings = len(user_sightings)
@@ -781,9 +977,34 @@ def get_weekly_report(db: Session, user_id: int = 1):
     last_week_sightings = db.query(models.Sighting).filter(
         models.Sighting.created_at >= last_week_start,
         models.Sighting.created_at < week_start,
+        models.Sighting.user_id == user_id,
     ).all()
-    last_week_user_sightings = [s for s in last_week_sightings if s.spotted_by == user_nickname]
+    last_week_user_sightings = last_week_sightings
     last_week_count = len(last_week_user_sightings)
+
+    cat_counts_this_week = {}
+    for s in user_sightings:
+        if s.cat_id is not None:
+            cat_counts_this_week[s.cat_id] = cat_counts_this_week.get(s.cat_id, 0) + 1
+    benming_cat_this_week = None
+    if cat_counts_this_week:
+        benming_cat_id = max(cat_counts_this_week, key=cat_counts_this_week.get)
+        benming_cat_obj = db.query(models.Cat).filter(models.Cat.id == benming_cat_id).first()
+        if benming_cat_obj:
+            benming_cat_this_week = {
+                "id": benming_cat_obj.id,
+                "name": benming_cat_obj.name,
+                "avatar": benming_cat_obj.avatar,
+                "count": cat_counts_this_week[benming_cat_id],
+            }
+
+    league_rank = None
+    from app.models import User as _User
+    all_users = db.query(_User).order_by(_User.xp.desc()).all()
+    for idx, u in enumerate(all_users):
+        if u.id == user_id:
+            league_rank = idx + 1
+            break
 
     return {
         "week_start": week_start.isoformat(),
@@ -793,8 +1014,80 @@ def get_weekly_report(db: Session, user_id: int = 1):
         "top_location": top_location,
         "top_location_count": top_location_count,
         "streak_days": streak,
+        "streak": streak,
         "last_week_count": last_week_count,
+        "last_week_sightings": last_week_count,
         "trend": "up" if total_sightings > last_week_count else "down" if total_sightings < last_week_count else "same",
+        "league_rank": league_rank,
+        "benming_cat_this_week": benming_cat_this_week,
+    }
+
+
+def get_wrapped_report(db: Session, user_id: int):
+    now = datetime.now()
+    year = now.year
+    year_start = datetime(year, 1, 1)
+
+    sightings = db.query(models.Sighting).filter(
+        models.Sighting.user_id == user_id,
+        models.Sighting.created_at >= year_start,
+    ).all()
+
+    total_sightings = len(sightings)
+    distinct_cats = len({s.cat_id for s in sightings if s.cat_id is not None})
+
+    location_counts = {}
+    for s in sightings:
+        loc = s.location_name or s.location or "未知地点"
+        location_counts[loc] = location_counts.get(loc, 0) + 1
+    top_locations = [
+        {"name": name, "count": cnt}
+        for name, cnt in sorted(location_counts.items(), key=lambda x: x[1], reverse=True)
+    ][:5]
+
+    cat_counts = {}
+    for s in sightings:
+        if s.cat_id is not None:
+            cat_counts[s.cat_id] = cat_counts.get(s.cat_id, 0) + 1
+    benming_cat = None
+    if cat_counts:
+        benming_cat_id = max(cat_counts, key=cat_counts.get)
+        cat_obj = db.query(models.Cat).filter(models.Cat.id == benming_cat_id).first()
+        if cat_obj:
+            benming_cat = {
+                "id": cat_obj.id,
+                "name": cat_obj.name,
+                "avatar": cat_obj.avatar,
+                "count": cat_counts[benming_cat_id],
+            }
+
+    badge_details, _, badge_count = compute_user_badges(db, user_id)
+    badges_earned = [b["badge_key"] for b in badge_details if b.get("earned")]
+
+    stats = get_user_stats_full(db, user_id)
+    total_xp = stats["xp"]
+    level = stats["level"]
+    streak = stats["streak"]
+    longest_streak = stats["longest_streak"]
+
+    collection_count = db.query(models.UserCatFollow).filter(
+        models.UserCatFollow.user_id == user_id
+    ).count()
+    collection_total = db.query(models.Cat).count()
+
+    return {
+        "year": year,
+        "total_sightings": total_sightings,
+        "distinct_cats": distinct_cats,
+        "top_locations": top_locations,
+        "badges_earned": badges_earned,
+        "benming_cat": benming_cat,
+        "total_xp": total_xp,
+        "level": level,
+        "collection_count": collection_count,
+        "collection_total": collection_total,
+        "streak": streak,
+        "longest_streak": longest_streak,
     }
 
 
@@ -818,6 +1111,9 @@ def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, curr
 
 
 def init_mock_data(db: Session):
+    if os.getenv("INIT_DEMO_USER") != "1":
+        return
+
     cat_ids = {}
     real_cats = db.query(models.Cat).all()
     for cat in real_cats:
@@ -832,7 +1128,7 @@ def init_mock_data(db: Session):
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
         demo_user = models.User(
             username="demo",
-            password_hash=pwd_ctx.hash("demo123"),
+            password_hash=pwd_ctx.hash(os.environ["DEMO_PASSWORD"]),
             nickname="Cat Lover",
             role="user",
         )
