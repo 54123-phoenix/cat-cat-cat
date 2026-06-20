@@ -79,7 +79,7 @@ export default function BadgeGallery() {
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
                           isEarned ? 'bg-primary-light text-primary' : 'bg-gray-100 text-gray-400'
                         }`}>
-                          <BadgeIcon badge={badge} size={20} />
+                          <BadgeIcon series={badge.series || badge.type || badge.category || 'default'} size={48} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">

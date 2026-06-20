@@ -149,6 +149,14 @@ if ($Verify) {
   Write-Ok 'build passed'
 
   Write-Step 'Snapshot + diff'
+  Write-Step 'Restart frontend container (fresh dev server)'
+  Push-Location $ROOT
+  $prevEAP2 = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+  docker compose restart frontend 2>&1 | Out-Null
+  $ErrorActionPreference = $prevEAP2
+  Pop-Location
+  if (!(Wait-Url $FRONT_URL 40)) { Write-Err 'frontend not ready after restart'; exit 1 }
+  Write-Ok 'frontend restarted'
   Push-Location $UILOOP
   node snapshot.mjs --url=$FRONT_URL --out=".loop/after_$Phase" --baseline=.loop/baseline --wait=2500
   $snapCode = $LASTEXITCODE
