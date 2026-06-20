@@ -16,11 +16,21 @@ from app import events
 router = APIRouter(prefix="/api/sightings", tags=["sightings"])
 
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 
 
-@router.get("", response_model=List[schemas.SightingResponse])
+def _validate_upload(file: UploadFile):
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(status_code=400, detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}")
+
+
+@router.get("", response_model=schemas.PaginatedSightingsResponse)
 def list_sightings(cat_id: Optional[int] = None, status: Optional[str] = "approved", skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
-    return crud.get_sightings(db, cat_id=cat_id, status=status, skip=skip, limit=limit)
+    total = crud.count_sightings(db, cat_id=cat_id, status=status)
+    items = crud.get_sightings(db, cat_id=cat_id, status=status, skip=skip, limit=limit)
+    has_more = (skip + limit) < total
+    return schemas.PaginatedSightingsResponse(items=items, total=total, has_more=has_more)
 
 
 @router.get("/{sighting_id}", response_model=schemas.SightingResponse)
@@ -48,18 +58,21 @@ async def create_sighting(
 ):
     image_path = None
     if file:
+        _validate_upload(file)
         ext = os.path.splitext(file.filename)[1]
         filename = f"{uuid.uuid4()}{ext}"
         filepath = os.path.join(UPLOAD_DIR, "sightings", filename)
 
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        content = await file.read()
+        if len(content) > MAX_UPLOAD_SIZE:
+            raise HTTPException(status_code=400, detail=f"File too large. Max size: {MAX_UPLOAD_SIZE // (1024 * 1024)}MB")
         with open(filepath, "wb") as f:
-            content = await file.read()
             f.write(content)
 
         image_path = f"/uploads/sightings/{filename}"
 
-    sighting_status = "pending" if file else "approved"
+    sighting_status = "pending"
     sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)
     db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by=current_user.nickname, user_id=current_user.id, status=sighting_status)
 

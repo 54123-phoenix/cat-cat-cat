@@ -182,7 +182,10 @@ def get_daily_quest(db: Session = Depends(get_db), user: User = Depends(require_
         models.Post.user_id == user.id,
         models.Post.created_at >= today_start,
     ).count()
-    recognize_count = 0
+    recognize_count = db.query(models.AuditLog).filter(
+        models.AuditLog.action == "recognize",
+        models.AuditLog.created_at >= today_start,
+    ).count()
 
     quests = [
         {"key": "sighting", "label": "偶遇1只猫", "target": 1, "progress": min(sighting_count, 1), "done": sighting_count >= 1},

@@ -9,7 +9,7 @@ import os
 
 from app.config import settings
 from app.database import engine, SessionLocal, Base
-from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, events
+from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, events, gallery
 from app.crud import init_mock_data
 from app.models import User
 from passlib.context import CryptContext
@@ -92,6 +92,7 @@ app.include_router(discoveries.router)
 app.include_router(map.router)
 app.include_router(audit.router)
 app.include_router(events.router)
+app.include_router(gallery.router)
 
 
 @app.get("/")

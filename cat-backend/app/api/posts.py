@@ -23,21 +23,32 @@ UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
 POSTS_UPLOAD = os.path.join(UPLOAD_DIR, "posts")
 os.makedirs(POSTS_UPLOAD, exist_ok=True)
 
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
+
+
+def _validate_upload(file: UploadFile):
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(status_code=400, detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}")
+
 
 def _save_images(files: List[UploadFile]) -> List[str]:
     paths = []
     for file in files:
+        _validate_upload(file)
         ext = os.path.splitext(file.filename or ".jpg")[1] or ".jpg"
         name = f"{uuid.uuid4().hex}{ext}"
         dest = os.path.join(POSTS_UPLOAD, name)
         content = file.file.read()
+        if len(content) > MAX_UPLOAD_SIZE:
+            raise HTTPException(status_code=400, detail=f"File too large. Max size: {MAX_UPLOAD_SIZE // (1024 * 1024)}MB")
         with open(dest, "wb") as f:
             f.write(content)
         paths.append(f"/uploads/posts/{name}")
     return paths
 
 
-@router.get("", response_model=List[schemas.PostResponse])
+@router.get("", response_model=schemas.PaginatedPostsResponse)
 def list_posts(
     topic: str = "all",
     keyword: str = None,
@@ -48,9 +59,13 @@ def list_posts(
 ):
     if topic not in {"all", "find", "daily", "health", "suggest"}:
         raise HTTPException(status_code=400, detail="Invalid topic")
+    total = crud.count_posts(db, topic=topic, keyword=keyword)
     if keyword and keyword.strip():
-        return crud.search_posts(db, keyword=keyword.strip(), skip=skip, limit=limit, current_user_id=user.id)
-    return crud.get_posts(db, topic=topic, skip=skip, limit=limit, current_user_id=user.id)
+        items = crud.search_posts(db, keyword=keyword.strip(), skip=skip, limit=limit, current_user_id=user.id)
+    else:
+        items = crud.get_posts(db, topic=topic, skip=skip, limit=limit, current_user_id=user.id)
+    has_more = (skip + limit) < total
+    return schemas.PaginatedPostsResponse(items=items, total=total, has_more=has_more)
 
 
 @router.post("", response_model=schemas.PostResponse)

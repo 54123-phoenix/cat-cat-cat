@@ -252,7 +252,7 @@ class FeedingPoint(Base):
     description = Column(Text)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    is_active = Column(String(10), nullable=False, default="yes")
+    is_active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime, default=datetime.now)
 
     check_ins = relationship("FeedingCheckIn", back_populates="point", cascade="all, delete-orphan", order_by="FeedingCheckIn.created_at.desc()")
@@ -282,7 +282,7 @@ class Notification(Base):
     content = Column(Text)
     related_id = Column(Integer)
     related_type = Column(String(20))
-    is_read = Column(String(10), nullable=False, default="no")
+    is_read = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, default=datetime.now)
 
 

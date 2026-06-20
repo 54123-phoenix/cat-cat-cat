@@ -107,6 +107,20 @@ def _serialize_post(post, current_user_id: int, liked_ids: Optional[set] = None)
     )
 
 
+def count_posts(db: Session, topic: str = "all", keyword: Optional[str] = None) -> int:
+    query = db.query(func.count(models.Post.id)).filter(models.Post.status == "normal")
+    if keyword and keyword.strip():
+        query = query.filter(
+            or_(
+                models.Post.content.contains(keyword.strip()),
+                models.Post.tags.contains(keyword.strip()),
+            )
+        )
+    elif topic != "all":
+        query = query.filter(models.Post.topic == topic)
+    return query.scalar() or 0
+
+
 def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, current_user_id: int = 0) -> List[schemas.PostResponse]:
     query = db.query(models.Post).options(
         joinedload(models.Post.author),
@@ -115,7 +129,7 @@ def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, c
     )
     if topic != "all":
         query = query.filter(models.Post.topic == topic)
-    query = query.filter(models.Post.status.in_(["normal", "reported"]))
+    query = query.filter(models.Post.status == "normal")
     posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
     liked_ids = set()
     if current_user_id and posts:
@@ -403,6 +417,13 @@ def get_user(db: Session, user_id: int = 1) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
+def count_cats(db: Session, location: Optional[str] = None) -> int:
+    query = db.query(func.count(models.Cat.id))
+    if location:
+        query = query.filter(models.Cat.location == location)
+    return query.scalar() or 0
+
+
 def get_cats(db: Session, location: Optional[str] = None, skip: int = 0, limit: int = 20) -> List[models.Cat]:
     query = db.query(models.Cat)
     if location:
@@ -458,6 +479,15 @@ def create_cat_image(db: Session, cat_id: int, image_path: str) -> models.CatIma
     return db_image
 
 
+def count_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None) -> int:
+    query = db.query(func.count(models.Sighting.id))
+    if cat_id:
+        query = query.filter(models.Sighting.cat_id == cat_id)
+    if status:
+        query = query.filter(models.Sighting.status == status)
+    return query.scalar() or 0
+
+
 def get_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None, skip: int = 0, limit: int = 20) -> List[models.Sighting]:
     query = db.query(models.Sighting)
     if cat_id:
@@ -465,6 +495,32 @@ def get_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[st
     if status:
         query = query.filter(models.Sighting.status == status)
     return query.order_by(desc(models.Sighting.created_at)).offset(skip).limit(limit).all()
+
+
+def count_heatmap_points(db: Session, days: int = 7) -> int:
+    query = db.query(func.count()).filter(
+        models.Sighting.latitude.isnot(None),
+        models.Sighting.longitude.isnot(None),
+    )
+    if days > 0:
+        query = query.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
+    subq = db.query(
+        models.Sighting.location_name,
+        models.Sighting.location,
+        models.Sighting.latitude,
+        models.Sighting.longitude,
+    ).filter(
+        models.Sighting.latitude.isnot(None),
+        models.Sighting.longitude.isnot(None),
+    )
+    if days > 0:
+        subq = subq.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
+    return db.query(func.count()).select_from(subq.group_by(
+        models.Sighting.location_name,
+        models.Sighting.location,
+        models.Sighting.latitude,
+        models.Sighting.longitude,
+    ).subquery()).scalar() or 0
 
 
 def get_heatmap_points(db: Session, days: int = 7, limit: int = 100) -> List[schemas.HeatmapPoint]:
@@ -550,8 +606,8 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
         models.Sighting.user_id == user_id,
         models.Sighting.image_path.isnot(None),
     ).count()
-    discoveries = 0
-    approved = 0
+    discoveries = db.query(models.Discovery).filter(models.Discovery.status == "pending").count() if hasattr(models, 'Discovery') else 0
+    approved = db.query(models.Discovery).filter(models.Discovery.status == "approved").count() if hasattr(models, 'Discovery') else 0
     event_badges = get_event_badges(db, user_id)
 
     user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -590,7 +646,7 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
         "sightings": sightings,
         "posts": posts,
         "cats_known": cats_known,
-        "total_cats": cats_known,
+        "total_cats": db.query(models.Cat).count(),
         "locations_count": locations,
         "photos_count": photos,
         "discoveries": discoveries,
@@ -730,7 +786,7 @@ def delete_health_record(db: Session, record_id: int) -> bool:
 def get_feeding_points(db: Session, active_only: bool = True) -> List[models.FeedingPoint]:
     query = db.query(models.FeedingPoint)
     if active_only:
-        query = query.filter(models.FeedingPoint.is_active == "yes")
+        query = query.filter(models.FeedingPoint.is_active == True)
     return query.order_by(models.FeedingPoint.name).all()
 
 
@@ -792,7 +848,7 @@ def create_notification(db: Session, user_id: int, notification_type: str, title
 def get_notifications(db: Session, user_id: int, unread_only: bool = False, limit: int = 50) -> List[models.Notification]:
     query = db.query(models.Notification).filter(models.Notification.user_id == user_id)
     if unread_only:
-        query = query.filter(models.Notification.is_read == "no")
+        query = query.filter(models.Notification.is_read == False)
     return query.order_by(desc(models.Notification.created_at)).limit(limit).all()
 
 
@@ -803,7 +859,7 @@ def mark_notification_read(db: Session, notification_id: int, user_id: int) -> b
     ).first()
     if not notification:
         return False
-    notification.is_read = "yes"
+    notification.is_read = True
     db.commit()
     return True
 
@@ -811,7 +867,7 @@ def mark_notification_read(db: Session, notification_id: int, user_id: int) -> b
 def mark_all_notifications_read(db: Session, user_id: int) -> int:
     count = db.query(models.Notification).filter(
         models.Notification.user_id == user_id,
-        models.Notification.is_read == "no",
+        models.Notification.is_read == False,
     ).update({"is_read": "yes"})
     db.commit()
     return count
@@ -1104,7 +1160,7 @@ def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, curr
             models.Post.content.contains(keyword),
             models.Post.tags.contains(keyword),
         ),
-        models.Post.status.in_(["normal", "reported"]),
+        models.Post.status == "normal",
     )
     posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
     return [_serialize_post(p, current_user_id) for p in posts]

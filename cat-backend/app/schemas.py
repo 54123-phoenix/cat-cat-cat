@@ -421,7 +421,7 @@ class FeedingPointCreate(BaseModel):
     description: Optional[str] = None
     latitude: float
     longitude: float
-    is_active: str = "yes"
+    is_active: bool = True
 
 
 class FeedingPointResponse(BaseModel):
@@ -510,3 +510,27 @@ class WechatLoginResponse(BaseModel):
     token_type: str = "bearer"
     user: UserProfile
     is_new: bool = False
+
+
+class PaginatedCatsResponse(BaseModel):
+    items: List[CatListResponse]
+    total: int
+    has_more: bool
+
+
+class PaginatedSightingsResponse(BaseModel):
+    items: List[SightingResponse]
+    total: int
+    has_more: bool
+
+
+class PaginatedPostsResponse(BaseModel):
+    items: List[PostResponse]
+    total: int
+    has_more: bool
+
+
+class PaginatedHeatmapResponse(BaseModel):
+    items: List[HeatmapPoint]
+    total: int
+    has_more: bool
