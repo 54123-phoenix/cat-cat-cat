@@ -40,6 +40,7 @@ export default {
         'card': '0 1px 2px 0 rgb(0 0 0 / 0.04)',
         'card-hover': '0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06)',
         'elevated': '0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06)',
+        'e0': 'none',
         'e1': '0 1px 2px rgb(17 12 9 / 0.04)',
         'e2': '0 2px 8px -2px rgb(17 12 9 / 0.08), 0 1px 2px rgb(17 12 9 / 0.04)',
         'e3': '0 8px 24px -8px rgb(17 12 9 / 0.12), 0 2px 6px -2px rgb(17 12 9 / 0.06)',
@@ -65,6 +66,7 @@ export default {
       },
       backgroundImage: {
         'page-warm': 'linear-gradient(180deg, #FFF9F5 0%, #FFF2EA 100%)',
+        'hero-morning': 'linear-gradient(135deg, #FFF7ED 0%, #FED7AA 100%)',
       },
     },
   },

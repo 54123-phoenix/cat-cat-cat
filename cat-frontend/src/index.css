@@ -120,7 +120,7 @@
     background: var(--color-surface);
     border-radius: 16px;
     padding: 16px;
-    box-shadow: 0 1px 2px rgb(17 12 9 / 0.04);
+    box-shadow: 0 0 0 1px rgb(23 20 17 / 0.05), 0 1px 2px rgb(17 12 9 / 0.04);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
 
