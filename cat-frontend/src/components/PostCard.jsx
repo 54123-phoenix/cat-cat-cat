@@ -223,14 +223,14 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2.5 rounded-full border border-border text-sm text-text-muted btn-ghost"
+                className="flex-1 py-3 rounded-full border border-border text-sm text-text-muted btn-ghost"
               >
                 算了
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 py-2.5 rounded-full bg-danger text-white text-sm disabled:opacity-40"
+                className="flex-1 py-3 rounded-full bg-danger text-white text-sm disabled:opacity-40"
               >
                 {deleting ? '推走中…' : '推走'}
               </button>
