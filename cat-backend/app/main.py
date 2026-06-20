@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -14,58 +15,9 @@ from app.models import User
 from passlib.context import CryptContext
 from app.ratelimit import limiter, _SLOWAPI_AVAILABLE
 
-app = FastAPI(title="猫猫社区 API", version="1.0.0")
 
-if _SLOWAPI_AVAILABLE:
-    from slowapi.middleware import SlowAPIMiddleware
-    from slowapi.errors import RateLimitExceeded
-    from slowapi import _rate_limit_exceeded_handler
-    app.state.limiter = limiter
-    app.add_middleware(SlowAPIMiddleware)
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-Base.metadata.create_all(bind=engine)
-
-from app.migrate import ensure_users_columns, ensure_sightings_columns, ensure_cats_columns, ensure_posts_columns
-ensure_users_columns()
-ensure_sightings_columns()
-ensure_cats_columns()
-ensure_posts_columns()
-
-UPLOAD_DIR = settings.UPLOAD_DIR
-os.makedirs(os.path.join(UPLOAD_DIR, "cats"), exist_ok=True)
-os.makedirs(os.path.join(UPLOAD_DIR, "sightings"), exist_ok=True)
-os.makedirs(os.path.join(UPLOAD_DIR, "posts"), exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
-app.include_router(auth.router)
-app.include_router(admin.router)
-app.include_router(cats.router)
-app.include_router(sightings.router)
-app.include_router(recognize.router)
-app.include_router(user.router)
-app.include_router(user.me_router)
-app.include_router(user.lb_router)
-app.include_router(posts.router)
-app.include_router(health.router)
-app.include_router(feeding.router)
-app.include_router(notifications.router)
-app.include_router(discoveries.router)
-app.include_router(map.router)
-app.include_router(audit.router)
-app.include_router(events.router)
-
-
-@app.on_event("startup")
-def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     db = SessionLocal()
     try:
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -94,6 +46,52 @@ def startup():
             init_mock_data(db)
     finally:
         db.close()
+    yield
+
+
+app = FastAPI(title="猫猫社区 API", version="1.0.0", lifespan=lifespan)
+
+if _SLOWAPI_AVAILABLE:
+    from slowapi.middleware import SlowAPIMiddleware
+    from slowapi.errors import RateLimitExceeded
+    from slowapi import _rate_limit_exceeded_handler
+    app.state.limiter = limiter
+    app.add_middleware(SlowAPIMiddleware)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+Base.metadata.create_all(bind=engine)
+
+UPLOAD_DIR = settings.UPLOAD_DIR
+os.makedirs(os.path.join(UPLOAD_DIR, "cats"), exist_ok=True)
+os.makedirs(os.path.join(UPLOAD_DIR, "sightings"), exist_ok=True)
+os.makedirs(os.path.join(UPLOAD_DIR, "posts"), exist_ok=True)
+os.makedirs(os.path.join(UPLOAD_DIR, "discoveries"), exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+app.include_router(auth.router)
+app.include_router(admin.router)
+app.include_router(cats.router)
+app.include_router(sightings.router)
+app.include_router(recognize.router)
+app.include_router(user.router)
+app.include_router(user.me_router)
+app.include_router(user.lb_router)
+app.include_router(posts.router)
+app.include_router(health.router)
+app.include_router(feeding.router)
+app.include_router(notifications.router)
+app.include_router(discoveries.router)
+app.include_router(map.router)
+app.include_router(audit.router)
+app.include_router(events.router)
 
 
 @app.get("/")

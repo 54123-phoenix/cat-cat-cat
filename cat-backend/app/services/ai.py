@@ -7,9 +7,10 @@ from pathlib import Path
 from PIL import Image
 
 from app.schemas import RecognizeCandidate, RecognizeResponse
-from app.services.model_loader import extract_embedding, cosine_similarity
+from app.services.model_loader import extract_embedding, cosine_similarity, TORCH_AVAILABLE
 from app.database import SessionLocal
 from app import models
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -54,12 +55,12 @@ def _load_reference_embeddings() -> dict:
 
 # ─── Recognition Logic ────────────────────────────────────────────────
 
-# Thresholds tuned for DINOv2 ViT-S/14 with ArcFace-style embedding head
-THRESHOLD_CONFIRMED = 0.45
-THRESHOLD_UNCERTAIN = 0.30
-
-
 def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResponse:
+    if not TORCH_AVAILABLE:
+        return RecognizeResponse(status="unavailable", confidence=0.0)
+
+    THRESHOLD_CONFIRMED = settings.RECOGNIZE_THRESHOLD_CONFIRMED
+    THRESHOLD_UNCERTAIN = settings.RECOGNIZE_THRESHOLD_UNCERTAIN
     """Recognize a cat from image bytes using DINOv2 embeddings.
 
     Compares the uploaded image against pre-computed reference embeddings

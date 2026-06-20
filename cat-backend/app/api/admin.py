@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models import User, Sighting, AuditLog
 from app.api.auth import require_admin, create_token
 from app import schemas
+from app.config import settings
 from app.ratelimit import limit
 from passlib.context import CryptContext
 
@@ -28,7 +29,7 @@ class AdminLoginResponse(BaseModel):
 
 
 @router.post("/login", response_model=AdminLoginResponse)
-@limit("5/minute")
+@limit(f"{settings.RATE_LOGIN_PER_MIN}/minute")
 def login(request: Request, payload: AdminLoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.role == "admin").first()
     if not user:

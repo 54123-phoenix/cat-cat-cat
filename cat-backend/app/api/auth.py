@@ -64,7 +64,7 @@ def require_auth(user: User = Depends(get_current_user_from_header)) -> User:
 
 
 @router.post("/register", response_model=TokenResponse)
-@limit("10/minute")
+@limit(f"{settings.RATE_REGISTER_PER_MIN}/minute")
 def register(request: Request, payload: UserRegister, db: Session = Depends(get_db)):
     if payload.username.lower() in RESERVED_USERNAMES:
         raise HTTPException(status_code=400, detail="This username is reserved")
@@ -83,7 +83,7 @@ def register(request: Request, payload: UserRegister, db: Session = Depends(get_
 
 
 @router.post("/login", response_model=TokenResponse)
-@limit("5/minute")
+@limit(f"{settings.RATE_LOGIN_PER_MIN}/minute")
 def login(request: Request, payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == payload.username).first()
     if not user or not user.password_hash or not pwd_context.verify(payload.password, user.password_hash):
@@ -97,7 +97,7 @@ def me(user: User = Depends(require_auth)):
 
 
 @router.post("/wechat-login", response_model=schemas.WechatLoginResponse)
-@limit("10/minute")
+@limit(f"{settings.RATE_REGISTER_PER_MIN}/minute")
 async def wechat_login(request: Request, payload: schemas.WechatLoginRequest, db: Session = Depends(get_db)):
     try:
         wx_data = await code2session(payload.code)
