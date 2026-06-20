@@ -274,22 +274,36 @@ export function getHeatmapData(params = {}) {
 }
 
 export function getNearbyCats(lat, lng, n = 8) {
-  return getCats()
-    .then((cats) => {
+  return Promise.all([
+    getCats(),
+    getSightings({ limit: 200 }),
+  ])
+    .then(([cats, sightings]) => {
       if (!Array.isArray(cats)) return []
-      const withDist = cats.map((c) => {
-        const cLat = c.latitude ?? c.lat
-        const cLng = c.longitude ?? c.lng ?? c.lon
-        let dist = Infinity
-        if (cLat != null && cLng != null && lat != null && lng != null) {
-          const dLat = cLat - lat
-          const dLng = cLng - lng
-          dist = dLat * dLat + dLng * dLng
-        }
-        return { ...c, _dist: dist }
-      })
-      withDist.sort((a, b) => a._dist - b._dist)
-      return withDist.slice(0, n).map(({ _dist, ...rest }) => rest)
+      const catById = new Map(cats.map((c) => [c.id, c]))
+      if (lat == null || lng == null || !Array.isArray(sightings) || sightings.length === 0) {
+        return cats.slice(0, n)
+      }
+      const bestDist = new Map()
+      for (const s of sightings) {
+        if (s.cat_id == null || s.latitude == null || s.longitude == null) continue
+        const dLat = s.latitude - lat
+        const dLng = s.longitude - lng
+        const dist = dLat * dLat + dLng * dLng
+        const prev = bestDist.get(s.cat_id)
+        if (prev == null || dist < prev) bestDist.set(s.cat_id, dist)
+      }
+      const ranked = [...bestDist.entries()]
+        .sort((a, b) => a[1] - b[1])
+        .map(([cid]) => catById.get(cid))
+        .filter(Boolean)
+      if (ranked.length >= n) return ranked.slice(0, n)
+      const seen = new Set(ranked.map((c) => c.id))
+      for (const c of cats) {
+        if (ranked.length >= n) break
+        if (!seen.has(c.id)) { ranked.push(c); seen.add(c.id) }
+      }
+      return ranked.slice(0, n)
     })
     .catch(() => [])
 }

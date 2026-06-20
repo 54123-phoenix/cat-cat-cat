@@ -27,6 +27,7 @@ def ensure_sightings_columns():
             return
         existing = {c["name"] for c in insp.get_columns("sightings")}
         for col, ddl in [
+            ("user_id", "user_id INTEGER"),
             ("confirmations", "confirmations INTEGER DEFAULT 0"),
             ("grade", "grade VARCHAR(20) DEFAULT 'casual'"),
             ("weather", "weather VARCHAR(20)"),

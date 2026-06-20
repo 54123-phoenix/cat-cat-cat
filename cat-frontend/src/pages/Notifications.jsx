@@ -73,7 +73,7 @@ export default function Notifications() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-text">{n.title}</p>
                 {n.content && <p className="text-xs text-text-secondary mt-0.5">{n.content}</p>}
-                <p className="text-xs text-text-muted mt-1">{n.createdAt || ''}</p>
+                <p className="text-xs text-text-muted mt-1">{n.created_at || ''}</p>
               </div>
             </div>
           )
