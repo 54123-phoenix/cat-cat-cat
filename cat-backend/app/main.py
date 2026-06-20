@@ -26,6 +26,7 @@ from passlib.context import CryptContext
 from app.ratelimit import limiter, _SLOWAPI_AVAILABLE
 from app.middleware.security_headers import SecurityHeadersMiddleware
 from app import events
+from app.cache import init_cache
 
 logger = logging.getLogger("cat_community")
 
@@ -33,6 +34,7 @@ logger = logging.getLogger("cat_community")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await events.init_redis(os.getenv("REDIS_URL"))
+    init_cache(os.getenv("REDIS_URL"))
     db = SessionLocal()
     try:
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")

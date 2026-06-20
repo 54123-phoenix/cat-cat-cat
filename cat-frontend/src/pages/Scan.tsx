@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle } from 'lucide-react'
+import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle, Share2 } from 'lucide-react'
+import SharePoster from '../components/SharePoster'
 import MascotCat from '../components/MascotCat'
 import PawRain from '../components/PawRain'
 import ConfidenceBar from '../components/ConfidenceBar'
@@ -286,6 +287,11 @@ export default function Scan() {
             <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-primary text-white rounded-full py-3 font-medium text-sm">
               查看猫猫档案
             </button>
+            <SharePoster type="sighting" data={{ catName: result.cat_name || '校园猫猫', confidence: Math.round(result.confidence * 100), location: result.location || '复旦校园' }}>
+              <button className="w-full bg-green-500 text-white rounded-full py-3 font-medium text-sm flex items-center justify-center gap-2">
+                <Share2 className="w-4 h-4" /> 分享这次偶遇
+              </button>
+            </SharePoster>
             <button onClick={reset} className="w-full border border-primary text-primary rounded-full py-3 font-medium text-sm">
               重新识别
             </button>

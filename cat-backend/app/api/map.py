@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas
+from app.cache import cached
 
 router = APIRouter(prefix="/api/map", tags=["map"])
 
 
 @router.get("/heatmap", response_model=schemas.PaginatedHeatmapResponse)
+@cached(ttl=120, key_fn=lambda days=7, skip=0, limit=100, **_: f"heatmap:{days}:{skip}:{limit}")
 def heatmap(days: int = 7, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     if days < 0 or days > 365:
         raise HTTPException(status_code=400, detail="days must be between 0 and 365")

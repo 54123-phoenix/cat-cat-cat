@@ -1,14 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Cat, Star, Heart, PawPrint } from 'lucide-react'
+import { Cat, Star, Heart, PawPrint, Search, Filter, Trophy } from 'lucide-react'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import EmptyState from '../components/EmptyState'
 import { getCats, getFollowedCats, getSightings } from '../api'
 
 const RARE_CHARS = ['稀', '珍', '白', '黑', '三花', '玳瑁']
 
-function isRareCat(cat) {
-  if (cat.sightings_count !== undefined && cat.sightings_count < 3) return true
+const MILESTONES = [
+  { count: 5, label: '初遇', emoji: '🌱' },
+  { count: 10, label: '熟识', emoji: '🌿' },
+  { count: 20, label: '猫友', emoji: '🐾' },
+  { count: 30, label: '猫达人', emoji: '🏅' },
+  { count: 50, label: '猫博士', emoji: '🎓' },
+]
+
+function isRareCat(cat, metIds) {
+  const sightingsForCat = cat.sightings_count
+  if (sightingsForCat !== undefined && sightingsForCat < 3) return true
+  if (metIds.has(cat.id) && (sightingsForCat === undefined || sightingsForCat < 5)) return true
   const name = cat.name || ''
   return RARE_CHARS.some((c) => name.includes(c))
 }
@@ -28,6 +38,8 @@ export default function Collection() {
   const [followed, setFollowed] = useState([])
   const [sightings, setSightings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState('all')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -63,6 +75,22 @@ export default function Collection() {
   const R = 36
   const C = 2 * Math.PI * R
 
+  const nextMilestone = MILESTONES.find((m) => m.count > metCount) || MILESTONES[MILESTONES.length - 1]
+  const currentMilestone = [...MILESTONES].reverse().find((m) => m.count <= metCount)
+
+  const filteredCats = useMemo(() => {
+    let result = cats
+    if (search) {
+      const q = search.toLowerCase()
+      result = result.filter((c) => (c.name || '').toLowerCase().includes(q) || (c.location || '').toLowerCase().includes(q) || (c.color || '').toLowerCase().includes(q))
+    }
+    if (filter === 'met') result = result.filter((c) => metIds.has(c.id))
+    else if (filter === 'unmet') result = result.filter((c) => !metIds.has(c.id))
+    else if (filter === 'rare') result = result.filter((c) => isRareCat(c, metIds))
+    else if (filter === 'followed') result = result.filter((c) => followedIds.has(c.id))
+    return result
+  }, [cats, search, filter, metIds, followedIds])
+
   if (total === 0) {
     return (
       <EmptyState
@@ -96,19 +124,53 @@ export default function Collection() {
           <p className="text-sm text-text-secondary mt-1">
             已遇见 <span className="font-bold text-primary">{metCount}</span> / {total} 只校园猫
           </p>
-          <p className="text-[11px] text-text-muted mt-1">
-            * 已相遇以偶遇记录标记
-          </p>
+          <div className="flex items-center gap-1 mt-1.5">
+            <Trophy className="w-3.5 h-3.5 text-amber-500" />
+            <span className="text-[11px] text-text-muted">
+              {currentMilestone ? `${currentMilestone.emoji} ${currentMilestone.label}` : '开始探索吧'} · 下一: {nextMilestone.emoji} {nextMilestone.label} ({nextMilestone.count}只)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Search + Filter */}
+      <div className="space-y-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="搜索猫名、位置、颜色…"
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
+          />
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
+          {[
+            { key: 'all', label: '全部' },
+            { key: 'met', label: '已相遇' },
+            { key: 'unmet', label: '未相遇' },
+            { key: 'rare', label: '稀有' },
+            { key: 'followed', label: '已关注' },
+          ].map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors shrink-0 ${filter === f.key ? 'bg-primary text-white' : 'bg-gray-100 text-text-secondary hover:bg-gray-200'}`}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-2 gap-3">
-        {cats.map((cat, idx) => {
+        {filteredCats.map((cat, idx) => {
           const followedCat = followedIds.has(cat.id)
           const metCat = metIds.has(cat.id)
           const status = followedCat ? 'followed' : metCat ? 'met' : 'unmet'
-          const rare = isRareCat(cat)
+          const rare = isRareCat(cat, metIds)
           return (
             <button
               key={cat.id}
@@ -143,6 +205,10 @@ export default function Collection() {
           )
         })}
       </div>
+
+      {filteredCats.length === 0 && (
+        <div className="text-center py-8 text-sm text-text-muted">没有找到匹配的猫猫</div>
+      )}
     </div>
   )
 }

@@ -94,6 +94,10 @@ export default function Index() {
           <Text style={{ fontSize: '40rpx', display: 'block' }}>📷</Text>
           <Text style={{ fontSize: '24rpx', fontWeight: '500', marginTop: '8rpx' }}>拍照识猫</Text>
         </View>
+        <View className='card' style={{ flex: 1, textAlign: 'center', padding: '24rpx' }} onClick={() => Taro.navigateTo({ url: '/pages/collection/index' })}>
+          <Text style={{ fontSize: '40rpx', display: 'block' }}>📖</Text>
+          <Text style={{ fontSize: '24rpx', fontWeight: '500', marginTop: '8rpx' }}>猫猫图鉴</Text>
+        </View>
         <View className='card' style={{ flex: 1, textAlign: 'center', padding: '24rpx' }} onClick={() => Taro.switchTab({ url: '/pages/community/index' })}>
           <Text style={{ fontSize: '40rpx', display: 'block' }}>💬</Text>
           <Text style={{ fontSize: '24rpx', fontWeight: '500', marginTop: '8rpx' }}>进社区</Text>

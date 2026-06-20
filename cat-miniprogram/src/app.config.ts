@@ -17,6 +17,7 @@ export default defineAppConfig({
     'pages/league/index',
     'pages/daily-quest/index',
     'pages/collection/index',
+    'pages/wrapped/index',
   ],
   window: {
     backgroundTextStyle: 'light',

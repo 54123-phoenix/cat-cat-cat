@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { Share2 } from 'lucide-react'
 import MascotCat from './MascotCat'
+import SharePoster from './SharePoster'
 
 const CONFETTI_COLORS = ['#F97316', '#FB923C', '#FDE68A', '#22C55E', '#3B82F6', '#DB2777', '#A855F7']
 
-export default function CelebrationOverlay({ badgeName, onClose, autoMs = 2000 }) {
+export default function CelebrationOverlay({ badgeName, onClose, autoMs = 3500 }) {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
@@ -32,6 +34,11 @@ export default function CelebrationOverlay({ badgeName, onClose, autoMs = 2000 }
         <h2 className="text-xl font-bold theme-text">解锁勋章！</h2>
         <p className="text-base font-semibold theme-primary">{badgeName || '新成就'}</p>
         <p className="text-sm theme-muted">恭喜你，继续探索校园猫猫吧～</p>
+        <SharePoster type="badge" data={{ name: badgeName || '新成就' }}>
+          <button className="w-full bg-primary text-white rounded-full py-2.5 font-medium text-sm flex items-center justify-center gap-2">
+            <Share2 className="w-4 h-4" /> 分享勋章
+          </button>
+        </SharePoster>
       </div>
       <div className="confetti-container" aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
         {pieces.map((p, i) => (

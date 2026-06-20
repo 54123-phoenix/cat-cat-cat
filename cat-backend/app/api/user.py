@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth
-from app.models import User, Cat, UserCatFollow
+from app.models import User
+from app.cache import cached
 
 router = APIRouter(prefix="/api/user", tags=["user"])
 me_router = APIRouter(prefix="/api/users", tags=["user"])
@@ -198,6 +199,7 @@ def get_daily_quest(db: Session = Depends(get_db), user: User = Depends(require_
 
 
 @lb_router.get("/leaderboard")
+@cached(ttl=60, key_fn=lambda **_: "leaderboard:v1")
 def get_leaderboard(db: Session = Depends(get_db), user: User = Depends(require_auth)):
     users = db.query(User).order_by(User.xp.desc()).all()
     total_players = len(users)

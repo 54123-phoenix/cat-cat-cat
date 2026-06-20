@@ -160,6 +160,17 @@ export default function Profile() {
           <Text style={{ fontSize: '32rpx', fontWeight: 'bold' }}>🏆 勋章墙</Text>
           <Text style={{ fontSize: '24rpx', color: '#F97316' }}>{badgeSummary()} ›</Text>
         </View>
+
+      <View
+        onClick={(e) => { e.stopPropagation(); Taro.navigateTo({ url: '/pages/wrapped/index' }) }}
+        style={{ backgroundColor: '#1C1917', borderRadius: '24rpx', padding: '32rpx 24rpx', marginBottom: '24rpx', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <View>
+          <Text style={{ fontSize: '30rpx', fontWeight: 'bold', color: '#F97316', display: 'block' }}>✨ 猫猫年度回顾</Text>
+          <Text style={{ fontSize: '24rpx', color: 'rgba(255,255,255,0.6)', display: 'block', marginTop: '4rpx' }}>查看你的猫猫故事</Text>
+        </View>
+        <Text style={{ fontSize: '28rpx', color: '#F97316' }}>›</Text>
+      </View>
         {earnedBadges.length > 0 ? (
           <ScrollView scrollX style={{ whiteSpace: 'nowrap', paddingBottom: '8rpx' }}>
             {earnedBadges.slice(0, 8).map((b: any) => (

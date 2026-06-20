@@ -4,7 +4,8 @@ import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
 import ImageWithShimmer from '../components/ImageWithShimmer'
-import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff, MapPinned } from 'lucide-react'
+import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff, MapPinned, Share2 } from 'lucide-react'
+import SharePoster from '../components/SharePoster'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow, createSighting, getToken } from '../api'
 import { toast } from '../components/Toast'
 
@@ -234,6 +235,11 @@ export default function CatDetail() {
               >
                 <Heart className={`w-5 h-5 ${following ? 'fill-primary text-primary' : 'text-gray-300'} ${followLoading ? 'animate-like-pop' : ''}`} />
               </button>
+              <SharePoster type="cat" data={{ name: cat.name, avatar: cat.avatar, personality: cat.personality }}>
+                <button className="rounded-full p-2 bg-gray-50 hover:bg-gray-100 transition-colors" aria-label="分享猫卡">
+                  <Share2 className="w-5 h-5 text-gray-400" />
+                </button>
+              </SharePoster>
               {cat.color && (
                 <span className="px-3 py-1 rounded-full bg-primary-light text-primary font-bold text-sm">
                   {cat.color}
