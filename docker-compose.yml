@@ -2,12 +2,7 @@ services:
   frontend:
     build: ./cat-frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./cat-frontend:/app
-      - /app/node_modules
-    environment:
-      - VITE_API_TARGET=http://backend:8000
+      - "80:80"
     depends_on:
       - backend
     restart: on-failure
@@ -17,10 +12,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./cat-backend/uploads:/app/uploads
-      - ./cat-backend/cat_community.db:/app/cat_community.db
+      - db_data:/app/data
+      - upload_data:/app/uploads
     environment:
-      - DATABASE_URL=sqlite:///./cat_community.db
+      - DATABASE_URL=sqlite:///./data/cat_community.db
       - UPLOAD_DIR=./uploads
       - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set in .env}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?ADMIN_PASSWORD must be set in .env}
@@ -37,5 +32,9 @@ services:
       - RATE_SIGHTING_PER_MIN=${RATE_SIGHTING_PER_MIN:-20}
       - RATE_REGISTER_PER_MIN=${RATE_REGISTER_PER_MIN:-10}
       - RATE_LOGIN_PER_MIN=${RATE_LOGIN_PER_MIN:-5}
-    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    command: gunicorn app.main:app -c gunicorn.conf.py
     restart: on-failure
+
+volumes:
+  db_data:
+  upload_data:
