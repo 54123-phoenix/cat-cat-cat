@@ -31,7 +31,7 @@ describe('SadCat SVG illustration', () => {
   it('renders with aria-label', async () => {
     const { default: SadCat } = await import('../components/illustrations/SadCat')
     const { render } = await import('@testing-library/react')
-    const { container } = render(<SadCat size={48} />)
+    const { container } = render(<SadCat size={48} className="" />)
     const svg = container.querySelector('svg')
     expect(svg).toBeTruthy()
     expect(svg?.getAttribute('aria-label')).toBeTruthy()

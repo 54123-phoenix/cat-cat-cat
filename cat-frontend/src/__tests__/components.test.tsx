@@ -62,7 +62,7 @@ describe('Logo SVG illustration', () => {
 describe('SadCat SVG illustration', () => {
   it('renders with aria-label', async () => {
     const mod = await import('../components/illustrations/SadCat')
-    const { container } = render(<mod.default size={48} />)
+    const { container } = render(<mod.default size={48} className="" />)
     const svg = container.querySelector('svg')
     expect(svg).toBeTruthy()
     expect(svg?.getAttribute('aria-label')).toBeTruthy()

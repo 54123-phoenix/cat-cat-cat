@@ -5,7 +5,7 @@ import MascotCat from '../components/MascotCat'
 import SharePoster from '../components/SharePoster'
 import { getWrapped, getStoredUser } from '../api'
 
-function loadImage(src) {
+function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
