@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
-import { getToken, getStoredUser } from './api'
+import { getToken, getStoredUser, getAdminToken } from './api'
 import { ROUTES } from './constants/routes'
 
 const Home = lazy(() => import('./pages/Home'))
@@ -55,9 +55,9 @@ export function updateUser(newUser) {
   emitChange()
 }
 
-function ProtectedRoute({ children }) {
-  const token = getToken()
-  if (!token) return <Navigate to="/login" replace />
+function ProtectedRoute({ children, adminOnly = false }) {
+  const token = adminOnly ? getAdminToken() : getToken()
+  if (!token) return <Navigate to={adminOnly ? "/admin/login" : "/login"} replace />
   return children
 }
 
@@ -95,7 +95,7 @@ export default function App() {
           <Route
             path={ROUTES.ADMIN}
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <Admin />
               </ProtectedRoute>
             }

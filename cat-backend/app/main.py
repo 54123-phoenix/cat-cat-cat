@@ -81,7 +81,9 @@ def startup():
         else:
             print("WARNING: ADMIN_PASSWORD not set. Admin account will not be created.")
         if settings.INIT_DEMO_USER:
-            if not db.query(User).filter(User.username == "demo").first():
+            if not settings.DEMO_PASSWORD:
+                print("WARNING: INIT_DEMO_USER=1 but DEMO_PASSWORD is empty. Skipping demo user creation.")
+            elif not db.query(User).filter(User.username == "demo").first():
                 db.add(User(
                     username="demo",
                     password_hash=pwd_ctx.hash(settings.DEMO_PASSWORD),

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 import json
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator, constr
 
 
 class CatImageBase(BaseModel):
@@ -247,14 +247,14 @@ class UserProfile(BaseModel):
 
 
 class UserRegister(BaseModel):
-    username: str
-    password: str
-    nickname: str
+    username: constr(min_length=3, max_length=50, pattern=r"^[A-Za-z0-9_\-]+$")
+    password: constr(min_length=6, max_length=128)
+    nickname: constr(min_length=1, max_length=50)
 
 
 class UserLogin(BaseModel):
-    username: str
-    password: str
+    username: constr(min_length=1, max_length=50)
+    password: constr(min_length=1, max_length=128)
 
 
 class TokenResponse(BaseModel):

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { CONFIG } from '../config'
-import { getToken, setToken, clearToken, getStoredUser, setStoredUser } from '../utils/storage'
+import { getToken, setToken, clearToken, setStoredUser } from '../utils/storage'
 import { demoApi } from './demo'
 
 const BASE = CONFIG.apiBase
@@ -169,7 +169,8 @@ export function getFollowedCats() { return request('/user/follows') }
 
 export function adminLogin(password: string) {
   return request('/admin/login', { method: 'POST', body: { password } }).then((res: any) => {
-    setStoredUser(res)
+    setToken(res.token)
+    setStoredUser({ role: 'admin', nickname: '管理员' })
     return res
   })
 }

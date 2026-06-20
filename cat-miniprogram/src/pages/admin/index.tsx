@@ -252,7 +252,7 @@ export default function Admin() {
             password
             value={password}
             onInput={(e) => setPassword(e.detail.value)}
-            placeholder='默认 cat-admin'
+            placeholder='请输入管理员口令'
             style={{ width: '100%', height: '80rpx', borderRadius: '16rpx', backgroundColor: '#F5F5F4', padding: '0 24rpx', fontSize: '28rpx', marginBottom: '24rpx' }}
             onConfirm={handleLogin}
           />

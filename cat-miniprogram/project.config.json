@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/weapp/",
   "projectname": "cat-community",
   "description": "校园猫猫数字档案与社区",
-  "appid": "touristappid",
+  "appid": "wxb0ef6b315b8905ab",
   "setting": {
     "urlCheck": true,
     "es6": true,

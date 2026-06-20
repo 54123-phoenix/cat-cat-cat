@@ -35,7 +35,8 @@ function clearAdminToken() {
 }
 
 async function request(url, options = {}) {
-  const token = url.startsWith('/admin') ? getAdminToken() : getToken()
+  const isAdminUrl = url.startsWith('/admin')
+  const token = isAdminUrl ? getAdminToken() : getToken()
   const headers = { ...options.headers }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
@@ -50,6 +51,13 @@ async function request(url, options = {}) {
       headers,
       signal: controller.signal,
     })
+    if (res.status === 401) {
+      if (isAdminUrl) {
+        clearAdminToken()
+      } else {
+        clearToken()
+      }
+    }
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: '请求失败' }))
       throw new Error(Array.isArray(err.detail) ? err.detail.map(e => e.msg || JSON.stringify(e)).join("; ") : (err.detail || `HTTP ${res.status}`))

@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from typing import Optional, List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models import User, Sighting, AuditLog
 from app.api.auth import require_admin, create_token
 from app import schemas
+from app.ratelimit import limit
 from passlib.context import CryptContext
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
@@ -27,7 +28,8 @@ class AdminLoginResponse(BaseModel):
 
 
 @router.post("/login", response_model=AdminLoginResponse)
-def login(payload: AdminLoginRequest, db: Session = Depends(get_db)):
+@limit("5/minute")
+def login(request: Request, payload: AdminLoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.role == "admin").first()
     if not user:
         raise HTTPException(status_code=401, detail="No admin account configured. Set ADMIN_PASSWORD and restart.")

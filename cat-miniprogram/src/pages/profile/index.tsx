@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { getUserProfile, getCats, getFollowedCats } from '../../services/api'
-import { getStoredUser } from '../../utils/storage'
+import { getUserProfile, getCats, getFollowedCats, wechatLogin } from '../../services/api'
+import { getStoredUser, setStoredUser, setToken } from '../../utils/storage'
 
 const BADGE_NAMES: Record<string, string> = {
   first_sighting: '初次偶遇', cat_observer: '观察员', cat_expert: '专家',
@@ -18,6 +18,40 @@ export default function Profile() {
   const [badges, setBadges] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
+  const [loginLoading, setLoginLoading] = useState(false)
+
+  const handleWechatLogin = async () => {
+    if (loginLoading) return
+    setLoginLoading(true)
+    try {
+      const { code } = await Taro.login()
+      const profileRes = await Taro.getUserProfile({ desc: '完善账号资料' }).catch(() => null)
+      const res: any = await wechatLogin(
+        code,
+        profileRes?.userInfo?.nickName,
+        profileRes?.userInfo?.avatarUrl,
+      )
+      setToken(res.token)
+      setStoredUser(res.user)
+      setAuthError(false)
+      Taro.showToast({ title: '登录成功', icon: 'success' })
+      setLoading(true)
+      Promise.all([
+        getUserProfile(),
+        getCats(),
+        getFollowedCats().catch(() => []),
+      ]).then(([userData, catsData, followedData]) => {
+        setUser(userData)
+        setCats(Array.isArray(catsData) ? catsData : [])
+        setFollowedCats(Array.isArray(followedData) ? followedData : [])
+        setBadges(userData?.badges || [])
+      }).finally(() => setLoading(false))
+    } catch (err: any) {
+      Taro.showToast({ title: err.message || '登录失败', icon: 'none' })
+    } finally {
+      setLoginLoading(false)
+    }
+  }
 
   useDidShow(() => {
     const storedUser = getStoredUser()
@@ -50,9 +84,9 @@ export default function Profile() {
           <Text style={{ fontSize: '56rpx', display: 'block' }}>🐱</Text>
           <Text style={{ fontSize: '32rpx', fontWeight: 'bold', marginTop: '24rpx', display: 'block' }}>请先登录</Text>
           <Text style={{ fontSize: '26rpx', color: '#78716C', marginTop: '12rpx', display: 'block' }}>登录后查看个人资料、勋章和猫档案</Text>
-          <View onClick={() => Taro.navigateTo({ url: '/pages/admin/index' })}
-            style={{ backgroundColor: '#F97316', color: '#fff', borderRadius: '999rpx', padding: '24rpx 48rpx', display: 'inline-block', marginTop: '32rpx', fontSize: '28rpx' }}>
-            去登录
+          <View onClick={handleWechatLogin}
+            style={{ backgroundColor: loginLoading ? '#E7E5E4' : '#F97316', color: '#fff', borderRadius: '999rpx', padding: '24rpx 48rpx', display: 'inline-block', marginTop: '32rpx', fontSize: '28rpx' }}>
+            {loginLoading ? '登录中...' : '微信登录'}
           </View>
         </View>
       </View>

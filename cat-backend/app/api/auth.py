@@ -1,7 +1,7 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -12,6 +12,7 @@ from app.models import User
 from app.schemas import UserLogin, UserProfile, UserRegister, TokenResponse
 from app import schemas
 from app.services.wechat import code2session
+from app.ratelimit import limit
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -21,12 +22,14 @@ SECRET_KEY = settings.JWT_SECRET
 ALGORITHM = settings.ALGORITHM
 TOKEN_TTL_MINUTES = settings.TOKEN_TTL_MINUTES
 
+RESERVED_USERNAMES = {"admin", "demo", "root", "system"}
+
 
 def create_token(user: User) -> str:
     payload = {
         "sub": str(user.id),
         "role": user.role,
-        "exp": datetime.now() + timedelta(minutes=TOKEN_TTL_MINUTES),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=TOKEN_TTL_MINUTES),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -36,10 +39,6 @@ def verify_token(token: str) -> dict:
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-
-
-def get_current_user(db: Session = Depends(get_db), token: str = Depends(lambda: None)) -> User:
-    raise HTTPException(status_code=401, detail="Not authenticated")
 
 
 def get_current_user_from_header(authorization: str = Header(default=""), db: Session = Depends(get_db)) -> User:
@@ -65,7 +64,10 @@ def require_auth(user: User = Depends(get_current_user_from_header)) -> User:
 
 
 @router.post("/register", response_model=TokenResponse)
-def register(payload: UserRegister, db: Session = Depends(get_db)):
+@limit("10/minute")
+def register(request: Request, payload: UserRegister, db: Session = Depends(get_db)):
+    if payload.username.lower() in RESERVED_USERNAMES:
+        raise HTTPException(status_code=400, detail="This username is reserved")
     if db.query(User).filter(User.username == payload.username).first():
         raise HTTPException(status_code=400, detail="Username already exists")
     user = User(
@@ -81,9 +83,10 @@ def register(payload: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(payload: UserLogin, db: Session = Depends(get_db)):
+@limit("5/minute")
+def login(request: Request, payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == payload.username).first()
-    if not user or not pwd_context.verify(payload.password, user.password_hash):
+    if not user or not user.password_hash or not pwd_context.verify(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     return TokenResponse(token=create_token(user), user=user)
 
@@ -94,7 +97,8 @@ def me(user: User = Depends(require_auth)):
 
 
 @router.post("/wechat-login", response_model=schemas.WechatLoginResponse)
-async def wechat_login(payload: schemas.WechatLoginRequest, db: Session = Depends(get_db)):
+@limit("10/minute")
+async def wechat_login(request: Request, payload: schemas.WechatLoginRequest, db: Session = Depends(get_db)):
     try:
         wx_data = await code2session(payload.code)
     except Exception as e:
@@ -113,7 +117,7 @@ async def wechat_login(payload: schemas.WechatLoginRequest, db: Session = Depend
         nickname = payload.nickname or f"猫友{openid[-4:]}"
         user = User(
             username=username,
-            password_hash=pwd_context.hash(openid),
+            password_hash="",
             nickname=nickname,
             role="user",
             avatar=payload.avatar_url,

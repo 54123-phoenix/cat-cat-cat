@@ -4,11 +4,15 @@ from typing import Optional
 
 WECHAT_APPID = os.getenv("WECHAT_APPID", "")
 WECHAT_SECRET = os.getenv("WECHAT_SECRET", "")
+WECHAT_DEV_MODE = os.getenv("WECHAT_DEV_MODE", "") == "1"
 
 async def code2session(code: str) -> dict:
     """Exchange wx.login code for openid and session_key"""
     if not WECHAT_APPID or not WECHAT_SECRET:
-        return {"openid": f"dev_openid_{code[:8]}", "session_key": "dev_session_key"}
+        if WECHAT_DEV_MODE:
+            print(f"[WARN] WECHAT_DEV_MODE=1: forging openid for code {code[:8]} (DO NOT use in production)")
+            return {"openid": f"dev_openid_{code[:8]}", "session_key": "dev_session_key"}
+        raise Exception("WeChat credentials not configured (WECHAT_APPID/WECHAT_SECRET)")
     url = "https://api.weixin.qq.com/sns/jscode2session"
     params = {
         "appid": WECHAT_APPID,
