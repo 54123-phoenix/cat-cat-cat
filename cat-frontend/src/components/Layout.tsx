@@ -109,7 +109,10 @@ export default function Layout() {
   useEventStream(handleEvent)
 
   return (
-    <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16">
+    <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-0 focus:left-0 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:text-sm">
+        跳到主要内容
+      </a>
       {/* Top bar */}
       <header className="sticky top-0 z-40 bg-surface-0/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
         <button
@@ -119,7 +122,7 @@ export default function Layout() {
         >
           <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
             {user?.avatar ? (
-              <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+              <img src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full object-cover" />
             ) : (
               <Menu className="w-5 h-5 text-primary" />
             )}
@@ -135,7 +138,7 @@ export default function Layout() {
       </header>
 
       {/* Main content */}
-      <main className="px-4 pt-2 pb-4">
+      <main id="main-content" className="px-4 pt-2 pb-4">
         <div key={location.pathname} className="animate-fade-up">
           <Outlet />
         </div>

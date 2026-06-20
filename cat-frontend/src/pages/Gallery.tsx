@@ -111,9 +111,12 @@ export default function Gallery() {
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center text-sm text-red-500">
-            {String(error)}
-          </div>
+          <EmptyState
+            icon={ImageIcon}
+            title="加载失败"
+            description={String(error)}
+            onRetry={() => window.location.reload()}
+          />
         ) : filtered.length > 0 ? (
           <>
             <div className="columns-2 gap-2 min-[480px]:columns-3">

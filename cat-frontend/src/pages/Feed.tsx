@@ -38,9 +38,16 @@ export default function Feed() {
 
       <div className="p-3 space-y-2">
         {isLoading ? (
-          <div className="card p-8 text-center text-gray-400">
-            <PawPrint className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-            加载动态中…
+          <div className="space-y-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="card flex gap-3 p-3">
+                <div className="w-12 h-12 rounded-xl skeleton shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-24 skeleton" />
+                  <div className="h-3 w-full skeleton" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : sightings.length > 0 ? (
           <>

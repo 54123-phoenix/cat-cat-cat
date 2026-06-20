@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPost } from '../api'
 import CatPicker from './CatPicker'
 import { Plus, X, Image as ImageIcon } from 'lucide-react'
@@ -21,6 +21,31 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
   const [pollOptions, setPollOptions] = useState(['', ''])
   const fileRef = useRef(null)
   const urlRefs = useRef([])
+  const panelRef = useRef(null)
+
+  useEffect(() => {
+    const container = panelRef.current
+    if (!container) return
+    const focusable = container.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    if (focusable.length > 0) focusable[0].focus()
+
+    function trapFocus(e) {
+      if (e.key !== 'Tab' || !focusable.length) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    container.addEventListener('keydown', trapFocus)
+    return () => container.removeEventListener('keydown', trapFocus)
+  }, [])
 
   const POST_TYPES = [
     { id: 'discussion', label: '讨论' },
@@ -88,7 +113,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end" style={{ background: 'rgba(0,0,0,0.4)' }}>
-      <div className="bg-white rounded-t-2xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div ref={panelRef} className="bg-white rounded-t-2xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between">
           <span className="font-medium text-gray-800">发帖</span>
           <button onClick={onClose} className="text-gray-400 text-xl">×</button>
@@ -179,7 +204,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
           <div className="flex flex-wrap gap-2">
             {images.map((img, i) => (
               <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200">
-                <img src={urlRefs.current[i] || ''} alt="" className="w-full h-full object-cover" />
+                <img src={urlRefs.current[i] || ''} alt="上传图片预览" className="w-full h-full object-cover" />
                 <button
                   onClick={() => removeImage(i)}
                   className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center"

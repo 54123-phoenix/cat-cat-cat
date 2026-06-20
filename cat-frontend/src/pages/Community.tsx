@@ -61,6 +61,7 @@ export default function Community() {
 
       <button
         onClick={() => setShowCompose(true)}
+        aria-label="发帖"
         className="fixed bottom-20 right-4 w-12 h-12 bg-primary rounded-full text-white text-2xl shadow-lg shadow-orange-200 flex items-center justify-center active:scale-95 transition-transform z-40"
       >
         <Pencil className="w-5 h-5" />

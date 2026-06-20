@@ -9,6 +9,7 @@ export default function CatCard({ cat }) {
           <ImageWithShimmer
             src={cat.avatar}
             alt={cat.name}
+            loading="lazy"
             className="w-full h-full"
           />
         ) : (

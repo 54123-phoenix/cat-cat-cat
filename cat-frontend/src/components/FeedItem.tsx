@@ -30,7 +30,7 @@ export default function FeedItem({ sighting }) {
     <div className="bg-white ring-1 ring-stone-900/5 shadow-e1 rounded-card px-4 py-3 flex gap-3 active:bg-primary-light transition-colors animate-fade-up">
       <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center overflow-hidden shrink-0 text-2xl">
         {sighting.image_path ? (
-          <img src={sighting.image_path} alt="偶遇照片" className="w-full h-full object-cover" />
+          <img src={sighting.image_path} alt={`${sighting.cat?.name || '猫猫'}的偶遇照片`} loading="lazy" className="w-full h-full object-cover" />
         ) : (
           <Cat className="w-6 h-6 text-primary/30" />
         )}

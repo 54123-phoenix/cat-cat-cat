@@ -181,7 +181,7 @@ export default function Wrapped() {
             <>
               <div className="w-40 h-40 rounded-full overflow-hidden mx-auto mb-4 ring-4 ring-white/60 bg-white/20">
                 {data.benming_cat.avatar ? (
-                  <img src={data.benming_cat.avatar} alt="" className="w-full h-full object-cover" />
+                  <img src={data.benming_cat.avatar} alt={data.benming_cat.name || '猫猫'} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-5xl">🐱</div>
                 )}

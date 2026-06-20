@@ -40,7 +40,7 @@ export default function League() {
   }
 
   if (error) {
-    return <EmptyState icon={Trophy} title="排行榜加载失败" description={error} />
+    return <EmptyState icon={Trophy} title="排行榜加载失败" description={error} onRetry={() => window.location.reload()} />
   }
 
   if (!data) return null
@@ -108,7 +108,7 @@ export default function League() {
                 </div>
                 <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center overflow-hidden shrink-0">
                   {u.avatar ? (
-                    <img src={u.avatar} alt="" className="w-full h-full object-cover" />
+                    <img src={u.avatar} alt={u.nickname || '用户'} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-sm font-bold text-primary">{u.nickname?.[0] || '?'}</span>
                   )}

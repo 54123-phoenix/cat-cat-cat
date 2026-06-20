@@ -19,6 +19,7 @@ interface EmptyStateProps {
   title: string
   description?: string
   action?: { label: string; onClick: () => void }
+  onRetry?: () => void
 }
 
 export default function EmptyState({
@@ -29,6 +30,7 @@ export default function EmptyState({
   title,
   description,
   action,
+  onRetry,
 }: EmptyStateProps) {
   const VariantIllustration = variant ? VARIANT_ILLUSTRATIONS[variant] : null
 
@@ -59,6 +61,14 @@ export default function EmptyState({
           className="btn btn-primary btn-sm mt-2"
         >
           {action.label}
+        </button>
+      )}
+      {onRetry && (
+        <button
+          onClick={onRetry}
+          className="btn btn-ghost btn-sm mt-2"
+        >
+          重试
         </button>
       )}
     </div>

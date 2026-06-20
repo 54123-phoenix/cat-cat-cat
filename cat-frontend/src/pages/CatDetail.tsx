@@ -4,8 +4,9 @@ import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
 import ImageWithShimmer from '../components/ImageWithShimmer'
-import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff } from 'lucide-react'
-import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow } from '../api'
+import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff, MapPinned } from 'lucide-react'
+import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow, createSighting, getToken } from '../api'
+import { toast } from '../components/Toast'
 
 function formatTime(value) {
   if (!value) return ''
@@ -117,6 +118,7 @@ export default function CatDetail() {
   const [following, setFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
   const [viewerIndex, setViewerIndex] = useState(null)
+  const [checkInLoading, setCheckInLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -152,6 +154,25 @@ export default function CatDetail() {
     }
   }
 
+  async function handleCheckIn() {
+    if (checkInLoading || !getToken()) return
+    setCheckInLoading(true)
+    try {
+      await createSighting({ catId, location: cat?.location || '', confidence: undefined, file: undefined, activity_type: undefined, weather: undefined, mood: undefined })
+      toast('打卡成功！', { emoji: '🐾' })
+    } catch (err) {
+      toast(err.message || '打卡失败', { emoji: '⚠️' })
+    } finally {
+      setCheckInLoading(false)
+    }
+  }
+
+  const MEMORIAL_KEYWORDS = ['去世', '离开', '纪念', '想念', '走了', '不在了']
+  const MELANCHOLIC_KEYWORDS = ['想念', '怀念', '纪念', '永远', '再也', '回不']
+  const isMemorial = cat?.story && MEMORIAL_KEYWORDS.some((k) => cat.story.includes(k))
+  const isMelancholicQuote = cat?.quote && MELANCHOLIC_KEYWORDS.some((k) => cat.quote.includes(k))
+  const showMemorial = isMemorial || isMelancholicQuote
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
@@ -164,8 +185,13 @@ export default function CatDetail() {
     return (
       <div className="pb-6">
         <PageHeader title="猫猫档案" />
-        <div className="p-4 text-center space-y-4">
-          <p className="text-text-secondary">{error || '没有找到这只猫'}</p>
+        <div className="p-4">
+          <EmptyState
+            icon={Cat}
+            title={error || '没有找到这只猫'}
+            description="请检查链接或返回首页"
+            onRetry={() => window.location.reload()}
+          />
         </div>
       </div>
     )
@@ -203,6 +229,7 @@ export default function CatDetail() {
               <button
                 onClick={toggleFollow}
                 disabled={followLoading}
+                aria-label={following ? '取消关注' : '关注'}
                 className={`rounded-full p-2 transition-colors ${following ? 'bg-red-50 hover:bg-red-100' : 'bg-gray-50 hover:bg-gray-100'}`}
               >
                 <Heart className={`w-5 h-5 ${following ? 'fill-primary text-primary' : 'text-gray-300'} ${followLoading ? 'animate-like-pop' : ''}`} />
@@ -259,8 +286,31 @@ export default function CatDetail() {
 
           {cat.quote && (
             <blockquote className="border-l-4 border-primary/40 bg-primary-light/50 rounded-r-lg pl-3 pr-2 py-2 text-text-secondary text-sm italic">
-              “{cat.quote}”
+              "{cat.quote}"
             </blockquote>
+          )}
+
+          {showMemorial && (
+            <div className="rounded-2xl bg-gradient-to-b from-stone-50 to-stone-100/50 border border-stone-200/60 p-4 text-center space-y-2">
+              <span className="text-2xl" aria-hidden="true">🕯️</span>
+              <p className="text-sm font-medium text-text-secondary">纪念</p>
+              {cat.quote && isMelancholicQuote && (
+                <p className="text-xs text-text-muted italic">"{cat.quote}"</p>
+              )}
+              <span className="text-lg" aria-hidden="true">🌸</span>
+            </div>
+          )}
+
+          {getToken() && (
+            <button
+              onClick={handleCheckIn}
+              disabled={checkInLoading}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-primary/30 bg-primary-light text-primary text-sm font-medium active:scale-[0.98] transition-transform disabled:opacity-50"
+              aria-label="偶遇打卡"
+            >
+              <MapPinned className="w-4 h-4" />
+              {checkInLoading ? '打卡中…' : '偶遇打卡'}
+            </button>
           )}
         </div>
       </section>
@@ -343,7 +393,7 @@ export default function CatDetail() {
                 onClick={() => setViewerIndex(i)}
                 className="aspect-square card p-0 overflow-hidden active:scale-95 transition-transform"
               >
-                <ImageWithShimmer src={image.image_path} alt={cat.name} className="w-full h-full" />
+                <ImageWithShimmer src={image.image_path} alt={`${cat.name}的照片`} loading="lazy" className="w-full h-full" />
               </button>
             ))}
           </div>

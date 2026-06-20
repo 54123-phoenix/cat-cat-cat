@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MapPin, MessageSquare, Camera, PawPrint, Cat } from 'lucide-react'
+import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight } from 'lucide-react'
 import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import DailyQuestCard from '../components/DailyQuestCard'
 import StreakBadge from '../components/StreakBadge'
+import Avatar from '../components/Avatar'
 import { getPrefs } from '../components/Onboarding'
 
 function greeting() {
@@ -31,6 +32,7 @@ export default function Home() {
   const [cats, setCats] = useState([])
   const [sightings, setSightings] = useState([])
   const [postCount, setPostCount] = useState(0)
+  const [latestPosts, setLatestPosts] = useState([])
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [weeklyReport, setWeeklyReport] = useState(null)
@@ -41,7 +43,7 @@ export default function Home() {
     Promise.all([
       getCats(),
       getSightings({ limit: 5 }),
-      getPosts(),
+      getPosts({ limit: 3 }),
       getUserProfile().catch(() => null),
       getWeeklyReport().catch(() => null),
       getMyStats().catch(() => null),
@@ -49,7 +51,9 @@ export default function Home() {
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
-      setPostCount(Array.isArray(postsData) ? postsData.length : 0)
+      const postsArr = Array.isArray(postsData) ? postsData : (postsData?.items || [])
+      setPostCount(postsArr.length)
+      setLatestPosts(postsArr.slice(0, 3))
       setProfile(userData)
       setWeeklyReport(reportData)
       setMyStats(statsData)
@@ -167,6 +171,7 @@ export default function Home() {
                   <ImageWithShimmer
                     src={cat.avatar}
                     alt={cat.name}
+                    loading="lazy"
                     className="w-full h-full"
                   />
                 </div>
@@ -174,6 +179,56 @@ export default function Home() {
                 {cat.location && (
                   <p className="text-[10px] text-text-secondary truncate">{cat.location}</p>
                 )}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Map preview */}
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-bold text-text">猫猫地图</h2>
+          <button onClick={() => navigate('/map')} className="text-xs text-primary flex items-center gap-0.5" aria-label="查看完整地图">
+            查看地图<ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+        <button
+          onClick={() => navigate('/map')}
+          className="w-full rounded-2xl overflow-hidden card p-0 relative h-32 bg-primary-light"
+          aria-label="打开猫猫地图"
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+            <MapPin className="w-8 h-8 text-primary/30" />
+            <span className="text-sm text-text-secondary ml-2">点击查看校园猫咪分布</span>
+          </div>
+        </button>
+      </section>
+
+      {/* Latest community posts */}
+      {latestPosts.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-text">最新动态</h2>
+            <button onClick={() => navigate('/community')} className="text-xs text-primary flex items-center gap-0.5" aria-label="查看更多动态">
+              更多<ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="space-y-2">
+            {latestPosts.map((post) => (
+              <button
+                key={post.id}
+                onClick={() => navigate(`/posts/${post.id}`)}
+                className="w-full card p-3 flex items-start gap-3 text-left active:scale-[0.98] transition-transform"
+              >
+                <Avatar user={post.user} size="xs" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-text truncate">{post.user?.nickname || '猫友'}</p>
+                  <p className="text-xs text-text-secondary truncate mt-0.5">{post.content}</p>
+                </div>
+                <span className="text-[10px] text-text-muted shrink-0 mt-0.5">
+                  {post.created_at?.substring(5, 10) || ''}
+                </span>
               </button>
             ))}
           </div>

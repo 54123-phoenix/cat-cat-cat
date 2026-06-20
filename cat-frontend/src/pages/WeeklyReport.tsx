@@ -88,7 +88,7 @@ export default function WeeklyReport() {
               <div className="card p-4 flex items-center gap-3">
                 <div className="w-14 h-14 rounded-2xl bg-primary-light overflow-hidden flex items-center justify-center">
                   {report.benming_cat_this_week.avatar ? (
-                    <img src={report.benming_cat_this_week.avatar} alt="" className="w-full h-full object-cover" />
+                    <img src={report.benming_cat_this_week.avatar} alt={report.benming_cat_this_week.name || '猫猫'} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl">🐱</span>
                   )}

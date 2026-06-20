@@ -1,15 +1,41 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { X, Bell, Award, Images, TrendingUp, Shield, LogOut, BookOpen, Trophy, Sparkles, Route as RouteIcon } from 'lucide-react'
 
 export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   const navigate = useNavigate()
+  const sidebarRef = useRef(null)
 
   useEffect(() => {
     if (!isOpen) return
     const handler = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
+
+    const container = sidebarRef.current
+    if (!container) return
+    const focusable = container.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    if (focusable.length > 0) focusable[0].focus()
+
+    function trapFocus(e) {
+      if (e.key !== 'Tab' || !focusable.length) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    container.addEventListener('keydown', trapFocus)
+
+    return () => {
+      window.removeEventListener('keydown', handler)
+      container.removeEventListener('keydown', trapFocus)
+    }
   }, [isOpen, onClose])
 
   const navItems = [
@@ -36,6 +62,7 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
       )}
 
       <div
+        ref={sidebarRef}
         className={`fixed top-0 left-0 h-full w-64 bg-warm-50 z-50 shadow-xl transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -47,7 +74,7 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center overflow-hidden">
               {user?.avatar ? (
-                <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                <img src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-lg">{user?.nickname?.[0] || '猫'}</span>
               )}

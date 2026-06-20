@@ -114,7 +114,7 @@ export default function Profile() {
           <div className="flex items-end gap-4 -mt-10">
             <div className="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden ring-4 ring-white shadow-md">
               {user?.avatar ? (
-                <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                <img src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full object-cover" />
               ) : (
                 <User className="w-8 h-8 text-primary" />
               )}
@@ -292,7 +292,7 @@ export default function Profile() {
               >
                 <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center overflow-hidden mx-auto">
                   {cat.cat_avatar ? (
-                    <img src={cat.cat_avatar} alt="" className="w-full h-full object-cover" />
+                    <img src={cat.cat_avatar} alt={cat.cat_name || '猫猫'} loading="lazy" className="w-full h-full object-cover" />
                   ) : (
                     <Cat className="w-6 h-6 text-primary/30" />
                   )}

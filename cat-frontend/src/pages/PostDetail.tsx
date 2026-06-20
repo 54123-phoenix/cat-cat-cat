@@ -4,6 +4,7 @@ import { Heart, Flag, Trash2, CheckCircle2 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import CommentSection from '../components/CommentSection'
 import Avatar from '../components/Avatar'
+import EmptyState from '../components/EmptyState'
 import { getPost, likePost, deletePost, acceptAnswer, getStoredUser } from '../api'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 import { toast } from '../components/Toast'
@@ -102,8 +103,13 @@ export default function PostDetail() {
     return (
       <div className="pb-6">
         <PageHeader title="帖子详情" />
-        <div className="p-8 text-center space-y-3">
-          <p className="text-sm text-text-secondary">{error || '帖子不存在'}</p>
+        <div className="p-4">
+          <EmptyState
+            icon={Heart}
+            title={error || '帖子不存在'}
+            description="帖子可能已被删除"
+            onRetry={() => window.location.reload()}
+          />
         </div>
       </div>
     )
@@ -171,7 +177,7 @@ export default function PostDetail() {
                   post.images.length === 3 && i === 0 ? 'row-span-2' : ''
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" style={{ minHeight: 160 }} />
+                <img src={img} alt="帖子图片" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: 160 }} />
               </div>
             ))}
           </div>
@@ -195,7 +201,7 @@ export default function PostDetail() {
 
         {/* Like + Comment count bar */}
         <div className="flex items-center gap-6 py-3 border-t border-b border-gray-100">
-          <button onClick={handleLike} className={`relative flex items-center gap-2 text-sm transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
+          <button onClick={handleLike} aria-label={liked ? '取消赞' : '赞'} className={`relative flex items-center gap-2 text-sm transition-colors ${liked ? 'text-primary' : 'text-gray-400'}`}>
             <Heart className={`w-5 h-5 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
             <span>{likes} 赞</span>
             {likeBurst && (

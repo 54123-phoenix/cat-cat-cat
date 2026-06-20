@@ -331,7 +331,7 @@ export default function Map() {
             {nearbyCats.map((cat) => (
               <button key={cat.id} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
                 <div className="w-16 h-16 rounded-2xl bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20 shadow-e2">
-                  {cat.avatar ? <img src={cat.avatar} alt="" className="w-full h-full object-cover" /> :
+                  {cat.avatar ? <img src={cat.avatar} alt={cat.name} loading="lazy" className="w-full h-full object-cover" /> :
                     <div className="w-full h-full flex items-center justify-center"><CatMarker size={40} /></div>}
                 </div>
                 <p className="text-xs font-medium text-text truncate">{cat.name}</p>

@@ -117,7 +117,7 @@ export default function Collection() {
             >
               <div className="aspect-square relative bg-primary-light">
                 {cat.avatar ? (
-                  <ImageWithShimmer src={cat.avatar} alt={cat.name} className="w-full h-full" />
+                  <ImageWithShimmer src={cat.avatar} alt={cat.name} loading="lazy" className="w-full h-full" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <Cat className="w-8 h-8 text-primary/30" />

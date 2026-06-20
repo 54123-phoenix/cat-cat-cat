@@ -88,12 +88,12 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
             </span>
           )}
           {canDelete && (
-            <button onClick={() => setShowDeleteConfirm(true)} className="text-text-muted hover:text-danger transition-colors">
+            <button onClick={() => setShowDeleteConfirm(true)} className="text-text-muted hover:text-danger transition-colors" aria-label="删除帖子">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           )}
           {onReport && (
-            <button onClick={() => onReport(post)} className="text-text-muted hover:text-danger transition-colors">
+            <button onClick={() => onReport(post)} className="text-text-muted hover:text-danger transition-colors" aria-label="举报帖子">
               <Flag className="w-3.5 h-3.5" />
             </button>
           )}
@@ -127,7 +127,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
                   post.images.length === 3 && i === 0 ? 'row-span-2' : ''
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" style={{ minHeight: 120 }} />
+                <img src={img} alt="帖子图片" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: 120 }} />
               </div>
             ))}
           </div>
@@ -153,7 +153,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
       )}
 
       <div className="flex items-center gap-4 pt-1 border-t border-border-light">
-        <button onClick={handleLike} className={`relative flex items-center gap-2 text-xs transition-colors ${liked ? 'text-primary' : 'text-text-muted'}`}>
+        <button onClick={handleLike} aria-label={liked ? '取消赞' : '赞'} className={`relative flex items-center gap-2 text-xs transition-colors ${liked ? 'text-primary' : 'text-text-muted'}`}>
           <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''} ${liking ? 'animate-like-pop' : ''}`} />
           {likes}
           {burst && (

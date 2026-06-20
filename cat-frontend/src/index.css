@@ -346,6 +346,7 @@
   .tab-bar {
     background: var(--color-surface);
     box-shadow: 0 -2px 8px -2px rgb(17 12 9 / 0.08), 0 -1px 2px rgb(17 12 9 / 0.04);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .modal-overlay {
