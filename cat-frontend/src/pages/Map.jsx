@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
+import CatMarker from '../components/illustrations/CatMarker'
+import { catMarkerString } from '../components/illustrations/CatMarker'
 import { getHeatmapData, getCats } from '../api'
 
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
@@ -191,23 +193,12 @@ export default function Map() {
           if (!point.latitude || !point.longitude) continue
           const catId = catByName.get(point.name)
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="width:36px;height:36px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25))">
-            <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="18" cy="18" r="16" fill="white" opacity="0.92"/>
-              <g fill="#F97316">
-                <ellipse cx="18" cy="22" rx="6" ry="5"/>
-                <ellipse cx="11" cy="14" rx="2.4" ry="3"/>
-                <ellipse cx="25" cy="14" rx="2.4" ry="3"/>
-                <ellipse cx="8" cy="20" rx="2" ry="2.6"/>
-                <ellipse cx="28" cy="20" rx="2" ry="2.6"/>
-              </g>
-            </svg>
-          </div>`
+          markerContent.innerHTML = `<div style="width:32px;height:32px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25))">${catMarkerString()}</div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
             content: markerContent,
-            offset: new AMap.Pixel(-18, -18),
+            offset: new AMap.Pixel(-16, -16),
             zIndex: 110,
           })
 
@@ -253,7 +244,7 @@ export default function Map() {
       <div ref={mapRef} className="w-full h-full amap-container" />
 
       {/* Time filter row */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-40 flex gap-2 bg-white/90 backdrop-blur rounded-full px-2 py-1.5 shadow-md">
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-40 flex gap-2 bg-surface-1/90 backdrop-blur rounded-full px-2 py-1.5 shadow-e2">
         {[
           { label: '24小时', value: 1 },
           { label: '7天', value: 7 },
@@ -319,8 +310,8 @@ export default function Map() {
             {nearbyCats.map((cat) => (
               <button key={cat.id} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
                 <div className="w-16 h-16 rounded-2xl bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20 shadow-e2">
-                  {cat.avatar ? <img src={cat.avatar} alt="" className="w-full h-full object-cover" /> : 
-                    <div className="w-full h-full flex items-center justify-center text-xl">🐱</div>}
+                  {cat.avatar ? <img src={cat.avatar} alt="" className="w-full h-full object-cover" /> :
+                    <div className="w-full h-full flex items-center justify-center"><CatMarker size={40} /></div>}
                 </div>
                 <p className="text-xs font-medium text-text truncate">{cat.name}</p>
                 {cat.location && <p className="text-[10px] text-text-muted truncate">{cat.location}</p>}
