@@ -273,6 +273,27 @@ export function getHeatmapData(params = {}) {
   return request(`/map/heatmap${qs ? '?' + qs : ''}`)
 }
 
+export function getNearbyCats(lat, lng, n = 8) {
+  return getCats()
+    .then((cats) => {
+      if (!Array.isArray(cats)) return []
+      const withDist = cats.map((c) => {
+        const cLat = c.latitude ?? c.lat
+        const cLng = c.longitude ?? c.lng ?? c.lon
+        let dist = Infinity
+        if (cLat != null && cLng != null && lat != null && lng != null) {
+          const dLat = cLat - lat
+          const dLng = cLng - lng
+          dist = dLat * dLat + dLng * dLng
+        }
+        return { ...c, _dist: dist }
+      })
+      withDist.sort((a, b) => a._dist - b._dist)
+      return withDist.slice(0, n).map(({ _dist, ...rest }) => rest)
+    })
+    .catch(() => [])
+}
+
 export function identifyCat(file) {
   return recognize(file)
 }

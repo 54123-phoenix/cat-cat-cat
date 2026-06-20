@@ -5,7 +5,7 @@ import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 import CatMarker from '../components/illustrations/CatMarker'
 import { catMarkerString } from '../components/illustrations/CatMarker'
-import { getHeatmapData, getCats } from '../api'
+import { getHeatmapData, getCats, getNearbyCats } from '../api'
 
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
 if (!AMAP_KEY) console.warn('VITE_AMAP_KEY 未设置，地图可能无法加载')
@@ -225,9 +225,9 @@ export default function Map() {
     loadMarkers()
     
     // Fetch nearby cats for bottom sheet
-    getCats().then(cats => {
-      if (!cancelled) setNearbyCats(cats.slice(0, 8))
-    }).catch(() => {})
+    getNearbyCats(campusCenter[1], campusCenter[0], 8).then((cats) => {
+      if (!cancelled) setNearbyCats(cats)
+    })
 
     return () => {
       cancelled = true
