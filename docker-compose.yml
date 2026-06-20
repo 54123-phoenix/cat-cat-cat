@@ -12,8 +12,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - db_data:/app/data
-      - upload_data:/app/uploads
+      - ./cat-backend/cat_community.db:/app/data/cat_community.db
+      - ./cat-backend/uploads:/app/uploads
+      - ./cat-backend/models:/app/models
+      - ./cat-backend/embeddings:/app/embeddings
     environment:
       - DATABASE_URL=sqlite:///./data/cat_community.db
       - UPLOAD_DIR=./uploads
@@ -21,7 +23,7 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?ADMIN_PASSWORD must be set in .env}
       - INIT_DEMO_USER=${INIT_DEMO_USER:-0}
       - DEMO_PASSWORD=${DEMO_PASSWORD:-}
-      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost:4173}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost:4173,http://localhost}
       - WECHAT_APPID=${WECHAT_APPID:-}
       - WECHAT_SECRET=${WECHAT_SECRET:-}
       - WECHAT_DEV_MODE=${WECHAT_DEV_MODE:-0}
@@ -34,7 +36,3 @@ services:
       - RATE_LOGIN_PER_MIN=${RATE_LOGIN_PER_MIN:-5}
     command: gunicorn app.main:app -c gunicorn.conf.py
     restart: on-failure
-
-volumes:
-  db_data:
-  upload_data:
