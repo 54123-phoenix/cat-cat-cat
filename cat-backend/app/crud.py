@@ -556,6 +556,36 @@ def get_heatmap_points(db: Session, days: int = 7, limit: int = 100) -> List[sch
     ]
 
 
+def get_nearby_sightings(db: Session, lat: float, lng: float, radius_km: float):
+    import math
+    lat_delta = radius_km / 111.0
+    lng_delta = radius_km / (111.0 * math.cos(math.radians(lat)))
+    lat_min = lat - lat_delta
+    lat_max = lat + lat_delta
+    lng_min = lng - lng_delta
+    lng_max = lng + lng_delta
+
+    rows = (
+        db.query(
+            models.Sighting.cat_id,
+            models.Sighting.latitude,
+            models.Sighting.longitude,
+            models.Sighting.created_at,
+            models.Cat.name,
+            models.Cat.avatar,
+        )
+        .join(models.Cat, models.Sighting.cat_id == models.Cat.id)
+        .filter(
+            models.Sighting.latitude.isnot(None),
+            models.Sighting.longitude.isnot(None),
+            models.Sighting.latitude.between(lat_min, lat_max),
+            models.Sighting.longitude.between(lng_min, lng_max),
+        )
+        .all()
+    )
+    return rows
+
+
 def get_sighting(db: Session, sighting_id: int) -> Optional[models.Sighting]:
     return db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
 
