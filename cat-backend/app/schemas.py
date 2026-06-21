@@ -148,6 +148,7 @@ class SightingResponse(SightingBase):
     note: Optional[str] = None
     spotted_by: Optional[str] = None
     location_name: Optional[str] = None
+    status: Optional[str] = None
     confirmations: int = 0
     grade: str = "casual"
     weather: Optional[str] = None
@@ -471,7 +472,7 @@ class NotificationResponse(BaseModel):
     content: Optional[str]
     related_id: Optional[int]
     related_type: Optional[str]
-    is_read: str
+    is_read: bool
     created_at: datetime
 
     class Config:

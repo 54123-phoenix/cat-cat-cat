@@ -75,6 +75,8 @@ export default function Scan() {
       weather: weather || undefined,
       mood: mood || undefined,
       file,
+      latitude: undefined,
+      longitude: undefined,
     })
   }
 

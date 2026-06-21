@@ -1,4 +1,5 @@
 from typing import Optional, List
+from pydantic import BaseModel
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -19,7 +20,7 @@ class GalleryItem:
         self.created_at = created_at
 
 
-class GalleryItemResponse:
+class GalleryItemResponse(BaseModel):
     id: int
     image_path: Optional[str]
     cat_id: int

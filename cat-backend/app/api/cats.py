@@ -20,6 +20,49 @@ def list_cats(location: Optional[str] = None, skip: int = 0, limit: int = 200, d
     return schemas.PaginatedCatsResponse(items=items, total=total, has_more=has_more)
 
 
+@router.get("/nearby", tags=["cats"])
+def nearby_cats(
+    lat: float = Query(..., description="Latitude of the search center"),
+    lng: float = Query(..., description="Longitude of the search center"),
+    radius_km: float = Query(1.0, gt=0, description="Search radius in kilometers"),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    sightings = (
+        db.query(Sighting)
+        .filter(Sighting.latitude.isnot(None), Sighting.longitude.isnot(None))
+        .all()
+    )
+
+    cat_distances = {}
+    for s in sightings:
+        dist = _haversine(lat, lng, s.latitude, s.longitude)
+        if dist > radius_km:
+            continue
+        cat_id = s.cat_id
+        if cat_id not in cat_distances or s.created_at > cat_distances[cat_id]["latest_sighting_at"]:
+            cat_distances[cat_id] = {
+                "distance_km": dist,
+                "latest_sighting_at": s.created_at,
+            }
+
+    results = []
+    for cat_id, info in cat_distances.items():
+        cat = db.query(Cat).filter(Cat.id == cat_id).first()
+        if not cat:
+            continue
+        results.append({
+            "cat_id": cat.id,
+            "cat_name": cat.name,
+            "cat_avatar": cat.avatar,
+            "distance_km": round(info["distance_km"], 3),
+            "latest_sighting_at": info["latest_sighting_at"],
+        })
+
+    results.sort(key=lambda x: x["distance_km"])
+    return results[:limit]
+
+
 @router.get("/{cat_id}", response_model=schemas.CatResponse)
 def get_cat(cat_id: int, db: Session = Depends(get_db)):
     cat = crud.get_cat(db, cat_id)
@@ -73,46 +116,3 @@ def _haversine(lat1, lon1, lat2, lon2):
     a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlam / 2) ** 2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
-
-
-@router.get("/nearby", tags=["cats"])
-def nearby_cats(
-    lat: float = Query(..., description="Latitude of the search center"),
-    lng: float = Query(..., description="Longitude of the search center"),
-    radius_km: float = Query(1.0, gt=0, description="Search radius in kilometers"),
-    limit: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db),
-):
-    sightings = (
-        db.query(Sighting)
-        .filter(Sighting.latitude.isnot(None), Sighting.longitude.isnot(None))
-        .all()
-    )
-
-    cat_distances = {}
-    for s in sightings:
-        dist = _haversine(lat, lng, s.latitude, s.longitude)
-        if dist > radius_km:
-            continue
-        cat_id = s.cat_id
-        if cat_id not in cat_distances or s.created_at > cat_distances[cat_id]["latest_sighting_at"]:
-            cat_distances[cat_id] = {
-                "distance_km": dist,
-                "latest_sighting_at": s.created_at,
-            }
-
-    results = []
-    for cat_id, info in cat_distances.items():
-        cat = db.query(Cat).filter(Cat.id == cat_id).first()
-        if not cat:
-            continue
-        results.append({
-            "cat_id": cat.id,
-            "cat_name": cat.name,
-            "cat_avatar": cat.avatar,
-            "distance_km": round(info["distance_km"], 3),
-            "latest_sighting_at": info["latest_sighting_at"],
-        })
-
-    results.sort(key=lambda x: x["distance_km"])
-    return results[:limit]
