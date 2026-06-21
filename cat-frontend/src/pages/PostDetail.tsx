@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Heart, Flag, Trash2, CheckCircle2 } from 'lucide-react'
+import { Heart, Trash2 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import CommentSection from '../components/CommentSection'
 import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
-import { getPost, likePost, deletePost, acceptAnswer, getStoredUser } from '../api'
+import { getPost, likePost, deletePost, getStoredUser } from '../api'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
-import { toast } from '../components/Toast'
+
 import PollView from '../components/PollView'
 
 const POST_TYPE_BADGE = {

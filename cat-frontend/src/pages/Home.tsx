@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight, Zap, Navigation } from 'lucide-react'
 import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats, getToken } from '../api'
@@ -34,7 +34,7 @@ export default function Home() {
   const [postCount, setPostCount] = useState(0)
   const [latestPosts, setLatestPosts] = useState([])
   const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [, setLoading] = useState(true)
   const [weeklyReport, setWeeklyReport] = useState(null)
   const [myStats, setMyStats] = useState(null)
   const navigate = useNavigate()
@@ -65,7 +65,7 @@ export default function Home() {
 
   useEffect(() => {
     const token = getToken()
-    if (!token) return
+    if (!token) return undefined
     try {
       const es = new EventSource(`${import.meta.env.VITE_API_URL || ''}/api/events/sightings?token=${token}`)
       es.onmessage = (e) => {

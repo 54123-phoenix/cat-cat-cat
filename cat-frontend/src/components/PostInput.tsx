@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPost } from '../api'
 import CatPicker from './CatPicker'
-import { Plus, X, Image as ImageIcon } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { TOPIC_LABEL, PRESET_TAGS } from '../constants/topics'
 import { toast } from './Toast'
 
@@ -25,13 +25,13 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
 
   useEffect(() => {
     const container = panelRef.current
-    if (!container) return
+    if (!container) return undefined
     const focusable = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
     if (focusable.length > 0) focusable[0].focus()
 
-    function trapFocus(e) {
+    function trapFocus(e: KeyboardEvent) {
       if (e.key !== 'Tab' || !focusable.length) return
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
@@ -202,7 +202,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
         <div>
           <div className="text-xs text-gray-400 mb-2">图片（最多 {MAX_IMAGES} 张）</div>
           <div className="flex flex-wrap gap-2">
-            {images.map((img, i) => (
+            {images.map((_img, i) => (
               <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200">
                 <img src={urlRefs.current[i] || ''} alt="上传图片预览" className="w-full h-full object-cover" />
                 <button

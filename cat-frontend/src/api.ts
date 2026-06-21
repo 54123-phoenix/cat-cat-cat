@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Migrate to typed API client using types.ts
 const API_BASE = '/api'
 
@@ -11,7 +10,7 @@ function clearToken() {
   localStorage.removeItem('user')
 }
 
-function setToken(token, user) {
+function setToken(token: string, user?: any) {
   localStorage.setItem('token', token)
   if (user) localStorage.setItem('user', JSON.stringify(user))
 }

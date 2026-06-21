@@ -2,11 +2,11 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
-import CommentSection from './CommentSection'
+
 import Avatar from './Avatar'
 import PollView from './PollView'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
-import { toast } from './Toast'
+
 
 const POST_TYPE_BADGE = {
   poll: { label: '投票', cls: 'bg-warning/10 text-warning' },

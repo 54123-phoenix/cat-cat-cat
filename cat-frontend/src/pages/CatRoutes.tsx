@@ -8,7 +8,6 @@ import { getVisitedLocations } from '../api'
 declare const AMap: any
 
 const AMAP_KEY = import.meta.env.VITE_AMAP_KEY
-const campusCenter = [121.503, 31.3005]
 
 export default function CatRoutes() {
   const [expanded, setExpanded] = useState(null)
@@ -22,7 +21,7 @@ export default function CatRoutes() {
   }, [])
 
   useEffect(() => {
-    if (expanded === null) return
+    if (expanded === null) return undefined
     let map = null
     AMapLoader.load({ key: AMAP_KEY, version: '1.4.15', plugins: [] })
       .then((AMap) => {
@@ -53,7 +52,7 @@ export default function CatRoutes() {
         })
         map.setFitView()
       })
-      .catch((e) => console.error('map load failed', e))
+      .catch((_e) => console.error('map load failed', _e))
 
     return () => {
       if (map) map.destroy()

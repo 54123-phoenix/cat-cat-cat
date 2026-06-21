@@ -113,7 +113,7 @@ export default function Map() {
 
   useEffect(() => {
     const map = mapInstanceRef.current
-    if (!map || showGeoModal) return
+    if (!map || showGeoModal) return undefined
 
     const timer = setTimeout(() => {
       map.plugin('AMap.Geolocation', () => {
@@ -172,7 +172,7 @@ export default function Map() {
   useEffect(() => {
     const map = mapInstanceRef.current
     const AMap = AMapRef.current
-    if (!map || !AMap) return
+    if (!map || !AMap) return undefined
 
     let cancelled = false
 

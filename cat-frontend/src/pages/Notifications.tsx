@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CheckCheck, Heart, MessageCircle, Eye, PawPrint, Award } from 'lucide-react'
+import { CheckCheck, Heart, MessageCircle, PawPrint, Award } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api'

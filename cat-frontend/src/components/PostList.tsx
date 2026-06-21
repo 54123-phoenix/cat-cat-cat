@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useInfinitePosts } from '../hooks/useApi'
 import PostCard from './PostCard'
 import EmptyState from './EmptyState'
@@ -28,7 +28,7 @@ function SkeletonPost() {
 }
 
 export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfinitePosts({ topic })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch } = useInfinitePosts({ topic })
   const sentinelRef = useRef(null)
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }
 
   useEffect(() => {
     const el = sentinelRef.current
-    if (!el || !hasNextPage) return
+    if (!el || !hasNextPage) return undefined
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -56,7 +56,7 @@ export default function PostList({ topic, refreshKey = 0, onReport, onTagClick }
     return []
   }) ?? []
 
-  function handleDeleted(postId) {
+  function handleDeleted(_postId) {
     refetch()
   }
 

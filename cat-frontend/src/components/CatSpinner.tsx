@@ -1,6 +1,5 @@
 export default function CatSpinner({ size = 32, fullPage = false }) {
   const s = size
-  const h = s * 0.75
 
   return (
     <div className="inline-flex items-center justify-center" style={{ width: s, height: s }}>

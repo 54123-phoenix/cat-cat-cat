@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Cat, Star, Heart, PawPrint, Search, Filter, Trophy } from 'lucide-react'
+import { Cat, Star, Search, Trophy } from 'lucide-react'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import EmptyState from '../components/EmptyState'
 import { getCats, getFollowedCats, getSightings } from '../api'

@@ -1,5 +1,4 @@
-import { type ReactNode } from 'react'
-import SadCat from './illustrations/SadCat'
+
 import MascotCat from './MascotCat'
 import EmptyCat from './illustrations/EmptyCat'
 import LostCat from './illustrations/LostCat'

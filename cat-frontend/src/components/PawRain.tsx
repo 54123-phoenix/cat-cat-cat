@@ -13,7 +13,7 @@ export default function PawRain({ count = 10, duration = 1500, onDone }) {
 
   if (!active) return null
 
-  const paws = Array.from({ length: count }, (_, i) => ({
+  const paws = Array.from({ length: count }, () => ({
     left: Math.random() * 100,
     delay: Math.random() * 0.5,
     dur: 1 + Math.random() * 0.5,
