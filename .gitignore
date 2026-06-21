@@ -16,13 +16,20 @@ __pycache__/
 .env.*
 !.env.example
 
-# Runtime uploads and databases
-uploads/
+# Runtime databases (generated, not committed)
 *.sqlite
 *.sqlite3
 *.db
 *.db-shm
 *.db-wal
+
+# User uploads at runtime (not reference data)
+uploads/sightings/
+uploads/posts/
+uploads/discoveries/
+
+# Scraper image cache (8GB+, regeneratable)
+cat-backend/uploads/
 
 # Local tool state
 .claude/
@@ -45,18 +52,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# ML Models
-models/
-*.pt
-*.pth
-*.onnx
-
-# Pre-computed embeddings
-cat-backend/embeddings/
-update_main.py
-
-# P0-A 安全清理
-*.txt
-*.b64
+# P0-A security cleanup
 cat-backend/demo_token.txt
 cat-frontend/_admin_script.b64
+*.b64

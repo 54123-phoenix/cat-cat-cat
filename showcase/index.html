@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复旦猫猫社区 — 校园猫猫数字档案与社区</title>
+<style>
+/* ====== Reset & Base ====== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','PingFang SC','Microsoft YaHei',sans-serif;background:#FFF9F5;color:#1C1917;line-height:1.6}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ====== Variables ====== */
+:root{
+  --c-ink:#1C1917;--c-bg:#FFF9F5;--c-surface:#FFFFFF;
+  --c-primary:#F97316;--c-primary-dark:#EA580C;
+  --c-muted:#78716C;--c-border:#E7E5E4;
+  --c-accent:#FED7AA;--c-success:#22C55E;--c-danger:#EF4444;
+  --c-info:#3B82F6;--c-primary-light:#FFF7ED;
+  --c-text-secondary:#57534E;--c-gray-50:#FAFAF9;--c-gray-100:#F5F5F4;
+  --sh-e1:0 1px 2px rgba(17,12,9,0.04);
+  --sh-e2:0 2px 8px -2px rgba(17,12,9,0.08),0 1px 2px rgba(17,12,9,0.04);
+  --sh-e3:0 8px 24px -8px rgba(17,12,9,0.12),0 2px 6px -2px rgba(17,12,9,0.06);
+}
+
+/* ====== Hero ====== */
+.hero{
+  background:linear-gradient(135deg,#FFF7ED 0%,#FED7AA 50%,#FFF7ED 100%);
+  padding:48px 24px 56px;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;background:rgba(249,115,22,0.08);border-radius:50%;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-40px;left:-40px;
+  width:160px;height:160px;background:rgba(249,115,22,0.06);border-radius:50%;
+}
+.hero-badge{
+  display:inline-block;background:#FFF;color:#F97316;font-size:11px;
+  font-weight:700;padding:4px 14px;border-radius:9999px;letter-spacing:1px;
+  text-transform:uppercase;box-shadow:var(--sh-e1);margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.hero-badge::before{content:'🐱 '}
+.hero h1{margin-top:40px;font-size:36px;font-weight:800;letter-spacing:-0.5px;position:relative;z-index:1}
+.hero h1 span{color:#F97316}
+.hero .subtitle{
+  font-size:17px;color:#78716C;margin-top:12px;font-weight:500;
+  position:relative;z-index:1;max-width:480px;margin-left:auto;margin-right:auto;
+  line-height:1.5;
+}
+.hero .keywords{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px;
+  position:relative;z-index:1;
+}
+.hero .keywords span{
+  background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);
+  font-size:12px;color:#57534E;padding:5px 12px;border-radius:9999px;font-weight:500;
+  border:1px solid rgba(231,229,228,0.5);
+}
+
+/* ====== Section ====== */
+.container{max-width:960px;margin:0 auto;padding:0 20px}
+.section{padding:48px 0 32px}
+.section-head{text-align:center;margin-bottom:32px}
+.section-head .emoji{font-size:32px;margin-bottom:8px}
+.section-head h2{font-size:24px;font-weight:700;color:#1C1917}
+.section-head p{font-size:14px;color:#78716C;margin-top:6px}
+
+/* ====== Intro Card ====== */
+.intro-card{
+  background:#FFF;border-radius:20px;padding:28px 24px;
+  box-shadow:var(--sh-e2);max-width:720px;margin:0 auto 16px;
+}
+.intro-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:#1C1917}
+.intro-card p{font-size:15px;color:#57534E;line-height:1.8}
+.intro-highlights{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.intro-highlights span{
+  background:#FFF7ED;color:#EA580C;font-size:12px;font-weight:600;
+  padding:4px 10px;border-radius:8px;
+}
+
+/* ====== Screenshot Gallery ====== */
+.screenshot-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;margin:0 auto
+}
+.screenshot-grid .screenshot-box{
+  background:#FFF;border-radius:16px;overflow:hidden;
+  box-shadow:var(--sh-e3);transition:transform 0.3s,box-shadow 0.3s;
+}
+.screenshot-grid .screenshot-box:hover{
+  transform:translateY(-4px);box-shadow:0 16px 40px -8px rgba(249,115,22,0.2)
+}
+.screenshot-box img{width:100%;display:block}
+.screenshot-box .label{
+  font-size:12px;color:#78716C;font-weight:600;text-align:center;
+  padding:10px;letter-spacing:0.5px
+}
+
+/* ====== Stats ====== */
+.stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.stat-item{text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:#F97316}
+.stat-label{font-size:12px;color:#78716C;margin-top:2px;font-weight:500}
+
+/* ====== Demo Modules ====== */
+.demo-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;margin:0 auto}
+@media(max-width:640px){.demo-row,.screenshot-grid{grid-template-columns:1fr}}
+
+.demo-card{
+  background:#FFF;border-radius:16px;padding:20px;box-shadow:var(--sh-e2);
+}
+
+/* Community Chat */
+.chat-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.chat-header .dot{width:8px;height:8px;background:#22C55E;border-radius:50%}
+.chat-header .title{font-size:14px;font-weight:700;color:#1C1917}
+.chat-header .sub{font-size:11px;color:#78716C}
+.chat-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+.chat-avatar{
+  width:36px;height:36px;border-radius:50%;background:#FED7AA;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  flex-shrink:0;overflow:hidden;
+}
+.chat-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-bubble{
+  background:#FFF7ED;border-radius:12px;padding:10px 14px;max-width:85%
+}
+.chat-bubble .author{font-size:12px;font-weight:600;color:#1C1917;margin-bottom:3px}
+.chat-bubble .text{font-size:13px;color:#57534E;line-height:1.5}
+.chat-bubble .time{font-size:10px;color:#A8A29E;margin-top:4px}
+.chat-bubble .images{display:flex;gap:4px;margin-top:6px}
+.chat-bubble .images img{
+  width:48px;height:48px;border-radius:8px;object-fit:cover
+}
+
+/* Post with Comments */
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.post-avatar{
+  width:40px;height:40px;border-radius:50%;background:#FED7AA;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.post-avatar img{width:100%;height:100%;object-fit:cover}
+.post-author{font-size:13px;font-weight:600;color:#1C1917}
+.post-topic{font-size:11px;color:#F97316;background:#FFF7ED;padding:2px 8px;border-radius:9999px;font-weight:600}
+.post-content{font-size:14px;color:#57534E;margin-bottom:10px;line-height:1.6}
+.post-actions{display:flex;gap:14px;margin-bottom:16px}
+.post-actions button{
+  background:none;border:none;font-size:12px;color:#78716C;cursor:pointer;
+  display:flex;align-items:center;gap:4px;padding:0;
+}
+.comment{display:flex;gap:8px;padding:8px 0;border-top:1px solid #F5F5F4}
+.comment-avatar{
+  width:28px;height:28px;border-radius:50%;background:#E7E5E4;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+  overflow:hidden;
+}
+.comment-avatar img{width:100%;height:100%;object-fit:cover}
+.comment-body{font-size:12px;color:#57534E;line-height:1.5}
+.comment-body .c-author{font-weight:600;color:#1C1917;margin-right:4px}
+
+/* Badges */
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.badge-item{text-align:center;padding:10px 4px;border-radius:12px;transition:transform 0.2s}
+.badge-item:hover{transform:scale(1.05)}
+.badge-item.earned{background:#FFF7ED}
+.badge-item.locked{background:#F5F5F4;opacity:0.4}
+.badge-item .icon{font-size:28px;margin-bottom:4px}
+.badge-item .name{font-size:10px;font-weight:600;color:#1C1917}
+.badge-item.earned .name{color:#EA580C}
+.badge-item.locked .name{color:#A8A29E}
+
+/* Gallery */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gallery-grid img{
+  width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;
+  transition:transform 0.2s;cursor:pointer
+}
+.gallery-grid img:hover{transform:scale(1.03)}
+
+/* ====== Timeline ====== */
+.timeline-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F5F5F4;align-items:flex-start}
+.timeline-item:last-child{border-bottom:none}
+.timeline-dot{
+  width:10px;height:10px;border-radius:50%;background:#F97316;margin-top:6px;flex-shrink:0
+}
+.timeline-text{font-size:13px;color:#57534E;line-height:1.5}
+.timeline-text strong{color:#1C1917}
+
+/* ====== Lightbox ====== */
+.lightbox{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:pointer;
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:92vh;border-radius:12px;object-fit:contain}
+.lightbox-close{position:absolute;top:20px;right:28px;color:#fff;font-size:32px;cursor:pointer;z-index:1;font-weight:300;opacity:0.7}
+.lightbox-close:hover{opacity:1}
+.gallery-grid img{cursor:zoom-in}
+.chat-bubble .images img{cursor:pointer;transition:transform 0.2s}
+.chat-bubble .images img:hover{transform:scale(1.05)}
+
+/* ====== Footer ====== */
+.footer{
+  background:#1C1917;color:#E7E5E4;text-align:center;padding:32px 20px;
+  font-size:13px;margin-top:48px;
+}
+.footer strong{color:#FED7AA}
+
+/* ====== Animations ====== */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.float{animation:float 3s ease-in-out infinite}
+.fade-in{animation:fadeIn 0.6s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.delay-1{animation-delay:0.1s}
+.delay-2{animation-delay:0.2s}
+.delay-3{animation-delay:0.3s}
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<section class="hero">
+  <div class="hero-badge">课程中期评审 · 优秀奖</div>
+  <h1 class="float" style="margin-top:20px">复旦校园<span>猫猫</span>数字档案与社区</h1>
+  <p class="subtitle">拍照识猫 → AI 识别 → 猫猫档案 → 偶遇记录 → 社区沉淀<br>用 AI 让每一只校园猫被看见、被记录、被记住。</p>
+  <div class="keywords">
+    <span>🧠 AI 图像识别</span><span>🗺 校园猫猫地图</span>
+    <span>🏘 多话题社区</span><span>🎖 勋章激励系统</span>
+    <span>📖 猫猫档案</span><span>🛠 猫协管理端</span>
+  </div>
+  <div class="stats" style="margin-top:24px">
+    <div class="stat-item"><div class="stat-num">353</div><div class="stat-label">校园猫档案</div></div>
+    <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">可收集勋章</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">终端覆盖</div></div>
+    <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">猫猫故事</div></div>
+  </div>
+</section>
+
+<!-- ====== 项目介绍 ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="emoji">📋</div>
+      <h2>项目介绍</h2>
+      <p>Fudan Campus Cat Digital Archive & Community</p>
+    </div>
+    <div class="intro-card">
+      <h3>🎯 关于猫猫社区</h3>
+      <p>
+      猫猫社区是一个面向复旦大学校园的<strong>猫咪数字档案与社区平台</strong>，结合<strong>AI 图像识别技术</strong>与<strong>社区 UGC 生态</strong>，让师生可以通过拍照自动识别校园流浪猫身份，查看完整档案、记录偶遇轨迹，并在多话题社区中分享交流。
+      平台提供<strong>Web 端、微信小程序端</strong>和独立的<strong>猫协管理后台</strong>，覆盖校园猫猫从发现、识别、建档到健康管理的完整生命周期。系统内置 12 枚<strong>勋章激励体系</strong>，
+      通过游戏化设计鼓励持续参与，同时建立人猫之间的情感连接与社区记忆。
+      </p>
+      <div class="intro-highlights">
+        <span>🧠 DINOv2 AI 识别</span>
+        <span>🎖 12 枚勋章系统</span>
+        <span>🗺 高德地图热力图</span>
+        <span>🏘 多话题社区</span>
+        <span>📱 微信小程序</span>
+        <span>🛠 猫协管理后台</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 项目截图 ====== -->
+<section class="section" style="padding-top:16px">
+  <div class="container">
+    <div class="section-head">
+      <div class="emoji">📸</div>
+      <h2>项目照片</h2>
+      <p>页面截图 / 功能一览</p>
+    </div>
+    <div class="screenshot-grid">
+      <div class="screenshot-box fade-in">
+        <img src="home.png" alt="猫猫社区首页">
+        <div class="label">📱 首页 — 猫猫卡片 · 快捷入口 · 最新动态</div>
+      </div>
+      <div class="screenshot-box fade-in delay-1">
+        <img src="community.png" alt="社区页面">
+        <div class="label">💬 社区 — 多话题 · 发帖 · 评论 · 点赞</div>
+      </div>
+    </div>
+    <div class="screenshot-grid" style="margin-top:16px">
+      <div class="screenshot-box fade-in delay-2">
+        <img src="badges.png" alt="勋章系统">
+        <div class="label">🎖 勋章墙 — 12 枚徽章 · 成就收集</div>
+      </div>
+      <div class="screenshot-box fade-in delay-3">
+        <img src="map.png" alt="地图页面">
+        <div class="label">🗺 猫猫地图 — 热力图 · 定位标记 · 时间筛选</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== Demo: 社区聊天 + 评论 ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="emoji">💬</div>
+      <h2>社区互动 DEMO</h2>
+      <p>多话题社区 · 发帖 · 评论 · 互动</p>
+    </div>
+    <div class="demo-row">
+      <!-- Chat Feed -->
+      <div class="demo-card fade-in">
+        <div class="chat-header">
+          <div class="dot"></div>
+          <span class="title">社区动态</span>
+          <span class="sub">· 广场</span>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"><img src="avatars/avatar208.jpg" alt=""></div>
+          <div class="chat-bubble">
+            <div class="author">光华楼巡逻员</div>
+            <div class="text">今天在光华楼门口看到大橘了！胖了好多，看来寒假大家喂得不错 😂</div>
+            <div class="images">
+              <img src="img/cat1.jpg" alt="校园猫照片" loading="lazy">
+              <img src="img/cat2.jpg" alt="校园猫照片" loading="lazy">
+            </div>
+            <div class="time">3 小时前</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"><img src="avatars/avatar457.jpg" alt=""></div>
+          <div class="chat-bubble">
+            <div class="author">文科楼常驻民</div>
+            <div class="text">[寻猫] 请问有同学最近在文科楼附近看到一只黑白相间的小猫吗？耳朵有一块黑色斑点，上周四之后就没出现了，有点担心 😢</div>
+            <div class="time">5 小时前 · 12 条评论</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar"><img src="avatars/avatar635.jpg" alt=""></div>
+          <div class="chat-bubble">
+            <div class="author">北区喵喵队</div>
+            <div class="text">分享一只三花美照！在北区食堂后面拍的，特别亲人～</div>
+            <div class="images">
+              <img src="img/cat3.jpg" alt="校园猫照片" loading="lazy">
+            </div>
+            <div class="time">昨天 · 28 赞 ❤️</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post with Comments -->
+      <div class="demo-card fade-in delay-1">
+        <div class="post-header">
+          <div class="post-avatar"><img src="avatars/avatar270.jpg" alt=""></div>
+          <div>
+            <div class="post-author">猫协小助手</div>
+            <span class="post-topic">健康</span>
+          </div>
+        </div>
+        <div class="post-content">
+          提醒大家：最近天气转凉，如果看到猫咪在角落缩着不动，请不要强行驱赶。可以联系猫协的喂养点负责人，我们会安排保暖措施。附上各校区喂养点分布：
+        </div>
+        <div class="post-actions">
+          <button>❤️ 42</button>
+          <button>💬 15</button>
+          <button>📌 收藏</button>
+        </div>
+        <div class="comment">
+          <div class="comment-avatar"><img src="avatars/avatar775.jpg" alt=""></div>
+          <div class="comment-body"><span class="c-author">枫林喵记</span>收到！南区食堂旁边的几个点我都关注了</div>
+        </div>
+        <div class="comment">
+          <div class="comment-avatar"><img src="avatars/avatar208.jpg" alt=""></div>
+          <div class="comment-body"><span class="c-author">文图摸鱼王</span>请问邯郸校区北区的喂养点具体在哪里呀？上周路过没找到</div>
+        </div>
+        <div class="comment">
+          <div class="comment-avatar"><img src="avatars/avatar270.jpg" alt=""></div>
+          <div class="comment-body"><span class="c-author">猫协小助手</span>回复：北区食堂后面和篮球场旁边各有一个，已更新地图标记~</div>
+        </div>
+        <div class="comment">
+          <div class="comment-avatar"><img src="avatars/avatar457.jpg" alt=""></div>
+          <div class="comment-body"><span class="c-author">动医大三-阿琳</span>如果需要帮助判断猫咪健康状况，可以随时在健康话题@我，我每天都会看</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== Demo: 勋章 & 照片墙 ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="emoji">🎖</div>
+      <h2>勋章收集 & 照片墙 DEMO</h2>
+      <p>游戏化激励 · 猫猫照片采集</p>
+    </div>
+    <div class="demo-row">
+      <!-- Badges -->
+      <div class="demo-card fade-in">
+        <div style="font-size:14px;font-weight:700;color:#1C1917;margin-bottom:4px">🏅 我的勋章</div>
+        <div style="font-size:11px;color:#78716C;margin-bottom:2px">已获得 5 / 12</div>
+        <div class="badge-grid">
+          <div class="badge-item earned">
+            <div class="icon">🐾</div>
+            <div class="name">初次偶遇</div>
+          </div>
+          <div class="badge-item earned">
+            <div class="icon">🔭</div>
+            <div class="name">观察员</div>
+          </div>
+          <div class="badge-item earned">
+            <div class="icon">📝</div>
+            <div class="name">首次发帖</div>
+          </div>
+          <div class="badge-item earned">
+            <div class="icon">📸</div>
+            <div class="name">摄影先锋</div>
+          </div>
+          <div class="badge-item earned">
+            <div class="icon">🗺</div>
+            <div class="name">地图探索者</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">⭐</div>
+            <div class="name">社区之星</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">🔍</div>
+            <div class="name">新猫发现者</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">🏆</div>
+            <div class="name">猫猫大师</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">🤝</div>
+            <div class="name">社区纽带</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">🏅</div>
+            <div class="name">专家</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">🎖</div>
+            <div class="name">全收集</div>
+          </div>
+          <div class="badge-item locked">
+            <div class="icon">✨</div>
+            <div class="name">年度之星</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery + Timeline -->
+      <div class="demo-card fade-in delay-1">
+        <div style="font-size:14px;font-weight:700;color:#1C1917;margin-bottom:10px">📸 猫猫照片墙</div>
+        <div class="gallery-grid">
+          <img src="img/cat1.jpg" alt="校园猫" loading="lazy">
+          <img src="img/cat2.jpg" alt="校园猫" loading="lazy">
+          <img src="img/cat3.jpg" alt="校园猫" loading="lazy">
+          <img src="img/cat4.jpg" alt="校园猫" loading="lazy">
+          <img src="img/cat5.jpg" alt="校园猫" loading="lazy">
+          <img src="img/cat6.jpg" alt="校园猫" loading="lazy">
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#1C1917;margin-top:18px;margin-bottom:8px">📋 最近偶遇记录</div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text"><strong>大橘</strong> — 光华楼东侧 · 今日 9:30 · <span style="color:#22C55E">✅ 已确认</span>（光华楼巡逻员 记录）</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#F59E0B"></div>
+          <div class="timeline-text"><strong>三花</strong> — 北区食堂后 · 昨天 14:00 · <span style="color:#F59E0B">⏳ 待确认</span>（北区喵喵队 提交）</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text"><strong>小黑</strong> — 文科楼附近 · 6月19日 · <span style="color:#22C55E">✅ 已确认</span>（文科楼常驻民 记录）</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text"><strong>麻酱</strong> — 南苑餐厅 · 6月18日 · <span style="color:#22C55E">✅ 已确认</span>（文图摸鱼王 记录）</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:#3B82F6"></div>
+          <div class="timeline-text"><strong>未知猫</strong> — 新发现 · 6月17日 · <span style="color:#3B82F6">🔍 审核中</span>（枫林喵记 提交）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== Footer ====== -->
+<footer class="footer">
+  <strong>🐱 复旦猫猫社区</strong><br>
+  拍照识猫 → AI 识别 → 猫猫档案 → 偶遇记录 → 社区沉淀<br>
+  课程中期评审 · 优秀奖<br><br>
+  <span style="font-size:11px;color:#78716C">React 18 · FastAPI · SQLite · DINOv2 · 高德地图 · Taro 微信小程序</span>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <span class="lightbox-close">&times;</span>
+  <img src="" alt="放大查看" id="lightbox-img">
+</div>
+
+<script>
+(function(){
+  var lb=document.getElementById('lightbox');
+  var lbImg=document.getElementById('lightbox-img');
+  var imgs=document.querySelectorAll('.gallery-grid img, .chat-bubble .images img');
+  imgs.forEach(function(img){
+    img.addEventListener('click',function(e){
+      e.stopPropagation();
+      lbImg.src=this.src;
+      lb.classList.add('open');
+    });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') lb.classList.remove('open');
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -37,8 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: pip install -r cat-backend/requirements.txt && pip install httpx==0.27.0
+      - run: pip install -r cat-backend/requirements.txt -r cat-backend/requirements-torch.txt httpx==0.27.0
       - run: cd cat-backend && python -m compileall app/
       - run: cd cat-backend && JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass pytest tests/ -q
