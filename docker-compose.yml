@@ -37,6 +37,7 @@ services:
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - redis
+      - postgres
     command: gunicorn app.main:app -c gunicorn.conf.py
     restart: on-failure
 
@@ -45,3 +46,18 @@ services:
     ports:
       - "6379:6379"
     restart: on-failure
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=cat_community
+      - POSTGRES_USER=cat
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-catdev}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: on-failure
+
+volumes:
+  pgdata:

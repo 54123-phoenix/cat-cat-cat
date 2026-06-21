@@ -7,7 +7,7 @@ from app.database import get_db
 from app import crud, schemas
 from app.api.auth import require_admin
 from app.api.upload import validate_upload, save_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
-from app.models import User, Cat, Sighting
+from app.models import User
 
 router = APIRouter(prefix="/api/cats", tags=["cats"])
 
@@ -28,37 +28,36 @@ def nearby_cats(
     limit: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    sightings = (
-        db.query(Sighting)
-        .filter(Sighting.latitude.isnot(None), Sighting.longitude.isnot(None))
-        .all()
-    )
+    if not -90 <= lat <= 90:
+        raise HTTPException(status_code=422, detail="Latitude must be between -90 and 90")
+    if not -180 <= lng <= 180:
+        raise HTTPException(status_code=422, detail="Longitude must be between -180 and 180")
+
+    rows = crud.get_nearby_sightings(db, lat, lng, radius_km)
 
     cat_distances = {}
-    for s in sightings:
-        dist = _haversine(lat, lng, s.latitude, s.longitude)
+    for cat_id, s_lat, s_lng, created_at, cat_name, cat_avatar in rows:
+        dist = _haversine(lat, lng, s_lat, s_lng)
         if dist > radius_km:
             continue
-        cat_id = s.cat_id
-        if cat_id not in cat_distances or s.created_at > cat_distances[cat_id]["latest_sighting_at"]:
+        if cat_id not in cat_distances or created_at > cat_distances[cat_id]["latest_sighting_at"]:
             cat_distances[cat_id] = {
                 "distance_km": dist,
-                "latest_sighting_at": s.created_at,
+                "latest_sighting_at": created_at,
+                "cat_name": cat_name,
+                "cat_avatar": cat_avatar,
             }
 
-    results = []
-    for cat_id, info in cat_distances.items():
-        cat = db.query(Cat).filter(Cat.id == cat_id).first()
-        if not cat:
-            continue
-        results.append({
-            "cat_id": cat.id,
-            "cat_name": cat.name,
-            "cat_avatar": cat.avatar,
+    results = [
+        {
+            "cat_id": cat_id,
+            "cat_name": info["cat_name"],
+            "cat_avatar": info["cat_avatar"],
             "distance_km": round(info["distance_km"], 3),
             "latest_sighting_at": info["latest_sighting_at"],
-        })
-
+        }
+        for cat_id, info in cat_distances.items()
+    ]
     results.sort(key=lambda x: x["distance_km"])
     return results[:limit]
 
