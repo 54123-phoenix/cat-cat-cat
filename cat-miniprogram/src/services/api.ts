@@ -5,6 +5,12 @@ import { demoApi } from './demo'
 
 const BASE = CONFIG.apiBase
 
+function buildQS(params: Record<string, any> = {}): string {
+  const entries = Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')
+  if (!entries.length) return ''
+  return '?' + entries.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join('&')
+}
+
 async function request<T = any>(url: string, options: any = {}): Promise<T> {
   if (CONFIG.demoMode) {
     return demoApi(url, options) as T
@@ -58,22 +64,33 @@ export function getCats() { return request('/cats') }
 export function getCat(catId: number) { return request(`/cats/${catId}`) }
 
 export function getSightings(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/sightings${qs ? '?' + qs : ''}`)
+  return request(`/sightings${buildQS(params)}`)
 }
 
 export function createSighting(data: any) {
-  const form = new FormData()
-  if (data.catId) form.append('cat_id', String(data.catId))
-  if (data.location) form.append('location', data.location)
-  if (data.confidence !== undefined) form.append('confidence', String(data.confidence))
-  if (data.activity_type) form.append('activity_type', data.activity_type)
-  return request('/sightings', { method: 'POST', body: data.file ? form : data })
+  if (data.file) {
+    const formData: any = {}
+    if (data.catId) formData.cat_id = String(data.catId)
+    if (data.location) formData.location = data.location
+    if (data.confidence !== undefined) formData.confidence = String(data.confidence)
+    if (data.activity_type) formData.activity_type = data.activity_type
+    if (data.weather) formData.weather = data.weather
+    if (data.mood) formData.mood = data.mood
+    if (data.latitude !== undefined) formData.latitude = String(data.latitude)
+    if (data.longitude !== undefined) formData.longitude = String(data.longitude)
+    return Taro.uploadFile({
+      url: `${BASE}/sightings`,
+      filePath: data.file,
+      name: 'file',
+      formData,
+      header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
+    }).then(res => JSON.parse(res.data))
+  }
+  return request('/sightings', { method: 'POST', body: data })
 }
 
 export function getPosts(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/posts${qs ? '?' + qs : ''}`)
+  return request(`/posts${buildQS(params)}`)
 }
 
 export function createPost(data: FormData) {
@@ -99,8 +116,7 @@ export function recognize(filePath: string) {
 }
 
 export function getNotifications(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/notifications${qs ? '?' + qs : ''}`)
+  return request(`/notifications${buildQS(params)}`)
 }
 
 export function getPost(postId: number) { return request(`/posts/${postId}`) }
@@ -118,8 +134,7 @@ export function reportPost(postId: number, data: { reason: string }) {
 }
 
 export function getReports(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/posts/reports${qs ? '?' + qs : ''}`)
+  return request(`/posts/reports${buildQS(params)}`)
 }
 
 export function handleReport(reportId: number, action: string) {
@@ -127,8 +142,7 @@ export function handleReport(reportId: number, action: string) {
 }
 
 export function getHealthRecords(catId: number, params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/cats/${catId}/health${qs ? '?' + qs : ''}`)
+  return request(`/cats/${catId}/health${buildQS(params)}`)
 }
 
 export function createHealthRecord(catId: number, data: any) {
@@ -140,8 +154,7 @@ export function deleteHealthRecord(catId: number, recordId: number) {
 }
 
 export function getFeedingPoints(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/feeding/points${qs ? '?' + qs : ''}`)
+  return request(`/feeding/points${buildQS(params)}`)
 }
 
 export function createFeedingPoint(data: any) {
@@ -161,15 +174,13 @@ export function markNotificationRead(id: number) { return request(`/notification
 export function markAllNotificationsRead() { return request('/notifications/read-all', { method: 'POST' }) }
 
 export function getGalleryImages(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/cats/images${qs ? '?' + qs : ''}`)
+  return request(`/gallery${buildQS(params)}`)
 }
 
 export function getFollowedCats() { return request('/user/follows') }
 
 export function getLeaderboard(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/leaderboard${qs ? '?' + qs : ''}`)
+  return request(`/leaderboard${buildQS(params)}`)
 }
 
 export function getDailyQuest() { return request('/users/me/daily-quest') }
@@ -223,8 +234,7 @@ export function deleteCat(catId: number) {
 }
 
 export function getDiscoveries(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/discoveries${qs ? '?' + qs : ''}`)
+  return request(`/discoveries${buildQS(params)}`)
 }
 
 export function reviewDiscovery(id: number, data: any) {
@@ -232,12 +242,13 @@ export function reviewDiscovery(id: number, data: any) {
 }
 
 export function getHeatmapData(params: any = {}) {
-  const qs = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-  return request(`/map/heatmap${qs ? '?' + qs : ''}`)
+  return request(`/map/heatmap${buildQS(params)}`)
 }
 
 export function adminLogout() {
   clearToken()
 }
+
+export function getMyStats() { return request('/users/me') }
 
 export { getToken, setToken, clearToken, getStoredUser, setStoredUser } from '../utils/storage'

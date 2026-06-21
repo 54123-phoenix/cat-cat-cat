@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { getMyStats, getFollowedCats, getSightings } from '../../services/api'
 
 const SLIDES = [
@@ -19,7 +19,8 @@ export default function Wrapped() {
   const [followCount, setFollowCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
-  useState(() => {
+  useDidShow(() => {
+    setLoading(true)
     Promise.all([
       getMyStats().catch(() => ({})),
       getFollowedCats().catch(() => []),
