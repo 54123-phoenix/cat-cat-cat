@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import desc, func, or_
@@ -668,26 +668,26 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
             longest = max((user.longest_streak or 0), streak)
             if (user.longest_streak or 0) < longest:
                 user.longest_streak = longest
-                db.commit()
         except Exception:
-            db.rollback()
+            pass
+    db.commit()
 
-    return {
-        "sightings": sightings,
-        "posts": posts,
-        "cats_known": cats_known,
-        "total_cats": db.query(models.Cat).count(),
-        "locations_count": locations,
-        "photos_count": photos,
-        "discoveries": discoveries,
-        "approved_discoveries": approved,
-        "event_badges": event_badges,
-        "streak": streak,
-        "longest_streak": longest,
-        "xp": xp,
-        "level": level,
-        "level_progress": progress,
-    }
+
+def get_campuses(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Campus).offset(skip).limit(limit).all()
+
+def get_campus(db: Session, campus_id: int):
+    return db.query(models.Campus).filter(models.Campus.id == campus_id).first()
+
+def get_campus_by_slug(db: Session, slug: str):
+    return db.query(models.Campus).filter(models.Campus.slug == slug).first()
+
+def create_campus(db: Session, campus: schemas.CampusCreate):
+    db_campus = models.Campus(**campus.model_dump())
+    db.add(db_campus)
+    db.commit()
+    db.refresh(db_campus)
+    return db_campus
 
 
 def compute_user_badges(db: Session, user_id: int) -> tuple:
@@ -1194,6 +1194,32 @@ def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, curr
     )
     posts = query.order_by(desc(models.Post.created_at)).offset(skip).limit(limit).all()
     return [_serialize_post(p, current_user_id) for p in posts]
+
+
+import secrets
+
+def create_invite_code(db: Session, user_id: int) -> models.InviteCode:
+    code = secrets.token_urlsafe(8)[:12].upper()
+    while db.query(models.InviteCode).filter(models.InviteCode.code == code).first():
+        code = secrets.token_urlsafe(8)[:12].upper()
+    invite = models.InviteCode(code=code, created_by=user_id)
+    db.add(invite)
+    db.commit()
+    db.refresh(invite)
+    return invite
+
+def use_invite_code(db: Session, code: str, user_id: int) -> Optional[models.InviteCode]:
+    invite = db.query(models.InviteCode).filter(models.InviteCode.code == code, models.InviteCode.used_by == None).first()
+    if not invite:
+        return None
+    invite.used_by = user_id
+    invite.used_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(invite)
+    return invite
+
+def get_user_invite_codes(db: Session, user_id: int) -> List:
+    return db.query(models.InviteCode).filter(models.InviteCode.created_by == user_id).order_by(models.InviteCode.created_at.desc()).all()
 
 
 def init_mock_data(db: Session):
