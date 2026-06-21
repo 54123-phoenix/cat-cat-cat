@@ -868,7 +868,7 @@ def mark_all_notifications_read(db: Session, user_id: int) -> int:
     count = db.query(models.Notification).filter(
         models.Notification.user_id == user_id,
         models.Notification.is_read == False,
-    ).update({"is_read": "yes"})
+    ).update({"is_read": True})
     db.commit()
     return count
 

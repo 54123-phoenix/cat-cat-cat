@@ -22,7 +22,7 @@ async def recognize(request: Request, file: UploadFile = File(...), db: Session 
             action="recognize",
             entity_type="cat",
             entity_id=result.cat_id,
-            performed_by=request.client.host if request.client else None,
+            performed_by=request.client.host if request.client else "system",
         ))
         db.commit()
     except Exception:

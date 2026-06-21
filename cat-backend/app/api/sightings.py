@@ -39,6 +39,9 @@ async def create_sighting(
     request: Request,
     cat_id: int = Form(...),
     location: Optional[str] = Form(None),
+    latitude: Optional[float] = Form(None),
+    longitude: Optional[float] = Form(None),
+    location_name: Optional[str] = Form(None),
     confidence: Optional[float] = Form(None),
     activity_type: Optional[str] = Form(None),
     note: Optional[str] = Form(None),
@@ -53,7 +56,7 @@ async def create_sighting(
         image_path = await save_upload(file, "sightings")
 
     sighting_status = "pending"
-    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)
+    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, latitude=latitude, longitude=longitude, location_name=location_name, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)
     db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by=current_user.nickname, user_id=current_user.id, status=sighting_status)
 
     cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()

@@ -159,7 +159,7 @@ export default function CatDetail() {
     if (checkInLoading || !getToken()) return
     setCheckInLoading(true)
     try {
-      await createSighting({ catId, location: cat?.location || '', confidence: undefined, file: undefined, activity_type: undefined, weather: undefined, mood: undefined })
+      await createSighting({ catId, location: cat?.location || '', confidence: undefined, file: undefined, activity_type: undefined, weather: undefined, mood: undefined, latitude: undefined, longitude: undefined })
       toast('打卡成功！', { emoji: '🐾' })
     } catch (err) {
       toast(err.message || '打卡失败', { emoji: '⚠️' })

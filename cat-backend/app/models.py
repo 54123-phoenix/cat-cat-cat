@@ -114,6 +114,7 @@ class Sighting(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     cat = relationship("Cat", back_populates="sightings")
+    user = relationship("User")
 
 
 class SightingConfirmation(Base):
@@ -226,6 +227,8 @@ class Report(Base):
     status = Column(String(20), default="pending")
     handled_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    post = relationship("Post")
 
 
 class HealthRecord(Base):

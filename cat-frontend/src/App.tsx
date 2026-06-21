@@ -70,7 +70,7 @@ export function updateUser(newUser) {
 
 function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   const token = adminOnly ? getAdminToken() : getToken()
-  if (!token) return <Navigate to={adminOnly ? "/admin/login" : "/login"} replace />
+  if (!token) return <Navigate to={adminOnly ? "/admin" : "/login"} replace />
   return children
 }
 
@@ -105,36 +105,15 @@ export default function App() {
             <Route path={ROUTES.LEAGUE} element={<League />} />
             <Route path={ROUTES.WRAPPED} element={<Wrapped />} />
             <Route path={ROUTES.ROUTES_PAGE} element={<CatRoutes />} />
+            <Route path={ROUTES.BADGES} element={<BadgeGallery />} />
+            <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
+            <Route path={ROUTES.WEEKLY_REPORT} element={<WeeklyReport />} />
           </Route>
           <Route
             path={ROUTES.ADMIN}
             element={
               <ProtectedRoute adminOnly>
                 <Admin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.BADGES}
-            element={
-              <ProtectedRoute>
-                <BadgeGallery />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.NOTIFICATIONS}
-            element={
-              <ProtectedRoute>
-                <Notifications />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.WEEKLY_REPORT}
-            element={
-              <ProtectedRoute>
-                <WeeklyReport />
               </ProtectedRoute>
             }
           />

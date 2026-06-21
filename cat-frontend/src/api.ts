@@ -152,7 +152,7 @@ export function recognize(file) {
   return request('/recognize', { method: 'POST', body: form })
 }
 
-export function createSighting({ catId, location, confidence, file, activity_type, weather, mood }) {
+export function createSighting({ catId, location, confidence, file, activity_type, weather, mood, latitude, longitude }) {
   const form = new FormData()
   form.append('cat_id', catId)
   if (location) form.append('location', location)
@@ -161,6 +161,8 @@ export function createSighting({ catId, location, confidence, file, activity_typ
   if (activity_type) form.append('activity_type', activity_type)
   if (weather) form.append('weather', weather)
   if (mood) form.append('mood', mood)
+  if (latitude !== undefined) form.append('latitude', String(latitude))
+  if (longitude !== undefined) form.append('longitude', String(longitude))
   return request('/sightings', { method: 'POST', body: form })
 }
 
