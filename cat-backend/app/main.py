@@ -106,7 +106,7 @@ os.makedirs(os.path.join(UPLOAD_DIR, "discoveries"), exist_ok=True)
 
 
 @app.get("/uploads/{filepath:path}")
-async def serve_upload(filepath: str, user: User = Depends(auth.require_auth)):
+async def serve_upload(filepath: str):
     full_path = os.path.normpath(os.path.join(UPLOAD_DIR, filepath))
     if not full_path.startswith(os.path.normpath(UPLOAD_DIR)):
         raise HTTPException(status_code=403, detail="Access denied")
