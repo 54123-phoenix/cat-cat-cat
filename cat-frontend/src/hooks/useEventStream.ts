@@ -1,3 +1,8 @@
+// SECURITY NOTE: EventSource API doesn't support custom headers, so JWT is passed as query param.
+// This is logged in server access logs. For production, implement a ticket-based approach:
+// 1. POST /api/events/ticket → returns short-lived nonce
+// 2. Connect EventSource with ?ticket=nonce (nonce is single-use)
+
 import { useEffect, useRef, useCallback } from 'react'
 import { getToken } from '../api'
 

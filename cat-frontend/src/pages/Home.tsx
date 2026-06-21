@@ -1,12 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight, Zap, Navigation } from 'lucide-react'
-import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats, getToken } from '../api'
+import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import DailyQuestCard from '../components/DailyQuestCard'
 import StreakBadge from '../components/StreakBadge'
 import Avatar from '../components/Avatar'
 import { getPrefs } from '../components/Onboarding'
+import { useEventStream } from '../hooks/useEventStream'
 
 function greeting() {
   const h = new Date().getHours()
@@ -61,25 +62,11 @@ export default function Home() {
   }, [])
 
   const [liveSighting, setLiveSighting] = useState(null)
-  const esRef = useRef(null)
 
-  useEffect(() => {
-    const token = getToken()
-    if (!token) return undefined
-    try {
-      const es = new EventSource(`${import.meta.env.VITE_API_URL || ''}/api/events/sightings?token=${token}`)
-      es.onmessage = (e) => {
-        try {
-          const data = JSON.parse(e.data)
-          setLiveSighting(data)
-          setTimeout(() => setLiveSighting(null), 4000)
-        } catch {}
-      }
-      es.onerror = () => es.close()
-      esRef.current = es
-    } catch {}
-    return () => { esRef.current?.close() }
-  }, [])
+  useEventStream((data) => {
+    setLiveSighting(data)
+    setTimeout(() => setLiveSighting(null), 4000)
+  })
 
   const streakDays = myStats?.streak || 0
   const streakWeek = Array.from({ length: 7 }, (_, i) => i < Math.min(streakDays, 7))
