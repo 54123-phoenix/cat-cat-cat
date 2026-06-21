@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from 'react'
-import { Download, Sparkles, ChevronLeft, ChevronRight, Share2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Download, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
 import QRCode from 'qrcode'
 import MascotCat from '../components/MascotCat'
-import SharePoster from '../components/SharePoster'
+
 import { getWrapped, getStoredUser } from '../api'
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -124,7 +124,7 @@ export default function Wrapped() {
   }, [])
 
   useEffect(() => {
-    if (!data) return
+    if (!data) return undefined
     const timer = setInterval(() => {
       setCurrentSlide(prev => prev < slides.length - 1 ? prev + 1 : prev)
     }, 5000)
@@ -321,7 +321,7 @@ export default function Wrapped() {
         className="h-full transition-transform duration-500 ease-out"
         style={{ transform: `translateY(-${currentSlide * 100}%)` }}
       >
-        {slides.map((slide, i) => (
+        {slides.map((slide, _i) => (
           <div key={slide.key} className="h-full flex items-center justify-center p-8">
             {slide.content}
           </div>

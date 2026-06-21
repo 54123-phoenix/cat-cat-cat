@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import PhotoViewer from '../components/PhotoViewer'
-import { Cat, PawPrint, Image as ImageIcon } from 'lucide-react'
+import { Cat, Image as ImageIcon } from 'lucide-react'
 import { useInfiniteGallery } from '../hooks/useApi'
 import { campusLocations } from '../campusLocations'
 
@@ -34,7 +34,7 @@ export default function Gallery() {
 
   useEffect(() => {
     const el = sentinelRef.current
-    if (!el || !hasNextPage) return
+    if (!el || !hasNextPage) return undefined
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {

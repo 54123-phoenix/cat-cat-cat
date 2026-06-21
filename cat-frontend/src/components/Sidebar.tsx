@@ -7,18 +7,18 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   const sidebarRef = useRef(null)
 
   useEffect(() => {
-    if (!isOpen) return
-    const handler = (e) => { if (e.key === 'Escape') onClose() }
+    if (!isOpen) return undefined
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handler)
 
     const container = sidebarRef.current
-    if (!container) return
+    if (!container) return undefined
     const focusable = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
     if (focusable.length > 0) focusable[0].focus()
 
-    function trapFocus(e) {
+    function trapFocus(e: KeyboardEvent) {
       if (e.key !== 'Tab' || !focusable.length) return
       const first = focusable[0]
       const last = focusable[focusable.length - 1]

@@ -30,7 +30,7 @@ export default function Layout() {
   const user = useUserStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const [tabIndex, setTabIndex] = useState(0)
+  const [, setTabIndex] = useState(0)
 
   const getTitle = () => {
     const exact = routeTitles[location.pathname]
@@ -52,7 +52,7 @@ export default function Layout() {
     const token = getToken()
     if (!token) {
       navigate('/login')
-      return
+      return undefined
     }
     let cancelled = false
     getUserProfile()

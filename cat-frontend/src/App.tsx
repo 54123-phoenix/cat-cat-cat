@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore, Suspense, lazy } from 'react'
+import { useSyncExternalStore, Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Layout from './components/Layout'
@@ -63,7 +63,7 @@ export function useUserStore() {
   )
 }
 
-export function updateUser(newUser) {
+export function updateUser(newUser: any) {
   currentUser = newUser
   emitChange()
 }

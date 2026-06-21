@@ -4,7 +4,7 @@ import FeedItem from '../components/FeedItem'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import { useInfiniteSightings } from '../hooks/useApi'
-import { PawPrint, Cat } from 'lucide-react'
+import { Cat } from 'lucide-react'
 
 export default function Feed() {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ export default function Feed() {
 
   useEffect(() => {
     const el = sentinelRef.current
-    if (!el || !hasNextPage) return
+    if (!el || !hasNextPage) return undefined
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {

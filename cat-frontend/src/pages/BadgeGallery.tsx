@@ -6,10 +6,6 @@ import { getBadges } from '../api'
 import { Medal } from 'lucide-react'
 import { SERIES_LABEL } from '../constants/badges'
 
-function getBadgeFromApi(b) {
-  return b
-}
-
 export default function BadgeGallery() {
   const [badges, setBadges] = useState([])
   const [loading, setLoading] = useState(true)
