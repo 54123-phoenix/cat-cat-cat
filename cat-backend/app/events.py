@@ -47,8 +47,7 @@ def publish(event_type: str, data: dict) -> None:
     )
     if _redis_client:
         try:
-            import asyncio as _aio
-            _aio.get_event_loop().create_task(_redis_client.publish(REDIS_CHANNEL, message))
+            asyncio.run(_redis_client.publish(REDIS_CHANNEL, message))
         except Exception:
             logger.warning("Redis publish failed, falling back to in-process")
             _publish_in_memory(message)

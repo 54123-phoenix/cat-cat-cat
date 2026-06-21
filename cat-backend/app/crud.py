@@ -672,6 +672,25 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
             pass
     db.commit()
 
+    total_cats = db.query(models.Cat).count()
+
+    return {
+        "sightings": sightings,
+        "posts": posts,
+        "cats_known": cats_known,
+        "locations_count": locations,
+        "photos_count": photos,
+        "discoveries": discoveries,
+        "approved_discoveries": approved,
+        "event_badges": event_badges,
+        "xp": xp,
+        "level": level,
+        "level_progress": progress,
+        "streak": streak,
+        "longest_streak": longest,
+        "total_cats": total_cats,
+    }
+
 
 def get_campuses(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Campus).offset(skip).limit(limit).all()

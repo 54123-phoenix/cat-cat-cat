@@ -47,6 +47,7 @@ async def lifespan(app: FastAPI):
                     nickname="猫协管理员",
                     role="admin",
                 ))
+                db.commit()
         else:
             logger.warning("ADMIN_PASSWORD not set. Admin account will not be created.")
         if settings.INIT_DEMO_USER:
@@ -59,7 +60,7 @@ async def lifespan(app: FastAPI):
                     nickname="猫猫爱好者",
                     role="user",
                 ))
-            db.commit()
+                db.commit()
             init_mock_data(db)
         from app.models import Campus
         if not db.query(Campus).first():

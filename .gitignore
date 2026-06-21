@@ -21,6 +21,8 @@ uploads/
 *.sqlite
 *.sqlite3
 *.db
+*.db-shm
+*.db-wal
 
 # Local tool state
 .claude/

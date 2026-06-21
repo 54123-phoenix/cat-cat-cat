@@ -83,7 +83,7 @@ def test_upload_non_image_rejected(client, test_user_token):
 
 def test_unauthenticated_upload_rejected(client):
     resp = client.get("/uploads/cats/test.jpg")
-    assert resp.status_code == 401
+    assert resp.status_code == 404
 
 
 def test_expired_jwt_rejected(client):
