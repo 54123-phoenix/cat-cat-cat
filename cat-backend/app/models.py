@@ -33,6 +33,32 @@ class UserBadge(Base):
     )
 
 
+class Campus(Base):
+    __tablename__ = "campuses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    slug = Column(String(50), unique=True, nullable=False, index=True)
+    center_lat = Column(Float, nullable=False)
+    center_lng = Column(Float, nullable=False)
+    bounds_ne_lat = Column(Float)
+    bounds_ne_lng = Column(Float)
+    bounds_sw_lat = Column(Float)
+    bounds_sw_lng = Column(Float)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+
+
+class InviteCode(Base):
+    __tablename__ = "invite_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, nullable=False, index=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+    used_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -49,6 +75,7 @@ class User(Base):
     level = Column(Integer, default=1)
     longest_streak = Column(Integer, default=0)
     token_version = Column(Integer, default=1)
+    campus_id = Column(Integer, ForeignKey("campuses.id"), nullable=True, index=True)
 
     posts = relationship("Post", back_populates="author")
     comments = relationship("Comment", back_populates="author")
@@ -73,6 +100,7 @@ class Cat(Base):
     aliases = Column(String(120))
     relationships = Column(Text)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    campus_id = Column(Integer, ForeignKey("campuses.id"), nullable=True, index=True)
 
     images = relationship("CatImage", back_populates="cat")
     sightings = relationship("Sighting", back_populates="cat")
@@ -258,6 +286,7 @@ class FeedingPoint(Base):
     longitude = Column(Float, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    campus_id = Column(Integer, ForeignKey("campuses.id"), nullable=True, index=True)
 
     check_ins = relationship("FeedingCheckIn", back_populates="point", cascade="all, delete-orphan", order_by="FeedingCheckIn.created_at.desc()")
 

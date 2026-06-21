@@ -506,6 +506,18 @@ class FollowCreate(BaseModel):
     pass
 
 
+class InviteCodeResponse(BaseModel):
+    id: int
+    code: str
+    created_by: int
+    used_by: Optional[int] = None
+    used_at: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class WechatLoginRequest(BaseModel):
     code: str
     nickname: Optional[str] = None
@@ -541,3 +553,29 @@ class PaginatedHeatmapResponse(BaseModel):
     items: List[HeatmapPoint]
     total: int
     has_more: bool
+
+
+class CampusCreate(BaseModel):
+    name: str
+    slug: str
+    center_lat: float
+    center_lng: float
+    bounds_ne_lat: Optional[float] = None
+    bounds_ne_lng: Optional[float] = None
+    bounds_sw_lat: Optional[float] = None
+    bounds_sw_lng: Optional[float] = None
+
+class CampusResponse(BaseModel):
+    id: int
+    name: str
+    slug: str
+    center_lat: float
+    center_lng: float
+    bounds_ne_lat: Optional[float] = None
+    bounds_ne_lng: Optional[float] = None
+    bounds_sw_lat: Optional[float] = None
+    bounds_sw_lng: Optional[float] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

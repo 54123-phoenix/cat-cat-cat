@@ -18,7 +18,7 @@ import os
 
 from app.config import settings
 from app.database import engine, SessionLocal, Base
-from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, gallery
+from app.api import cats, sightings, recognize, user, auth, admin, posts, health, feeding, notifications, discoveries, map, audit, gallery, campus, invite
 from app.api import events as events_api
 from app.crud import init_mock_data
 from app.models import User
@@ -61,6 +61,10 @@ async def lifespan(app: FastAPI):
                 ))
             db.commit()
             init_mock_data(db)
+        from app.models import Campus
+        if not db.query(Campus).first():
+            db.add(Campus(name="复旦大学", slug="fudan", center_lat=31.3005, center_lng=121.5068))
+            db.commit()
     finally:
         db.close()
     yield
@@ -131,6 +135,8 @@ app.include_router(map.router)
 app.include_router(audit.router)
 app.include_router(events_api.router)
 app.include_router(gallery.router)
+app.include_router(campus.router)
+app.include_router(invite.router)
 
 
 @app.get("/")
