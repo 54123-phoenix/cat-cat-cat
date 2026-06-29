@@ -3,8 +3,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from app import crud, schemas
-from app.api.admin import require_admin
+from app import crud, schemas, models
+from app.api.auth import require_reviewer_or_admin
 from app.api.upload import save_upload
 from app.database import get_db
 
@@ -28,16 +28,27 @@ async def create_discovery(
 
 
 @router.get("", response_model=List[schemas.DiscoveryResponse])
-def list_discoveries(status: Optional[str] = None, skip: int = 0, limit: int = 50, db: Session = Depends(get_db), _: None = Depends(require_admin)):
+def list_discoveries(status: Optional[str] = None, skip: int = 0, limit: int = 50, db: Session = Depends(get_db), _: None = Depends(require_reviewer_or_admin)):
     return crud.get_discoveries(db, status=status, skip=skip, limit=limit)
 
 
 @router.post("/{discovery_id}/review", response_model=schemas.DiscoveryResponse)
-def review_discovery(discovery_id: int, review: schemas.DiscoveryReview, db: Session = Depends(get_db), _: None = Depends(require_admin)):
+def review_discovery(discovery_id: int, review: schemas.DiscoveryReview, db: Session = Depends(get_db), admin = Depends(require_reviewer_or_admin)):
+    before = db.query(models.Discovery).filter(models.Discovery.id == discovery_id).first()
+    before_json = schemas.DiscoveryResponse.model_validate(before).model_dump_json() if before else None
     try:
         discovery = crud.review_discovery(db, discovery_id, review)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if not discovery:
         raise HTTPException(status_code=404, detail="Discovery not found")
+    crud.create_audit_log(
+        db,
+        action=review.action,
+        entity_type="discovery",
+        entity_id=discovery_id,
+        old_value=before_json,
+        new_value=discovery.model_dump_json(),
+        performed_by=getattr(admin, "nickname", "admin"),
+    )
     return discovery

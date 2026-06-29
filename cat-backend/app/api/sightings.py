@@ -1,4 +1,3 @@
-import os
 import uuid
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
@@ -8,7 +7,7 @@ from sqlalchemy import func
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth
-from app.api.upload import save_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
+from app.api.upload import save_upload
 from app.models import User
 from app.ratelimit import limit
 from app.config import settings
@@ -61,17 +60,15 @@ async def create_sighting(
 
     cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()
     if cat:
-        follows = db.query(models.UserCatFollow).filter(models.UserCatFollow.cat_id == cat_id).all()
-        for f in follows:
-            crud.create_notification(
-                db,
-                user_id=f.user_id,
-                notification_type="cat_update",
-                title=f"{cat.name} 有新动态",
-                content=f"{cat.name} 被观察到{activity_type or '出现了'}，去看看吧",
-                related_id=cat_id,
-                related_type="cat",
-            )
+        crud.notify_cat_followers(
+            db,
+            cat_id=cat_id,
+            title=f"{cat.name} 有新偶遇",
+            content=f"{cat.name} 在 {location_name or location or '校园某处'} 被观察到了",
+            related_id=db_sighting.id,
+            related_type="sighting",
+            exclude_user_id=current_user.id,
+        )
 
     return db_sighting
 

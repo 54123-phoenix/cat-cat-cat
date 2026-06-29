@@ -6,10 +6,21 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import crud, schemas
 from app.api.auth import require_admin
-from app.api.upload import validate_upload, save_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
+from app.api.upload import save_upload
 from app.models import User
 
 router = APIRouter(prefix="/api/cats", tags=["cats"])
+
+AUDIT_CAT_FIELDS = [
+    "name", "nickname", "gender", "neutered", "age_estimate", "color",
+    "personality", "story", "location", "avatar", "quote", "aliases",
+]
+
+
+def _cat_audit_snapshot(cat):
+    if not cat:
+        return {}
+    return {field: getattr(cat, field, None) for field in AUDIT_CAT_FIELDS}
 
 
 @router.get("", response_model=schemas.PaginatedCatsResponse)
@@ -72,22 +83,52 @@ def get_cat(cat_id: int, db: Session = Depends(get_db)):
 
 @router.post("", response_model=schemas.CatResponse)
 def create_cat(cat: schemas.CatCreate, db: Session = Depends(get_db), user: User = Depends(require_admin)):
-    return crud.create_cat(db, cat)
+    created = crud.create_cat(db, cat)
+    crud.create_audit_log(
+        db,
+        action="create",
+        entity_type="cat",
+        entity_id=created.id,
+        new_value=schemas.CatResponse.model_validate(created).model_dump_json(),
+        performed_by=user.nickname,
+    )
+    return created
 
 
 @router.put("/{cat_id}", response_model=schemas.CatResponse)
 def update_cat(cat_id: int, cat: schemas.CatUpdate, db: Session = Depends(get_db), user: User = Depends(require_admin)):
+    before = _cat_audit_snapshot(crud.get_cat(db, cat_id))
     updated = crud.update_cat(db, cat_id, cat)
     if not updated:
         raise HTTPException(status_code=404, detail="Cat not found")
+    after = _cat_audit_snapshot(updated)
+    if before != after:
+        crud.create_audit_log(
+            db,
+            action="update",
+            entity_type="cat",
+            entity_id=cat_id,
+            old_value=schemas.CatUpdate(**before).model_dump_json(),
+            new_value=schemas.CatUpdate(**after).model_dump_json(),
+            performed_by=user.nickname,
+        )
     return updated
 
 
 @router.delete("/{cat_id}")
 def delete_cat(cat_id: int, db: Session = Depends(get_db), user: User = Depends(require_admin)):
+    before = _cat_audit_snapshot(crud.get_cat(db, cat_id))
     success = crud.delete_cat(db, cat_id)
     if not success:
         raise HTTPException(status_code=404, detail="Cat not found")
+    crud.create_audit_log(
+        db,
+        action="delete",
+        entity_type="cat",
+        entity_id=cat_id,
+        old_value=schemas.CatUpdate(**before).model_dump_json(),
+        performed_by=user.nickname,
+    )
     return {"message": "Deleted"}
 
 
@@ -103,7 +144,17 @@ async def upload_cat_image(cat_id: int, file: UploadFile = File(...), db: Sessio
         raise HTTPException(status_code=404, detail="Cat not found")
 
     image_path = await save_upload(file, "cats")
-    return crud.create_cat_image(db, cat_id, image_path)
+    image = crud.create_cat_image(db, cat_id, image_path)
+    crud.notify_cat_followers(
+        db,
+        cat_id=cat_id,
+        title=f"{cat.name} 有新照片",
+        content=f"{cat.name} 的照片墙更新了，快去看看",
+        related_id=cat_id,
+        related_type="cat",
+        exclude_user_id=user.id,
+    )
+    return image
 
 
 def _haversine(lat1, lon1, lat2, lon2):

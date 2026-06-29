@@ -19,6 +19,7 @@ export default function Scan() {
   const [message, setMessage] = useState('')
   const [discoveryNote, setDiscoveryNote] = useState('')
   const [discovery, setDiscovery] = useState(null)
+  const [savedSighting, setSavedSighting] = useState(null)
   const [showPawRain, setShowPawRain] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const [customLocation, setCustomLocation] = useState('')
@@ -65,9 +66,9 @@ export default function Scan() {
   }
 
   async function saveConfirmedSighting(data) {
-    if (!data.cat_id) return
+    if (!data.cat_id) return null
     const file = selectedFileRef.current
-    await createSighting({
+    return createSighting({
       catId: data.cat_id,
       location: getLocationName(),
       confidence: data.confidence,
@@ -95,8 +96,11 @@ export default function Scan() {
       setResult(data)
       setPhase(data.status || 'confirmed')
       if (data.status === 'confirmed') {
-        await saveConfirmedSighting(data)
+        const created = await saveConfirmedSighting(data)
+        setSavedSighting(created)
         setShowPawRain(true)
+      } else if (data.status === 'unavailable') {
+        setMessage('识别服务暂时不可用，可以稍后重试，或先提交线索给猫协。')
       }
     } catch (error) {
       window.clearTimeout(timer)
@@ -141,6 +145,7 @@ export default function Scan() {
     setWeather('')
     setMood('')
     selectedFileRef.current = null
+    setSavedSighting(null)
     if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null }
     setPreview(null)
     if (fileRef.current) fileRef.current.value = ''
@@ -289,6 +294,11 @@ export default function Scan() {
             <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-primary text-white rounded-full py-3 font-medium text-sm">
               查看猫猫档案
             </button>
+            {savedSighting?.id && (
+              <button onClick={() => navigate(`/sightings/share/${savedSighting.id}`)} className="w-full bg-white border border-primary text-primary rounded-full py-3 font-medium text-sm flex items-center justify-center gap-2">
+                <Share2 className="w-4 h-4" /> 打开偶遇分享页
+              </button>
+            )}
             <SharePoster type="sighting" data={{ catName: result.cat_name || '校园猫猫', confidence: Math.round(result.confidence * 100), location: result.location || '复旦校园' }}>
               <button className="w-full bg-green-500 text-white rounded-full py-3 font-medium text-sm flex items-center justify-center gap-2">
                 <Share2 className="w-4 h-4" /> 分享这次偶遇
@@ -349,6 +359,39 @@ export default function Scan() {
               </>
             )}
             <button onClick={reset} className="w-full mt-2 text-sm text-gray-400">取消</button>
+          </div>
+        )}
+
+        {phase === 'unavailable' && (
+          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-yellow-50 flex items-center justify-center">
+              <HelpCircle className="w-6 h-6 text-yellow-500" />
+            </div>
+            <div className="font-medium text-gray-800">识别服务暂时不可用</div>
+            <div className="text-xs text-gray-400 mt-1 mb-4">
+              {message || 'AI 现在没有返回可靠结果，你可以稍后重试，或先把这次偶遇提交给猫协。'}
+            </div>
+            {discovery ? (
+              <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left mb-3">
+                <p className="text-sm font-medium text-green-700">线索已提交，等待猫协审核</p>
+                <p className="text-xs text-green-600 mt-1">谢谢你先把这次偶遇留住。</p>
+              </div>
+            ) : (
+              <>
+                <textarea
+                  value={discoveryNote}
+                  onChange={(event) => setDiscoveryNote(event.target.value)}
+                  placeholder="补充描述：毛色、状态、你在哪里看到它..."
+                  className="w-full h-24 text-sm text-gray-700 border border-gray-100 rounded-xl p-3 outline-none resize-none mb-3"
+                />
+                <button onClick={submitDiscovery} className="w-full bg-primary text-white rounded-full py-3 text-sm font-medium">
+                  先提交线索
+                </button>
+              </>
+            )}
+            <button onClick={reset} className="w-full mt-2 border border-gray-200 text-gray-500 rounded-full py-3 text-sm">
+              重新选择照片
+            </button>
           </div>
         )}
 

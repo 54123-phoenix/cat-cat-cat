@@ -26,6 +26,8 @@ const Community = lazy(() => import('./pages/Community'))
 const Admin = lazy(() => import('./pages/Admin'))
 const BadgeGallery = lazy(() => import('./pages/BadgeGallery'))
 const CatDetail = lazy(() => import('./pages/CatDetail'))
+const PublicCat = lazy(() => import('./pages/PublicCat'))
+const SightingShare = lazy(() => import('./pages/SightingShare'))
 const PostDetail = lazy(() => import('./pages/PostDetail'))
 const Feed = lazy(() => import('./pages/Feed'))
 const Scan = lazy(() => import('./pages/Scan'))
@@ -85,6 +87,8 @@ export default function App() {
       <Suspense fallback={<FullScreenLoader />}>
         <Routes>
           <Route path={ROUTES.LOGIN} element={<Login onLogin={handleLogin} />} />
+          <Route path={ROUTES.PUBLIC_CAT} element={<PublicCat />} />
+          <Route path={ROUTES.SIGHTING_SHARE} element={<SightingShare />} />
           <Route
             element={
               <ProtectedRoute>

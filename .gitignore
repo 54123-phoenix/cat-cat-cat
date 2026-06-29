@@ -39,6 +39,8 @@ cat-backend/uploads/
 # UI Loop runtime artifacts
 .loop/
 scripts/ui_loop/node_modules/
+harness/reports/
+backups/
 
 # OS/editor files
 .DS_Store

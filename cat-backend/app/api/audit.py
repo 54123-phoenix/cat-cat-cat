@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas
-from app.api.admin import require_admin
+from app.api.auth import require_admin
 
 router = APIRouter(prefix="/api/audit", tags=["audit"])
 

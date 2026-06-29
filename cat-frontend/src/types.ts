@@ -124,6 +124,18 @@ export interface UserStats {
   total_badges: number
   locations_count: number
   photos_count: number
+  contribution_score: number
+  primary_contribution?: string
+  contribution_breakdown: ContributionStat[]
+}
+
+export interface ContributionStat {
+  key: string
+  label: string
+  score: number
+  current: number
+  target: number
+  description: string
 }
 
 export interface UserBadgeItem {
@@ -157,7 +169,7 @@ export interface Notification {
   content?: string
   related_id?: number
   related_type?: string
-  is_read: string
+  is_read: boolean
   created_at: string
 }
 
@@ -213,6 +225,41 @@ export interface RecognizeCandidate {
   cat_id: number
   cat_name: string
   confidence: number
+}
+
+export type HealthStatus = 'healthy' | 'degraded' | 'unhealthy'
+export type HealthCheckStatus = 'pass' | 'warn' | 'fail' | 'skip'
+
+export interface HealthCheckItem {
+  name: string
+  status: HealthCheckStatus
+  detail: string
+  metadata: Record<string, unknown>
+}
+
+export interface ModelHealth {
+  status: HealthStatus
+  runtime_available: boolean
+  model_file: Record<string, unknown>
+  embeddings_file: Record<string, unknown>
+  reference_cat_count: number
+  embedding_dimensions: number[]
+  thresholds: {
+    confirmed: number
+    uncertain: number
+    valid: boolean
+  }
+  warm_model_requested: boolean
+  warm_model_loaded: boolean
+  checked_at: string
+  checks: HealthCheckItem[]
+}
+
+export interface SystemHealth {
+  service: string
+  status: HealthStatus
+  model: ModelHealth
+  checked_at: string
 }
 
 export interface HeatmapPoint {

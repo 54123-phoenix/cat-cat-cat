@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { QrCode, X, Download } from 'lucide-react'
+import { QrCode, X, Download, ClipboardList, MapPin, Trophy, History, AlertTriangle, Cat, Users } from 'lucide-react'
 import QRCode from 'qrcode'
-import { adminLogin, clearAdminToken, createCat, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
+import { adminLogin, clearAdminToken, createCat, getAdminDashboard, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
 
 const emptyForm = {
   name: '', nickname: '', gender: '', neutered: '', age_estimate: '',
@@ -40,6 +40,7 @@ const RECORD_TYPES = [
 ]
 
 const TABS = [
+  { key: 'overview', label: '总览' },
   { key: 'cats', label: '猫档案' },
   { key: 'health', label: '健康' },
   { key: 'feeding', label: '喂食' },
@@ -50,6 +51,7 @@ const TABS = [
 export default function Admin() {
   const [authenticated, setAuthenticated] = useState(Boolean(getAdminToken()))
   const [password, setPassword] = useState('')
+  const [dashboard, setDashboard] = useState(null)
   const [cats, setCats] = useState([])
   const [sightings, setSightings] = useState([])
   const [reports, setReports] = useState([])
@@ -66,7 +68,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const [adminTab, setAdminTab] = useState('cats')
+  const [adminTab, setAdminTab] = useState('overview')
   const [qrPoint, setQrPoint] = useState(null)
   const [qrDataUrl, setQrDataUrl] = useState('')
 
@@ -75,10 +77,11 @@ export default function Admin() {
   const loadReports = () => getReports({ status: 'pending', limit: 20 }).then(data => setReports(Array.isArray(data) ? data : [])).catch(e => setError(e.message))
   const loadFeeding = () => getFeedingPoints().then(setFeedingPoints).catch(e => setError(e.message))
   const loadHealthCats = () => getCats().then(setHealthCats).catch(e => setError(e.message))
+  const loadDashboard = () => getAdminDashboard().then(setDashboard).catch(e => setError(e.message))
 
   const loadData = () => {
     setLoading(true)
-    Promise.all([loadCats(), loadSightings(), loadReports(), loadFeeding(), loadHealthCats()])
+    Promise.all([loadDashboard(), loadCats(), loadSightings(), loadReports(), loadFeeding(), loadHealthCats()])
       .catch((err) => setError(err.message || '后台数据加载失败'))
       .finally(() => setLoading(false))
   }
@@ -245,6 +248,94 @@ export default function Admin() {
       )}
 
       <div className="p-4 space-y-4">
+        {/* Tab: 总览 */}
+        {adminTab === 'overview' && (
+          <section className="space-y-4">
+            <h2 className="font-bold text-lg text-text">总览看板</h2>
+            {dashboard ? (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <AlertTriangle className="w-4 h-4" /><span className="text-xs">待审线索</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.pending_discoveries ?? 0}</p>
+                  </div>
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <AlertTriangle className="w-4 h-4" /><span className="text-xs">待处理举报</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.pending_reports ?? 0}</p>
+                  </div>
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <MapPin className="w-4 h-4" /><span className="text-xs">待审偶遇</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.pending_sightings ?? 0}</p>
+                  </div>
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <MapPin className="w-4 h-4" /><span className="text-xs">近7天偶遇</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.recent_sightings ?? 0}</p>
+                  </div>
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <Cat className="w-4 h-4" /><span className="text-xs">猫档总数</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.total_cats ?? 0}</p>
+                  </div>
+                  <div className="card p-3">
+                    <div className="flex items-center gap-2 text-text-secondary">
+                      <Users className="w-4 h-4" /><span className="text-xs">用户数</span>
+                    </div>
+                    <p className="mt-1 text-2xl font-bold text-text">{dashboard.summary?.total_users ?? 0}</p>
+                  </div>
+                </div>
+
+                <div className="card p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-primary" /><h3 className="font-bold text-text">近7天热区</h3>
+                  </div>
+                  {dashboard.hot_locations?.length > 0 ? dashboard.hot_locations.map((loc, i) => (
+                    <div key={i} className="flex items-center justify-between text-sm">
+                      <span className="text-text truncate">{loc.name}</span>
+                      <span className="text-text-secondary shrink-0 ml-2">{loc.count} 次</span>
+                    </div>
+                  )) : <p className="text-sm text-text-secondary">暂无热区数据</p>}
+                </div>
+
+                <div className="card p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-primary" /><h3 className="font-bold text-text">活跃贡献者</h3>
+                  </div>
+                  {dashboard.active_contributors?.length > 0 ? dashboard.active_contributors.map((u) => (
+                    <div key={u.id} className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {u.avatar ? <img src={u.avatar} alt="" className="w-6 h-6 rounded-full object-cover" /> : <div className="w-6 h-6 rounded-full bg-border" />}
+                        <span className="text-text truncate">{u.nickname || '匿名'}</span>
+                      </div>
+                      <span className="text-text-secondary shrink-0 ml-2">Lv{u.level} · {u.contribution_score}</span>
+                    </div>
+                  )) : <p className="text-sm text-text-secondary">暂无贡献者</p>}
+                </div>
+
+                <div className="card p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <History className="w-4 h-4 text-primary" /><h3 className="font-bold text-text">最近审计动态</h3>
+                  </div>
+                  {dashboard.recent_audit_logs?.length > 0 ? dashboard.recent_audit_logs.map((log) => (
+                    <div key={log.id} className="flex items-center justify-between text-sm gap-2">
+                      <span className="text-text truncate">{log.action} · {log.entity_type}{log.entity_id ? `#${log.entity_id}` : ''}</span>
+                      <span className="text-text-muted shrink-0">{formatTime(log.created_at)}</span>
+                    </div>
+                  )) : <p className="text-sm text-text-secondary">暂无审计记录</p>}
+                </div>
+              </>
+            ) : <div className="card p-5 text-sm text-text-secondary text-center">看板数据加载中…</div>}
+          </section>
+        )}
+
         {/* Tab: 猫档案 */}
         {adminTab === 'cats' && (
           <>

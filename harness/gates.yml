@@ -1,0 +1,69 @@
+version: 1
+score:
+  pass: 90
+  internal_trial: 80
+  demo_only: 70
+  stop_feature_work_below: 70
+
+weights:
+  stability: 30
+  core_loop: 25
+  interaction: 15
+  sharing_value: 15
+  maintainability: 15
+
+gates:
+  - id: G0
+    name: build-and-boot-sanity
+    title: "构建与启动基础"
+    blocking: true
+    checks:
+      - "frontend package scripts exist"
+      - "backend settings are import-safe"
+      - "miniprogram package is valid JSON"
+
+  - id: G1
+    name: core-loop
+    title: "核心闭环"
+    blocking: true
+    checks:
+      - "auth endpoints exist"
+      - "recognize contract supports all states"
+      - "scan route, cat detail route and community route exist"
+      - "sighting creation client exists"
+
+  - id: G2
+    name: data-and-security
+    title: "数据与安全"
+    blocking: true
+    checks:
+      - "JWT and admin secrets are required by config"
+      - "security headers middleware is installed"
+      - "upload path traversal guard exists"
+      - "upload endpoints use content validation or are tracked as risk"
+
+  - id: G3
+    name: ux-smoke
+    title: "交互冒烟"
+    blocking: true
+    checks:
+      - "loading and error states exist on scan flow"
+      - "public sharing tasks are not marked done without routes"
+      - "mobile-first routes keep protected route behavior"
+
+  - id: G4
+    name: product-value
+    title: "产品价值"
+    blocking: false
+    checks:
+      - "new feature maps to one of recognition, archive, community, sharing, association workflow"
+      - "passion score is balanced by risk score and acceptance criteria"
+
+  - id: G5
+    name: docs-and-traceability
+    title: "文档与可追踪"
+    blocking: true
+    checks:
+      - "roadmap exists"
+      - "latest report is generated"
+      - "upgrade execution guide exists"

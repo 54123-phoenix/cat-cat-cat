@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Trophy, Crown, Sparkles } from 'lucide-react'
+import { Trophy, Crown, Sparkles, Camera, Compass, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react'
 import EmptyState from '../components/EmptyState'
 import { getLeaderboard, getStoredUser } from '../api'
 
@@ -16,18 +16,30 @@ const TIER_GRADIENTS = [
   'from-cyan-300 to-cyan-200',
 ]
 
+const CATEGORIES = [
+  { key: 'overall', label: '总榜', Icon: Trophy },
+  { key: 'photography', label: '摄影', Icon: Camera },
+  { key: 'discovery', label: '发现', Icon: Compass },
+  { key: 'map', label: '地图', Icon: MapPin },
+  { key: 'confirmation', label: '确认', Icon: CheckCircle2 },
+  { key: 'guardian', label: '守护', Icon: ShieldCheck },
+]
+
 export default function League() {
   const [data, setData] = useState(null)
+  const [category, setCategory] = useState('overall')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const myId = getStoredUser()?.id
 
   useEffect(() => {
-    getLeaderboard()
+    setLoading(true)
+    setError('')
+    getLeaderboard(category)
       .then(setData)
       .catch((err) => setError(err.message || '排行榜加载失败'))
       .finally(() => setLoading(false))
-  }, [])
+  }, [category])
 
   if (loading) {
     return (
@@ -52,6 +64,7 @@ export default function League() {
 
   const grad = TIER_GRADIENTS[tier_index] || TIER_GRADIENTS[0]
   const diff = next_tier_xp != null ? Math.max(0, next_tier_xp - my_xp) : null
+  const activeCategory = CATEGORIES.find((item) => item.key === category) || CATEGORIES[0]
 
   return (
     <div className="space-y-4">
@@ -87,13 +100,35 @@ export default function League() {
         )}
       </div>
 
+      <div className="flex gap-2 overflow-x-auto scrollbar-none -mx-4 px-4 pb-1">
+        {CATEGORIES.map(({ key, label, Icon }) => {
+          const active = key === category
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setCategory(key)}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold border transition-colors ${
+                active
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-white text-text-secondary border-border'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {label}
+            </button>
+          )
+        })}
+      </div>
+
       {/* Ranking list */}
       <div className="space-y-2">
-        <h3 className="text-sm font-bold text-text px-1">排行榜 Top {top.length}</h3>
+        <h3 className="text-sm font-bold text-text px-1">{activeCategory.label} Top {top.length}</h3>
         <div className="card p-0 overflow-hidden">
           {top.map((u, idx) => {
             const isMe = u.id === myId
             const rank = idx + 1
+            const displayScore = category === 'overall' ? `${u.xp} XP` : `${u.category_score || 0} 分`
             return (
               <div
                 key={u.id}
@@ -119,7 +154,7 @@ export default function League() {
                   </p>
                   <p className="text-[11px] text-text-secondary">Lv.{u.level}</p>
                 </div>
-                <span className="text-sm font-bold text-text-secondary shrink-0">{u.xp} XP</span>
+                <span className="text-sm font-bold text-text-secondary shrink-0">{displayScore}</span>
               </div>
             )
           })}

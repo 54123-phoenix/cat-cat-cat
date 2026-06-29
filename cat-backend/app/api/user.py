@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Literal
 from datetime import datetime, date
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -48,6 +48,9 @@ def get_profile(db: Session = Depends(get_db), user: User = Depends(require_auth
         total_badges=12,
         locations_count=stats_dict["locations_count"],
         photos_count=stats_dict["photos_count"],
+        contribution_score=stats_dict["contribution_score"],
+        primary_contribution=stats_dict["primary_contribution"],
+        contribution_breakdown=stats_dict["contribution_breakdown"],
     )
     badges = [
         schemas.UserBadgeItem(badge_key=b["badge_key"], earned=b["earned"], earned_at=b["earned_at"])
@@ -164,6 +167,9 @@ def get_me(db: Session = Depends(get_db), user: User = Depends(require_auth)):
         "longest_streak": stats["longest_streak"],
         "sightings": stats["sightings"],
         "posts": stats["posts"],
+        "contribution_score": stats["contribution_score"],
+        "primary_contribution": stats["primary_contribution"],
+        "contribution_breakdown": stats["contribution_breakdown"],
     }
 
 
@@ -199,15 +205,30 @@ def get_daily_quest(db: Session = Depends(get_db), user: User = Depends(require_
 
 
 @lb_router.get("/leaderboard")
-@cached(ttl=60, key_fn=lambda **_: "leaderboard:v1")
-def get_leaderboard(db: Session = Depends(get_db), user: User = Depends(require_auth)):
-    users = db.query(User).order_by(User.xp.desc()).all()
+@cached(
+    ttl=60,
+    key_fn=lambda *args, **kwargs: f"leaderboard:v2:{getattr(kwargs.get('user'), 'id', 'anon')}:{kwargs.get('category', 'overall')}",
+)
+def get_leaderboard(
+    category: Literal["overall", "photography", "discovery", "map", "confirmation", "guardian"] = Query("overall"),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    users = db.query(User).all()
+    user_rows = []
+    for u in users:
+        contribution = crud.get_user_contribution_stats(db, u.id)
+        category_scores = {item["key"]: item["score"] for item in contribution["contribution_breakdown"]}
+        category_score = (u.xp or 0) if category == "overall" else category_scores.get(category, 0)
+        user_rows.append((u, contribution, category_score))
+
+    user_rows.sort(key=lambda row: row[2], reverse=True)
     total_players = len(users)
     top = []
     my_rank = 1
     my_xp = user.xp or 0
     my_level = crud.compute_level(my_xp)
-    for idx, u in enumerate(users):
+    for idx, (u, contribution, category_score) in enumerate(user_rows):
         rank = idx + 1
         if u.id == user.id:
             my_rank = rank
@@ -219,16 +240,24 @@ def get_leaderboard(db: Session = Depends(get_db), user: User = Depends(require_
                 "avatar": u.avatar,
                 "xp": u_xp,
                 "level": crud.compute_level(u_xp),
+                "contribution_score": contribution["contribution_score"],
+                "primary_contribution": contribution["primary_contribution"],
+                "category_score": category_score,
             })
     ti = _tier_index(my_level)
     boundary = _tier_boundary_xp(ti)
+    my_contribution = crud.get_user_contribution_stats(db, user.id)
     return {
+        "category": category,
         "tier_name": TIER_NAMES_CN[ti],
         "tier_name_en": TIER_NAMES_EN[ti],
         "tier_index": ti,
         "my_rank": my_rank,
         "my_xp": my_xp,
         "my_level": my_level,
+        "my_contribution_score": my_contribution["contribution_score"],
+        "my_primary_contribution": my_contribution["primary_contribution"],
+        "contribution_breakdown": my_contribution["contribution_breakdown"],
         "total_players": total_players,
         "next_tier_xp": boundary,
         "next_tier_name": TIER_NAMES_CN[ti + 1] if ti < 9 else None,

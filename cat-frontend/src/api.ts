@@ -110,6 +110,20 @@ export function getAdminMe() {
   return request('/admin/me')
 }
 
+export function getAdminDashboard() {
+  return request('/admin/dashboard')
+}
+
+export function getRouteRecommendations(params = {}) {
+  const qs = new URLSearchParams(params).toString()
+  return request(`/routes/recommendations${qs ? '?' + qs : ''}`)
+}
+
+export function getSystemHealth(params = {}) {
+  const qs = new URLSearchParams(params).toString()
+  return request(`/system/health${qs ? '?' + qs : ''}`)
+}
+
 export function getCats(params = {}) {
   const qs = new URLSearchParams(params).toString()
   return request(`/cats${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
@@ -168,6 +182,10 @@ export function createSighting({ catId, location, confidence, file, activity_typ
 export function getSightings(params = {}) {
   const qs = new URLSearchParams(params).toString()
   return request(`/sightings${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
+}
+
+export function getSighting(sightingId) {
+  return request(`/sightings/${sightingId}`)
 }
 
 export function confirmSighting(id) {
@@ -379,8 +397,9 @@ export function getFollowedCats() {
   return request('/user/follows')
 }
 
-export function getLeaderboard() {
-  return request('/leaderboard')
+export function getLeaderboard(category = 'overall') {
+  const qs = category && category !== 'overall' ? `?category=${encodeURIComponent(category)}` : ''
+  return request(`/leaderboard${qs}`)
 }
 
 export function getDailyQuest() {

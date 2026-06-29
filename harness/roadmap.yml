@@ -1,0 +1,242 @@
+version: 1
+name: cat-community-upgrade
+theme: "passionate but steady"
+north_star: "识别可信、档案可靠、社区活跃、传播自然、猫协可用"
+
+principles:
+  - "每个新功能都必须服务主闭环：识别 -> 偶遇 -> 档案 -> 社区 -> 分享 -> 回流。"
+  - "稳定性优先于功能数量；任何阶段不得破坏登录、识别、打卡、档案和社区主路径。"
+  - "传播型功能优先做小而完整的闭环，不做只增加入口的空功能。"
+  - "所有上线候选都必须通过 harness gate，并留下可追踪报告。"
+
+phases:
+  - id: P0
+    name: stabilize-core-loop
+    title: "稳住主闭环"
+    goal: "让项目从可演示升级到可内测。"
+    priority: critical
+    target_outcome:
+      - "登录、拍照识别、确认结果、记录偶遇、查看档案、社区发帖主流程稳定。"
+      - "模型不可用、上传失败、网络慢、权限过期、地图失败都有可理解降级。"
+    tasks:
+      - id: P0-01
+        title: "识别状态与降级体验统一"
+        status: completed
+        type: hardening
+        passion_score: 3
+        risk_score: 2
+        acceptance:
+          - "前后端都明确支持 confirmed、uncertain、unknown、unavailable。"
+          - "AI 不可用时前端不显示误导性成功态。"
+          - "识别超时或失败时提供重新上传、提交线索或稍后再试入口。"
+      - id: P0-02
+        title: "上传安全与边界校验"
+        status: completed
+        type: hardening
+        passion_score: 2
+        risk_score: 3
+        acceptance:
+          - "限制上传文件类型、大小和损坏图片。"
+          - "后端对 discovery、post、cat image、sighting 上传使用一致的校验策略。"
+          - "测试覆盖非图片上传和超大文件。"
+      - id: P0-03
+        title: "核心闭环冒烟测试"
+        status: completed
+        type: harness
+        passion_score: 2
+        risk_score: 2
+        acceptance:
+          - "harness 能检查后端测试、前端测试和关键路由存在性。"
+          - "失败时生成 reports/latest.md。"
+      - id: P0-04
+        title: "修复 full harness 后端测试环境"
+        status: completed
+        type: harness
+        passion_score: 2
+        risk_score: 2
+        acceptance:
+          - "后端测试脚本优先使用项目 .venv。"
+          - "full harness 能完整执行后端测试、前端测试和构建检查。"
+
+  - id: P1
+    name: sharing-blade
+    title: "做出传播尖刀"
+    goal: "让猫和偶遇可以自然分享出去。"
+    priority: high
+    target_outcome:
+      - "每只猫拥有免登录可访问的公开主页。"
+      - "每次偶遇拥有可分享落地页或海报。"
+    tasks:
+      - id: P1-01
+        title: "公开猫猫主页"
+        status: completed
+        type: feature
+        passion_score: 5
+        risk_score: 2
+        acceptance:
+          - "免登录访问公开猫主页。"
+          - "页面包含头像、名字、别名、常出没地点、精选照片、最近偶遇。"
+          - "登录用户可从公开页进入关注、打卡或查看完整档案。"
+      - id: P1-02
+        title: "偶遇分享页"
+        status: completed
+        type: feature
+        passion_score: 5
+        risk_score: 3
+        acceptance:
+          - "识别成功或打卡后能生成分享链接。"
+          - "分享页包含猫名、地点、时间、照片、心情或活动状态。"
+          - "未登录用户可查看，登录用户可一键关注或参与确认。"
+
+  - id: P2
+    name: return-loop
+    title: "让用户回来"
+    goal: "把一次性浏览变成持续参与。"
+    priority: high
+    target_outcome:
+      - "关注猫猫后能收到动态。"
+      - "贡献行为有明确反馈和荣誉感。"
+    tasks:
+      - id: P2-01
+        title: "关注猫猫动态通知"
+        status: completed
+        type: feature
+        passion_score: 4
+        risk_score: 3
+        acceptance:
+          - "关注猫有新偶遇、新照片或健康记录时生成通知。"
+          - "通知列表可读、可标记已读。"
+      - id: P2-02
+        title: "猫猫贡献体系"
+        status: completed
+        type: feature
+        passion_score: 4
+        risk_score: 3
+        acceptance:
+          - "按摄影、发现、地图、确认、守护分贡献类型。"
+          - "个人中心展示贡献进度。"
+          - "排行榜不只按总分，也能按贡献类型查看。"
+
+  - id: P3
+    name: cat-association-workflow
+    title: "强化猫协真实工作流"
+    goal: "让项目不仅好玩，也能帮助真实管理。"
+    priority: medium
+    target_outcome:
+      - "新猫、档案、健康、喂食点、举报都有可追踪审核。"
+      - "管理端能看见待办和运营指标。"
+    tasks:
+      - id: P3-01
+        title: "审核与变更记录"
+        status: completed
+        type: hardening
+        passion_score: 3
+        risk_score: 4
+        acceptance:
+          - "猫档案关键字段修改写入 audit log。"
+          - "新猫线索从提交到通过/拒绝有完整状态流。"
+      - id: P3-02
+        title: "管理端数据看板"
+        status: completed
+        type: feature
+        passion_score: 4
+        risk_score: 3
+        acceptance:
+          - "展示待审核新猫、近 7 天偶遇热区、举报待处理、活跃贡献者。"
+
+  - id: P4
+    name: memorable-highlight
+    title: "做一个有记忆点的亮点"
+    goal: "在稳定基础上做出展示和传播时能被记住的功能。"
+    priority: medium
+    target_outcome:
+      - "用户能获得个性化的校园猫路线或猫猫活动建议。"
+    tasks:
+      - id: P4-01
+        title: "校园猫路线推荐"
+        status: completed
+        type: feature
+        passion_score: 5
+        risk_score: 4
+        acceptance:
+          - "基于最近偶遇、时间段和校区地点推荐路线。"
+          - "路线可分享，并能跳转到地图和打卡。"
+
+  - id: P5
+    name: production-hardening
+    title: "生产化补强"
+    goal: "把内测版本推进到可长期维护、可部署、可多人协作的版本。"
+    priority: high
+    target_outcome:
+      - "模型、数据库、权限、日志、备份和发布流程都有明确健康信号。"
+      - "多人或多模型协作时有稳定交接规范和验收口径。"
+    tasks:
+      - id: P5-01
+        title: "模型健康检查与阈值校准"
+        status: completed
+        type: hardening
+        passion_score: 3
+        risk_score: 4
+        acceptance:
+          - "检查模型权重、embedding 文件、依赖和 warm inference 是否可用。"
+          - "用测试覆盖健康接口、阈值异常、embedding 缺失和 embedding 维度检查。"
+          - "沉淀固定样本集的阈值校准方法，后续可接入真实校园猫样本指标。"
+      - id: P5-02
+        title: "数据库迁移、备份与恢复演练"
+        status: completed
+        type: hardening
+        passion_score: 2
+        risk_score: 5
+        acceptance:
+          - "提供非破坏性备份脚本，支持数据库、uploads、dry run 和自定义备份目录。"
+          - "提供默认安全的恢复脚本，真实恢复必须显式确认，恢复前自动预备份。"
+          - "提供备份与恢复演练说明，并纳入 docs harness 检查。"
+      - id: P5-03
+        title: "权限矩阵与多管理员审计"
+        status: completed
+        type: hardening
+        passion_score: 3
+        risk_score: 4
+        acceptance:
+          - "区分普通用户、审核员、管理员三类角色能力。"
+          - "审核员可处理线索、偶遇和举报，高危管理动作仍需管理员。"
+          - "关键管理操作写入可检索审计记录。"
+      - id: P5-04
+        title: "部署监控、错误追踪与结构化日志"
+        status: completed
+        type: ops
+        passion_score: 2
+        risk_score: 4
+        acceptance:
+          - "后端健康、模型健康、接口错误率和前端构建状态可观测。"
+          - "响应包含 request id，日志包含请求路径、状态、耗时和失败事件。"
+          - "日志不记录 token、请求 body 或上传内容。"
+      - id: P5-05
+        title: "协作交接、发布清单与演示脚本"
+        status: completed
+        type: collaboration
+        passion_score: 3
+        risk_score: 3
+        acceptance:
+          - "维护协作手册、发布 checklist 和演示路径。"
+          - "外部实现代理交付后必须由 Codex 或维护者复核 diff 与 harness。"
+  - id: P6
+    name: release-candidate-closeout
+    title: "Release candidate closeout"
+    goal: "Freeze broad feature work, prove release readiness, and leave a clear acceptance trail."
+    priority: high
+    target_outcome:
+      - "Final acceptance document exists and names the current release criteria."
+      - "opencode has a bounded audit task that cannot touch product code or data."
+      - "README, roadmap, TODO, docs, and harness stay aligned before the next feature wave."
+    tasks:
+      - id: P6-01
+        title: "Final acceptance pack and opencode audit guardrails"
+        status: completed
+        type: release
+        passion_score: 2
+        risk_score: 2
+        acceptance:
+          - "docs/FINAL_ACCEPTANCE.md defines release candidate goals, smoke path, risks, and next upgrade path."
+          - "harness/opencode/P6-release-candidate-audit.md defines allowed files, forbidden files, and handoff summary."
+          - "docs_check.py requires the final acceptance pack and P6 opencode task."

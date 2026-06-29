@@ -1,5 +1,4 @@
 import json
-import os
 from typing import List
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, File, Request
@@ -8,8 +7,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas, models
-from app.api.auth import require_auth
-from app.api.upload import validate_upload, UPLOAD_DIR, MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES
+from app.api.auth import ROLE_ADMIN, require_auth, require_reviewer_or_admin
+from app.api.upload import save_upload
 from app.models import User
 from app.ratelimit import limit
 from app.config import settings
@@ -21,20 +20,10 @@ class HandleAction(BaseModel):
     action: str = "dismiss"
 
 
-POSTS_UPLOAD = os.path.join(UPLOAD_DIR, "posts")
-os.makedirs(POSTS_UPLOAD, exist_ok=True)
-
-
 async def _save_images(files: List[UploadFile]) -> List[str]:
     paths = []
     for file in files:
-        content = await validate_upload(file)
-        ext = os.path.splitext(file.filename or ".jpg")[1] or ".jpg"
-        name = f"{os.urandom(16).hex()}{ext}"
-        dest = os.path.join(POSTS_UPLOAD, name)
-        with open(dest, "wb") as f:
-            f.write(content)
-        paths.append(f"/uploads/posts/{name}")
+        paths.append(await save_upload(file, "posts"))
     return paths
 
 
@@ -134,7 +123,7 @@ def delete_post(
     db: Session = Depends(get_db),
     user: User = Depends(require_auth),
 ):
-    is_admin = user.role == "admin"
+    is_admin = user.role == ROLE_ADMIN
     ok = crud.delete_post(db, post_id, user.id, is_admin)
     if not ok:
         raise HTTPException(status_code=403, detail="Not authorized or post not found")
@@ -212,10 +201,8 @@ def list_reports(
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),
-    user: User = Depends(require_auth),
+    user: User = Depends(require_reviewer_or_admin),
 ):
-    if user.role != "admin":
-        raise HTTPException(status_code=403, detail="Admin only")
     return crud.get_reports(db, status=status, skip=skip, limit=limit)
 
 
@@ -224,13 +211,42 @@ def handle_report(
     report_id: int,
     body: HandleAction,
     db: Session = Depends(get_db),
-    user: User = Depends(require_auth),
+    user: User = Depends(require_reviewer_or_admin),
 ):
-    if user.role != "admin":
-        raise HTTPException(status_code=403, detail="Admin only")
+    if body.action not in {"dismiss", "hide"}:
+        raise HTTPException(status_code=400, detail="Action must be dismiss or hide")
+    before = db.query(models.Report).filter(models.Report.id == report_id).first()
+    before_json = schemas.ReportResponse(
+        id=before.id,
+        postId=before.post_id,
+        post_title=before.post.content[:50] if before.post else "",
+        reported_by=before.reported_by,
+        reason=before.reason,
+        status=before.status,
+        created_at=before.created_at,
+    ).model_dump_json() if before else None
     ok = crud.handle_report(db, report_id, body.action, user.id)
     if not ok:
         raise HTTPException(status_code=404, detail="Report not found")
+    after = db.query(models.Report).filter(models.Report.id == report_id).first()
+    after_json = schemas.ReportResponse(
+        id=after.id,
+        postId=after.post_id,
+        post_title=after.post.content[:50] if after.post else "",
+        reported_by=after.reported_by,
+        reason=after.reason,
+        status=after.status,
+        created_at=after.created_at,
+    ).model_dump_json() if after else None
+    crud.create_audit_log(
+        db,
+        action=f"report_{body.action}",
+        entity_type="report",
+        entity_id=report_id,
+        old_value=before_json,
+        new_value=after_json,
+        performed_by=user.nickname,
+    )
     return {"ok": True}
 
 
@@ -262,7 +278,7 @@ def accept_answer(
     db: Session = Depends(get_db),
     user: User = Depends(require_auth),
 ):
-    is_admin = user.role == "admin"
+    is_admin = user.role == ROLE_ADMIN
     result = crud.accept_answer(db, post_id, body.comment_id, user.id, is_admin)
     if not result:
         raise HTTPException(status_code=403, detail="无法采纳：权限不足或帖子/评论不存在")

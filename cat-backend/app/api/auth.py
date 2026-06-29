@@ -26,6 +26,10 @@ TOKEN_TTL_MINUTES = settings.TOKEN_TTL_MINUTES
 
 RESERVED_USERNAMES = {"admin", "demo", "root", "system"}
 
+ROLE_USER = "user"
+ROLE_REVIEWER = "reviewer"
+ROLE_ADMIN = "admin"
+
 
 def create_token(user: User) -> str:
     payload = {
@@ -60,8 +64,26 @@ def get_current_user_from_header(authorization: str = Header(default=""), db: Se
 
 
 def require_admin(user: User = Depends(get_current_user_from_header)) -> User:
-    if user.role != "admin":
+    if user.role != ROLE_ADMIN:
         raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
+
+def require_roles(*allowed_roles: str):
+    allowed = set(allowed_roles)
+
+    def dependency(user: User = Depends(get_current_user_from_header)) -> User:
+        if user.role not in allowed:
+            allowed_text = ", ".join(sorted(allowed))
+            raise HTTPException(status_code=403, detail=f"Role required: {allowed_text}")
+        return user
+
+    return dependency
+
+
+def require_reviewer_or_admin(user: User = Depends(get_current_user_from_header)) -> User:
+    if user.role not in {ROLE_REVIEWER, ROLE_ADMIN}:
+        raise HTTPException(status_code=403, detail="Reviewer or admin access required")
     return user
 
 

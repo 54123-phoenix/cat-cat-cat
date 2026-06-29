@@ -9,6 +9,7 @@ const TYPE_ICONS = {
   post_comment: MessageCircle,
   discovery: PawPrint,
   badge: Award,
+  cat_update: PawPrint,
 }
 
 export default function Notifications() {
@@ -25,18 +26,22 @@ export default function Notifications() {
   async function handleMarkRead(id) {
     try {
       await markNotificationRead(id)
-      setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, is_read: 'yes' } : n))
+      setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, is_read: true } : n))
     } catch (e) { console.error(e) }
   }
 
   async function handleMarkAllRead() {
     try {
       await markAllNotificationsRead()
-      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: 'yes' })))
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
     } catch (e) { console.error(e) }
   }
 
-  const unreadCount = notifications.filter((n) => n.is_read === 'no').length
+  function isUnread(notification) {
+    return notification.is_read === false || notification.is_read === 'no'
+  }
+
+  const unreadCount = notifications.filter(isUnread).length
 
   return (
     <div className="min-h-screen bg-warm-50">
@@ -62,9 +67,9 @@ export default function Notifications() {
             return (
             <div
               key={n.id}
-              onClick={() => n.is_read === 'no' && handleMarkRead(n.id)}
+              onClick={() => isUnread(n) && handleMarkRead(n.id)}
               className={`card flex items-start gap-3 cursor-pointer transition-opacity ${
-                n.is_read === 'no' ? 'bg-primary-light/50 border-primary-light' : 'opacity-60'
+                isUnread(n) ? 'bg-primary-light/50 border-primary-light' : 'opacity-60'
               }`}
             >
               <div className="w-8 h-8 rounded-full bg-primary-light/60 flex items-center justify-center shrink-0 mt-0.5">

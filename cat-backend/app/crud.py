@@ -45,6 +45,110 @@ def add_xp(db: Session, user, amount: int):
         db.rollback()
 
 
+CONTRIBUTION_CATALOG = {
+    "photography": {
+        "label": "摄影",
+        "target": 12,
+        "description": "上传带照片的偶遇，帮猫猫留下可识别素材",
+    },
+    "discovery": {
+        "label": "发现",
+        "target": 10,
+        "description": "记录不同猫猫的踪迹，扩大学校猫猫图鉴",
+    },
+    "map": {
+        "label": "地图",
+        "target": 8,
+        "description": "补充地点与坐标，让大家更容易找到猫猫",
+    },
+    "confirmation": {
+        "label": "确认",
+        "target": 10,
+        "description": "参与偶遇确认与投票，提升档案可信度",
+    },
+    "guardian": {
+        "label": "守护",
+        "target": 10,
+        "description": "关注、喂食、发帖与互动，维持社区持续运转",
+    },
+}
+
+
+def _count_user_locations(db: Session, user_id: int) -> int:
+    rows = db.query(models.Sighting.location_name, models.Sighting.location).filter(
+        models.Sighting.user_id == user_id,
+    ).all()
+    names = set()
+    for location_name, location in rows:
+        if location_name:
+            names.add(location_name)
+        if location:
+            names.add(location)
+    return len(names)
+
+
+def get_user_contribution_stats(db: Session, user_id: int) -> dict:
+    sightings = db.query(models.Sighting).filter(models.Sighting.user_id == user_id).count()
+    posts = db.query(models.Post).filter(models.Post.user_id == user_id).count()
+    follows = db.query(models.UserCatFollow).filter(models.UserCatFollow.user_id == user_id).count()
+    locations = _count_user_locations(db, user_id)
+    photos = db.query(models.Sighting).filter(
+        models.Sighting.user_id == user_id,
+        models.Sighting.image_path.isnot(None),
+    ).count()
+    distinct_cats = db.query(func.count(func.distinct(models.Sighting.cat_id))).filter(
+        models.Sighting.user_id == user_id,
+    ).scalar() or 0
+    geo_sightings = db.query(models.Sighting).filter(
+        models.Sighting.user_id == user_id,
+        models.Sighting.latitude.isnot(None),
+        models.Sighting.longitude.isnot(None),
+    ).count()
+    confirmations = db.query(models.SightingConfirmation).filter(
+        models.SightingConfirmation.user_id == user_id,
+    ).count()
+    votes = db.query(models.SightingVote).filter(models.SightingVote.user_id == user_id).count()
+    feeding_checkins = db.query(models.FeedingCheckIn).filter(
+        models.FeedingCheckIn.user_id == user_id,
+    ).count()
+
+    raw = {
+        "photography": {"current": photos, "score": photos * 4},
+        "discovery": {"current": distinct_cats, "score": distinct_cats * 6 + sightings},
+        "map": {"current": locations, "score": locations * 5 + geo_sightings * 2},
+        "confirmation": {"current": confirmations + votes, "score": confirmations * 3 + votes * 2},
+        "guardian": {"current": follows + feeding_checkins + posts, "score": follows * 2 + feeding_checkins * 5 + posts},
+    }
+
+    breakdown = []
+    for key, meta in CONTRIBUTION_CATALOG.items():
+        item = raw[key]
+        breakdown.append({
+            "key": key,
+            "label": meta["label"],
+            "score": int(item["score"]),
+            "current": int(item["current"]),
+            "target": meta["target"],
+            "description": meta["description"],
+        })
+
+    primary = max(breakdown, key=lambda item: item["score"])["key"] if breakdown else None
+    total_score = sum(item["score"] for item in breakdown)
+    return {
+        "sightings": sightings,
+        "posts": posts,
+        "cats_known": follows,
+        "locations_count": locations,
+        "photos_count": photos,
+        "distinct_cats": int(distinct_cats),
+        "confirmations_count": confirmations + votes,
+        "feeding_checkins_count": feeding_checkins,
+        "contribution_score": int(total_score),
+        "primary_contribution": primary,
+        "contribution_breakdown": breakdown,
+    }
+
+
 def _tags_from_json(value: str) -> List[str]:
     if not value:
         return []
@@ -628,14 +732,12 @@ def award_event_badge(db: Session, user_id: int, badge_key: str) -> bool:
 
 def get_user_stats_full(db: Session, user_id: int) -> dict:
     from app.config.badges import BADGE_CATALOG
-    sightings = db.query(models.Sighting).filter(models.Sighting.user_id == user_id).count()
-    posts = db.query(models.Post).filter(models.Post.user_id == user_id).count()
-    cats_known = db.query(models.UserCatFollow).filter(models.UserCatFollow.user_id == user_id).count()
-    locations = db.query(models.Sighting.location).filter(models.Sighting.user_id == user_id).distinct().count()
-    photos = db.query(models.Sighting).filter(
-        models.Sighting.user_id == user_id,
-        models.Sighting.image_path.isnot(None),
-    ).count()
+    contribution = get_user_contribution_stats(db, user_id)
+    sightings = contribution["sightings"]
+    posts = contribution["posts"]
+    cats_known = contribution["cats_known"]
+    locations = contribution["locations_count"]
+    photos = contribution["photos_count"]
     discoveries = db.query(models.Discovery).filter(models.Discovery.status == "pending").count() if hasattr(models, 'Discovery') else 0
     approved = db.query(models.Discovery).filter(models.Discovery.status == "approved").count() if hasattr(models, 'Discovery') else 0
     event_badges = get_event_badges(db, user_id)
@@ -689,6 +791,12 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
         "streak": streak,
         "longest_streak": longest,
         "total_cats": total_cats,
+        "contribution_score": contribution["contribution_score"],
+        "primary_contribution": contribution["primary_contribution"],
+        "contribution_breakdown": contribution["contribution_breakdown"],
+        "confirmations_count": contribution["confirmations_count"],
+        "feeding_checkins_count": contribution["feeding_checkins_count"],
+        "distinct_cats": contribution["distinct_cats"],
     }
 
 
@@ -892,6 +1000,34 @@ def create_notification(db: Session, user_id: int, notification_type: str, title
     db.commit()
     db.refresh(notification)
     return notification
+
+
+def notify_cat_followers(
+    db: Session,
+    cat_id: int,
+    title: str,
+    content: str,
+    related_id: int = None,
+    related_type: str = "cat",
+    exclude_user_id: Optional[int] = None,
+) -> int:
+    query = db.query(models.UserCatFollow).filter(models.UserCatFollow.cat_id == cat_id)
+    if exclude_user_id is not None:
+        query = query.filter(models.UserCatFollow.user_id != exclude_user_id)
+    follows = query.all()
+    count = 0
+    for follow in follows:
+        create_notification(
+            db,
+            user_id=follow.user_id,
+            notification_type="cat_update",
+            title=title,
+            content=content,
+            related_id=related_id if related_id is not None else cat_id,
+            related_type=related_type,
+        )
+        count += 1
+    return count
 
 
 def get_notifications(db: Session, user_id: int, unread_only: bool = False, limit: int = 50) -> List[models.Notification]:

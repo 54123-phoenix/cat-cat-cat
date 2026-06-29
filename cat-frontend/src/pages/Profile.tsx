@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles } from 'lucide-react'
+import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles, Camera, Compass, CheckCircle2, ShieldCheck } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import EmptyState from '../components/EmptyState'
@@ -97,6 +97,16 @@ export default function Profile() {
   const earnedBadges = badges.filter((b) => b.earned)
   const badgeStats = user?.stats || {}
   const totalBadges = badgeStats.total_badges || 12
+  const contributionBreakdown = badgeStats.contribution_breakdown || myStats?.contribution_breakdown || []
+  const contributionScore = badgeStats.contribution_score || myStats?.contribution_score || 0
+  const primaryContribution = contributionBreakdown.find((item) => item.key === (badgeStats.primary_contribution || myStats?.primary_contribution))
+  const contributionIcons = {
+    photography: Camera,
+    discovery: Compass,
+    map: MapPin,
+    confirmation: CheckCircle2,
+    guardian: ShieldCheck,
+  }
 
   function badgeSummary() {
     const count = earnedBadges.length
@@ -167,6 +177,47 @@ export default function Profile() {
       <div className="card p-4">
         <ThemeSwitcher />
       </div>
+
+      {contributionBreakdown.length > 0 && (
+        <div className="card p-4 space-y-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs text-text-muted font-medium">猫猫贡献画像</p>
+              <h3 className="text-lg font-bold text-text mt-1">
+                {primaryContribution ? `${primaryContribution.label}型贡献者` : '校园猫猫贡献者'}
+              </h3>
+              <p className="text-xs text-text-secondary mt-1">
+                {primaryContribution?.description || '记录、确认、分享与守护都会变成可见贡献'}
+              </p>
+            </div>
+            <div className="text-right shrink-0">
+              <p className="text-2xl font-extrabold text-primary">{contributionScore}</p>
+              <p className="text-[11px] text-text-muted">贡献分</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {contributionBreakdown.map((item) => {
+              const Icon = contributionIcons[item.key] || Award
+              const progress = Math.min(100, Math.round(((item.current || 0) / Math.max(item.target || 1, 1)) * 100))
+              return (
+                <div key={item.key} className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-sm font-medium text-text truncate">{item.label}</span>
+                    </div>
+                    <span className="text-xs font-bold text-text-secondary shrink-0">{item.score} 分</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-stone-100 overflow-hidden">
+                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <button
         onClick={() => navigate('/wrapped')}

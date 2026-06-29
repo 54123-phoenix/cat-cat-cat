@@ -27,6 +27,7 @@
 - [演示路径](#演示路径)
 - [核心功能文档](#核心功能文档)
 - [项目路线图](#项目路线图)
+- [升级路径与监督机制](#升级路径与监督机制)
 - [当前限制](#当前限制)
 - [团队](#团队)
 
@@ -40,7 +41,7 @@
 - **uncertain** — 返回 Top3 候选，用户手动确认
 - **unknown** — 引导提交新猫线索，进入猫协审核流程
 
-支持 DINOv2 真实模型接入（接口已预留），现阶段使用 mock 逻辑演示全链路。
+后端已内置 DINOv2-style 本地模型加载与 embedding 匹配链路；当模型权重、依赖或参考向量不可用时，会降级到 `unavailable` / `unknown`，保证主流程不崩。
 
 ### 🤝 AI + 人协同审核
 未知猫线索先由 AI 初审（生成建议名称、花色），再经管理员终审。通过后自动建档并给提交者发放 **新猫发现者** 勋章。
@@ -196,15 +197,23 @@ npm run dev
 ## 核心功能文档
 
 - **识别接口契约**：[docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md)
+- **模型健康检查**：[docs/MODEL_HEALTH.md](docs/MODEL_HEALTH.md)
+- **协作交接规范**：[docs/COLLABORATION.md](docs/COLLABORATION.md)
+- **发布清单**：[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)
+- **演示脚本**：[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)
+- **备份与恢复**：[docs/BACKUP_RECOVERY.md](docs/BACKUP_RECOVERY.md)
+- **权限矩阵**：[docs/PERMISSIONS.md](docs/PERMISSIONS.md)
+- **运行观测**：[docs/OBSERVABILITY.md](docs/OBSERVABILITY.md)
+- **可观测性运维手册**：[docs/OBSERVABILITY_RUNBOOK.md](docs/OBSERVABILITY_RUNBOOK.md)
 - **技术架构设计**：[docx/猫猫社区技术文档.md](docx/猫猫社区技术文档.md)
 
 ### 识别接口说明
 
-当前 `/api/recognize` 使用 mock 逻辑演示全链路。AI 接入边界已抽象到 `cat-backend/app/services/ai.py`。
+当前 `/api/recognize` 通过 `cat-backend/app/services/ai.py` 调用 `model_loader.py`，加载 `models/finetuned_best.pt` 并对比 `embeddings/cat_embeddings.json` 中的参考向量。AI 边界已抽象在 service 层，路由层只消费稳定响应。
 
 ```json
 {
-  "status": "confirmed | uncertain | unknown",
+  "status": "confirmed | uncertain | unknown | unavailable",
   "confidence": 0.92,
   "cat_id": 1,
   "cat_name": "皮球",
@@ -256,7 +265,8 @@ POST /api/posts/{id}/comments
 - [x] Docker Compose 一键部署（SQLite 模式）
 
 ### 🔄 进行中 / 规划中
-- [ ] 真实 DINOv2 模型接入
+- [x] DINOv2-style 模型加载与 embedding 匹配链路
+- [x] 模型健康检查、权重/embedding 完整性校验与阈值校准入口
 - [ ] 微信小程序上线
 - [ ] 用户登录系统（微信 OpenID）
 - [ ] 推送通知（点赞 / 评论 / 发现审核结果）
@@ -264,9 +274,79 @@ POST /api/posts/{id}/comments
 
 ---
 
+## 升级路径与监督机制
+
+### 项目评价
+
+当前项目已经形成了完整的校园猫社区闭环：拍照识别、偶遇记录、猫猫档案、社区互动、个人成长与管理端协作都具备雏形。结构上采用 FastAPI + React + Taro 的三端分层，后端 API、模型、服务和前端页面边界较清晰，适合继续做纵向功能切片。
+
+可拓展性方面，项目已有 `schemas`、`crud`、`api`、前端 `api.ts` 和页面层的稳定路径，新功能可以按“数据契约 -> 后端接口 -> 前端体验 -> harness gate”的方式推进。需要注意的是，部分历史逻辑仍集中在 `crud.py` 和大型页面中，后续进入多校区、审核流、运营看板时应逐步拆出领域服务和更细的前端组件。
+
+稳健性方面，本轮已经补强识别降级、上传校验、关注猫猫动态通知、贡献体系和 full harness。项目成熟度从“可演示原型”提升到“可内测迭代版本”：主链路更稳定，失败状态更清楚，也有了自动化监督入口。但生产化仍需继续加强模型健康检查、权限分层、审计、迁移策略和部署监控。
+
+### 交互、功能与传播价值
+
+优势：
+
+- 交互性强：拍照识猫、偶遇打卡、地图热力、徽章和贡献画像能形成连续反馈。
+- 功能多样：档案、社区、照片墙、健康记录、喂食点、通知、排行榜覆盖了校园猫项目的主要场景。
+- 传播价值明确：公开猫猫主页、偶遇分享页和个人贡献体系让内容可以自然外传，也能把外部访问带回档案和社区。
+
+不足：
+
+- 模型链路已经存在，但仍需要健康检查、权重/embedding 完整性校验、阈值校准和推理性能观测。
+- 管理端审核、变更记录和多角色权限还不够成熟，真实猫协运营会需要更强的可追踪性。
+- 前端部分页面承载较重，后续功能继续增加时需要拆组件，避免维护成本变高。
+- 传播链路已有页面，但海报、站外预览、分享来源统计还可以继续增强。
+
+### 激情而稳健的升级路径
+
+已完成：
+
+- P0 稳住主闭环：识别状态统一、上传安全校验、核心 smoke harness、full harness 测试环境修复。
+- P1 做出传播尖刀：公开猫猫主页、偶遇分享页、识别后直达分享。
+- P2 回流机制：关注猫猫动态通知、猫猫贡献画像、分类型排行榜。
+- P3-01 审核与变更记录：猫档创建/更新/删除、线索审核通过/拒绝写入 AuditLog。
+- P3-02 管理端数据看板：总览 tab 展示待审线索/举报/偶遇、近 7 天偶遇热区、活跃贡献者与最近审计动态。
+- P4-01 校园猫路线推荐：基于近 14 天偶遇热度与时间段生成 2-4 个路线点，可分享并跳转地图与识猫打卡。
+- P5-01 模型健康检查与阈值校准：新增 `/api/system/health`，检查 PyTorch、模型权重、reference embedding、阈值配置与可选 warm model load。
+- P5-02 数据库备份与恢复演练：新增 `scripts/backup.ps1`、`scripts/restore.ps1` 与恢复演练文档，支持 dry run、DB-only、uploads 可选和恢复前预备份。
+- P5-03 权限矩阵与多管理员审计：新增 `user/reviewer/admin` 三级角色约束，审核与举报处理支持 reviewer/admin，高危管理动作保留 admin，并补充举报处理审计。
+- P5-04 部署监控、错误追踪与结构化日志：新增 `X-Request-ID`、结构化请求日志、请求失败日志和观测文档。
+- P5-05 协作交接、发布清单与演示脚本：新增发布 checklist、6 分钟演示路径和 opencode 任务模板。
+
+下一阶段建议：
+
+- 发布候选（P6）：冻结广泛功能开发，按 `docs/FINAL_ACCEPTANCE.md` 验收，保持 README/roadmap/TODO/docs/harness 对齐。
+- 协作化补强：用 `docs/COLLABORATION.md` 约束多模型/多人交接，外部实现后由维护者复核 diff、测试与 harness。
+
+P5 进阶路径：
+
+- P5-01 模型健康检查与阈值校准：已提供健康接口、阈值有效性检查、embedding 完整性检查和维护文档；后续可继续扩充真实样本集指标。
+- P5-02 数据库迁移、备份与恢复演练：已完成文件级备份/恢复第一版；后续若进入真实生产库，再补正式 schema migration 策略。
+- P5-03 权限矩阵与多管理员审计：已完成轻量角色分级、后端权限 helper、举报/线索/偶遇审核权限拆分与权限文档。
+- P5-04 部署监控、错误追踪与结构化日志：已完成第一版请求追踪、结构化日志、健康检查联动与排障文档；后续可接入外部 APM/日志平台。
+- P5-05 协作交接、发布清单与演示脚本：已完成基础文档，后续每次发布前按清单复核即可。
+
+### Harness 监督
+
+升级监督入口位于 `harness/`：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File harness/run.ps1 -Mode quick -ContinueOnFailure
+powershell -NoProfile -ExecutionPolicy Bypass -File harness/run.ps1 -Mode full -ContinueOnFailure
+```
+
+规则：
+
+- 每完成一个任务，至少运行 quick harness。
+- 阶段验收或合并前运行 full harness。
+- 分数低于 80 时暂停新增功能，优先修复稳定性。
+- 最新报告写入 `harness/reports/latest.md`，报告目录已加入 `.gitignore`。
+
 ## 当前限制
 
-- 真实 AI 识别模型未接入，当前使用 mock 逻辑演示全链路
+- AI 识别模型链路已存在，但生产运行仍需补齐健康检查、权重/embedding 完整性校验、阈值校准和性能观测
 - 社区用户身份当前使用默认用户 `demo`，后续可接入真实登录系统
 - 管理员端已加入轻量口令鉴权，但尚未实现完整多账号和角色体系
 - 高德地图点位为演示级校园坐标
@@ -284,3 +364,23 @@ POST /api/posts/{id}/comments
 <div align="center">
   <sub>📸 用 AI 让每一只校园猫被看见 · 课程项目 · 2026</sub>
 </div>
+---
+
+## P6 Release Candidate Closeout
+
+The project has now entered a release-candidate closeout stage after P0-P5. Broad feature work should pause until the acceptance pack is reviewed and the full harness remains green.
+
+New release-candidate references:
+
+- [Final acceptance pack](docs/FINAL_ACCEPTANCE.md)
+- [P6 opencode audit guardrails](harness/opencode/P6-release-candidate-audit.md)
+- [Release checklist](docs/RELEASE_CHECKLIST.md)
+- [Collaboration playbook](docs/COLLABORATION.md)
+
+Recommended next upgrade path after this closeout:
+
+- Deployment: production environment matrix, secret handling, process/container deployment, and external log/APM sink.
+- Data: migration discipline, disposable restore drill, seed reset path, and optional PostgreSQL migration plan.
+- Model: labeled evaluation set, threshold calibration, inference latency budget, and unavailable/degraded monitoring.
+- Product: share-card previews, source analytics, richer route storytelling, and stronger admin triage filters.
+- Collaboration: issue templates, release notes, version tags, and one acceptance report per milestone.

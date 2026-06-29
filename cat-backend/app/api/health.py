@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app import crud, schemas
+from app import crud, schemas, models
 from app.api.auth import require_admin
 
 router = APIRouter(prefix="/api/cats", tags=["health"])
@@ -26,7 +26,20 @@ def create_health_record(
     db: Session = Depends(get_db),
     admin=Depends(require_admin),
 ):
-    return crud.create_health_record(db, cat_id=cat_id, record=record, created_by=admin.id)
+    cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()
+    if not cat:
+        raise HTTPException(status_code=404, detail="Cat not found")
+    created = crud.create_health_record(db, cat_id=cat_id, record=record, created_by=admin.id)
+    crud.notify_cat_followers(
+        db,
+        cat_id=cat_id,
+        title=f"{cat.name} 有健康记录更新",
+        content=record.title,
+        related_id=cat_id,
+        related_type="cat",
+        exclude_user_id=admin.id,
+    )
+    return created
 
 
 @router.delete("/{cat_id}/health/{record_id}")

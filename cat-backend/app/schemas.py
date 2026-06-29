@@ -206,7 +206,7 @@ class RecognizeCandidate(BaseModel):
 
 
 class RecognizeResponse(BaseModel):
-    status: str = "unknown"
+    status: Literal["confirmed", "uncertain", "unknown", "unavailable"] = "unknown"
     cat_id: Optional[int] = None
     cat_name: Optional[str] = None
     name: Optional[str] = None
@@ -214,11 +214,55 @@ class RecognizeResponse(BaseModel):
     candidates: List[RecognizeCandidate] = []
 
 
+class HealthCheckItem(BaseModel):
+    name: str
+    status: Literal["pass", "warn", "fail", "skip"]
+    detail: str = ""
+    metadata: dict = {}
+
+
+class RecognitionThresholdHealth(BaseModel):
+    confirmed: float
+    uncertain: float
+    valid: bool
+
+
+class ModelHealthResponse(BaseModel):
+    status: Literal["healthy", "degraded", "unhealthy"]
+    runtime_available: bool
+    model_file: dict
+    embeddings_file: dict
+    reference_cat_count: int = 0
+    embedding_dimensions: List[int] = []
+    thresholds: RecognitionThresholdHealth
+    warm_model_requested: bool = False
+    warm_model_loaded: bool = False
+    checked_at: datetime
+    checks: List[HealthCheckItem] = []
+    model_config = {"protected_namespaces": ()}
+
+
+class SystemHealthResponse(BaseModel):
+    service: str
+    status: Literal["healthy", "degraded", "unhealthy"]
+    model: ModelHealthResponse
+    checked_at: datetime
+
+
 class HeatmapPoint(BaseModel):
     name: str
     latitude: float
     longitude: float
     count: int
+
+
+class ContributionStat(BaseModel):
+    key: str
+    label: str
+    score: int = 0
+    current: int = 0
+    target: int = 1
+    description: str = ""
 
 
 class UserStats(BaseModel):
@@ -231,6 +275,9 @@ class UserStats(BaseModel):
     total_badges: int = 12
     locations_count: int = 0
     photos_count: int = 0
+    contribution_score: int = 0
+    primary_contribution: Optional[str] = None
+    contribution_breakdown: List[ContributionStat] = []
 
 
 class UserBadgeItem(BaseModel):

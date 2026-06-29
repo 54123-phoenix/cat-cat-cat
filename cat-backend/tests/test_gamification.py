@@ -67,3 +67,70 @@ def test_add_xp_and_daily_quest_structure():
         assert keys == {"sighting", "photo", "post", "recognize"}
     finally:
         db.close()
+
+
+def test_contribution_stats_and_category_leaderboard():
+    import uuid
+    from app.database import SessionLocal, Base, engine
+    from app import models, crud
+
+    Base.metadata.create_all(bind=engine)
+    from app.migrate import ensure_users_columns
+    ensure_users_columns()
+    db = SessionLocal()
+    try:
+        from passlib.context import CryptContext
+        pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        suffix = uuid.uuid4().hex[:8]
+        photographer = models.User(
+            username=f"photo_rank_user_{suffix}",
+            password_hash=pwd.hash("x"),
+            nickname="photo",
+            role="user",
+            xp=5,
+        )
+        observer = models.User(
+            username=f"observe_rank_user_{suffix}",
+            password_hash=pwd.hash("x"),
+            nickname="observer",
+            role="user",
+            xp=500,
+        )
+        cat = models.Cat(name="RankCat", location="测试草坪")
+        db.add_all([photographer, observer, cat])
+        db.commit()
+        db.refresh(photographer)
+        db.refresh(observer)
+        db.refresh(cat)
+
+        photo_sighting = models.Sighting(
+            cat_id=cat.id,
+            user_id=photographer.id,
+            image_path="/uploads/sightings/rank.png",
+            location="测试草坪",
+            latitude=31.1,
+            longitude=121.1,
+        )
+        plain_sighting = models.Sighting(cat_id=cat.id, user_id=observer.id, location="测试草坪")
+        db.add_all([photo_sighting, plain_sighting])
+        db.commit()
+        db.refresh(photo_sighting)
+        db.add(models.SightingConfirmation(sighting_id=photo_sighting.id, user_id=observer.id))
+        db.add(models.SightingVote(sighting_id=photo_sighting.id, user_id=observer.id, cat_id=cat.id))
+        db.add(models.UserCatFollow(user_id=photographer.id, cat_id=cat.id))
+        db.commit()
+
+        stats = crud.get_user_stats_full(db, photographer.id)
+        assert stats["contribution_score"] > 0
+        assert len(stats["contribution_breakdown"]) == 5
+        assert {item["key"] for item in stats["contribution_breakdown"]} == {
+            "photography", "discovery", "map", "confirmation", "guardian",
+        }
+
+        from app.api.user import get_leaderboard
+        board = get_leaderboard(category="photography", db=db, user=photographer)
+        assert board["category"] == "photography"
+        assert board["top"][0]["id"] == photographer.id
+        assert board["top"][0]["category_score"] > 0
+    finally:
+        db.close()

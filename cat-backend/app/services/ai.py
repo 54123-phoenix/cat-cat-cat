@@ -72,6 +72,9 @@ def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResp
 
         # Extract embedding from uploaded image
         query_embedding = extract_embedding(image)
+        if not query_embedding:
+            logger.warning("Recognition model unavailable or failed to produce embedding")
+            return RecognizeResponse(status="unavailable", confidence=0.0)
 
         # Load reference embeddings
         references = _load_reference_embeddings()

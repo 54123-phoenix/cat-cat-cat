@@ -8,6 +8,7 @@ from app.ratelimit import limit
 from app.config import settings
 from app.database import get_db
 from app.models import AuditLog
+from app.api.upload import validate_upload
 
 router = APIRouter(prefix="/api", tags=["recognize"])
 
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/api", tags=["recognize"])
 @router.post("/recognize", response_model=RecognizeResponse)
 @limit(f"{settings.RATE_RECOGNIZE_PER_MIN}/minute")
 async def recognize(request: Request, file: UploadFile = File(...), db: Session = Depends(get_db)):
-    image_bytes = await file.read()
+    image_bytes = await validate_upload(file)
     result = await asyncio.to_thread(recognize_cat_image, image_bytes=image_bytes, filename=file.filename or "")
     try:
         db.add(AuditLog(
