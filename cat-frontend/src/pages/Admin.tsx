@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { QrCode, X, Download, ClipboardList, MapPin, Trophy, History, AlertTriangle, Cat, Users } from 'lucide-react'
+import { QrCode, X, Download, MapPin, Trophy, History, AlertTriangle, Cat, Users } from 'lucide-react'
 import QRCode from 'qrcode'
 import { adminLogin, clearAdminToken, createCat, getAdminDashboard, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
 

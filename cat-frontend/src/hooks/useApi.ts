@@ -90,7 +90,7 @@ export function useDailyQuest() {
 export function useLeaderboard() {
   return useQuery({
     queryKey: ['leaderboard'],
-    queryFn: getLeaderboard,
+    queryFn: () => getLeaderboard(),
   })
 }
 
