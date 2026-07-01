@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import CatDeskToken from './CatDeskToken'
 
 export interface MiniSceneCat {

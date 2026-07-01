@@ -83,6 +83,7 @@ function ProtectedRoute({ children, adminOnly = false }: { children: React.React
       return () => clearTimeout(t)
     }
     setShowCapsule(false)
+    return undefined
   }, [adminOnly, token, location.pathname])
 
   if (!token) return <Navigate to={adminOnly ? "/admin" : "/login"} replace />

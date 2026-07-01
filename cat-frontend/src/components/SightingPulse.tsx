@@ -35,6 +35,7 @@ export default function SightingPulse({ sightings, onFollowCat, onViewCat, durat
       }, duration))
       return () => timers.forEach(t => clearTimeout(t))
     }
+    return undefined
   }, [sightings, duration])
 
   if (active.length === 0) return null
