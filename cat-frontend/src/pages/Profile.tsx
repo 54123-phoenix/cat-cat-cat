@@ -5,9 +5,12 @@ import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import EmptyState from '../components/EmptyState'
 import ThemeSwitcher from '../components/ThemeSwitcher'
-import { getUserProfile, getCats, getFollowedCats, getStoredUser, getMyStats } from '../api'
+import { getUserProfile, getCats, getFollowedCats, getStoredUser, getMyStats, getCollectibles } from '../api'
 import { BADGE_DISPLAY } from '../constants/badges'
 import StreakBadge from '../components/StreakBadge'
+import ContributionTitles from '../components/ContributionTitles'
+import ImageWithShimmer from '../components/ImageWithShimmer'
+import type { Collectible } from '../types'
 
 export default function Profile() {
   const [user, setUser] = useState(null)
@@ -15,6 +18,7 @@ export default function Profile() {
   const [followedCats, setFollowedCats] = useState([])
   const [badges, setBadges] = useState([])
   const [myStats, setMyStats] = useState(null)
+  const [collectibles, setCollectibles] = useState<Collectible[]>([])
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
   const navigate = useNavigate()
@@ -31,13 +35,15 @@ export default function Profile() {
       getCats(),
       getFollowedCats().catch(() => []),
       getMyStats().catch(() => null),
+      getCollectibles().catch(() => ({ collectibles: [], total: 0 })),
     ])
-      .then(([userData, catsData, followedData, statsData]) => {
+      .then(([userData, catsData, followedData, statsData, collData]) => {
         setUser(userData)
         setCats(Array.isArray(catsData) ? catsData : [])
         setFollowedCats(Array.isArray(followedData) ? followedData : [])
         setBadges(userData.badges || [])
         setMyStats(statsData)
+        setCollectibles(collData.collectibles || [])
       })
       .catch((err) => {
         if (err.message?.includes('401') || err.message?.includes('Not authenticated')) {
@@ -124,7 +130,7 @@ export default function Profile() {
           <div className="flex items-end gap-4 -mt-10">
             <div className="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden ring-4 ring-white shadow-md">
               {user?.avatar ? (
-                <img src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full object-cover" />
+                <ImageWithShimmer src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full" loading="lazy" compact />
               ) : (
                 <User className="w-8 h-8 text-primary" />
               )}
@@ -177,6 +183,27 @@ export default function Profile() {
       <div className="card p-4">
         <ThemeSwitcher />
       </div>
+
+      <ContributionTitles variant="full" />
+
+      {collectibles.length > 0 && (
+        <div className="card p-4">
+          <h3 className="text-lg font-bold text-text mb-3 flex items-center gap-2">
+            🎁 我的收藏品 <span className="text-sm text-text-secondary font-normal">({collectibles.length})</span>
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            {collectibles.map((c) => (
+              <div key={c.id} className="rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50/50 to-white p-3">
+                <div className="text-2xl text-center mb-1">{c.emoji || '🎁'}</div>
+                <div className="text-xs font-medium text-center text-text">{c.display_name}</div>
+                <div className="text-[10px] text-text-secondary text-center mt-0.5">
+                  {new Date(c.created_at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {contributionBreakdown.length > 0 && (
         <div className="card p-4 space-y-4">
@@ -343,7 +370,7 @@ export default function Profile() {
               >
                 <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center overflow-hidden mx-auto">
                   {cat.cat_avatar ? (
-                    <img src={cat.cat_avatar} alt={cat.cat_name || '猫猫'} loading="lazy" className="w-full h-full object-cover" />
+                    <ImageWithShimmer src={cat.cat_avatar} alt={cat.cat_name || '猫猫'} loading="lazy" className="w-full h-full" compact />
                   ) : (
                     <Cat className="w-6 h-6 text-primary/30" />
                   )}

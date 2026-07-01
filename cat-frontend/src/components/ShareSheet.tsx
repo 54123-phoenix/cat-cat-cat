@@ -6,9 +6,10 @@ import { toPng } from 'html-to-image'
 interface ShareSheetProps {
   posterRef: React.RefObject<HTMLDivElement>
   onClose: () => void
+  shareUrl?: string
 }
 
-export default function ShareSheet({ posterRef, onClose }: ShareSheetProps) {
+export default function ShareSheet({ posterRef, onClose, shareUrl }: ShareSheetProps) {
   const [copied, setCopied] = useState(false)
 
   async function handleSave() {
@@ -37,7 +38,7 @@ export default function ShareSheet({ posterRef, onClose }: ShareSheetProps) {
   }
 
   async function handleCopyLink() {
-    const url = `${window.location.origin}${window.location.pathname}?utm_source=share&utm_campaign=cat_share`
+    const url = shareUrl || `${window.location.origin}${window.location.pathname}?utm_source=share&utm_campaign=cat_share`
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)

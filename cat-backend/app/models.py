@@ -1,10 +1,19 @@
 import json
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean, Index
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    Float,
+    DateTime,
+    ForeignKey,
+    Boolean,
+    Index,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy import UniqueConstraint
 from app.database import Base
-
 
 
 class Discovery(Base):
@@ -28,9 +37,7 @@ class UserBadge(Base):
     badge_key = Column(String(50), nullable=False)
     earned_at = Column(DateTime, default=datetime.now(timezone.utc))
 
-    __table_args__ = (
-        UniqueConstraint("user_id", "badge_key", name="uq_user_badge"),
-    )
+    __table_args__ = (UniqueConstraint("user_id", "badge_key", name="uq_user_badge"),)
 
 
 class Campus(Base):
@@ -104,7 +111,12 @@ class Cat(Base):
 
     images = relationship("CatImage", back_populates="cat")
     sightings = relationship("Sighting", back_populates="cat")
-    health_records = relationship("HealthRecord", back_populates="cat", cascade="all, delete-orphan", order_by="HealthRecord.record_date.desc()")
+    health_records = relationship(
+        "HealthRecord",
+        back_populates="cat",
+        cascade="all, delete-orphan",
+        order_by="HealthRecord.record_date.desc()",
+    )
 
 
 class CatImage(Base):
@@ -149,7 +161,9 @@ class SightingConfirmation(Base):
     __tablename__ = "sighting_confirmations"
 
     id = Column(Integer, primary_key=True, index=True)
-    sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
+    sighting_id = Column(
+        Integer, ForeignKey("sightings.id"), nullable=False, index=True
+    )
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
@@ -162,7 +176,9 @@ class SightingVote(Base):
     __tablename__ = "sighting_votes"
 
     id = Column(Integer, primary_key=True, index=True)
-    sighting_id = Column(Integer, ForeignKey("sightings.id"), nullable=False, index=True)
+    sighting_id = Column(
+        Integer, ForeignKey("sightings.id"), nullable=False, index=True
+    )
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
@@ -189,12 +205,22 @@ class Post(Base):
     poll_data = Column(Text)
     accepted_comment_id = Column(Integer)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime,
+        default=datetime.now(timezone.utc),
+        onupdate=datetime.now(timezone.utc),
+    )
 
     author = relationship("User", back_populates="posts")
-    images = relationship("PostImage", back_populates="post", order_by="PostImage.sort_order")
-    likes = relationship("PostLike", back_populates="post", cascade="all, delete-orphan")
-    comment_list = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+    images = relationship(
+        "PostImage", back_populates="post", order_by="PostImage.sort_order"
+    )
+    likes = relationship(
+        "PostLike", back_populates="post", cascade="all, delete-orphan"
+    )
+    comment_list = relationship(
+        "Comment", back_populates="post", cascade="all, delete-orphan"
+    )
 
 
 class PostImage(Base):
@@ -227,9 +253,7 @@ class PostPollVote(Base):
     option_index = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
-    __table_args__ = (
-        UniqueConstraint("post_id", "user_id", name="uq_post_poll_vote"),
-    )
+    __table_args__ = (UniqueConstraint("post_id", "user_id", name="uq_post_poll_vote"),)
 
 
 class Comment(Base):
@@ -288,15 +312,24 @@ class FeedingPoint(Base):
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     campus_id = Column(Integer, ForeignKey("campuses.id"), nullable=True, index=True)
 
-    check_ins = relationship("FeedingCheckIn", back_populates="point", cascade="all, delete-orphan", order_by="FeedingCheckIn.created_at.desc()")
+    check_ins = relationship(
+        "FeedingCheckIn",
+        back_populates="point",
+        cascade="all, delete-orphan",
+        order_by="FeedingCheckIn.created_at.desc()",
+    )
 
 
 class FeedingCheckIn(Base):
     __tablename__ = "feeding_check_ins"
 
     id = Column(Integer, primary_key=True, index=True)
-    point_id = Column(Integer, ForeignKey("feeding_points.id"), nullable=False, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, default=1, index=True)
+    point_id = Column(
+        Integer, ForeignKey("feeding_points.id"), nullable=False, index=True
+    )
+    user_id = Column(
+        Integer, ForeignKey("users.id"), nullable=False, default=1, index=True
+    )
     food_remaining = Column(String(20))
     cats_seen = Column(Integer, default=0)
     note = Column(Text)
@@ -339,3 +372,47 @@ class UserCatFollow(Base):
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     __table_args__ = (UniqueConstraint("user_id", "cat_id", name="uq_user_cat_follow"),)
+
+
+class UserCollectible(Base):
+    __tablename__ = "user_collectibles"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    collectible_type = Column(String(30), nullable=False)
+    key = Column(String(100), nullable=False)
+    display_name = Column(String(100), nullable=False)
+    emoji = Column(String(10))
+    extra_data = Column(Text)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id", "collectible_type", "key", name="uq_user_collectible"
+        ),
+    )
+
+
+class RouteCheckin(Base):
+    __tablename__ = "route_checkins"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    time_slot = Column(String(20), nullable=False)
+    stop_name = Column(String(100), nullable=False)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    __table_args__ = (
+        UniqueConstraint("user_id", "time_slot", "stop_name", name="uq_route_checkin"),
+    )
+
+
+class DailyCapsuleClaim(Base):
+    __tablename__ = "daily_capsule_claims"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    claim_date = Column(String(10), nullable=False)
+    cat_id = Column(Integer, ForeignKey("cats.id"), nullable=True)
+    sticker = Column(String(10))
+    title = Column(String(50))
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    __table_args__ = (
+        UniqueConstraint("user_id", "claim_date", name="uq_daily_capsule_claim"),
+    )

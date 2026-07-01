@@ -6,6 +6,9 @@ import PhotoViewer from '../components/PhotoViewer'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import { Cat, Heart, PawPrint, Syringe, Scissors, Bandage, Stethoscope, MapPin, ImageOff, MapPinned, Share2 } from 'lucide-react'
 import SharePoster from '../components/SharePoster'
+import CatIdentityCard from '../components/CatIdentityCard'
+import CatDeskToken from '../components/CatDeskToken'
+import ContributionTitles from '../components/ContributionTitles'
 import { getCat, getSightings, getHealthRecords, followCat, unfollowCat, checkFollow, createSighting, getToken } from '../api'
 import { toast } from '../components/Toast'
 
@@ -120,6 +123,7 @@ export default function CatDetail() {
   const [followLoading, setFollowLoading] = useState(false)
   const [viewerIndex, setViewerIndex] = useState(null)
   const [checkInLoading, setCheckInLoading] = useState(false)
+  const [showIdentityCard, setShowIdentityCard] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -257,6 +261,26 @@ export default function CatDetail() {
               ))}
             </div>
           )}
+
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => setShowIdentityCard(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-light text-primary text-sm font-medium hover:bg-primary-light/70 transition-colors"
+            >
+              🪪 身份卡
+            </button>
+            <ContributionTitles variant="badge" />
+          </div>
+
+          <div className="flex justify-center py-2">
+            <CatDeskToken
+              name={cat.name}
+              avatar={cat.avatar}
+              color={cat.color || '#FED7AA'}
+              size={100}
+              mood="sit"
+            />
+          </div>
 
           {(cat.gender || cat.age_estimate || cat.neutered) && (
             <div className="grid grid-cols-3 gap-2 pt-2">
@@ -454,6 +478,15 @@ export default function CatDetail() {
           images={cat.images.map((img) => ({ url: img.image_path, alt: cat.name }))}
           initialIndex={viewerIndex}
           onClose={() => setViewerIndex(null)}
+        />
+      )}
+
+      {showIdentityCard && (
+        <CatIdentityCard
+          cat={cat}
+          personalityTags={personalityTags}
+          sightingCount={sightings.length}
+          onClose={() => setShowIdentityCard(false)}
         />
       )}
     </div>

@@ -5,7 +5,6 @@ import TabBar from './TabBar'
 import Sidebar from './Sidebar'
 import Toast, { toast } from './Toast'
 import CelebrationOverlay from './CelebrationOverlay'
-import Onboarding, { isOnboarded } from './Onboarding'
 import { useEventStream } from '../hooks/useEventStream'
 import { getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
@@ -26,7 +25,6 @@ const routeTitles = {
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [celebration, setCelebration] = useState(null)
-  const [showOnboarding, setShowOnboarding] = useState(() => !isOnboarded())
   const user = useUserStore()
   const navigate = useNavigate()
   const location = useLocation()
@@ -153,9 +151,6 @@ export default function Layout() {
           badgeName={celebration.name}
           onClose={() => setCelebration(null)}
         />
-      )}
-      {showOnboarding && (
-        <Onboarding onClose={() => setShowOnboarding(false)} />
       )}
     </div>
   )

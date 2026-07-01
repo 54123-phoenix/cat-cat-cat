@@ -86,6 +86,18 @@ def cache_invalidate(pattern: str) -> None:
         _memory_cache.delete(pattern)
 
 
+def _cacheable(value):
+    if hasattr(value, "model_dump"):
+        return value.model_dump(mode="json")
+    if isinstance(value, list):
+        return [_cacheable(item) for item in value]
+    if isinstance(value, tuple):
+        return [_cacheable(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _cacheable(item) for key, item in value.items()}
+    return value
+
+
 def cached(ttl: int = 300, key_fn: Optional[Callable] = None):
     def decorator(func):
         @functools.wraps(func)
@@ -99,7 +111,7 @@ def cached(ttl: int = 300, key_fn: Optional[Callable] = None):
                     pass
             value = func(*args, **kwargs)
             try:
-                cache_set(cache_key, json.dumps(value, default=str), ttl)
+                cache_set(cache_key, json.dumps(_cacheable(value), default=str), ttl)
             except (TypeError, ValueError):
                 pass
             return value

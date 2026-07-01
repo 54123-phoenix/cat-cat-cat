@@ -245,6 +245,13 @@ class TestMap:
         assert "total" in data
         assert "has_more" in data
 
+        cached_resp = client.get("/api/map/heatmap")
+        assert cached_resp.status_code == 200
+        cached_data = cached_resp.json()
+        assert "items" in cached_data
+        assert "total" in cached_data
+        assert "has_more" in cached_data
+
 
 # ─── Badges/Quests Tests ─────────────────────────────────────────────
 

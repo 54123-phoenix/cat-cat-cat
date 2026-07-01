@@ -5,7 +5,10 @@ import { MapPin, Navigation, HelpCircle } from 'lucide-react'
 import CatSpinner from '../components/CatSpinner'
 import CatMarker from '../components/illustrations/CatMarker'
 import { catMarkerString } from '../components/illustrations/CatMarker'
-import { getHeatmapData, getCats, getNearbyCats } from '../api'
+import SightingPulse from '../components/SightingPulse'
+import CampusMiniScene from '../components/CampusMiniScene'
+import ImageWithShimmer from '../components/ImageWithShimmer'
+import { getHeatmapData, getCats, getNearbyCats, getSightings } from '../api'
 import { campusCenter } from '../campusLocations'
 
 declare const AMap: any
@@ -62,6 +65,8 @@ export default function Map() {
   const [days, setDays] = useState(0)
   const [mapReady, setMapReady] = useState(false)
   const [nearbyCats, setNearbyCats] = useState([])
+  const [recentSightings, setRecentSightings] = useState([])
+  const [showMiniScene, setShowMiniScene] = useState(false)
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const AMapRef = useRef(null)
@@ -113,7 +118,7 @@ export default function Map() {
 
   useEffect(() => {
     const map = mapInstanceRef.current
-    if (!map || showGeoModal) return undefined
+    if (!map || showGeoModal || !geoLoading) return undefined
 
     const timer = setTimeout(() => {
       map.plugin('AMap.Geolocation', () => {
@@ -167,7 +172,7 @@ export default function Map() {
     }, 300)
 
     return () => clearTimeout(timer)
-  }, [showGeoModal])
+  }, [showGeoModal, geoLoading])
 
   useEffect(() => {
     const map = mapInstanceRef.current
@@ -201,12 +206,12 @@ export default function Map() {
           if (!point.latitude || !point.longitude) continue
           const catId = point.cat_id || catById.get(point.name)?.id
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="width:32px;height:32px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25))">${catMarkerString()}</div>`
+          markerContent.innerHTML = `<div style="width:40px;height:46px;cursor:pointer;filter:drop-shadow(0 5px 8px rgba(124,45,18,0.28))">${catMarkerString()}</div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
             content: markerContent,
-            offset: new AMap.Pixel(-16, -16),
+            offset: new AMap.Pixel(-20, -42),
             zIndex: 110,
           })
 
@@ -245,6 +250,11 @@ export default function Map() {
     getNearbyCats(campusCenter[1], campusCenter[0], 8).then((cats) => {
       if (!cancelled) setNearbyCats(cats)
     })
+
+    // Fetch recent sightings for pulse
+    getSightings({ limit: 5 }).then((data) => {
+      if (!cancelled && Array.isArray(data)) setRecentSightings(data)
+    }).catch(() => {})
 
     return () => {
       cancelled = true
@@ -328,10 +338,10 @@ export default function Map() {
           <div className="w-10 h-1 bg-border rounded-full mx-auto mb-3" />
           <h3 className="text-h3 font-bold text-text mb-3">附近猫咪</h3>
           <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-4 px-4 pb-1">
-            {nearbyCats.map((cat) => (
-              <button key={cat.id} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
+            {nearbyCats.map((cat, idx) => (
+              <button key={`${cat.id ?? 'cat'}-${idx}`} onClick={() => navigate('/cats/' + cat.id)} className="flex-shrink-0 w-20 text-center space-y-1">
                 <div className="w-16 h-16 rounded-2xl bg-primary-light overflow-hidden mx-auto ring-2 ring-primary/20 shadow-e2">
-                  {cat.avatar ? <img src={cat.avatar} alt={cat.name} loading="lazy" className="w-full h-full object-cover" /> :
+                  {cat.avatar ? <ImageWithShimmer src={cat.avatar} alt={cat.name} loading="lazy" className="w-full h-full" compact /> :
                     <div className="w-full h-full flex items-center justify-center"><CatMarker size={40} /></div>}
                 </div>
                 <p className="text-xs font-medium text-text truncate">{cat.name}</p>
@@ -341,6 +351,43 @@ export default function Map() {
           </div>
         </div>
       )}
+
+      {/* Mini scene toggle */}
+      <button
+        onClick={() => setShowMiniScene(s => !s)}
+        className="absolute top-3 right-3 z-40 px-3 py-1.5 rounded-full bg-surface-1/90 backdrop-blur shadow-e2 text-sm font-medium text-text-secondary hover:text-text transition-colors"
+      >
+        🏫 {showMiniScene ? '收起' : '场景'}
+      </button>
+
+      {showMiniScene && nearbyCats.length > 0 && (
+        <div className="absolute top-16 left-3 right-3 z-40 animate-fade-in">
+          <CampusMiniScene
+            cats={nearbyCats.slice(0, 5).map((c, i) => ({
+              id: c.id,
+              name: c.name,
+              avatar: c.avatar,
+              color: c.color,
+              x: 0.15 + (i % 3) * 0.35,
+              y: 0.3 + Math.floor(i / 3) * 0.35,
+            }))}
+            onSelectCat={(catId) => navigate('/cats/' + catId)}
+            height={240}
+          />
+        </div>
+      )}
+
+      <SightingPulse
+        sightings={recentSightings.map(s => ({
+          id: s.id,
+          cat_id: s.cat_id,
+          cat_name: s.cat?.name || '校园猫猫',
+          cat_avatar: s.cat?.avatar,
+          location_name: s.location_name,
+          created_at: s.created_at,
+        }))}
+        onViewCat={(catId) => navigate('/cats/' + catId)}
+      />
     </div>
   )
 }

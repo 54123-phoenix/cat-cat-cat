@@ -425,3 +425,42 @@ export function acceptAnswer(postId, commentId) {
     body: JSON.stringify({ comment_id: commentId }),
   })
 }
+
+export function getDailyCapsule() {
+  return request('/daily-capsule')
+}
+
+export function getContributionTitles() {
+  return request('/users/me/titles')
+}
+
+export function getRouteStory(params: { time_slot?: string; limit?: number; days?: number } = {}) {
+  const qs = new URLSearchParams()
+  if (params.time_slot) qs.set('time_slot', params.time_slot)
+  if (params.limit) qs.set('limit', String(params.limit))
+  if (params.days) qs.set('days', String(params.days))
+  const q = qs.toString()
+  return request(`/routes/story${q ? `?${q}` : ''}`)
+}
+
+export function claimDailyCapsule() {
+  return request('/daily-capsule/claim', { method: 'POST' })
+}
+
+export function getCollectibles() {
+  return request('/users/me/collectibles')
+}
+
+export function routeCheckIn(body: { time_slot: string; stop_name: string; cat_id?: number; route_limit?: number }) {
+  return request('/routes/story/check-in', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
+export function getRouteProgress(time_slot = 'anytime', route_limit?: number) {
+  const params = new URLSearchParams({ time_slot })
+  if (route_limit) params.set('route_limit', String(route_limit))
+  return request(`/routes/story/progress?${params.toString()}`)
+}

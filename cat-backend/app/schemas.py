@@ -91,7 +91,9 @@ class CatResponse(CatBase):
                 d["personality_radar"] = json.loads(radar_raw) if radar_raw else None
             except (json.JSONDecodeError, TypeError):
                 d["personality_radar"] = None
-            d["aliases_list"] = [a for a in aliases_raw.split(",") if a.strip()] if aliases_raw else []
+            d["aliases_list"] = (
+                [a for a in aliases_raw.split(",") if a.strip()] if aliases_raw else []
+            )
             try:
                 d["relationships_list"] = json.loads(rel_raw) if rel_raw else []
             except (json.JSONDecodeError, TypeError):
@@ -212,6 +214,9 @@ class RecognizeResponse(BaseModel):
     name: Optional[str] = None
     confidence: float = 0.0
     candidates: List[RecognizeCandidate] = []
+    personality_tags: Optional[List[str]] = None
+    campus_zone: Optional[str] = None
+    collector_status: Optional[str] = None
 
 
 class HealthCheckItem(BaseModel):
@@ -546,7 +551,9 @@ class FollowResponse(BaseModel):
     cat_name: Optional[str] = None
     cat_avatar: Optional[str] = None
     created_at: datetime
-    class Config: from_attributes = True
+
+    class Config:
+        from_attributes = True
 
 
 class FollowCreate(BaseModel):
@@ -611,6 +618,7 @@ class CampusCreate(BaseModel):
     bounds_ne_lng: Optional[float] = None
     bounds_sw_lat: Optional[float] = None
     bounds_sw_lng: Optional[float] = None
+
 
 class CampusResponse(BaseModel):
     id: int

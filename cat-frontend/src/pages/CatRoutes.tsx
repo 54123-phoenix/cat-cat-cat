@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { MapPin, PawPrint, Share2, Navigation, ScanLine, Clock } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
+import RouteStoryView from '../components/RouteStoryView'
+import ImageWithShimmer from '../components/ImageWithShimmer'
 import { ROUTES } from '../constants/routes'
 import { getRouteRecommendations } from '../api'
+import { useNavigate } from 'react-router-dom'
 
 const TIME_SLOTS = [
   { key: 'anytime', label: '任意' },
@@ -19,6 +22,7 @@ function formatTime(v) {
 }
 
 export default function CatRoutes() {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const initialSlot = searchParams.get('time_slot') || 'anytime'
   const [timeSlot, setTimeSlot] = useState(initialSlot)
@@ -41,7 +45,7 @@ export default function CatRoutes() {
   }
 
   const shareUrl = () => {
-    const base = `${window.location.origin}/#/routes`
+    const base = `${window.location.origin}${ROUTES.ROUTES_PAGE}`
     return timeSlot === 'anytime' ? base : `${base}?time_slot=${timeSlot}`
   }
 
@@ -120,7 +124,7 @@ export default function CatRoutes() {
                     {(stop.cat_name || stop.cat_avatar) && (
                       <Link to={`${ROUTES.CAT_DETAIL.replace(':catId', stop.cat_id)}`} className="flex items-center gap-2 ml-10">
                         {stop.cat_avatar
-                          ? <img src={stop.cat_avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
+                          ? <ImageWithShimmer src={stop.cat_avatar} alt={stop.cat_name || '猫猫'} className="w-8 h-8 rounded-full" loading="lazy" compact />
                           : <div className="w-8 h-8 rounded-full bg-border flex items-center justify-center"><PawPrint className="w-4 h-4 text-text-secondary" /></div>}
                         <span className="text-sm font-medium text-text">{stop.cat_name || '校园猫猫'}</span>
                       </Link>
@@ -153,6 +157,17 @@ export default function CatRoutes() {
             )}
           </>
         )}
+
+        <div className="pt-2">
+          <h3 className="font-bold text-text mb-3 flex items-center gap-2">
+            <PawPrint className="w-5 h-5 text-primary" />
+            路线故事化探索
+          </h3>
+          <RouteStoryView
+            timeSlot={timeSlot}
+            onViewCat={(catId) => navigate(ROUTES.CAT_DETAIL.replace(':catId', String(catId)))}
+          />
+        </div>
       </div>
     </div>
   )

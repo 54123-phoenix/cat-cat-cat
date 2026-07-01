@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import BadgeIcon from '../components/BadgeIcon'
+import CatPassport from '../components/CatPassport'
 import { getBadges } from '../api'
 import { Medal } from 'lucide-react'
 import { SERIES_LABEL } from '../constants/badges'
@@ -53,9 +54,11 @@ export default function BadgeGallery() {
             const info = SERIES_LABEL[seriesKey] || { name: seriesKey, Icon: Medal }
             const SeriesIcon = info.Icon
             return (
-              <section key={seriesKey} className="space-y-2">
+              <section key={seriesKey} className="space-y-3">
                 <h2 className="font-bold text-text flex items-center gap-2">
-                  <SeriesIcon className="w-4 h-4 text-primary" />
+                  <span className="w-7 h-7 rounded-full bg-primary-light flex items-center justify-center">
+                    <SeriesIcon className="w-4 h-4 text-primary" />
+                  </span>
                   {info.name}
                 </h2>
                 <div className="space-y-2">
@@ -68,14 +71,16 @@ export default function BadgeGallery() {
                     return (
                       <div
                         key={badge.badge_key}
-                        className={`card flex items-center gap-4 ${
-                          isEarned ? 'badge-earned' : 'opacity-60'
+                        className={`rounded-2xl border p-4 flex items-center gap-4 transition-all ${
+                          isEarned
+                            ? 'bg-gradient-to-r from-white to-primary-light/50 border-primary/20 shadow-e2'
+                            : 'bg-white border-border opacity-75'
                         }`}
                       >
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                          isEarned ? 'bg-primary-light text-primary' : 'bg-gray-100 text-gray-400'
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ring-1 ${
+                          isEarned ? 'bg-white text-primary ring-primary/20' : 'bg-gray-50 text-gray-400 ring-border'
                         }`}>
-                          <BadgeIcon series={badge.series || badge.type || badge.category || 'default'} size={48} />
+                          <BadgeIcon series={badge.series || badge.type || badge.category || 'default'} size={54} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
@@ -91,7 +96,7 @@ export default function BadgeGallery() {
                           </p>
                           {!isEarned && badge.progress_total > 1 && (
                             <div className="mt-1.5 flex items-center gap-2">
-                              <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                                 <div
                                   className="h-full bg-primary rounded-full transition-all duration-700"
                                   style={{ width: `${pct}%` }}
@@ -113,6 +118,10 @@ export default function BadgeGallery() {
 
           {badges.length === 0 && (
             <EmptyState icon={Medal} title="暂无勋章数据" />
+          )}
+
+          {badges.length > 0 && (
+            <CatPassport badges={badges} />
           )}
         </div>
       )}

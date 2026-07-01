@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader'
 import CommentSection from '../components/CommentSection'
 import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
+import ImageWithShimmer from '../components/ImageWithShimmer'
 import { getPost, likePost, deletePost, getStoredUser } from '../api'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 
@@ -177,7 +178,7 @@ export default function PostDetail() {
                   post.images.length === 3 && i === 0 ? 'row-span-2' : ''
                 }`}
               >
-                <img src={img} alt="帖子图片" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: 160 }} />
+                <ImageWithShimmer src={img} alt="帖子图片" loading="lazy" className="w-full h-full min-h-[160px]" />
               </div>
             ))}
           </div>

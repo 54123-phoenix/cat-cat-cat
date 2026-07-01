@@ -98,7 +98,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (!qrPoint) { setQrDataUrl(''); return }
-    const url = `${window.location.origin}/#/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`
+    const url = `${window.location.origin}/scan?point=${encodeURIComponent(qrPoint.name)}&lat=${qrPoint.latitude}&lng=${qrPoint.longitude}`
     QRCode.toDataURL(url, { width: 240, margin: 2 }).then(setQrDataUrl).catch(() => setQrDataUrl(''))
   }, [qrPoint])
 

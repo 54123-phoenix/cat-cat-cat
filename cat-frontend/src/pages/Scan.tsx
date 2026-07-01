@@ -6,6 +6,7 @@ import MascotCat from '../components/MascotCat'
 import PawRain from '../components/PawRain'
 import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
+import CatIdentityCard from '../components/CatIdentityCard'
 import { createDiscovery, createSighting, identifyCat } from '../api'
 import { campusLocations, findCampusLocation } from '../campusLocations'
 import { ACTIVITY_OPTIONS, WEATHER_OPTIONS, MOOD_OPTIONS } from '../constants/activities'
@@ -21,6 +22,7 @@ export default function Scan() {
   const [discovery, setDiscovery] = useState(null)
   const [savedSighting, setSavedSighting] = useState(null)
   const [showPawRain, setShowPawRain] = useState(false)
+  const [showIdentityCard, setShowIdentityCard] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const [customLocation, setCustomLocation] = useState('')
   const [activity, setActivity] = useState('')
@@ -294,6 +296,9 @@ export default function Scan() {
             <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="w-full bg-primary text-white rounded-full py-3 font-medium text-sm">
               查看猫猫档案
             </button>
+            <button onClick={() => setShowIdentityCard(true)} className="w-full bg-white border border-primary text-primary rounded-full py-3 font-medium text-sm">
+              🪪 打开身份卡
+            </button>
             {savedSighting?.id && (
               <button onClick={() => navigate(`/sightings/share/${savedSighting.id}`)} className="w-full bg-white border border-primary text-primary rounded-full py-3 font-medium text-sm flex items-center justify-center gap-2">
                 <Share2 className="w-4 h-4" /> 打开偶遇分享页
@@ -423,6 +428,26 @@ export default function Scan() {
           </>
         )}
       </div>
+
+      {showIdentityCard && phase === 'confirmed' && result?.cat_id && (
+        <CatIdentityCard
+          cat={{
+            id: result.cat_id,
+            name: result.cat_name || '校园猫猫',
+            personality: result.personality_tags?.join('、'),
+            location: result.campus_zone,
+            avatar: undefined,
+            images: [],
+            health_records: [],
+            created_at: '',
+          }}
+          personalityTags={result.personality_tags}
+          campusZone={result.campus_zone}
+          collectorStatus={result.collector_status}
+          onClose={() => setShowIdentityCard(false)}
+          onShare={() => setShowIdentityCard(false)}
+        />
+      )}
     </div>
   )
 }

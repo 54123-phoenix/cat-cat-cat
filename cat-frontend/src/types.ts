@@ -219,6 +219,9 @@ export interface RecognizeResult {
   name?: string
   confidence: number
   candidates: RecognizeCandidate[]
+  personality_tags?: string[]
+  campus_zone?: string
+  collector_status?: string
 }
 
 export interface RecognizeCandidate {
@@ -267,4 +270,113 @@ export interface HeatmapPoint {
   latitude: number
   longitude: number
   count: number
+}
+
+export interface DailyCapsuleCat {
+  id: number
+  name: string
+  nickname?: string
+  avatar?: string
+  color?: string
+  location?: string
+  quote?: string
+  personality_tags: string[]
+  sighting_count: number
+}
+
+export interface DailyCapsule {
+  available: boolean
+  message?: string
+  date?: string
+  cat?: DailyCapsuleCat
+  reward?: { sticker: string; title: string; route_hint: string | null }
+  latest_sighting_at?: string
+}
+
+export interface ContributionTitle {
+  key: string
+  label: string
+  label_en: string
+  count: number
+  description: string
+}
+
+export interface ContributionTitlesResult {
+  titles: ContributionTitle[]
+  primary_title: ContributionTitle | null
+  total: number
+}
+
+export interface RouteStoryStop {
+  name: string
+  reason: string
+  cat_id: number
+  cat_name: string
+  cat_avatar?: string
+  cat_color?: string
+  latitude?: number
+  longitude?: number
+  sightings_count: number
+  latest_sighting_at: string
+  clue: string
+  confidence: number
+  time_window: string
+  checked_in: boolean
+}
+
+export interface RouteStory {
+  title: string
+  time_slot: string
+  generated_at: string
+  share_path: string
+  stops: RouteStoryStop[]
+  route_stamp: { name: string; time_slot: string; stop_count: number; emoji: string }
+  story_intro: string
+}
+
+export interface Collectible {
+  id: number
+  type: string
+  key: string
+  display_name: string
+  emoji?: string
+  created_at: string
+}
+
+export interface CollectiblesResult {
+  collectibles: Collectible[]
+  total: number
+}
+
+export interface DailyCapsuleClaimResult {
+  claimed: boolean
+  message?: string
+  claim?: {
+    cat_id?: number
+    cat_name?: string
+    sticker?: string
+    title?: string
+    claim_date: string
+  }
+}
+
+export interface RouteCheckInResult {
+  checked_in: boolean
+  message?: string | null
+  stop_name?: string
+  total_checkins?: number
+  total_stops?: number
+  completed?: boolean
+  has_stamp?: boolean
+  stamp_issued?: boolean
+}
+
+export interface RouteProgressResult {
+  time_slot: string
+  checked_stops: string[]
+  checkin_count: number
+  total_stops: number
+  remaining_stops: number
+  completed: boolean
+  has_stamp: boolean
 }

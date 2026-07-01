@@ -4,6 +4,7 @@ import { likePost, deletePost, getStoredUser } from '../api'
 import { Flag, Trash2, Heart, MessageCircle } from 'lucide-react'
 
 import Avatar from './Avatar'
+import ImageWithShimmer from './ImageWithShimmer'
 import PollView from './PollView'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 
@@ -127,7 +128,7 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
                   post.images.length === 3 && i === 0 ? 'row-span-2' : ''
                 }`}
               >
-                <img src={img} alt="帖子图片" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: 120 }} />
+                <ImageWithShimmer src={img} alt="帖子图片" loading="lazy" className="w-full h-full min-h-[120px]" />
               </div>
             ))}
           </div>

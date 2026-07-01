@@ -85,7 +85,7 @@ async function buildShareCanvas(data, user) {
     ctx.fillText(`猫猫人格: ${data.cat_personality}`, W / 2, 1060)
   }
 
-  const shareUrl = `${window.location.origin}/#/wrapped?user=${user?.id || ''}`
+  const shareUrl = `${window.location.origin}/wrapped?user=${user?.id || ''}`
   try {
     const qrDataUrl = await QRCode.toDataURL(shareUrl, { width: 180, margin: 1 })
     const qr = await loadImage(qrDataUrl)

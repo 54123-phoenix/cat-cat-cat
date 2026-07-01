@@ -1,9 +1,10 @@
-import { useSyncExternalStore, Suspense, lazy } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useSyncExternalStore, Suspense, lazy, useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
+import DailyCapsuleModal from './components/DailyCapsuleModal'
 import { getToken, getStoredUser, getAdminToken } from './api'
 import { ROUTES } from './constants/routes'
 import { toast } from './components/Toast'
@@ -72,8 +73,30 @@ export function updateUser(newUser: any) {
 
 function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   const token = adminOnly ? getAdminToken() : getToken()
+  const [showCapsule, setShowCapsule] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!adminOnly && token && location.pathname === ROUTES.HOME) {
+      const t = setTimeout(() => setShowCapsule(true), 800)
+      return () => clearTimeout(t)
+    }
+    setShowCapsule(false)
+  }, [adminOnly, token, location.pathname])
+
   if (!token) return <Navigate to={adminOnly ? "/admin" : "/login"} replace />
-  return children
+  return (
+    <>
+      {children}
+      {showCapsule && (
+        <DailyCapsuleModal
+          onClose={() => setShowCapsule(false)}
+          onViewCat={(catId) => navigate(ROUTES.CAT_DETAIL.replace(':catId', String(catId)))}
+        />
+      )}
+    </>
+  )
 }
 
 export default function App() {
