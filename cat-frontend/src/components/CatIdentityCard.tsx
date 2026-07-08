@@ -11,7 +11,6 @@ interface CatIdentityCardProps {
   collectorStatus?: string
   sightingCount?: number
   onClose?: () => void
-  onShare?: () => void
 }
 
 export default function CatIdentityCard({
@@ -21,7 +20,6 @@ export default function CatIdentityCard({
   collectorStatus,
   sightingCount,
   onClose,
-  onShare,
 }: CatIdentityCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
@@ -117,20 +115,12 @@ export default function CatIdentityCard({
             </blockquote>
           )}
 
-          {onShare && (
-            <button
-              onClick={onShare}
-              className="w-full mt-4 py-2.5 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark transition-colors active:scale-[0.98]"
-            >
-              📸 一键生成分享卡
-            </button>
-          )}
           <ShareArtifact
             title={cat.name}
             subtitle={cat.nickname || zone}
             image={cat.avatar}
             proof={`已被记录 ${sightingCount ?? 0} 次 · ${status}`}
-            sharePath={`/cats/${cat.id}`}
+            sharePath={`/cats/public/${cat.id}`}
             slogan="来复旦找猫"
           >
             <button className="w-full mt-4 py-2.5 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark transition-colors active:scale-[0.98]">
