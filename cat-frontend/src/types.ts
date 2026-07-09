@@ -360,6 +360,40 @@ export interface DailyCapsuleClaimResult {
   }
 }
 
+export interface DailyGachaCat {
+  id: number
+  name: string
+  nickname?: string
+  avatar?: string
+  color?: string
+  location?: string
+  quote?: string
+}
+
+export interface DailyGachaPrize {
+  key: string
+  title: string
+  base_title: string
+  emoji: string
+  rarity: 'common' | 'rare' | 'epic' | string
+  rarity_label: string
+  fortune: string
+  action_hint: string
+  share_text: string
+  cat: DailyGachaCat
+}
+
+export interface DailyGacha {
+  available: boolean
+  date?: string
+  drawn: boolean
+  newly_drawn?: boolean
+  seed_tag?: string
+  message?: string
+  prize?: DailyGachaPrize
+  collectible?: Collectible
+}
+
 export interface RouteCheckInResult {
   checked_in: boolean
   message?: string | null

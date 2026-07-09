@@ -365,6 +365,105 @@ def test_daily_capsule_different_users_different_seed():
         db.close()
 
 
+def test_daily_gacha_is_stable_before_draw():
+    import uuid
+    from datetime import date
+    from app.database import SessionLocal, Base, engine
+    from app import models
+
+    Base.metadata.create_all(bind=engine)
+    from app.migrate import ensure_users_columns
+
+    ensure_users_columns()
+    db = SessionLocal()
+    try:
+        from passlib.context import CryptContext
+
+        pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        suffix = uuid.uuid4().hex[:8]
+        user = models.User(
+            username=f"gacha_stable_{suffix}",
+            password_hash=pwd.hash("x"),
+            nickname="gacha",
+            role="user",
+        )
+        cat = models.Cat(name="GachaCat", location="North Gate")
+        db.add_all([user, cat])
+        db.commit()
+        db.refresh(user)
+        db.refresh(cat)
+        db.add(models.Sighting(cat_id=cat.id, user_id=user.id, location="North Gate"))
+        db.commit()
+
+        from app.api.gamification import daily_gacha
+
+        result1 = daily_gacha(db=db, user=user)
+        result2 = daily_gacha(db=db, user=user)
+
+        assert result1["available"] is True
+        assert result1["drawn"] is False
+        assert result1["date"] == date.today().isoformat()
+        assert result1["seed_tag"] == result2["seed_tag"]
+        assert result1["prize"]["key"] == result2["prize"]["key"]
+        assert result1["prize"]["cat"]["id"] == result2["prize"]["cat"]["id"]
+    finally:
+        db.close()
+
+
+def test_daily_gacha_draw_is_idempotent_collectible():
+    import uuid
+    from app.database import SessionLocal, Base, engine
+    from app import models
+
+    Base.metadata.create_all(bind=engine)
+    from app.migrate import ensure_users_columns
+
+    ensure_users_columns()
+    db = SessionLocal()
+    try:
+        from passlib.context import CryptContext
+
+        pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        suffix = uuid.uuid4().hex[:8]
+        user = models.User(
+            username=f"gacha_draw_{suffix}",
+            password_hash=pwd.hash("x"),
+            nickname="drawer",
+            role="user",
+        )
+        cat = models.Cat(name="DrawCat", location="Library")
+        db.add_all([user, cat])
+        db.commit()
+        db.refresh(user)
+        db.refresh(cat)
+        db.add(models.Sighting(cat_id=cat.id, user_id=user.id, location="Library"))
+        db.commit()
+
+        from app.api.gamification import draw_daily_gacha
+
+        result1 = draw_daily_gacha(db=db, user=user)
+        assert result1["drawn"] is True
+        assert result1["newly_drawn"] is True
+        assert result1["collectible"]["type"] == "gacha_prize"
+
+        result2 = draw_daily_gacha(db=db, user=user)
+        assert result2["drawn"] is True
+        assert result2["newly_drawn"] is False
+        assert result2["prize"]["key"] == result1["prize"]["key"]
+
+        collectibles = (
+            db.query(models.UserCollectible)
+            .filter(
+                models.UserCollectible.user_id == user.id,
+                models.UserCollectible.collectible_type == "gacha_prize",
+            )
+            .all()
+        )
+        assert len(collectibles) == 1
+    finally:
+        db.close()
+
+
 def _setup_route_test_data(db, user, cat, stop_names, time_slot="anytime"):
     """Create sightings at given stop_names so route_story produces them.
 
@@ -374,6 +473,8 @@ def _setup_route_test_data(db, user, cat, stop_names, time_slot="anytime"):
     from datetime import datetime, timedelta
     from app import models
 
+    db.query(models.SightingConfirmation).delete()
+    db.query(models.SightingVote).delete()
     db.query(models.Sighting).delete()
     db.query(models.RouteCheckin).delete()
     db.query(models.UserCollectible).filter(
@@ -793,5 +894,78 @@ def test_capsule_claim_compensates_missing_collectible():
         )
         assert len(collectibles) == 1
         assert collectibles[0].display_name == "清晨观察员"
+    finally:
+        db.close()
+
+
+def test_capsule_claim_tolerates_existing_collectible_without_claim():
+    """已有 capsule_reward 但缺少 DailyCapsuleClaim 时，claim 仍应成功补齐记录。"""
+    import uuid
+    from datetime import date
+    from app.database import SessionLocal, Base, engine
+    from app import models
+
+    Base.metadata.create_all(bind=engine)
+    from app.migrate import ensure_users_columns
+
+    ensure_users_columns()
+    db = SessionLocal()
+    try:
+        from passlib.context import CryptContext
+
+        pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        suffix = uuid.uuid4().hex[:8]
+        user = models.User(
+            username=f"existing_collectible_{suffix}",
+            password_hash=pwd.hash("x"),
+            nickname="existing",
+            role="user",
+        )
+        db.add(user)
+        cat = models.Cat(name="ExistingCollectibleCat", location="本部")
+        db.add(cat)
+        db.commit()
+        db.refresh(user)
+        db.refresh(cat)
+        db.add(models.Sighting(cat_id=cat.id, user_id=user.id, location="本部"))
+
+        today_iso = date.today().isoformat()
+        db.add(
+            models.UserCollectible(
+                user_id=user.id,
+                collectible_type="capsule_reward",
+                key=today_iso,
+                display_name="旧奖励",
+                emoji="⭐",
+            )
+        )
+        db.commit()
+
+        from app.api.gamification import claim_daily_capsule
+
+        result = claim_daily_capsule(db=db, user=user)
+        assert result["claimed"] is True
+
+        claims = (
+            db.query(models.DailyCapsuleClaim)
+            .filter(
+                models.DailyCapsuleClaim.user_id == user.id,
+                models.DailyCapsuleClaim.claim_date == today_iso,
+            )
+            .all()
+        )
+        assert len(claims) == 1
+
+        collectibles = (
+            db.query(models.UserCollectible)
+            .filter(
+                models.UserCollectible.user_id == user.id,
+                models.UserCollectible.collectible_type == "capsule_reward",
+                models.UserCollectible.key == today_iso,
+            )
+            .all()
+        )
+        assert len(collectibles) == 1
+        assert collectibles[0].display_name == "旧奖励"
     finally:
         db.close()

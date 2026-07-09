@@ -144,7 +144,7 @@ export default function PublicCat() {
             {personalityTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {personalityTags.map((tag: string) => (
-                  <span key={tag} className="rounded-full bg-white/18 px-3 py-1 text-xs text-white backdrop-blur">
+                  <span key={tag} className="rounded-full bg-white/20 px-3 py-1 text-xs text-white backdrop-blur">
                     {tag}
                   </span>
                 ))}

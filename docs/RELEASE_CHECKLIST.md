@@ -33,7 +33,7 @@ cd D:\Desktop\cat\cat-backend
 .\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
-- [ ] 全部测试通过（当前基线 62 passed）。
+- [ ] 全部测试通过（当前基线 81 passed）。
 - [ ] 无新增 deprecation warning 影响运行。
 - [ ] 识别接口 `/api/recognize` 在无模型时返回 `unavailable`，不抛 500。
 - [ ] 管理端 `/api/admin/dashboard` 需 `require_admin`，未登录返回 401。
@@ -51,6 +51,9 @@ npm run build
 - [ ] `npm run build` 成功，无类型错误。
 - [ ] 构建产物体积无异常膨胀（`dist/assets/index-*.js` gzip < 160 kB）。
 - [ ] 移动端窄屏（≤ 480px）下主要页面无横向溢出。
+- [ ] 首页「今日校园寻猫入口」在有数据和空数据时都能给出拍照识猫入口。
+- [ ] 识猫 confirmed 状态显示「已记入偶遇」与「生成偶遇纪念卡」入口。
+- [ ] `/routes` 路线页可生成分享卡，并可跳转地图和识猫入口。
 
 ## 五、数据与上传安全
 
@@ -85,6 +88,7 @@ npm run build
 - [ ] 前端测试 + build 通过
 - [ ] 管理端总览与审核流人工冒烟通过
 - [ ] `/routes` 路线推荐页人工冒烟通过
+- [ ] 首页 -> 识猫 -> 偶遇纪念卡 -> 路线/地图 -> 公开分享的演示链路人工冒烟通过
 - [ ] 发布说明已写入 `README.md` 升级路径段
 
 全部勾选后，可标记本轮发布完成。

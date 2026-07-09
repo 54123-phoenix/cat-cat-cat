@@ -319,25 +319,25 @@ export default function Scan() {
                     <Cat className="h-16 w-16 text-primary/30" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/72 via-stone-950/18 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/20 to-transparent" />
                 <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-green-700 shadow-e1">
                     <Check className="h-3.5 w-3.5" />
                     已记入偶遇
                   </span>
-                  <span className="rounded-full bg-stone-950/55 px-3 py-1.5 text-xs font-semibold text-white">
+                  <span className="rounded-full bg-stone-950/60 px-3 py-1.5 text-xs font-semibold text-white">
                     {confidencePercent(result.confidence)}%
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <p className="text-xs font-medium text-white/78">这次遇见的是</p>
+                  <p className="text-xs font-medium text-white/80">这次遇见的是</p>
                   <h2 className="mt-1 text-3xl font-bold leading-tight">{confirmedCatName()}</h2>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/88">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/18 px-2.5 py-1">
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/90">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1">
                       <MapPin className="h-3.5 w-3.5" />
                       {confirmedZone()}
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/18 px-2.5 py-1">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1">
                       <BadgeCheck className="h-3.5 w-3.5" />
                       {result.collector_status || '校园观察员'}
                     </span>

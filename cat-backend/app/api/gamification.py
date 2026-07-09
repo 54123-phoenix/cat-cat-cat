@@ -1,3 +1,4 @@
+import json
 import random
 import hashlib
 from datetime import datetime, date, timedelta
@@ -24,6 +25,67 @@ CAPSULE_TITLES = [
     "猫猫日记员",
     "偶遇收藏者",
 ]
+
+GACHA_PRIZES = [
+    {
+        "key": "paw_sticker",
+        "title": "猫爪贴纸",
+        "emoji": "🐾",
+        "rarity": "common",
+        "weight": 38,
+    },
+    {
+        "key": "fish_coupon",
+        "title": "小鱼干券",
+        "emoji": "🐟",
+        "rarity": "common",
+        "weight": 30,
+    },
+    {
+        "key": "sun_badge",
+        "title": "晒太阳徽章",
+        "emoji": "☀️",
+        "rarity": "rare",
+        "weight": 18,
+    },
+    {
+        "key": "route_compass",
+        "title": "巡猫罗盘",
+        "emoji": "🧭",
+        "rarity": "rare",
+        "weight": 10,
+    },
+    {
+        "key": "golden_whisker",
+        "title": "金色胡须",
+        "emoji": "✨",
+        "rarity": "epic",
+        "weight": 4,
+    },
+]
+
+GACHA_FORTUNES = [
+    "今天适合从一条熟悉的小路开始，猫猫可能已经先到一步。",
+    "如果路过草坪，记得慢一点，偶遇经常藏在拐角。",
+    "今天的猫缘偏向安静观察，拍照前先给它一点距离。",
+    "适合补一条猫猫近况，让后来的人知道它最近很好。",
+    "今天可能遇到一只很会晒太阳的猫，别急着打扰它。",
+    "把路线走完会有好运，尤其是下午光线变软的时候。",
+]
+
+GACHA_ACTIONS = [
+    "去地图看看它最近出现在哪里",
+    "给它补一张清晰照片",
+    "完成一段校园猫猫路线",
+    "在社区写下今天的偶遇",
+    "收藏这只猫，之后继续关注",
+]
+
+RARITY_LABELS = {
+    "common": "普通",
+    "rare": "稀有",
+    "epic": "闪光",
+}
 
 
 def build_daily_capsule_for_user(db: Session, user_id: int, target_date: date) -> dict:
@@ -128,6 +190,209 @@ def build_daily_capsule_for_user(db: Session, user_id: int, target_date: date) -
 @router.get("/daily-capsule")
 def daily_capsule(db: Session = Depends(get_db), user: User = Depends(require_auth)):
     return build_daily_capsule_for_user(db, user.id, date.today())
+
+
+def _weighted_pick(rng: random.Random, items: list[dict]) -> dict:
+    total = sum(max(0, int(item.get("weight", 0))) for item in items)
+    if total <= 0:
+        return rng.choice(items)
+    cursor = rng.randint(1, total)
+    running = 0
+    for item in items:
+        running += max(0, int(item.get("weight", 0)))
+        if cursor <= running:
+            return item
+    return items[-1]
+
+
+def _gacha_cat_payload(cat: models.Cat) -> dict:
+    return {
+        "id": cat.id,
+        "name": cat.name,
+        "nickname": cat.nickname,
+        "avatar": cat.avatar,
+        "color": cat.color,
+        "location": cat.location,
+        "quote": cat.quote,
+    }
+
+
+def _today_gacha_collectible(
+    db: Session, user_id: int, target_date: date
+) -> Optional[models.UserCollectible]:
+    return (
+        db.query(models.UserCollectible)
+        .filter(
+            models.UserCollectible.user_id == user_id,
+            models.UserCollectible.collectible_type == "gacha_prize",
+            models.UserCollectible.key == target_date.isoformat(),
+        )
+        .first()
+    )
+
+
+def _gacha_response_from_collectible(
+    collectible: models.UserCollectible,
+) -> Optional[dict]:
+    try:
+        extra = json.loads(collectible.extra_data or "{}")
+    except (TypeError, json.JSONDecodeError):
+        extra = {}
+    prize = extra.get("prize")
+    if not prize:
+        return None
+    return {
+        "available": True,
+        "date": collectible.key,
+        "drawn": True,
+        "newly_drawn": False,
+        "seed_tag": extra.get("seed_tag"),
+        "prize": prize,
+        "collectible": {
+            "id": collectible.id,
+            "type": collectible.collectible_type,
+            "key": collectible.key,
+            "display_name": collectible.display_name,
+            "emoji": collectible.emoji,
+            "created_at": collectible.created_at,
+        },
+    }
+
+
+def build_daily_gacha_for_user(db: Session, user_id: int, target_date: date) -> dict:
+    date_iso = target_date.isoformat()
+    seed_hex = hashlib.md5(f"gacha-{user_id}-{date_iso}".encode()).hexdigest()
+    rng = random.Random(int(seed_hex[:8], 16))
+
+    sightings = (
+        db.query(models.Sighting)
+        .order_by(models.Sighting.created_at.desc())
+        .limit(120)
+        .all()
+    )
+    cat = None
+    if sightings:
+        cat_ids = [s.cat_id for s in sightings]
+        cats_map = {
+            c.id: c
+            for c in db.query(models.Cat).filter(models.Cat.id.in_(cat_ids)).all()
+        }
+        pool = [s for s in sightings if s.cat_id in cats_map]
+        if pool:
+            cat = cats_map[rng.choice(pool).cat_id]
+
+    if cat is None:
+        cats = db.query(models.Cat).limit(200).all()
+        if not cats:
+            return {
+                "available": False,
+                "date": date_iso,
+                "drawn": False,
+                "message": "今天扭蛋机还没有猫猫数据，先去记录一次偶遇吧。",
+            }
+        cat = rng.choice(cats)
+
+    base_prize = _weighted_pick(rng, GACHA_PRIZES)
+    fortune = rng.choice(GACHA_FORTUNES)
+    action_hint = rng.choice(GACHA_ACTIONS)
+    rarity = base_prize["rarity"]
+    title = f"{base_prize['title']} · {cat.name}"
+
+    return {
+        "available": True,
+        "date": date_iso,
+        "drawn": False,
+        "newly_drawn": False,
+        "seed_tag": seed_hex[:6],
+        "prize": {
+            "key": base_prize["key"],
+            "title": title,
+            "base_title": base_prize["title"],
+            "emoji": base_prize["emoji"],
+            "rarity": rarity,
+            "rarity_label": RARITY_LABELS.get(rarity, rarity),
+            "fortune": fortune,
+            "action_hint": action_hint,
+            "share_text": f"我抽到了{cat.name}的今日猫签：{base_prize['title']}",
+            "cat": _gacha_cat_payload(cat),
+        },
+    }
+
+
+@router.get("/gacha/today")
+def daily_gacha(db: Session = Depends(get_db), user: User = Depends(require_auth)):
+    today = date.today()
+    existing = _today_gacha_collectible(db, user.id, today)
+    if existing:
+        stored = _gacha_response_from_collectible(existing)
+        if stored:
+            return stored
+
+    result = build_daily_gacha_for_user(db, user.id, today)
+    result["drawn"] = existing is not None
+    if existing:
+        result["collectible"] = {
+            "id": existing.id,
+            "type": existing.collectible_type,
+            "key": existing.key,
+            "display_name": existing.display_name,
+            "emoji": existing.emoji,
+            "created_at": existing.created_at,
+        }
+    return result
+
+
+@router.post("/gacha/draw")
+def draw_daily_gacha(
+    db: Session = Depends(get_db), user: User = Depends(require_auth)
+):
+    today = date.today()
+    existing = _today_gacha_collectible(db, user.id, today)
+    if existing:
+        stored = _gacha_response_from_collectible(existing)
+        if stored:
+            return stored
+
+    result = build_daily_gacha_for_user(db, user.id, today)
+    if not result.get("available"):
+        raise HTTPException(status_code=400, detail=result.get("message") or "暂无可抽取内容")
+
+    prize = result["prize"]
+    try:
+        collectible = models.UserCollectible(
+            user_id=user.id,
+            collectible_type="gacha_prize",
+            key=today.isoformat(),
+            display_name=prize["title"],
+            emoji=prize["emoji"],
+            extra_data=json.dumps(
+                {"seed_tag": result["seed_tag"], "prize": prize},
+                ensure_ascii=False,
+            ),
+        )
+        db.add(collectible)
+        db.commit()
+        db.refresh(collectible)
+    except IntegrityError:
+        db.rollback()
+        existing = _today_gacha_collectible(db, user.id, today)
+        if existing:
+            stored = _gacha_response_from_collectible(existing)
+            if stored:
+                return stored
+        raise
+
+    result["drawn"] = True
+    result["newly_drawn"] = True
+    result["collectible"] = {
+        "id": collectible.id,
+        "type": collectible.collectible_type,
+        "key": collectible.key,
+        "display_name": collectible.display_name,
+        "emoji": collectible.emoji,
+        "created_at": collectible.created_at,
+    }
+    return result
 
 
 @router.get("/users/me/titles")
@@ -430,22 +695,13 @@ def claim_daily_capsule(
     cat_name = capsule["cat"]["name"]
 
     try:
-        claim = models.DailyCapsuleClaim(
-            user_id=user.id,
-            claim_date=today_iso,
-            cat_id=cat_id,
-            sticker=sticker,
-            title=title,
-        )
-        db.add(claim)
-        db.flush()
         db.add(
-            models.UserCollectible(
+            models.DailyCapsuleClaim(
                 user_id=user.id,
-                collectible_type="capsule_reward",
-                key=today_iso,
-                display_name=title,
-                emoji=sticker,
+                claim_date=today_iso,
+                cat_id=cat_id,
+                sticker=sticker,
+                title=title,
             )
         )
         db.commit()
@@ -474,6 +730,8 @@ def claim_daily_capsule(
                 },
             }
         raise
+
+    ensure_capsule_collectible(db, user.id, today_iso, title, sticker)
 
     return {
         "claimed": True,

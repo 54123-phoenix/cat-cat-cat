@@ -77,22 +77,22 @@ export default function CatRoutes() {
               </div>
 
               <div>
-                <p className="text-sm text-white/72">根据近 14 天偶遇热度，为你挑出最值得走的一段路。</p>
+                <p className="text-sm text-white/75">根据近 14 天偶遇热度，为你挑出最值得走的一段路。</p>
                 <h2 className="mt-2 text-3xl font-bold leading-tight">
                   {leadStop ? `先去 ${leadStop.name} 看看` : '从一次偶遇开始生成路线'}
                 </h2>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
-                <div className="rounded-xl bg-white/12 px-3 py-2">
+                <div className="rounded-xl bg-white/10 px-3 py-2">
                   <p className="text-[11px] text-white/62">路线点</p>
                   <p className="mt-1 text-lg font-bold">{stops.length || 0}</p>
                 </div>
-                <div className="rounded-xl bg-white/12 px-3 py-2">
+                <div className="rounded-xl bg-white/10 px-3 py-2">
                   <p className="text-[11px] text-white/62">偶遇记录</p>
                   <p className="mt-1 text-lg font-bold">{totalSightings}</p>
                 </div>
-                <div className="rounded-xl bg-white/12 px-3 py-2">
+                <div className="rounded-xl bg-white/10 px-3 py-2">
                   <p className="text-[11px] text-white/62">当前时段</p>
                   <p className="mt-1 text-lg font-bold">{activeSlot.label}</p>
                 </div>
@@ -112,6 +112,14 @@ export default function CatRoutes() {
                   生成路线分享卡
                 </button>
               </ShareArtifact>
+
+              <Link
+                to={ROUTES.MAP}
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+              >
+                <MapPin className="h-4 w-4" />
+                打开猫猫地图
+              </Link>
             </div>
           </div>
         </section>

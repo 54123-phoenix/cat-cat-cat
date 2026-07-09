@@ -204,14 +204,15 @@ export default function Map() {
         const markers = []
         for (const point of heatmap) {
           if (!point.latitude || !point.longitude) continue
-          const catId = point.cat_id || catById.get(point.name)?.id
+          const cat = point.cat_id ? catById.get(point.cat_id) : null
+          const catId = point.cat_id || cat?.id
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="width:40px;height:46px;cursor:pointer;filter:drop-shadow(0 5px 8px rgba(124,45,18,0.28))">${catMarkerString()}</div>`
+          markerContent.innerHTML = `<div style="width:46px;height:52px;cursor:pointer;filter:drop-shadow(0 6px 10px rgba(124,45,18,0.28))">${catMarkerString(cat?.avatar || null, point.count)}</div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
             content: markerContent,
-            offset: new AMap.Pixel(-20, -42),
+            offset: new AMap.Pixel(-23, -48),
             zIndex: 110,
           })
 

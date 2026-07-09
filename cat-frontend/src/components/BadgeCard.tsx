@@ -23,7 +23,7 @@ export default function BadgeCard({ badge = {}, earned, size = 'sm' }: BadgeCard
       } mx-auto rounded-2xl ${
         earned ? 'bg-white text-primary ring-1 ring-primary/20' : 'bg-gray-100 text-gray-400'
       } flex items-center justify-center`}>
-        <BadgeIcon series={badge.series || badge.type || badge.category || 'default'} size={sm ? 46 : 58} className={earned ? 'text-primary' : 'text-gray-400'} />
+        <BadgeIcon series={badge.series || badge.type || badge.category || 'default'} size={sm ? 46 : 58} earned={earned} className={earned ? 'text-primary' : 'text-gray-400'} />
       </div>
       <div className={`text-h3 text-text-secondary mt-1 leading-tight truncate`}>
         {badge.name}

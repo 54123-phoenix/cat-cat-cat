@@ -13,91 +13,108 @@ function escapeSvgText(value: string) {
     .replace(/>/g, '&gt;')
 }
 
-function markerShell(inner: string, clipDef = '') {
+function markerShell(inner: string, clipDef = '', count?: number | null) {
+  const countBadge = count && count > 1
+    ? `<g><circle cx="34.5" cy="10.5" r="8.5" fill="#7C2D12" stroke="#FFFFFF" stroke-width="2"/><text x="34.5" y="14.2" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="800" fill="#FFFFFF">${Math.min(count, 99)}</text></g>`
+    : ''
   return (
-    '<svg width="40" height="46" viewBox="0 0 40 46" xmlns="http://www.w3.org/2000/svg">' +
+    '<svg width="46" height="52" viewBox="0 0 46 52" xmlns="http://www.w3.org/2000/svg">' +
     clipDef +
-    '<path d="M20 44C17.2 38.8 6 32.6 6 19.8C6 10 12.2 3 20 3C27.8 3 34 10 34 19.8C34 32.6 22.8 38.8 20 44Z" fill="#EA580C"/>' +
-    '<path d="M20 40.8C17.4 36.2 9.2 30.8 9.2 20C9.2 11.8 14 6.2 20 6.2C26 6.2 30.8 11.8 30.8 20C30.8 30.8 22.6 36.2 20 40.8Z" fill="#F97316"/>' +
-    '<circle cx="20" cy="19" r="12.8" fill="#FFF7ED"/>' +
+    '<ellipse cx="23" cy="47" rx="10" ry="3" fill="#7C2D12" opacity="0.18"/>' +
+    '<path d="M23 48C20 42.4 8 35.8 8 22C8 11.5 14.5 4 23 4C31.5 4 38 11.5 38 22C38 35.8 26 42.4 23 48Z" fill="#7C2D12" opacity="0.18"/>' +
+    '<path d="M23 46C20 40.5 7 33.8 7 20.5C7 9.8 13.6 2.8 23 2.8C32.4 2.8 39 9.8 39 20.5C39 33.8 26 40.5 23 46Z" fill="#EA580C"/>' +
+    '<path d="M23 42.4C20.3 37.5 10.5 31.5 10.5 20.7C10.5 12.2 15.6 6.2 23 6.2C30.4 6.2 35.5 12.2 35.5 20.7C35.5 31.5 25.7 37.5 23 42.4Z" fill="#F97316"/>' +
+    '<circle cx="23" cy="20.4" r="13.2" fill="#FFF7ED"/>' +
     inner +
-    '<circle cx="20" cy="19" r="12.8" fill="none" stroke="#FFFFFF" stroke-width="2"/>' +
+    '<circle cx="23" cy="20.4" r="13.2" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>' +
+    countBadge +
     '</svg>'
   )
 }
 
 function fallbackFace() {
   return (
-    '<path d="M11.4 15.2L14.4 8.4L18.1 14.1" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.8" stroke-linejoin="round"/>' +
-    '<path d="M21.9 14.1L25.6 8.4L28.6 15.2" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.8" stroke-linejoin="round"/>' +
-    '<circle cx="16.1" cy="18.7" r="1.7" fill="#7C2D12"/>' +
-    '<circle cx="23.9" cy="18.7" r="1.7" fill="#7C2D12"/>' +
-    '<path d="M18.4 23.2C19.2 24 20.8 24 21.6 23.2" fill="none" stroke="#7C2D12" stroke-width="1.7" stroke-linecap="round"/>' +
-    '<path d="M19 21.4H21L20 22.6Z" fill="#EA580C"/>' +
-    '<path d="M12.2 22H16.2M23.8 22H27.8" stroke="#F97316" stroke-width="1.2" stroke-linecap="round"/>' +
-    '<path d="M12.8 24.5H16.3M23.7 24.5H27.2" stroke="#F97316" stroke-width="1.2" stroke-linecap="round"/>'
+    '<path d="M14.3 16.2L17 9.4L20.9 15.1" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.8" stroke-linejoin="round"/>' +
+    '<path d="M25.1 15.1L29 9.4L31.7 16.2" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.8" stroke-linejoin="round"/>' +
+    '<circle cx="19" cy="20.4" r="1.7" fill="#7C2D12"/>' +
+    '<circle cx="27" cy="20.4" r="1.7" fill="#7C2D12"/>' +
+    '<path d="M21.3 24.7C22.2 25.5 23.8 25.5 24.7 24.7" fill="none" stroke="#7C2D12" stroke-width="1.7" stroke-linecap="round"/>' +
+    '<path d="M22 22.8H24L23 24Z" fill="#EA580C"/>' +
+    '<path d="M15.2 23.6H19.1M26.9 23.6H30.8" stroke="#F97316" stroke-width="1.2" stroke-linecap="round"/>' +
+    '<path d="M15.8 26H19.2M26.8 26H30.2" stroke="#F97316" stroke-width="1.2" stroke-linecap="round"/>'
   )
 }
 
-export function catMarkerString(avatar: string | null = null) {
+export function catMarkerString(avatar: string | null = null, count?: number | null) {
   if (avatar) {
     const id = nextClipId()
     const safe = escapeSvgText(avatar)
     return markerShell(
-      `<image href="${safe}" x="8.5" y="7.5" width="23" height="23" clip-path="url(#${id})" preserveAspectRatio="xMidYMid slice"/>`,
-      `<defs><clipPath id="${id}"><circle cx="20" cy="19" r="11.5"/></clipPath></defs>`
+      `<image href="${safe}" x="11.2" y="8.6" width="23.6" height="23.6" clip-path="url(#${id})" preserveAspectRatio="xMidYMid slice"/>`,
+      `<defs><clipPath id="${id}"><circle cx="23" cy="20.4" r="11.8"/></clipPath></defs>`,
+      count
     )
   }
-  return markerShell(fallbackFace())
+  return markerShell(fallbackFace(), '', count)
 }
 
-export default function CatMarker({ avatar = null, size = 40, className = '' }: { avatar?: string | null; size?: number; className?: string }) {
+export default function CatMarker({ avatar = null, count = null, size = 40, className = '' }: { avatar?: string | null; count?: number | null; size?: number; className?: string }) {
   const id = nextClipId()
-  const height = Math.round(size * 1.15)
+  const height = Math.round(size * 1.13)
 
   return (
     <svg
       width={size}
       height={height}
-      viewBox="0 0 40 46"
+      viewBox="0 0 46 52"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       role="img"
       aria-label="猫猫位置标记"
     >
-      <path d="M20 44C17.2 38.8 6 32.6 6 19.8C6 10 12.2 3 20 3C27.8 3 34 10 34 19.8C34 32.6 22.8 38.8 20 44Z" fill="#EA580C" />
-      <path d="M20 40.8C17.4 36.2 9.2 30.8 9.2 20C9.2 11.8 14 6.2 20 6.2C26 6.2 30.8 11.8 30.8 20C30.8 30.8 22.6 36.2 20 40.8Z" fill="#F97316" />
-      <circle cx="20" cy="19" r="12.8" fill="#FFF7ED" />
+      <ellipse cx="23" cy="47" rx="10" ry="3" fill="#7C2D12" opacity="0.18" />
+      <path d="M23 48C20 42.4 8 35.8 8 22C8 11.5 14.5 4 23 4C31.5 4 38 11.5 38 22C38 35.8 26 42.4 23 48Z" fill="#7C2D12" opacity="0.18" />
+      <path d="M23 46C20 40.5 7 33.8 7 20.5C7 9.8 13.6 2.8 23 2.8C32.4 2.8 39 9.8 39 20.5C39 33.8 26 40.5 23 46Z" fill="#EA580C" />
+      <path d="M23 42.4C20.3 37.5 10.5 31.5 10.5 20.7C10.5 12.2 15.6 6.2 23 6.2C30.4 6.2 35.5 12.2 35.5 20.7C35.5 31.5 25.7 37.5 23 42.4Z" fill="#F97316" />
+      <circle cx="23" cy="20.4" r="13.2" fill="#FFF7ED" />
       {avatar ? (
         <>
           <defs>
             <clipPath id={id}>
-              <circle cx="20" cy="19" r="11.5" />
+              <circle cx="23" cy="20.4" r="11.8" />
             </clipPath>
           </defs>
           <image
             href={avatar}
-            x="8.5"
-            y="7.5"
-            width="23"
-            height="23"
+            x="11.2"
+            y="8.6"
+            width="23.6"
+            height="23.6"
             clipPath={`url(#${id})`}
             preserveAspectRatio="xMidYMid slice"
           />
         </>
       ) : (
         <>
-          <path d="M11.4 15.2L14.4 8.4L18.1 14.1" fill="#FFF7ED" stroke="#EA580C" strokeWidth="1.8" strokeLinejoin="round" />
-          <path d="M21.9 14.1L25.6 8.4L28.6 15.2" fill="#FFF7ED" stroke="#EA580C" strokeWidth="1.8" strokeLinejoin="round" />
-          <circle cx="16.1" cy="18.7" r="1.7" fill="#7C2D12" />
-          <circle cx="23.9" cy="18.7" r="1.7" fill="#7C2D12" />
-          <path d="M18.4 23.2C19.2 24 20.8 24 21.6 23.2" fill="none" stroke="#7C2D12" strokeWidth="1.7" strokeLinecap="round" />
-          <path d="M19 21.4H21L20 22.6Z" fill="#EA580C" />
-          <path d="M12.2 22H16.2M23.8 22H27.8" stroke="#F97316" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M12.8 24.5H16.3M23.7 24.5H27.2" stroke="#F97316" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M14.3 16.2L17 9.4L20.9 15.1" fill="#FFF7ED" stroke="#EA580C" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M25.1 15.1L29 9.4L31.7 16.2" fill="#FFF7ED" stroke="#EA580C" strokeWidth="1.8" strokeLinejoin="round" />
+          <circle cx="19" cy="20.4" r="1.7" fill="#7C2D12" />
+          <circle cx="27" cy="20.4" r="1.7" fill="#7C2D12" />
+          <path d="M21.3 24.7C22.2 25.5 23.8 25.5 24.7 24.7" fill="none" stroke="#7C2D12" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M22 22.8H24L23 24Z" fill="#EA580C" />
+          <path d="M15.2 23.6H19.1M26.9 23.6H30.8" stroke="#F97316" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M15.8 26H19.2M26.8 26H30.2" stroke="#F97316" strokeWidth="1.2" strokeLinecap="round" />
         </>
       )}
-      <circle cx="20" cy="19" r="12.8" fill="none" stroke="#FFFFFF" strokeWidth="2" />
+      <circle cx="23" cy="20.4" r="13.2" fill="none" stroke="#FFFFFF" strokeWidth="2.2" />
+      {count && count > 1 && (
+        <g>
+          <circle cx="34.5" cy="10.5" r="8.5" fill="#7C2D12" stroke="#FFFFFF" strokeWidth="2" />
+          <text x="34.5" y="14.2" textAnchor="middle" fontFamily="Inter, Arial, sans-serif" fontSize="10" fontWeight="800" fill="#FFFFFF">
+            {Math.min(count, 99)}
+          </text>
+        </g>
+      )}
     </svg>
   )
 }

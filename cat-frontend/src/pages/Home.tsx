@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight, Zap, Navigation } from 'lucide-react'
+import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight, Zap, Navigation, Route as RouteIcon } from 'lucide-react'
 import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import DailyQuestCard from '../components/DailyQuestCard'
+import CatGachaCard from '../components/CatGachaCard'
 import StreakBadge from '../components/StreakBadge'
 import Avatar from '../components/Avatar'
 import { getPrefs } from '../components/Onboarding'
@@ -88,6 +89,17 @@ export default function Home() {
       })
     : cats
   const displayCats = recommendedCats.length > 0 ? recommendedCats : cats
+  const leadCat = displayCats[0] || cats[0]
+  const leadSighting = sightings[0]
+  const leadPoint = leadSighting?.location_name || leadSighting?.location || leadCat?.location || '复旦校园'
+  const leadCatName = leadSighting?.cat_name || leadSighting?.cat?.name || leadCat?.name || '校园猫猫'
+  const leadPhoto = leadSighting?.cat?.avatar || leadSighting?.cat_avatar || leadCat?.avatar
+  const goldenScanPath = `/scan?point=${encodeURIComponent(leadPoint)}`
+  const leadIntro = leadSighting
+    ? `最近在 ${leadPoint} 偶遇 ${leadCatName}`
+    : leadCat
+      ? `${leadCatName} 常在 ${leadPoint} 出没`
+      : '先拍一张猫照，路线会随着偶遇变丰富'
 
   return (
     <div className="space-y-5">
@@ -127,6 +139,79 @@ export default function Home() {
           </span>
         </div>
       )}
+
+        <section className="overflow-hidden rounded-2xl bg-stone-950 text-white shadow-e3">
+          <div className="relative p-5">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/50 via-stone-900 to-stone-950" />
+            <div className="absolute -right-10 -top-14 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
+            <div className="relative space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/15">
+                  {leadPhoto ? (
+                    <ImageWithShimmer
+                      src={leadPhoto}
+                      alt={leadCatName}
+                      loading="lazy"
+                      compact
+                      className="h-full w-full"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Cat className="h-7 w-7 text-orange-100/70" />
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-semibold text-orange-100/80">今日校园寻猫入口</p>
+                  <h2 className="mt-1 text-h2 text-white text-balance">从 {leadPoint} 开始找猫</h2>
+                  <p className="mt-1 text-xs leading-5 text-white/75">{leadIntro}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 text-[11px] text-white/75">
+                <div className="rounded-xl bg-white/10 px-2.5 py-2">
+                  <span className="block font-semibold text-white">识猫</span>
+                  <span>拍照确认身份</span>
+                </div>
+                <div className="rounded-xl bg-white/10 px-2.5 py-2">
+                  <span className="block font-semibold text-white">纪念卡</span>
+                  <span>保存这次偶遇</span>
+                </div>
+                <div className="rounded-xl bg-white/10 px-2.5 py-2">
+                  <span className="block font-semibold text-white">路线</span>
+                  <span>去下一站看看</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => navigate(goldenScanPath)}
+                  className="btn-sweep flex items-center justify-center gap-2 rounded-xl bg-white px-3 py-3 text-sm font-bold text-stone-950 active:scale-[0.98] transition-transform"
+                >
+                  <Camera className="h-4 w-4" />
+                  拍照识猫
+                </button>
+                <button
+                  onClick={() => navigate('/routes')}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 px-3 py-3 text-sm font-semibold text-white ring-1 ring-white/15 active:scale-[0.98] transition-transform"
+                >
+                  <RouteIcon className="h-4 w-4" />
+                  查看路线
+                </button>
+              </div>
+
+              <button
+                onClick={() => navigate('/map')}
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-orange-100/90 hover:bg-white/10"
+              >
+                <MapPin className="h-3.5 w-3.5" />
+                打开猫猫地图，看看附近还有谁
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <CatGachaCard onViewCat={(catId) => navigate(`/cats/${catId}`)} />
 
       {streakDays > 0 && (
         <div className="card p-3">

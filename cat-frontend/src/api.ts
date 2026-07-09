@@ -430,6 +430,14 @@ export function getDailyCapsule() {
   return request('/daily-capsule')
 }
 
+export function getDailyGacha() {
+  return request('/gacha/today')
+}
+
+export function drawDailyGacha() {
+  return request('/gacha/draw', { method: 'POST' })
+}
+
 export function getContributionTitles() {
   return request('/users/me/titles')
 }

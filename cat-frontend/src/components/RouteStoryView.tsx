@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AlertCircle, BadgeCheck, Camera, CheckCircle2, Clock, MapPin, PawPrint } from 'lucide-react'
+import { AlertCircle, BadgeCheck, Camera, CheckCircle2, Clock, MapPin, PawPrint, Trophy } from 'lucide-react'
 import { getRouteStory, routeCheckIn, getRouteProgress } from '../api'
 import type { RouteStory, RouteProgressResult } from '../types'
 import ImageWithShimmer from './ImageWithShimmer'
@@ -196,12 +196,25 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
       </div>
 
       {allChecked && hasStamp && (
-        <div className="border-t border-primary/20 bg-gradient-to-r from-amber-50 to-primary-light/20 px-5 py-4 animate-fade-in">
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">{story.route_stamp.emoji}</div>
-            <div className="flex-1">
-              <div className="font-bold text-text">获得路线印章</div>
-              <div className="text-sm text-text-secondary">{story.route_stamp.name}，全程 {story.route_stamp.stop_count} 站</div>
+        <div className="border-t border-primary/20 bg-gradient-to-br from-stone-950 via-stone-900 to-orange-950 px-5 py-5 text-white animate-fade-in">
+          <div className="flex items-center gap-4">
+            <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-4 border-amber-200 bg-primary shadow-primary-glow">
+              <div className="absolute inset-2 rounded-full border border-white/50" />
+              <Trophy className="h-9 w-9 text-white" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold text-amber-100">
+                {story.route_stamp.emoji} 路线完成
+              </div>
+              <div className="mt-2 text-xl font-extrabold tracking-tight">{story.route_stamp.name}</div>
+              <div className="mt-1 text-sm text-amber-50/80">已完成 {story.route_stamp.stop_count} 个偶遇点，路线印章已收入护照。</div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-white/10 p-3">
+            <div className="min-w-0">
+              <div className="text-xs font-semibold text-amber-100">可分享证明</div>
+              <div className="mt-0.5 truncate text-xs text-white/70">扫码即可打开这条校园猫路线</div>
             </div>
             <ShareArtifact
               title={story.route_stamp.name}
@@ -211,7 +224,7 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
               sharePath={`/routes?time_slot=${story.time_slot}`}
               slogan="校园猫路线"
             >
-              <button className="rounded-full bg-primary px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-hover active:scale-[0.98]">
+              <button className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-950 transition-colors hover:bg-amber-50 active:scale-[0.98]">
                 分享印章
               </button>
             </ShareArtifact>

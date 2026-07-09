@@ -8,7 +8,7 @@ Move the project from a feature-complete internal-trial build to a maintainable 
 
 The release candidate is acceptable when:
 
-- Core product loops remain stable: recognition, sighting creation, cat archive, public sharing, community, profile, admin review, dashboard, and route recommendations.
+- Core product loops remain stable: home golden path, recognition, sighting creation, encounter memory card, cat archive, public sharing, community, profile, admin review, dashboard, and route recommendations.
 - Failure paths are understandable: unavailable model, empty data, rejected upload, unauthorized access, and moderation/audit flows.
 - Operations have first-version coverage: health check, model health, request id, structured request logs, backup, restore dry run, permissions, collaboration guide, release checklist, and demo script.
 - The repository has a clear handoff trail: roadmap, TODO, README, docs, and harness report agree with each other.
@@ -22,6 +22,7 @@ In scope for P6:
 - Harness contract coverage for the final acceptance pack.
 - A bounded opencode task brief for passive audit or documentation cleanup.
 - No-risk polish that does not change user data, auth semantics, model thresholds, or public API contracts.
+- Documentation updates that explain the current golden demo path: home entry, scan, memory card, route/map, public share, and admin review.
 
 Out of scope for P6:
 
@@ -38,6 +39,7 @@ Out of scope for P6:
 - [ ] Frontend tests pass.
 - [ ] Frontend build succeeds.
 - [ ] Full harness reports `score: 100` and `pass`.
+- [ ] The demo path shows the current highlight: home entry -> scan -> encounter memory card -> route/map -> public sharing.
 - [ ] README, roadmap, TODO, and docs mention the same release status.
 - [ ] `docs/RELEASE_CHECKLIST.md` still contains the manual smoke steps.
 - [ ] `docs/BACKUP_RECOVERY.md` documents dry-run backup and restore behavior.
@@ -51,15 +53,17 @@ Run this path before a real demo or handoff:
 
 1. Start backend and frontend.
 2. Log in with the configured demo account.
-3. Open scan, upload a valid image, and verify confirmed, uncertain, unknown, or unavailable states render without crashing.
-4. Open a cat detail page and a public cat page.
-5. Create or inspect a sighting share page.
-6. Open community and confirm post list, comments, like, and report surfaces still render.
-7. Open profile and leaderboard.
-8. Open admin overview and verify pending work, hot locations, contributors, and audit activity.
-9. Open routes and switch time slots.
-10. Call the system health endpoint and confirm the model-health payload is understandable.
-11. Run backup dry run and restore dry run only.
+3. Open home and verify the golden entry points to scan, routes, and map.
+4. Open scan, upload a valid image, and verify confirmed, uncertain, unknown, or unavailable states render without crashing.
+5. On a confirmed result, verify the encounter memory-card action is visible.
+6. Open a cat detail page and a public cat page.
+7. Create or inspect a sighting share page.
+8. Open routes, switch time slots, open map from routes, and jump from a route stop to scan.
+9. Open community and confirm post list, comments, like, and report surfaces still render.
+10. Open profile and leaderboard.
+11. Open admin overview and verify pending work, hot locations, contributors, and audit activity.
+12. Call the system health endpoint and confirm the model-health payload is understandable.
+13. Run backup dry run and restore dry run only.
 
 ## Risk Register
 
@@ -75,5 +79,5 @@ Run this path before a real demo or handoff:
 1. Deployment track: environment matrix, production secrets guide, process manager or container deployment, and external log/APM sink.
 2. Data track: migration discipline, backup drill with a disposable copy, seed-data reset path, and optional PostgreSQL migration plan.
 3. Model track: labeled evaluation set, threshold calibration, inference latency budget, and monitoring for unavailable/degraded states.
-4. Product track: share-card previews, referral/source analytics, richer route storytelling, and better admin triage filters.
+4. Product track: referral/source analytics, route completion telemetry, richer route storytelling, and better admin triage filters.
 5. Collaboration track: issue templates, release notes, version tags, and a mandatory acceptance report per milestone.

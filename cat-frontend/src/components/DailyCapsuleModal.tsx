@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { X } from 'lucide-react'
+import { Gift, Sparkles, X } from 'lucide-react'
 import { getDailyCapsule, claimDailyCapsule } from '../api'
 import type { DailyCapsule } from '../types'
 import ImageWithShimmer from './ImageWithShimmer'
@@ -51,16 +51,20 @@ export default function DailyCapsuleModal({ onClose, onViewCat }: DailyCapsuleMo
   return (
     <div className="fixed bottom-20 left-1/2 z-50 w-[min(22rem,calc(100vw-1.5rem))] -translate-x-1/2 animate-slide-up">
       <div
-        className="relative rounded-2xl bg-white border border-primary/20 shadow-e3 overflow-hidden"
+        className="relative overflow-hidden rounded-2xl border border-primary/20 bg-white shadow-e4"
       >
+        <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10" />
         <div className="absolute top-3 right-3 z-10">
           <button onClick={handleClose} className="w-8 h-8 rounded-full bg-black/10 hover:bg-black/20 flex items-center justify-center text-text-secondary transition-colors" aria-label="跳过">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="bg-gradient-to-b from-primary-light/40 to-white px-5 pt-6 pb-4 text-center">
-          <div className="text-sm text-text-secondary mb-1">今日校园猫胶囊</div>
+        <div className="relative bg-gradient-to-b from-primary-light/60 to-white px-5 pt-6 pb-4 text-center">
+          <div className="mx-auto mb-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold text-primary shadow-e1">
+            <Sparkles className="h-3.5 w-3.5" />
+            今日校园猫胶囊
+          </div>
           <div className="text-4xl mb-2">{reward?.sticker || '🐱'}</div>
 
           <div className="relative mx-auto w-28 h-28 rounded-2xl overflow-hidden border-2 border-primary/20 shadow-e2">
@@ -87,14 +91,17 @@ export default function DailyCapsuleModal({ onClose, onViewCat }: DailyCapsuleMo
           )}
 
           {cat.quote && (
-            <blockquote className="px-3 py-2 rounded-xl bg-primary-light/20 text-sm text-text-secondary italic border-l-2 border-primary/30 mb-3">
+            <blockquote className="mb-3 rounded-xl border border-primary/15 bg-primary-light/20 px-3 py-2 text-sm italic text-text-secondary">
               "{cat.quote}"
             </blockquote>
           )}
 
-          <div className="rounded-2xl bg-amber-50 border border-amber-100 px-3 py-2.5 text-center">
-            <div className="text-xs text-amber-600 font-medium mb-0.5">今日称号</div>
-            <div className="text-sm font-bold text-amber-800">{reward?.title}</div>
+          <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-3 text-center">
+            <div className="mb-1 flex items-center justify-center gap-1.5 text-xs font-bold text-amber-700">
+              <Gift className="h-3.5 w-3.5" />
+              今日称号
+            </div>
+            <div className="text-base font-extrabold text-amber-900">{reward?.title}</div>
             {reward?.route_hint && (
               <div className="text-xs text-amber-600 mt-1">{reward.route_hint}</div>
             )}
@@ -110,7 +117,7 @@ export default function DailyCapsuleModal({ onClose, onViewCat }: DailyCapsuleMo
             onClick={() => {
               setClaiming(true)
               claimDailyCapsule()
-                .then((res) => { setClaimed(!!res.claimed); setClaiming(false) })
+                .then((res) => { setClaimed(!!res.claimed || !!res.claim); setClaiming(false) })
                 .catch(() => setClaiming(false))
             }}
             disabled={claiming || claimed}
