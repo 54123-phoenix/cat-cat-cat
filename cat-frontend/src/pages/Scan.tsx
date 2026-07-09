@@ -119,6 +119,11 @@ export default function Scan() {
     navigate(`/cats/${catId}`)
   }
 
+  function openCatArchive(event, catId) {
+    event.stopPropagation()
+    if (catId) navigate(`/cats/${catId}`)
+  }
+
   async function submitDiscovery() {
     const file = selectedFileRef.current
     const location = findCampusLocation(selectedLocation)
@@ -424,13 +429,26 @@ export default function Scan() {
             </div>
             {result.candidates?.map((candidate) => (
               <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
-                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center">
-                  <Cat className="w-6 h-6 text-primary/30" />
+                <div
+                  onClick={(event) => openCatArchive(event, candidate.cat_id)}
+                  className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center overflow-hidden shrink-0"
+                >
+                  {candidate.cat_avatar ? (
+                    <img src={candidate.cat_avatar} alt={`${candidate.cat_name} 的参考照片`} className="w-full h-full object-cover" />
+                  ) : (
+                    <Cat className="w-6 h-6 text-primary/30" />
+                  )}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium">{candidate.cat_name}</div>
                   <ConfidenceBar value={candidate.confidence} />
                 </div>
+                <span
+                  onClick={(event) => openCatArchive(event, candidate.cat_id)}
+                  className="shrink-0 rounded-full bg-primary-light px-3 py-1.5 text-xs font-semibold text-primary"
+                >
+                  看照片{candidate.photo_count ? ` ${candidate.photo_count}` : ''}
+                </span>
               </button>
             ))}
             <button onClick={reset} className="w-full border border-gray-200 text-gray-500 rounded-full py-3 text-sm">
@@ -537,7 +555,7 @@ export default function Scan() {
             name: result.cat_name || '校园猫猫',
             personality: result.personality_tags?.join('、'),
             location: result.campus_zone,
-            avatar: undefined,
+            avatar: result.cat_avatar,
             images: [],
             health_records: [],
             created_at: '',

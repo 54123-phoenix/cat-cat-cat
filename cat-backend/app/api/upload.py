@@ -7,7 +7,7 @@ from PIL import Image, UnidentifiedImageError
 
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
-ALLOWED_SUBDIRS = {"cats", "sightings", "posts", "discoveries"}
+ALLOWED_SUBDIRS = {"cats", "sightings", "posts", "discoveries", "avatars"}
 MAGIC_BYTES = {
     b"\xff\xd8\xff": "image/jpeg",
     b"\x89PNG": "image/png",

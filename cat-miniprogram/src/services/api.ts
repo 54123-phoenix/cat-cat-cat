@@ -102,6 +102,28 @@ export function likePost(postId: number) {
 }
 
 export function getUserProfile() { return request('/user/profile') }
+export function updateUserProfile(data: { nickname?: string; avatar?: string | null }) {
+  return request('/user/profile', { method: 'PATCH', body: data })
+}
+export function uploadUserAvatar(filePath: string) {
+  if (CONFIG.demoMode) {
+    return Promise.resolve({
+      id: 1,
+      username: 'demo',
+      nickname: '猫猫爱好者',
+      role: 'user',
+      avatar: filePath,
+      stats: {},
+      badges: [],
+    })
+  }
+  return Taro.uploadFile({
+    url: `${BASE}/user/profile/avatar`,
+    filePath,
+    name: 'file',
+    header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
+  }).then(res => JSON.parse(res.data))
+}
 export function followCat(catId: number) { return request(`/user/follows/${catId}`, { method: 'POST' }) }
 export function unfollowCat(catId: number) { return request(`/user/follows/${catId}`, { method: 'DELETE' }) }
 export function checkFollow(catId: number) { return request(`/user/follows/${catId}`) }

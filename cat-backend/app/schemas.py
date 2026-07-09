@@ -205,6 +205,8 @@ class RecognizeCandidate(BaseModel):
     cat_id: int
     cat_name: str
     confidence: float
+    cat_avatar: Optional[str] = None
+    photo_count: int = 0
 
 
 class RecognizeResponse(BaseModel):
@@ -212,8 +214,10 @@ class RecognizeResponse(BaseModel):
     cat_id: Optional[int] = None
     cat_name: Optional[str] = None
     name: Optional[str] = None
+    cat_avatar: Optional[str] = None
     confidence: float = 0.0
     candidates: List[RecognizeCandidate] = []
+    photo_count: int = 0
     personality_tags: Optional[List[str]] = None
     campus_zone: Optional[str] = None
     collector_status: Optional[str] = None
@@ -303,6 +307,11 @@ class UserProfile(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserProfileUpdate(BaseModel):
+    nickname: Optional[constr(min_length=1, max_length=50)] = None
+    avatar: Optional[constr(max_length=200)] = None
 
 
 class UserRegister(BaseModel):

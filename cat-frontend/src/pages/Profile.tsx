@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles, Camera, Compass, CheckCircle2, ShieldCheck } from 'lucide-react'
+import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles, Camera, Compass, CheckCircle2, ShieldCheck, Pencil } from 'lucide-react'
 import CatCard from '../components/CatCard'
 import BadgeCard from '../components/BadgeCard'
 import EmptyState from '../components/EmptyState'
 import ThemeSwitcher from '../components/ThemeSwitcher'
-import { getUserProfile, getCats, getFollowedCats, getStoredUser, getMyStats, getCollectibles } from '../api'
+import { getUserProfile, getCats, getFollowedCats, getStoredUser, setStoredUser, getMyStats, getCollectibles, updateUserProfile, uploadUserAvatar } from '../api'
 import { BADGE_DISPLAY } from '../constants/badges'
 import StreakBadge from '../components/StreakBadge'
 import ContributionTitles from '../components/ContributionTitles'
@@ -21,6 +21,12 @@ export default function Profile() {
   const [collectibles, setCollectibles] = useState<Collectible[]>([])
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [draftNickname, setDraftNickname] = useState('')
+  const [avatarFile, setAvatarFile] = useState(null)
+  const [avatarPreview, setAvatarPreview] = useState('')
+  const [profileSaving, setProfileSaving] = useState(false)
+  const [profileMessage, setProfileMessage] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -52,6 +58,53 @@ export default function Profile() {
       })
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview?.startsWith('blob:')) URL.revokeObjectURL(avatarPreview)
+    }
+  }, [avatarPreview])
+
+  function openProfileEditor() {
+    setDraftNickname(user?.nickname || '')
+    setAvatarFile(null)
+    setAvatarPreview(user?.avatar || '')
+    setProfileMessage('')
+    setEditingProfile(true)
+  }
+
+  function handleAvatarChange(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
+  }
+
+  async function saveProfile() {
+    const nickname = draftNickname.trim()
+    if (!nickname) {
+      setProfileMessage('昵称不能为空')
+      return
+    }
+    setProfileSaving(true)
+    setProfileMessage('')
+    try {
+      let nextUser = user
+      if (avatarFile) {
+        nextUser = await uploadUserAvatar(avatarFile)
+      }
+      if (nickname !== nextUser?.nickname) {
+        nextUser = await updateUserProfile({ nickname })
+      }
+      setUser(nextUser)
+      setStoredUser(nextUser)
+      setEditingProfile(false)
+    } catch (error) {
+      setProfileMessage(error.message || '资料保存失败，请稍后重试')
+    } finally {
+      setProfileSaving(false)
+    }
+  }
 
   if (authError) {
     return (
@@ -124,7 +177,14 @@ export default function Profile() {
   return (
     <div className="space-y-5">
       {/* User Info */}
-      <div className="card p-0 overflow-hidden">
+      <div className="card p-0 overflow-hidden relative">
+        <button
+          onClick={openProfileEditor}
+          className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-primary shadow-e1"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+          编辑资料
+        </button>
         <div className="h-28 bg-gradient-to-r from-primary to-[#EA580C] rounded-b-3xl" />
         <div className="px-5 pb-5">
           <div className="flex items-end gap-4 -mt-10">
@@ -178,6 +238,59 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      {editingProfile && (
+        <div className="card p-4 space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-bold text-text">编辑个人资料</h3>
+              <p className="text-xs text-text-secondary mt-1">换一张头像，或调整社区里显示的昵称</p>
+            </div>
+            <button onClick={() => setEditingProfile(false)} className="text-sm font-medium text-text-secondary">
+              取消
+            </button>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <label className="relative block h-20 w-20 shrink-0 cursor-pointer overflow-hidden rounded-full bg-primary-light ring-1 ring-border">
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="头像预览" className="h-full w-full object-cover" />
+              ) : (
+                <span className="flex h-full w-full items-center justify-center">
+                  <User className="h-8 w-8 text-primary" />
+                </span>
+              )}
+              <span className="absolute inset-x-0 bottom-0 bg-stone-950/60 py-1 text-center text-[10px] font-medium text-white">
+                更换
+              </span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
+            </label>
+
+            <label className="block min-w-0 flex-1">
+              <span className="text-xs font-medium text-text-secondary">昵称</span>
+              <input
+                value={draftNickname}
+                maxLength={50}
+                onChange={(event) => setDraftNickname(event.target.value)}
+                className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-text outline-none focus:ring-2 focus:ring-primary/30"
+                placeholder="输入你的昵称"
+              />
+            </label>
+          </div>
+
+          {profileMessage && (
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-xs font-medium text-red-600">{profileMessage}</p>
+          )}
+
+          <button
+            onClick={saveProfile}
+            disabled={profileSaving}
+            className="w-full rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {profileSaving ? '保存中...' : '保存资料'}
+          </button>
+        </div>
+      )}
 
       {/* Settings: theme */}
       <div className="card p-4">

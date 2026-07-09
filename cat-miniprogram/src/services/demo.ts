@@ -44,6 +44,14 @@ const MOCK_DATA: Record<string, any> = {
 export function demoApi(url: string, options: any = {}): any {
   const method = options.method || 'GET'
   const key = `${method} ${url.split('?')[0]}`
+  if (key === 'PATCH /user/profile') {
+    const body = options.body || {}
+    return Promise.resolve({
+      ...MOCK_DATA['GET /user/profile'],
+      nickname: body.nickname || MOCK_DATA['GET /user/profile'].nickname,
+      avatar: body.avatar ?? MOCK_DATA['GET /user/profile'].avatar,
+    })
+  }
   if (MOCK_DATA[key]) {
     return Promise.resolve(MOCK_DATA[key])
   }

@@ -15,6 +15,10 @@ function setToken(token: string, user?: any) {
   if (user) localStorage.setItem('user', JSON.stringify(user))
 }
 
+function setStoredUser(user: any) {
+  localStorage.setItem('user', JSON.stringify(user))
+}
+
 function getStoredUser() {
   try {
     return JSON.parse(localStorage.getItem('user'))
@@ -93,7 +97,7 @@ export function getMe() {
   return request('/auth/me')
 }
 
-export { getToken, setToken, clearToken, getStoredUser, getAdminToken, setAdminToken, clearAdminToken }
+export { getToken, setToken, clearToken, getStoredUser, setStoredUser, getAdminToken, setAdminToken, clearAdminToken }
 
 export function adminLogin(password) {
   return request('/admin/login', {
@@ -202,6 +206,20 @@ export function voteSighting(id, catId) {
 
 export function getUserProfile() {
   return request('/user/profile')
+}
+
+export function updateUserProfile(data) {
+  return request('/user/profile', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+}
+
+export function uploadUserAvatar(file) {
+  const form = new FormData()
+  form.append('file', file)
+  return request('/user/profile/avatar', { method: 'POST', body: form })
 }
 
 export function getDiscoveries(params = {}) {

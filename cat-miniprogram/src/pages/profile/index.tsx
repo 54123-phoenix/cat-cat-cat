@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, Image, Input, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { getUserProfile, getCats, getFollowedCats, wechatLogin } from '../../services/api'
+import { getUserProfile, getCats, getFollowedCats, updateUserProfile, uploadUserAvatar, wechatLogin } from '../../services/api'
 import { getStoredUser, setStoredUser, setToken } from '../../utils/storage'
 
 const BADGE_NAMES: Record<string, string> = {
@@ -19,6 +19,10 @@ export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(false)
   const [loginLoading, setLoginLoading] = useState(false)
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [draftNickname, setDraftNickname] = useState('')
+  const [draftAvatar, setDraftAvatar] = useState('')
+  const [profileSaving, setProfileSaving] = useState(false)
 
   const handleWechatLogin = async () => {
     if (loginLoading) return
@@ -76,6 +80,52 @@ export default function Profile() {
       }
     }).finally(() => setLoading(false))
   })
+
+  function openProfileEditor() {
+    setDraftNickname(user?.nickname || '')
+    setDraftAvatar(user?.avatar || '')
+    setEditingProfile(true)
+  }
+
+  async function chooseAvatar() {
+    try {
+      const res = await Taro.chooseMedia({
+        count: 1,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+      })
+      setDraftAvatar(res.tempFiles[0].tempFilePath)
+    } catch (e) {
+      if ((e as any).errMsg?.includes('cancel')) return
+      Taro.showToast({ title: '选择头像失败', icon: 'none' })
+    }
+  }
+
+  async function saveProfile() {
+    const nickname = draftNickname.trim()
+    if (!nickname) {
+      Taro.showToast({ title: '昵称不能为空', icon: 'none' })
+      return
+    }
+    setProfileSaving(true)
+    try {
+      let nextUser = user
+      if (draftAvatar && draftAvatar !== user?.avatar) {
+        nextUser = await uploadUserAvatar(draftAvatar)
+      }
+      if (nickname !== nextUser?.nickname) {
+        nextUser = await updateUserProfile({ nickname })
+      }
+      setUser(nextUser)
+      setStoredUser(nextUser)
+      setEditingProfile(false)
+      Taro.showToast({ title: '资料已更新', icon: 'success' })
+    } catch (err: any) {
+      Taro.showToast({ title: err.message || '保存失败', icon: 'none' })
+    } finally {
+      setProfileSaving(false)
+    }
+  }
 
   if (authError) {
     return (
@@ -137,6 +187,9 @@ export default function Profile() {
             <Text style={{ fontSize: '26rpx', color: '#78716C', display: 'block', marginTop: '4rpx' }}>
               {cats.length > 0 ? `已经认识了 ${cats.length} 只校园猫猫` : '还没有认识的猫猫'}
             </Text>
+          </View>
+          <View onClick={openProfileEditor} style={{ padding: '12rpx 20rpx', borderRadius: '999rpx', backgroundColor: '#FFF7ED', color: '#F97316', fontSize: '24rpx', flexShrink: 0 }}>
+            编辑
           </View>
         </View>
         <View style={{ display: 'flex', justifyContent: 'space-around', marginTop: '32rpx', paddingTop: '24rpx', borderTop: '1rpx solid #E7E5E4' }}>
@@ -242,6 +295,54 @@ export default function Profile() {
           </View>
         )}
       </View>
+
+      {editingProfile && (
+        <View onClick={() => !profileSaving && setEditingProfile(false)} style={{
+          position: 'fixed', left: 0, right: 0, bottom: 0, top: 0,
+          backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 1000,
+          display: 'flex', alignItems: 'flex-end',
+        }}>
+          <View onClick={e => e.stopPropagation()} style={{
+            width: '100%', backgroundColor: '#fff', borderRadius: '32rpx 32rpx 0 0',
+            padding: '32rpx 24rpx calc(32rpx + env(safe-area-inset-bottom))',
+          }}>
+            <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28rpx' }}>
+              <Text style={{ fontSize: '32rpx', fontWeight: '600' }}>编辑个人资料</Text>
+              <Text onClick={() => !profileSaving && setEditingProfile(false)} style={{ fontSize: '36rpx', color: '#A8A29E', padding: '0 12rpx' }}>×</Text>
+            </View>
+
+            <View style={{ display: 'flex', alignItems: 'center', gap: '24rpx', marginBottom: '28rpx' }}>
+              <View onClick={chooseAvatar} style={{ width: '144rpx', height: '144rpx', borderRadius: '50%', backgroundColor: '#FFF7ED', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {draftAvatar ? <Image src={draftAvatar} mode='aspectFill' style={{ width: '100%', height: '100%' }} /> : <Text style={{ fontSize: '56rpx' }}>🐱</Text>}
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: '26rpx', color: '#1C1917', fontWeight: '500', display: 'block' }}>头像</Text>
+                <Text style={{ fontSize: '22rpx', color: '#78716C', lineHeight: '36rpx', display: 'block', marginTop: '6rpx' }}>点击头像，从相册或相机换一张更有辨识度的照片</Text>
+              </View>
+            </View>
+
+            <Text style={{ fontSize: '24rpx', color: '#78716C', display: 'block', marginBottom: '12rpx' }}>昵称</Text>
+            <Input
+              value={draftNickname}
+              maxlength={50}
+              onInput={e => setDraftNickname(e.detail.value)}
+              placeholder='输入你的昵称'
+              style={{
+                padding: '20rpx', border: '1rpx solid #E7E5E4', borderRadius: '16rpx',
+                fontSize: '28rpx', marginBottom: '28rpx', width: '100%', boxSizing: 'border-box',
+              }}
+            />
+
+            <View onClick={saveProfile} style={{
+              backgroundColor: profileSaving ? '#FDBA74' : '#F97316',
+              borderRadius: '999rpx', padding: '26rpx', textAlign: 'center',
+              color: '#fff', fontSize: '30rpx', fontWeight: '500',
+            }}>
+              {profileSaving ? '保存中...' : '保存资料'}
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   )
 }

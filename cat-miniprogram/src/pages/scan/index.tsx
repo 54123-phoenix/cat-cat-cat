@@ -79,6 +79,12 @@ export default function Scan() {
     Taro.navigateTo({ url: `/pages/cat-detail/index?id=${catId}` })
   }
 
+  function openCatPhotos(e: any, catId: number) {
+    e?.stopPropagation?.()
+    if (!catId) return
+    Taro.navigateTo({ url: `/pages/cat-detail/index?id=${catId}` })
+  }
+
   async function handleSubmitDiscovery() {
     if (!filePath) {
       setMessage('请先选择照片')
@@ -196,7 +202,12 @@ export default function Scan() {
 
           <View className='card' style={{ marginBottom: '20rpx', overflow: 'hidden' }}>
             <View style={{ display: 'flex', gap: '20rpx', padding: '20rpx' }}>
-              <Image src={preview} mode='aspectFill' style={{ width: '140rpx', height: '140rpx', borderRadius: '16rpx', flexShrink: 0 }} />
+              <Image
+                src={result.cat_avatar || preview}
+                mode='aspectFill'
+                onClick={(e) => openCatPhotos(e, result.cat_id)}
+                style={{ width: '140rpx', height: '140rpx', borderRadius: '16rpx', flexShrink: 0 }}
+              />
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text style={{ fontSize: '32rpx', fontWeight: '600', display: 'block', marginBottom: '8rpx' }}>{result.cat_name || '校园猫猫'}</Text>
                 <Text style={{ fontSize: '22rpx', color: '#059669', display: 'block', marginBottom: '12rpx' }}>高置信度匹配</Text>
@@ -206,6 +217,9 @@ export default function Scan() {
                   </View>
                   <Text style={{ fontSize: '22rpx', color: '#059669', fontWeight: '500' }}>{confidencePct}%</Text>
                 </View>
+                <Text onClick={(e) => openCatPhotos(e, result.cat_id)} style={{ fontSize: '22rpx', color: '#F97316', display: 'block', marginTop: '12rpx' }}>
+                  查看照片墙{result.photo_count ? ` · ${result.photo_count} 张` : ''}
+                </Text>
               </View>
             </View>
           </View>
@@ -237,8 +251,17 @@ export default function Scan() {
               <View key={candidate.cat_id || index} className='card' style={{ marginBottom: '16rpx' }}
                 onClick={() => handleConfirmCandidate(candidate)}>
                 <View style={{ display: 'flex', alignItems: 'center', gap: '20rpx' }}>
-                  <View style={{ width: '80rpx', height: '80rpx', borderRadius: '20rpx', backgroundColor: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Text style={{ fontSize: '40rpx' }}>🐱</Text>
+                  <View style={{ width: '80rpx', height: '80rpx', borderRadius: '20rpx', backgroundColor: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                    {candidate.cat_avatar ? (
+                      <Image
+                        src={candidate.cat_avatar}
+                        mode='aspectFill'
+                        onClick={(e) => openCatPhotos(e, candidate.cat_id)}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    ) : (
+                      <Text style={{ fontSize: '40rpx' }}>🐱</Text>
+                    )}
                   </View>
                   <View style={{ flex: 1, minWidth: 0 }}>
                     <Text style={{ fontSize: '28rpx', fontWeight: '500', display: 'block', marginBottom: '8rpx' }}>{candidate.cat_name}</Text>
@@ -248,6 +271,12 @@ export default function Scan() {
                       </View>
                       <Text style={{ fontSize: '22rpx', color: '#F97316' }}>{cPct}%</Text>
                     </View>
+                  </View>
+                  <View onClick={(e) => openCatPhotos(e, candidate.cat_id)} style={{ padding: '12rpx 0 12rpx 16rpx', flexShrink: 0 }}>
+                    <Text style={{ fontSize: '22rpx', color: '#F97316', display: 'block', textAlign: 'right' }}>看照片</Text>
+                    <Text style={{ fontSize: '18rpx', color: '#A8A29E', display: 'block', marginTop: '4rpx' }}>
+                      {candidate.photo_count ? `${candidate.photo_count} 张` : '档案'}
+                    </Text>
                   </View>
                 </View>
               </View>

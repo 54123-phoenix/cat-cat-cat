@@ -1,12 +1,13 @@
 from typing import List, Literal
 from datetime import datetime, date
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth
+from app.api.upload import save_upload
 from app.models import User
 from app.cache import cached
 
@@ -66,6 +67,38 @@ def get_profile(db: Session = Depends(get_db), user: User = Depends(require_auth
         stats=stats,
         badges=badges,
     )
+
+
+@router.patch("/profile", response_model=schemas.UserProfile)
+def update_profile(
+    payload: schemas.UserProfileUpdate,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    if "nickname" in payload.model_fields_set:
+        nickname = (payload.nickname or "").strip()
+        if not nickname:
+            raise HTTPException(status_code=400, detail="昵称不能为空")
+        user.nickname = nickname
+    if "avatar" in payload.model_fields_set:
+        avatar = (payload.avatar or "").strip()
+        user.avatar = avatar or None
+    db.commit()
+    db.refresh(user)
+    return get_profile(db=db, user=user)
+
+
+@router.post("/profile/avatar", response_model=schemas.UserProfile)
+async def upload_profile_avatar(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_auth),
+):
+    image_path = await save_upload(file, "avatars")
+    user.avatar = image_path
+    db.commit()
+    db.refresh(user)
+    return get_profile(db=db, user=user)
 
 
 @router.get("/badges", response_model=List[schemas.BadgeDetail])
