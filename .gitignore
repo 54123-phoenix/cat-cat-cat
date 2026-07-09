@@ -28,7 +28,8 @@ uploads/sightings/
 uploads/posts/
 uploads/discoveries/
 
-# Scraper image cache (8GB+, regeneratable)
+# Scraper image cache (8GB+, backed up on HuggingFace)
+# Download via: python scripts/download_assets.py
 cat-backend/uploads/
 
 # Local tool state

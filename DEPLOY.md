@@ -39,6 +39,11 @@
    cd cat-cat-cat
    cp .env.example .env
    ```
+4. 下载模型和数据（~9 GB，首次部署需要）：
+   ```bash
+   pip install huggingface_hub requests tqdm
+   python scripts/download_assets.py
+   ```
 4. 编辑 `.env`，填入你的值：
    ```ini
     DATABASE_URL=sqlite:///./cat_community.db
