@@ -23,7 +23,7 @@ from PIL import Image
 
 # ─── Config ───────────────────────────────────────────────────────────
 
-SCRAPER_CATS_DIR = Path(r"D:\Desktop\meowzart_scraper\output\cats")
+SCRAPER_CATS_DIR = Path(r"D:\code\python\Cat\data_crops")
 BACKEND_DIR = Path(__file__).parent.parent
 # Use project-root uploads (Docker mounts ./uploads -> /app/uploads)
 UPLOADS_DIR = BACKEND_DIR.parent / "uploads" / "cats"
@@ -102,8 +102,10 @@ def import_cat_to_db(cat_name: str, cat_dir: Path, photo_count: int, db_session)
     return cat.id
 
 
-def generate_embeddings(cat_name: str, cat_dir: Path, model, preprocess_fn) -> list[list[float]]:
+def generate_embeddings(cat_name: str, cat_dir: Path, model) -> list[list[float]]:
     """Generate embeddings for all photos of a cat using the model."""
+    from app.services.model_loader import extract_embedding
+
     photo_files = sorted([f for f in cat_dir.iterdir() if f.suffix.lower() in (".jpg", ".jpeg", ".png")])
     selected = photo_files[:MAX_PHOTOS_PER_CAT]
 
@@ -111,11 +113,8 @@ def generate_embeddings(cat_name: str, cat_dir: Path, model, preprocess_fn) -> l
     for photo_path in selected:
         try:
             img = Image.open(photo_path).convert("RGB")
-            tensor = preprocess_fn(img)
-            import torch
-            with torch.no_grad():
-                emb = model(tensor)
-            embeddings.append(emb.squeeze(0).cpu().tolist())
+            emb = extract_embedding(img)
+            embeddings.append(emb)
         except Exception as e:
             print(f"  [WARN] Failed to process {photo_path.name}: {e}")
             continue
@@ -125,38 +124,17 @@ def generate_embeddings(cat_name: str, cat_dir: Path, model, preprocess_fn) -> l
 
 def load_model():
     """Load the cat recognition model."""
-    import torch
     sys.path.insert(0, str(BACKEND_DIR))
-    from app.services.model_loader import CatRecognitionModel, preprocess_image
-
-    if not MODEL_PATH.exists():
-        print(f"[ERROR] Model not found: {MODEL_PATH}")
-        sys.exit(1)
+    from app.services.model_loader import load_model as _load_model
 
     print(f"Loading model from {MODEL_PATH} ...")
-    checkpoint = torch.load(str(MODEL_PATH), map_location="cpu", weights_only=False)
+    model = _load_model()
+    if model is None:
+        print("[ERROR] Failed to load model")
+        sys.exit(1)
 
-    model = CatRecognitionModel()
-    new_state_dict = {}
-    for k, v in checkpoint.items():
-        new_key = k
-        if new_key.startswith("backbone.model."):
-            new_key = "backbone." + new_key[len("backbone.model."):]
-        if "patch_embed.proj." in new_key:
-            new_key = new_key.replace("patch_embed.proj.", "patch_embed.")
-        if "emb_head.proj." in new_key:
-            new_key = new_key.replace("emb_head.proj.", "emb_head.")
-        new_state_dict[new_key] = v
-
-    missing, unexpected = model.load_state_dict(new_state_dict, strict=False)
-    if missing:
-        print(f"  [WARN] Missing keys: {missing}")
-    if unexpected:
-        print(f"  [WARN] Unexpected keys: {unexpected}")
-
-    model.eval()
     print("Model loaded successfully.")
-    return model, preprocess_image
+    return model
 
 
 def main():
@@ -203,7 +181,7 @@ def main():
     if not args.no_embeddings:
         print(f"\n=== Generating embeddings ===")
         try:
-            model, preprocess_fn = load_model()
+            model = load_model()
         except ImportError:
             print("[ERROR] torch not available, skipping embedding generation")
             return
@@ -225,7 +203,7 @@ def main():
                 continue
 
             print(f"  Generating embeddings for {cat_name} ...")
-            embs = generate_embeddings(cat_name, cat_dir, model, preprocess_fn)
+            embs = generate_embeddings(cat_name, cat_dir, model)
             if embs:
                 embeddings_data[cat_name] = {
                     "cat_id": cat.id,

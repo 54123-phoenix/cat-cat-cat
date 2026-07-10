@@ -1,9 +1,9 @@
-"""DINOv2-style ViT model loader for cat recognition (optional dependency).
+"""DINOv3 ViT model loader for cat recognition.
 
+Uses official Meta dinov3 vit_base_patch16_dinov3 model.
 If torch is not installed, recognition gracefully degrades to unknown status.
 """
 
-import os
 import logging
 from pathlib import Path
 from typing import Optional
@@ -15,139 +15,19 @@ try:
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
+    try:
+        import timm
+        TIMM_AVAILABLE = True
+    except ImportError:
+        TIMM_AVAILABLE = False
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
+    TIMM_AVAILABLE = False
     nn = None
     F = None
 
 logger = logging.getLogger(__name__)
-
-# ─── Model Architecture (only defined when torch is available) ─────────
-
-if TORCH_AVAILABLE:
-
-    class Attention(nn.Module):
-        """Multi-head self-attention with LayerScale."""
-
-        def __init__(self, dim: int, num_heads: int = 12):
-            super().__init__()
-            self.num_heads = num_heads
-            self.head_dim = dim // num_heads
-            self.scale = self.head_dim ** -0.5
-
-            self.qkv = nn.Linear(dim, dim * 3, bias=False)
-            self.proj = nn.Linear(dim, dim)
-
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            B, N, C = x.shape
-            qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
-            q, k, v = qkv.unbind(0)
-
-            attn = (q @ k.transpose(-2, -1)) * self.scale
-            attn = attn.softmax(dim=-1)
-
-            x = (attn @ v).transpose(1, 2).reshape(B, N, C)
-            x = self.proj(x)
-            return x
-
-
-    class MLP(nn.Module):
-        """MLP block with GELU activation."""
-
-        def __init__(self, dim: int, mlp_ratio: float = 4.0):
-            super().__init__()
-            hidden_dim = int(dim * mlp_ratio)
-            self.fc1 = nn.Linear(dim, hidden_dim)
-            self.fc2 = nn.Linear(hidden_dim, dim)
-
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            x = self.fc1(x)
-            x = F.gelu(x)
-            x = self.fc2(x)
-            return x
-
-
-    class Block(nn.Module):
-        """Transformer block with LayerScale."""
-
-        def __init__(self, dim: int, num_heads: int = 12, mlp_ratio: float = 4.0):
-            super().__init__()
-            self.norm1 = nn.LayerNorm(dim)
-            self.attn = Attention(dim, num_heads)
-            self.norm2 = nn.LayerNorm(dim)
-            self.mlp = MLP(dim, mlp_ratio)
-
-            self.gamma_1 = nn.Parameter(torch.ones(dim))
-            self.gamma_2 = nn.Parameter(torch.ones(dim))
-
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            x = x + self.gamma_1 * self.attn(self.norm1(x))
-            x = x + self.gamma_2 * self.mlp(self.norm2(x))
-            return x
-
-
-    class VisionTransformer(nn.Module):
-        """DINOv2-style ViT with register tokens."""
-
-        def __init__(
-            self,
-            img_size: int = 224,
-            patch_size: int = 16,
-            in_chans: int = 3,
-            embed_dim: int = 768,
-            depth: int = 12,
-            num_heads: int = 12,
-            mlp_ratio: float = 4.0,
-            num_register_tokens: int = 4,
-        ):
-            super().__init__()
-            self.embed_dim = embed_dim
-            self.patch_size = patch_size
-            self.num_patches = (img_size // patch_size) ** 2
-
-            self.patch_embed = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
-
-            self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
-            self.reg_token = nn.Parameter(torch.zeros(1, num_register_tokens, embed_dim))
-
-            self.blocks = nn.ModuleList([
-                Block(embed_dim, num_heads, mlp_ratio) for _ in range(depth)
-            ])
-
-            self.norm = nn.LayerNorm(embed_dim)
-
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            B = x.shape[0]
-
-            x = self.patch_embed(x)
-            x = x.flatten(2).transpose(1, 2)
-
-            cls_tokens = self.cls_token.expand(B, -1, -1)
-            reg_tokens = self.reg_token.expand(B, -1, -1)
-            x = torch.cat([cls_tokens, reg_tokens, x], dim=1)
-
-            for block in self.blocks:
-                x = block(x)
-
-            x = self.norm(x)
-            return x[:, 0]
-
-
-    class CatRecognitionModel(nn.Module):
-        """Full cat recognition model: ViT backbone + embedding head."""
-
-        def __init__(self, embed_dim: int = 768, out_dim: int = 256):
-            super().__init__()
-            self.backbone = VisionTransformer()
-            self.emb_head = nn.Linear(embed_dim, out_dim)
-
-        def forward(self, x: torch.Tensor) -> torch.Tensor:
-            features = self.backbone(x)
-            embeddings = self.emb_head(features)
-            embeddings = F.normalize(embeddings, p=2, dim=1)
-            return embeddings
-
 
 # ─── Image Preprocessing ──────────────────────────────────────────────
 
@@ -157,8 +37,8 @@ _STD = [0.229, 0.224, 0.225]
 
 
 def preprocess_image(image: Image.Image):
-    """Preprocess PIL image for ViT inference (without torchvision).
-
+    """Preprocess PIL image for ViT inference.
+    
     Returns: [1, 3, 224, 224] tensor or None if torch unavailable.
     """
     if not TORCH_AVAILABLE:
@@ -184,7 +64,61 @@ def preprocess_image(image: Image.Image):
     return tensor
 
 
-# ─── Singleton Loader ─────────────────────────────────────────────────
+# ─── Model Wrapper (DINOv3 + Linear Projection) ───────────────────────
+
+if TORCH_AVAILABLE and nn is not None:
+    class _LinearHead(nn.Module):
+        """Single Linear + L2-norm — aligned with training code state-dict keys."""
+        def __init__(self, in_dim, out_dim):
+            super().__init__()
+            self.proj = nn.Linear(in_dim, out_dim)
+
+        def forward(self, x):
+            return F.normalize(self.proj(x), p=2, dim=1)
+
+    class _BackboneWrapper(nn.Module):
+        """Wraps timm DINOv3 ViT to match training-code state-dict keys.
+
+        The training code's build_backbone() nests the ViT under ``self.model``,
+        producing checkpoint keys like ``backbone.model.cls_token``.
+
+        Forward returns only the CLS token (shape [B, 768]) — same behaviour
+        as the training backbone.
+        """
+
+        def __init__(self, vit_model):
+            super().__init__()
+            self.model = vit_model
+
+        def forward(self, x):
+            features = self.model.forward_features(x)  # [B, N+1, 768]
+            return features[:, 0, :]                    # [B, 768] — CLS token
+
+    class DINOv3WithProjection(nn.Module):
+        """DINOv3 backbone with 768->256 embedding head.
+
+        State-dict keys match the training code:
+          backbone.model.*    — DINOv3 ViT (nested via _BackboneWrapper)
+          emb_head.proj.*     — projection layer
+        """
+
+        def __init__(self, dinov3_model):
+            super().__init__()
+            self.backbone = _BackboneWrapper(dinov3_model)
+            self.emb_head = _LinearHead(768, 256)
+
+        def forward(self, x):
+            # _BackboneWrapper extracts CLS token [B, 768]
+            cls_token = self.backbone(x)
+            # Project to 256 dimensions (L2-normalized by _LinearHead)
+            return self.emb_head(cls_token)  # [batch, 256]
+
+        def forward_features(self, x):
+            """Forward pass to get raw features (before CLS extraction)."""
+            return self.backbone.model.forward_features(x)
+
+
+# ─── Singleton Model Loader ──────────────────────────────────────────
 
 _model: Optional = None
 
@@ -193,66 +127,110 @@ MODEL_PATH = MODEL_DIR / "finetuned_best.pt"
 
 
 def load_model() -> Optional:
-    """Load the cat recognition model (singleton). Returns None if torch unavailable."""
+    """Load dinov3 (vit_base_patch16_dinov3) model with optional finetuned weights.
+    
+    Returns None if torch/timm unavailable.
+    """
     global _model
 
-    if not TORCH_AVAILABLE:
+    if not TORCH_AVAILABLE or not TIMM_AVAILABLE:
+        logger.warning("torch or timm not available")
         return None
 
     if _model is not None:
         return _model
 
-    if not MODEL_PATH.exists():
-        logger.warning("Model file not found: %s", MODEL_PATH)
+    try:
+        # Load official dinov3 model
+        logger.info("Loading official dinov3 (vit_base_patch16_dinov3) model...")
+        backbone = timm.create_model('vit_base_patch16_dinov3', pretrained=False)
+        backbone.eval()
+
+        # Wrap with projection head (768 -> 256)
+        model = DINOv3WithProjection(backbone)
+        model.eval()
+
+        # Load finetuned weights if available
+        if MODEL_PATH.exists():
+            try:
+                logger.info("Loading finetuned weights from %s ...", MODEL_PATH)
+                checkpoint = torch.load(str(MODEL_PATH), map_location="cpu", weights_only=False)
+
+                # Handle both direct state dict and checkpoint wrapper
+                if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
+                    state_dict = checkpoint['state_dict']
+                elif isinstance(checkpoint, dict) and 'model' in checkpoint:
+                    state_dict = checkpoint['model']
+                else:
+                    state_dict = checkpoint
+
+                # Remove any 'module.' prefix (from DataParallel)
+                if all(k.startswith('module.') for k in state_dict.keys()):
+                    state_dict = {k.replace('module.', ''): v for k, v in state_dict.items()}
+
+                # Load into wrapped model
+                missing, unexpected = model.load_state_dict(state_dict, strict=False)
+                if missing:
+                    logger.warning("Missing keys in checkpoint: %d keys", len(missing))
+                if unexpected:
+                    logger.warning("Unexpected keys in checkpoint: %d keys", len(unexpected))
+
+                logger.info("Finetuned weights loaded successfully (including projection head)")
+            except Exception as e:
+                logger.warning("Failed to load finetuned weights (%s), using model with random projection", e)
+        else:
+            logger.warning("Checkpoint not found at %s, using model with random weights", MODEL_PATH)
+
+        _model = model
+        logger.info("Model ready for inference (DINOv3 + 768->256 projection)")
+        return _model
+
+    except Exception as e:
+        logger.error("Failed to load model: %s", e)
         return None
-
-    logger.info("Loading cat recognition model from %s ...", MODEL_PATH)
-    checkpoint = torch.load(str(MODEL_PATH), map_location="cpu", weights_only=False)
-
-    model = CatRecognitionModel()
-
-    new_state_dict = {}
-    for k, v in checkpoint.items():
-        new_key = k
-        if new_key.startswith("backbone.model."):
-            new_key = "backbone." + new_key[len("backbone.model."):]
-        if "patch_embed.proj." in new_key:
-            new_key = new_key.replace("patch_embed.proj.", "patch_embed.")
-        if "emb_head.proj." in new_key:
-            new_key = new_key.replace("emb_head.proj.", "emb_head.")
-        new_state_dict[new_key] = v
-
-    missing, unexpected = model.load_state_dict(new_state_dict, strict=False)
-    if missing:
-        logger.warning("Missing keys: %s", missing)
-    if unexpected:
-        logger.warning("Unexpected keys: %s", unexpected)
-
-    model.eval()
-    _model = model
-    logger.info("Model loaded successfully.")
-    return _model
 
 
 def extract_embedding(image: Image.Image) -> list[float]:
-    """Extract 256-dim feature embedding. Returns empty list if torch unavailable."""
-    if not TORCH_AVAILABLE:
+    """Extract embedding from image using dinov3 + projection head.
+    
+    Returns a normalized 256-dim embedding vector from the projection head.
+    Returns empty list if torch unavailable.
+    """
+    if not TORCH_AVAILABLE or not TIMM_AVAILABLE:
         return []
 
     model = load_model()
     if model is None:
         return []
 
-    tensor = preprocess_image(image)
-    with torch.no_grad():
-        embedding = model(tensor)
-    return embedding.squeeze(0).cpu().tolist()
+    try:
+        tensor = preprocess_image(image)
+        if tensor is None:
+            return []
+            
+        with torch.no_grad():
+            # Forward pass through dinov3 backbone + embedding head
+            # _LinearHead already applies L2-normalization internally
+            embedding = model(tensor)  # [1, 256], L2-normalized
+
+            return embedding.squeeze(0).cpu().tolist()
+    except Exception as e:
+        logger.error("Failed to extract embedding: %s", e)
+        return []
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:
-    """Compute cosine similarity. Returns 0 if torch unavailable."""
+    """Compute cosine similarity between two embedding vectors.
+    
+    Returns 0 if torch unavailable.
+    """
     if not TORCH_AVAILABLE:
         return 0.0
-    ta = torch.tensor(a)
-    tb = torch.tensor(b)
-    return F.cosine_similarity(ta.unsqueeze(0), tb.unsqueeze(0)).item()
+    
+    try:
+        ta = torch.tensor(a)
+        tb = torch.tensor(b)
+        return F.cosine_similarity(ta.unsqueeze(0), tb.unsqueeze(0)).item()
+    except Exception as e:
+        logger.error("Failed to compute cosine similarity: %s", e)
+        return 0.0

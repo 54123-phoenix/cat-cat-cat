@@ -15,6 +15,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).parent))
 
 from app.services.model_loader import extract_embedding, load_model
+from app.services.detector import detect_and_crop
 
 UPLOADS_DIR = Path(__file__).parent / "uploads" / "cats"
 EMBEDDINGS_DIR = Path(__file__).parent / "embeddings"
@@ -56,6 +57,8 @@ def compute_embeddings():
         for img_path in images:
             try:
                 image = Image.open(img_path).convert("RGB")
+                # Detect and crop cat first (same as recognition pipeline)
+                image = detect_and_crop(image)
                 embedding = extract_embedding(image)
                 embeddings.append(embedding)
                 print(f"  {img_path.name}: OK")

@@ -6,34 +6,21 @@ import os
 import sys, json, shutil
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import torch
 from PIL import Image
-import numpy as np
 
 from app.database import SessionLocal
 from app.models import Cat
-from app.services.model_loader import CatRecognitionModel, preprocess_image
+from app.services.model_loader import load_model, extract_embedding
 
-SCRAPER_DIR = r"D:\Desktop\meowzart_scraper\output\cats"
+SCRAPER_DIR = r"D:\code\python\Cat\data_crops"
 EMBEDDINGS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "embeddings", "cat_embeddings.json")
-MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "finetuned_best.pt")
 MAX_PHOTOS_PER_CAT = 5
 
 print("Loading model...")
-checkpoint = torch.load(MODEL_PATH, map_location="cpu", weights_only=False)
-model = CatRecognitionModel()
-sd = {}
-for k, v in checkpoint.items():
-    nk = k
-    if nk.startswith("backbone.model."):
-        nk = "backbone." + nk[len("backbone.model."):]
-    if "patch_embed.proj." in nk:
-        nk = nk.replace("patch_embed.proj.", "patch_embed.")
-    if "emb_head.proj." in nk:
-        nk = nk.replace("emb_head.proj.", "emb_head.")
-    sd[nk] = v
-model.load_state_dict(sd, strict=False)
-model.eval()
+model = load_model()
+if model is None:
+    print("[ERROR] Failed to load model")
+    sys.exit(1)
 print("Model loaded.")
 
 db = SessionLocal()
@@ -82,10 +69,8 @@ for cat in all_cats:
         try:
             img_path = os.path.join(cat_dir, p)
             img = Image.open(img_path).convert("RGB")
-            tensor = preprocess_image(img)
-            with torch.no_grad():
-                emb = model(tensor)
-            embs.append(emb.squeeze(0).tolist())
+            emb = extract_embedding(img)
+            embs.append(emb)
         except Exception as e:
             print(f"  WARN: failed {p}: {e}")
 

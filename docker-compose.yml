@@ -12,7 +12,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./cat-backend/cat_community.db:/app/data/cat_community.db
+      - ./cat-backend/cat_community.db:/app/data
       - ./cat-backend/uploads:/app/uploads
       - ./cat-backend/models:/app/models
       - ./cat-backend/embeddings:/app/embeddings

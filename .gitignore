@@ -59,3 +59,6 @@ yarn-error.log*
 cat-backend/demo_token.txt
 cat-frontend/_admin_script.b64
 *.b64
+
+# Model Weights
+cat-backend/models

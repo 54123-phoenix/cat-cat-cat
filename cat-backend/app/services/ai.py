@@ -8,6 +8,7 @@ from PIL import Image
 
 from app.schemas import RecognizeCandidate, RecognizeResponse
 from app.services.model_loader import extract_embedding, cosine_similarity, TORCH_AVAILABLE
+from app.services.detector import detect_and_crop
 from app.database import SessionLocal
 from app import models
 from app.config import settings
@@ -69,6 +70,9 @@ def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResp
     try:
         # Load and preprocess image
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+
+        # Detect and crop cat from image (YOLOv8m)
+        image = detect_and_crop(image)
 
         # Extract embedding from uploaded image
         query_embedding = extract_embedding(image)
