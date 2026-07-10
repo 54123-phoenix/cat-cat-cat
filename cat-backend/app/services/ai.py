@@ -92,14 +92,17 @@ def recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResp
             cat_id = cat_data["cat_id"]
             ref_embeddings = cat_data["embeddings"]  # List of embeddings
 
-            # Average similarity across all reference images for this cat
-            sims = [cosine_similarity(query_embedding, ref_emb) for ref_emb in ref_embeddings]
-            avg_sim = sum(sims) / len(sims)
+            # Use the BEST-matching reference image per cat (max), not the
+            # average — averaging dilutes the score when a cat has varied
+            # reference photos and pushes valid matches below threshold.
+            if not ref_embeddings:
+                continue
+            best_sim = max(cosine_similarity(query_embedding, ref_emb) for ref_emb in ref_embeddings)
 
             similarities.append({
                 "cat_id": cat_id,
                 "cat_name": cat_name,
-                "confidence": avg_sim,
+                "confidence": best_sim,
             })
 
         # Sort by confidence (highest first)

@@ -19,8 +19,10 @@ class Settings(BaseSettings):
     RATE_REGISTER_PER_MIN: int = 10
     RATE_LOGIN_PER_MIN: int = 5
 
-    RECOGNIZE_THRESHOLD_CONFIRMED: float = 0.45
-    RECOGNIZE_THRESHOLD_UNCERTAIN: float = 0.30
+    # Tuned for the DINOv3 finetuned extractor (cosine on L2-normalized
+    # embeddings). Matches Campus-Cat-ReID's validated thresholds.
+    RECOGNIZE_THRESHOLD_CONFIRMED: float = 0.57
+    RECOGNIZE_THRESHOLD_UNCERTAIN: float = 0.49
 
     WECHAT_APPID: str = ""
     WECHAT_SECRET: str = ""
