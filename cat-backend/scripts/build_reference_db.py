@@ -37,7 +37,7 @@ sys.path.insert(0, str(BACKEND_DIR))
 
 from app.database import SessionLocal  # noqa: E402
 from app import models  # noqa: E402
-from app.services.model_loader import load_model, MODEL_PATH  # noqa: E402
+from app.services.model_loader import load_model, extract_embedding, MODEL_PATH  # noqa: E402
 
 EMBEDDINGS_PATH = BACKEND_DIR / "embeddings" / "cat_embeddings.json"
 UPLOADS_DIR = BACKEND_DIR / "uploads" / "cats"
@@ -49,6 +49,26 @@ def list_photos(cat_dir: Path) -> list[Path]:
         f for f in cat_dir.iterdir()
         if f.suffix.lower() in IMG_EXTS and not f.name.startswith("._")
     )
+
+
+def _build_faiss(embeddings_data: dict) -> None:
+    """Build and save a FAISS index from the generated embeddings."""
+    try:
+        from app.services.faiss_index import FaissIndex   # noqa: E402
+    except ImportError:
+        print("[WARN] faiss-cpu not installed, skipping FAISS index")
+        return
+
+    idx = FaissIndex(dim=256)
+    for cat_name, cat_data in embeddings_data.items():
+        cat_id = cat_data["cat_id"]
+        if cat_id is None:
+            continue
+        for emb in cat_data["embeddings"]:
+            idx.add(cat_id, emb)
+    idx.build()
+    idx.save()
+    print("[SAVED] FAISS index (%d vectors)" % idx.ntotal)
 
 
 def main() -> int:
@@ -69,11 +89,11 @@ def main() -> int:
         print(f"[ERROR] crops dir not found: {crops_dir}")
         return 1
 
-    extractor = load_model()
-    if extractor is None:
+    model = load_model()
+    if model is None:
         print(f"[ERROR] Feature extractor unavailable (torch/timm missing or {MODEL_PATH} not found)")
         return 1
-    print(f"[OK] Feature extractor ready (dim={extractor.dim})")
+    print("[OK] Feature extractor ready (DINOv3, dim=256)")
 
     db = SessionLocal()
     try:
@@ -147,7 +167,7 @@ def main() -> int:
             for photo in selected:
                 try:
                     img = Image.open(photo).convert("RGB")
-                    embs.append(extractor.extract(img).tolist())
+                    embs.append(extract_embedding(img))
                 except Exception as exc:  # noqa: BLE001
                     print(f"  [WARN] {cat_name}/{photo.name}: {exc}")
 
@@ -167,6 +187,9 @@ def main() -> int:
         size_mb = EMBEDDINGS_PATH.stat().st_size / 1024 / 1024
         print(f"\n[DONE] {imported} cats embedded, {skipped} skipped")
         print(f"[SAVED] {EMBEDDINGS_PATH} ({size_mb:.1f} MB)")
+
+        # Build FAISS index for fast retrieval
+        _build_faiss(embeddings_data)
         return 0
     finally:
         db.close()
