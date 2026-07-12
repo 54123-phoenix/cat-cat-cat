@@ -19,4 +19,5 @@ export const ROUTES = {
   LEAGUE: '/league',
   WRAPPED: '/wrapped',
   ROUTES_PAGE: '/routes',
+  CAT_INTEL: '/intel',
 }

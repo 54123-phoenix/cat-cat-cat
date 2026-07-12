@@ -18,6 +18,14 @@ class Settings(BaseSettings):
     RATE_SIGHTING_PER_MIN: int = 20
     RATE_REGISTER_PER_MIN: int = 10
     RATE_LOGIN_PER_MIN: int = 5
+    RATE_AGENT_PER_MIN: int = 20
+
+    AGENT_ENABLED: bool = False
+    AGENT_BASE_URL: str = "https://api.openai.com/v1"
+    AGENT_API_KEY: str = ""
+    AGENT_MODEL: str = ""
+    AGENT_TIMEOUT_SECONDS: int = 25
+    AGENT_MAX_TOOL_CALLS: int = 3
 
     # Tuned for the DINOv3 finetuned extractor (cosine on L2-normalized
     # embeddings). Matches Campus-Cat-ReID's validated thresholds.

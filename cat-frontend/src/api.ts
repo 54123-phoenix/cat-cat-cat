@@ -490,3 +490,11 @@ export function getRouteProgress(time_slot = 'anytime', route_limit?: number) {
   if (route_limit) params.set('route_limit', String(route_limit))
   return request(`/routes/story/progress?${params.toString()}`)
 }
+
+export function askCatIntel(message: string, context: Record<string, unknown> = {}) {
+  return request('/agents/cat-intel/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, context }),
+  })
+}

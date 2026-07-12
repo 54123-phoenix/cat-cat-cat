@@ -20,6 +20,7 @@ const routeTitles = {
   '/gallery': '猫猫图库',
   '/collection': '猫猫图鉴',
   '/league': '联赛季榜',
+  '/intel': '猫情报 Agent',
 }
 
 export default function Layout() {

@@ -38,6 +38,7 @@ from app.api import (
     routes,
     system,
     gamification,
+    agents,
 )
 from app.api import events as events_api
 from app.crud import init_mock_data
@@ -180,6 +181,7 @@ app.include_router(invite.router)
 app.include_router(routes.router)
 app.include_router(system.router)
 app.include_router(gamification.router)
+app.include_router(agents.router)
 
 
 @app.get("/")

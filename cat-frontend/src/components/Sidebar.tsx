@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { X, Bell, Award, Images, TrendingUp, Shield, LogOut, BookOpen, Trophy, Sparkles, Route as RouteIcon } from 'lucide-react'
+import { X, Bell, Award, Images, TrendingUp, Shield, LogOut, BookOpen, Trophy, Sparkles, Route as RouteIcon, Bot } from 'lucide-react'
 
 export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   const navigate = useNavigate()
@@ -39,6 +39,7 @@ export default function Sidebar({ isOpen, onClose, user, onLogout }) {
   }, [isOpen, onClose])
 
   const navItems = [
+    { label: '猫情报 Agent', icon: Bot, path: '/intel' },
     { label: '通知中心', icon: Bell, path: '/notifications' },
     { label: '猫猫图鉴', icon: BookOpen, path: '/collection' },
     { label: '联赛', icon: Trophy, path: '/league' },

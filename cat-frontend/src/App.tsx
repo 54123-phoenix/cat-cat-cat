@@ -39,6 +39,7 @@ const Collection = lazy(() => import('./pages/Collection'))
 const League = lazy(() => import('./pages/League'))
 const Wrapped = lazy(() => import('./pages/Wrapped'))
 const CatRoutes = lazy(() => import('./pages/CatRoutes'))
+const CatIntel = lazy(() => import('./pages/CatIntel'))
 
 function FullScreenLoader() {
   return (
@@ -133,6 +134,7 @@ export default function App() {
             <Route path={ROUTES.LEAGUE} element={<League />} />
             <Route path={ROUTES.WRAPPED} element={<Wrapped />} />
             <Route path={ROUTES.ROUTES_PAGE} element={<CatRoutes />} />
+            <Route path={ROUTES.CAT_INTEL} element={<CatIntel />} />
             <Route path={ROUTES.BADGES} element={<BadgeGallery />} />
             <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
             <Route path={ROUTES.WEEKLY_REPORT} element={<WeeklyReport />} />

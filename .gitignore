@@ -10,6 +10,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
+.venv/
 
 # Environment and local secrets
 .env
@@ -36,6 +37,9 @@ cat-backend/uploads/
 .claude/
 .omo/
 .opencode/
+
+# Local planning notes
+Agent.md
 
 # UI Loop runtime artifacts
 .loop/
