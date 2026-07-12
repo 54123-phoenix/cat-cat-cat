@@ -97,6 +97,7 @@ def test_api_requires_auth_and_returns_structured_answer(db):
     def override_db():
         yield db
 
+    previous_override = app.dependency_overrides.get(get_db)
     app.dependency_overrides[get_db] = override_db
     try:
         client = TestClient(app)
@@ -112,4 +113,7 @@ def test_api_requires_auth_and_returns_structured_answer(db):
         assert payload["evidence"]
         assert payload["actions"]
     finally:
-        app.dependency_overrides.pop(get_db, None)
+        if previous_override is None:
+            app.dependency_overrides.pop(get_db, None)
+        else:
+            app.dependency_overrides[get_db] = previous_override
