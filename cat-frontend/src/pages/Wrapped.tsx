@@ -69,7 +69,7 @@ async function buildShareCanvas(data, user) {
         ctx.beginPath()
         ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2)
         ctx.stroke()
-      } catch {}
+      } catch { /* The report remains exportable when optional artwork fails. */ }
     }
   }
 
@@ -90,7 +90,7 @@ async function buildShareCanvas(data, user) {
     const qrDataUrl = await QRCode.toDataURL(shareUrl, { width: 180, margin: 1 })
     const qr = await loadImage(qrDataUrl)
     ctx.drawImage(qr, W / 2 - 90, 1100, 180, 180)
-  } catch {}
+  } catch { /* The report remains exportable when optional artwork fails. */ }
   ctx.font = '22px sans-serif'
   ctx.fillStyle = 'rgba(255,255,255,0.8)'
   ctx.fillText('扫码查看我的年度报告', W / 2, 1290)

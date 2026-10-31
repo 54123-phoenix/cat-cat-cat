@@ -1,3 +1,4 @@
+from app.time_utils import utc_now, campus_date, campus_day_bounds, CAMPUS_TIMEZONE
 import json
 import random
 import hashlib
@@ -96,12 +97,12 @@ def build_daily_capsule_for_user(db: Session, user_id: int, target_date: date) -
     different capsules.
     """
     date_iso = target_date.isoformat()
-    today_start = datetime.combine(target_date, datetime.min.time())
-    recent = datetime.now() - timedelta(days=7)
+    today_start, today_end = campus_day_bounds(target_date)
+    recent = utc_now() - timedelta(days=7)
 
     sightings = (
         db.query(models.Sighting)
-        .filter(models.Sighting.created_at >= recent)
+        .filter(models.Sighting.status == "approved", models.Sighting.created_at >= recent)
         .order_by(models.Sighting.created_at.desc())
         .limit(200)
         .all()
@@ -133,7 +134,7 @@ def build_daily_capsule_for_user(db: Session, user_id: int, target_date: date) -
                 "available": False,
                 "message": "暂无校园猫数据",
             }
-        today_sightings = [s for s in weighted if s.created_at >= today_start]
+        today_sightings = [s for s in weighted if today_start <= s.created_at < today_end]
         pool = today_sightings if today_sightings else weighted
         chosen_sighting = rng.choice(pool)
         featured_cat = cats_map[chosen_sighting.cat_id]
@@ -189,7 +190,7 @@ def build_daily_capsule_for_user(db: Session, user_id: int, target_date: date) -
 
 @router.get("/daily-capsule")
 def daily_capsule(db: Session = Depends(get_db), user: User = Depends(require_auth)):
-    return build_daily_capsule_for_user(db, user.id, date.today())
+    return build_daily_capsule_for_user(db, user.id, campus_date())
 
 
 def _weighted_pick(rng: random.Random, items: list[dict]) -> dict:
@@ -321,7 +322,7 @@ def build_daily_gacha_for_user(db: Session, user_id: int, target_date: date) -> 
 
 @router.get("/gacha/today")
 def daily_gacha(db: Session = Depends(get_db), user: User = Depends(require_auth)):
-    today = date.today()
+    today = campus_date()
     existing = _today_gacha_collectible(db, user.id, today)
     if existing:
         stored = _gacha_response_from_collectible(existing)
@@ -346,7 +347,7 @@ def daily_gacha(db: Session = Depends(get_db), user: User = Depends(require_auth
 def draw_daily_gacha(
     db: Session = Depends(get_db), user: User = Depends(require_auth)
 ):
-    today = date.today()
+    today = campus_date()
     existing = _today_gacha_collectible(db, user.id, today)
     if existing:
         stored = _gacha_response_from_collectible(existing)
@@ -412,7 +413,7 @@ def get_titles(db: Session = Depends(get_db), user: User = Depends(require_auth)
     distinct_cats = len(set(s.cat_id for s in sightings))
     geo_count = sum(1 for s in sightings if s.latitude and s.longitude)
     night_count = sum(
-        1 for s in sightings if s.created_at.hour >= 20 or s.created_at.hour < 5
+        1 for s in sightings if s.created_at.astimezone(CAMPUS_TIMEZONE).hour >= 20 or s.created_at.astimezone(CAMPUS_TIMEZONE).hour < 5
     )
 
     cat_ids = set(s.cat_id for s in sightings)
@@ -522,17 +523,17 @@ def route_story(
     if time_slot not in TIME_SLOTS:
         time_slot = "anytime"
 
-    since = datetime.now() - timedelta(days=days)
+    since = utc_now() - timedelta(days=days)
     sightings = (
         db.query(models.Sighting)
-        .filter(models.Sighting.created_at >= since)
+        .filter(models.Sighting.status == "approved", models.Sighting.created_at >= since)
         .order_by(models.Sighting.created_at.desc())
         .all()
     )
 
     start_h, end_h = SLOT_HOURS.get(time_slot, (None, None))
     if start_h is not None:
-        sightings = [s for s in sightings if start_h <= s.created_at.hour < end_h]
+        sightings = [s for s in sightings if start_h <= s.created_at.astimezone(CAMPUS_TIMEZONE).hour < end_h]
 
     groups: dict[str, dict] = {}
     for s in sightings:
@@ -607,7 +608,7 @@ def route_story(
     return {
         "title": SLOT_TITLE.get(time_slot, SLOT_TITLE["anytime"]),
         "time_slot": time_slot,
-        "generated_at": datetime.now(),
+        "generated_at": utc_now(),
         "share_path": f"/routes?time_slot={time_slot}",
         "stops": stops,
         "route_stamp": route_stamp,
@@ -660,7 +661,7 @@ def ensure_capsule_collectible(
 def claim_daily_capsule(
     db: Session = Depends(get_db), user: User = Depends(require_auth)
 ):
-    today = date.today()
+    today = campus_date()
     today_iso = today.isoformat()
     existing = (
         db.query(models.DailyCapsuleClaim)

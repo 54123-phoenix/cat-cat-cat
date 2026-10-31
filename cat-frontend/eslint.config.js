@@ -17,6 +17,9 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // React 18 uses effect-driven loading states. Track this compiler/performance
+      // migration as warnings (ISS-029); hook order, purity and refs remain errors.
+      "react-hooks/set-state-in-effect": "warn",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "prettier/prettier": "warn",
       "@typescript-eslint/no-explicit-any": "off",

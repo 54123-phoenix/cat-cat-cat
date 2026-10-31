@@ -10,6 +10,7 @@ from app.config import settings
 from app.database import get_db
 from app.models import AuditLog, Cat, CatImage, Sighting
 from app.api.upload import validate_upload
+from app.api.auth import optional_auth
 
 router = APIRouter(prefix="/api", tags=["recognize"])
 
@@ -48,7 +49,7 @@ def _enrich_result(result, db: Session):
         result.personality_tags = tags[:5]
     if cat.location:
         result.campus_zone = cat.location
-    sighting_count = db.query(Sighting).filter(Sighting.cat_id == cat.id).count()
+    sighting_count = db.query(Sighting).filter(Sighting.cat_id == cat.id, Sighting.status == 'approved').count()
     if sighting_count >= 50:
         result.collector_status = "资深观察员"
     elif sighting_count >= 20:
@@ -63,7 +64,7 @@ def _enrich_result(result, db: Session):
 @router.post("/recognize", response_model=RecognizeResponse)
 @limit(f"{settings.RATE_RECOGNIZE_PER_MIN}/minute")
 async def recognize(
-    request: Request, file: UploadFile = File(...), db: Session = Depends(get_db)
+    request: Request, file: UploadFile = File(...), db: Session = Depends(get_db), user=Depends(optional_auth)
 ):
     image_bytes = await validate_upload(file)
     result = await asyncio.to_thread(
@@ -72,7 +73,8 @@ async def recognize(
     try:
         db.add(
             AuditLog(
-                action="recognize",
+                action="recognize" if result.status != "unavailable" else "recognize_failed",
+                user_id=user.id if user else None,
                 entity_type="cat",
                 entity_id=result.cat_id,
                 performed_by=request.client.host if request.client else "system",

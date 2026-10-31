@@ -1,0 +1,17 @@
+
+> cat-miniprogram@1.0.0 test
+> node --test tests/*.test.cjs
+
+✔ ordinary requests work without a browser FormData global (62.6953ms)
+✔ text posts send URL-encoded fields accepted by the API (17.8602ms)
+✔ HTTP upload failures reject instead of returning success-shaped JSON (15.7315ms)
+✔ list clients receive items and paginated clients retain total/has_more (14.4467ms)
+✔ sightings with and without images preserve API form fields (12.1341ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 306.8061

@@ -1,10 +1,14 @@
 # Final Acceptance
 
+> **2026-10-31 status:** The current candidate has 25 locally accepted issues, 9 pending specialty checks and 3 partial items. Reference lifecycle B1–B4, 238 backend tests, four-process Redis (10 checks), and SQLite/upload recovery (4 groups) passed locally; the latest Web baseline is 66 tests. Docker engine startup, deployment integration, real model/platform validation and licensing remain open. See [C evidence](validation/OPTIMIZATION_C.md). This is not release approval; P0–P6 labels below describe historical implementation work.
+
+> **Review update — 2026-10-30:** Source review and local verification found unresolved core-flow, authorization, data-integrity, and deployment defects. The current baseline has not passed release-candidate acceptance. See the [known-issues ledger](KNOWN_ISSUES.md) for evidence, priorities, and closure criteria. The goals and checklist below are acceptance targets, not proof of completion; passing the current tests or harness alone does not close the ledger.
+
 This document is the release-candidate acceptance pack for the current cat community project. It is meant to keep the next iteration disciplined: prove the project is shippable before opening another large feature surface.
 
 ## Release Candidate Goal
 
-Move the project from a feature-complete internal-trial build to a maintainable release candidate.
+Repair the documented defects and validate each core flow before declaring a release candidate. See [repair evidence](validation/REPAIR_PROGRESS.md) for the current working-tree results.
 
 The release candidate is acceptable when:
 
@@ -24,7 +28,7 @@ In scope for P6:
 - No-risk polish that does not change user data, auth semantics, model thresholds, or public API contracts.
 - Documentation updates that explain the current golden demo path: home entry, scan, memory card, route/map, public share, and admin review.
 
-Out of scope for P6:
+Historical P6 exclusions (the user-authorized repair cycle now includes additive migrations, dependencies and disposable-copy restore tests):
 
 - New product features.
 - Schema changes or migrations.
@@ -63,7 +67,7 @@ Run this path before a real demo or handoff:
 10. Open profile and leaderboard.
 11. Open admin overview and verify pending work, hot locations, contributors, and audit activity.
 12. Call the system health endpoint and confirm the model-health payload is understandable.
-13. Run backup dry run and restore dry run only.
+13. Run backup/restore on a disposable copy, verify integrity and attachments; never use production data for a drill.
 
 ## Risk Register
 
@@ -71,7 +75,7 @@ Run this path before a real demo or handoff:
 - Model quality depends on the current weights and reference embeddings. Future work should add a labeled campus sample set and threshold calibration report.
 - Frontend pages are feature-rich and some are still large. Future work should split heavily edited pages into smaller components.
 - External map coordinates remain demo-grade unless connected to a verified campus location source.
-- Real restore has not been executed in this release cycle. Only dry-run backup and restore have been validated. A disposable-copy restore drill should be run before production deployment.
+- SQLite WAL snapshots and the PowerShell backup/restore wrappers passed a disposable-project drill. Docker volume persistence and a deployment-size backup including uploads still need environment validation.
 - opencode or other external agents may help, but Codex or the maintainer must review diff, tests, docs, and harness before acceptance.
 
 ## Next Upgrade Path

@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { View, Text, Image, ScrollView, Textarea } from '@tarojs/components'
 import Taro, { useDidShow, useReachBottom, usePullDownRefresh } from '@tarojs/taro'
-import { getPosts, likePost, reportPost, getUserProfile, createPost } from '../../services/api'
+import { getPostsPage, likePost, reportPost, getUserProfile, createPost } from '../../services/api'
 import { TOPICS } from '../../config'
 
 const TOPIC_COLORS: Record<string, { bg: string; text: string }> = {
@@ -21,13 +21,23 @@ export default function Community() {
   const [composeText, setComposeText] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  function fetchPosts() {
+  const [hasMore, setHasMore] = useState(true)
+  const requestId = useRef(0)
+
+  function fetchPosts(append = false, topic = activeTab) {
+    const id = ++requestId.current
+    setLoading(true)
     const params: any = { limit: 30 }
-    if (activeTab !== 'all') params.topic = activeTab
-    getPosts(params)
-      .then((data) => setPosts(Array.isArray(data) ? data : []))
-      .catch(console.error)
-      .finally(() => setLoading(false))
+    params.skip = append ? posts.length : 0
+    if (topic !== 'all') params.topic = topic
+    getPostsPage(params)
+      .then((page) => {
+        if (id !== requestId.current) return
+        setPosts(previous => append ? [...previous, ...page.items] : page.items)
+        setHasMore(page.has_more)
+      })
+      .catch(err => Taro.showToast({ title: err.message || '加载失败', icon: 'none' }))
+      .finally(() => { if (id === requestId.current) setLoading(false) })
     getUserProfile().then(setUser).catch(() => {})
   }
 
@@ -44,9 +54,7 @@ export default function Community() {
   })
 
   useReachBottom(() => {
-    if (posts.length >= 30) {
-      Taro.showToast({ title: '已加载全部帖子', icon: 'none', duration: 1000 })
-    }
+    if (!loading && hasMore) fetchPosts(true)
   })
 
   async function handleLike(post: any) {
@@ -84,7 +92,7 @@ export default function Community() {
       <ScrollView scrollX style={{ whiteSpace: 'nowrap', padding: '16rpx 16rpx', backgroundColor: '#fff', borderBottom: '1rpx solid #E7E5E4' }}>
         {[{ id: 'all', label: '广场' }, ...TOPICS].map((tab) => (
           <Text key={tab.id}
-            onClick={() => { setActiveTab(tab.id); setLoading(true); setPosts([]); fetchPosts() }}
+            onClick={() => { setActiveTab(tab.id); setLoading(true); setPosts([]); fetchPosts(false, tab.id) }}
             style={{
               display: 'inline-block', padding: '12rpx 24rpx', fontSize: '26rpx', fontWeight: '500',
               color: activeTab === tab.id ? '#F97316' : '#78716C',
@@ -207,10 +215,7 @@ export default function Community() {
                 if (!composeText.trim() || submitting) return
                 setSubmitting(true)
                 try {
-                  const form = new FormData()
-                  form.append('topic', composeTopic)
-                  form.append('content', composeText.trim())
-                  await createPost(form)
+                  await createPost({ topic: composeTopic, content: composeText.trim() })
                   setShowCompose(false)
                   setComposeText('')
                   setComposeTopic('daily')

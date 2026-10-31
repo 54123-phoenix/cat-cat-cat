@@ -19,6 +19,8 @@
 #>
 param(
     [string]$BackupDir = "backups",
+    [string]$DatabasePath = "",
+    [string]$Python = "python",
     [switch]$SkipUploads,
     [switch]$DryRun
 )
@@ -27,7 +29,9 @@ $ErrorActionPreference = "Stop"
 
 $Root = Resolve-Path "$PSScriptRoot\.."
 $BackendDir = Join-Path $Root "cat-backend"
-$Timestamp = (Get-Date -Format "yyyyMMdd-HHmmss")
+. (Join-Path $PSScriptRoot 'database_path.ps1')
+$DatabaseFile = Resolve-CatDatabasePath -BackendDir $BackendDir -DatabasePath $DatabasePath -AllowMissing:$DryRun
+$Timestamp = (Get-Date -Format "yyyyMMdd-HHmmss-fff")
 
 # Resolve BackupDir: absolute paths used as-is, relative resolved under project root
 if ([System.IO.Path]::IsPathRooted($BackupDir)) {
@@ -47,16 +51,12 @@ if (-not $DryRun) {
     New-Item -ItemType Directory -Path $Dest -Force | Out-Null
 }
 
-# 1. Backup database files
-$dbFiles = Get-ChildItem -Path $BackendDir -Filter "*.db" -File -ErrorAction SilentlyContinue
-if (-not $dbFiles -or $dbFiles.Count -eq 0) {
-    Write-Host "[INFO] No *.db file found under cat-backend, skipping database backup." -ForegroundColor Yellow
-} else {
-    foreach ($db in $dbFiles) {
-        $target = Join-Path $Dest $db.Name
-        Write-Host "[DB ] $($db.FullName) -> $target"
-        if (-not $DryRun) { Copy-Item -LiteralPath $db.FullName -Destination $target -Force }
-    }
+# 1. Consistent snapshot includes committed WAL transactions.
+$target = Join-Path $Dest 'cat_community.db'
+Write-Host "[DB ] $DatabaseFile -> $target"
+if (-not $DryRun) {
+    & $Python (Join-Path $PSScriptRoot 'sqlite_backup.py') $DatabaseFile $target
+    if ($LASTEXITCODE -ne 0) { throw 'SQLite backup failed' }
 }
 
 # 2. Backup uploads
@@ -82,7 +82,9 @@ if (-not $DryRun) {
         "timestamp: $Timestamp",
         "project_root: $Root",
         "skip_uploads: $SkipUploads",
-        "db_files: $($dbFiles.Name -join ', ')"
+        "db_files: cat_community.db",
+        "database_source: $DatabaseFile",
+        "database_snapshot: sqlite-online-backup"
     )
     Set-Content -LiteralPath $ManifestPath -Value $lines -Encoding UTF8
     Write-Host ""

@@ -3,7 +3,7 @@
 // 1. POST /api/events/ticket → returns short-lived nonce
 // 2. Connect EventSource with ?ticket=nonce (nonce is single-use)
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import { getToken } from '../api'
 
 const MAX_RETRIES = 5
@@ -17,12 +17,13 @@ function getDelay(retryCount: number): number {
 
 export function useEventStream(onEvent) {
   const onEventRef = useRef(onEvent)
-  onEventRef.current = onEvent
+  useEffect(() => { onEventRef.current = onEvent }, [onEvent])
   const sourceRef = useRef<EventSource | null>(null)
   const retryRef = useRef(0)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const connect = useCallback(() => {
+  useEffect(() => {
+    function connect() {
     const token = getToken()
     if (!token) return
     try {
@@ -55,9 +56,7 @@ export function useEventStream(onEvent) {
     } catch {
       // EventSource unsupported
     }
-  }, [])
-
-  useEffect(() => {
+    }
     connect()
     return () => {
       if (timerRef.current) {
@@ -69,7 +68,7 @@ export function useEventStream(onEvent) {
         sourceRef.current = null
       }
     }
-  }, [connect])
+  }, [])
 
   return sourceRef
 }

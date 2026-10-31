@@ -1,3 +1,4 @@
+from app.time_utils import utc_now, CAMPUS_TIMEZONE
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -47,17 +48,17 @@ def recommendations(
     if time_slot not in TIME_SLOTS:
         time_slot = "anytime"
 
-    since = datetime.now() - timedelta(days=days)
+    since = utc_now() - timedelta(days=days)
     sightings = (
         db.query(models.Sighting)
-        .filter(models.Sighting.created_at >= since)
+        .filter(models.Sighting.status == "approved", models.Sighting.created_at >= since)
         .order_by(models.Sighting.created_at.desc())
         .all()
     )
 
     start_h, end_h = SLOT_HOURS.get(time_slot, (None, None))
     if start_h is not None:
-        sightings = [s for s in sightings if start_h <= s.created_at.hour < end_h]
+        sightings = [s for s in sightings if start_h <= s.created_at.astimezone(CAMPUS_TIMEZONE).hour < end_h]
 
     groups: dict[str, dict] = {}
     for s in sightings:
@@ -105,7 +106,7 @@ def recommendations(
     return {
         "title": SLOT_TITLE.get(time_slot, SLOT_TITLE["anytime"]),
         "time_slot": time_slot,
-        "generated_at": datetime.now(),
+        "generated_at": utc_now(),
         "share_path": f"/routes?time_slot={time_slot}",
         "stops": stops,
     }

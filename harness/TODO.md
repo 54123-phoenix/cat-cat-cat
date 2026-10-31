@@ -1,5 +1,18 @@
 # Upgrade TODO
 
+## Current acceptance status — 2026-10-31
+
+The P0–P6 checkmarks below are historical implementation records, not current release approval. The source of truth is [KNOWN_ISSUES](../docs/KNOWN_ISSUES.md) and [NEXT_OPTIMIZATION_PATH](../docs/NEXT_OPTIMIZATION_PATH.md).
+
+- [x] Core repairs and reference lifecycle B1–B4: local acceptance completed.
+- [x] C: four-process Redis acceptance (10 checks) and SQLite/upload recovery (4 groups).
+- [x] Backend regression: 238 passed; latest Web baseline: 66 passed.
+- [ ] Docker images, Gunicorn and volume recovery: host engine startup is blocked.
+- [ ] Browser reconnect state refresh, real model quality, WeChat devices, map/LLM services and licensing.
+- [ ] Remaining type/module debt, warning cleanup and measured capacity targets.
+
+See [C acceptance](../docs/validation/OPTIMIZATION_C.md). No release-candidate approval is implied by the checks above.
+
 ## Core Loop
 
 - [x] P0-01 Recognition states and degraded experience

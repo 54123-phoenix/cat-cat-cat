@@ -15,7 +15,8 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
   const [tags, setTags] = useState([])
   const [customTag, setCustomTag] = useState('')
   const [relatedCat, setRelatedCat] = useState(null)
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<File[]>([])
+  const [previewUrls, setPreviewUrls] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [postType, setPostType] = useState('discussion')
   const [pollOptions, setPollOptions] = useState(['', ''])
@@ -77,6 +78,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
     const newFiles = Array.from(fileList).slice(0, MAX_IMAGES - images.length)
     const newUrls = newFiles.map((f) => URL.createObjectURL(f))
     urlRefs.current.push(...newUrls)
+    setPreviewUrls([...urlRefs.current])
     setImages((prev) => [...prev, ...newFiles])
   }
 
@@ -85,6 +87,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
       URL.revokeObjectURL(urlRefs.current[index])
       urlRefs.current.splice(index, 1)
     }
+    setPreviewUrls([...urlRefs.current])
     setImages((prev) => prev.filter((_, i) => i !== index))
   }
 
@@ -204,7 +207,7 @@ export default function PostInput({ defaultTopic, onClose, onCreated }) {
           <div className="flex flex-wrap gap-2">
             {images.map((_img, i) => (
               <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200">
-                <img src={urlRefs.current[i] || ''} alt="上传图片预览" className="w-full h-full object-cover" />
+                <img src={previewUrls[i] || ''} alt="上传图片预览" className="w-full h-full object-cover" />
                 <button
                   onClick={() => removeImage(i)}
                   className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center"

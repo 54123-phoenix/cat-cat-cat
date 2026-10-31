@@ -1,0 +1,47 @@
+{
+  "status": "failed",
+  "checks": {},
+  "started_at": "2026-10-31T03:05:32.861726+00:00",
+  "environment": "WSL Redis + Windows API",
+  "redis_version": "7.4.2",
+  "api_pids": [
+    "26300",
+    "32392",
+    "39480",
+    "54748"
+  ],
+  "bootstrap_counts": {
+    "admin": 2,
+    "fudan": 1
+  },
+  "username_indexes": [
+    {
+      "seq": 0,
+      "name": "ix_users_username",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 1,
+      "name": "ix_users_openid",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 2,
+      "name": "ix_users_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 3,
+      "name": "ix_users_campus_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    }
+  ]
+}

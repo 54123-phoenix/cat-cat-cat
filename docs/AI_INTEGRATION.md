@@ -1,6 +1,6 @@
 # AI Integration Contract
 
-This document defines the stable AI integration boundary for the campus cat archive. The backend already includes a DINOv2-style local model loading and embedding matching path. Future AI work should harden observability, model health, threshold calibration, and optional new-cat advisory review without breaking the product workflow.
+This document defines the AI integration boundary for the campus cat archive. The backend uses a DINOv3 extractor with a 256-dimensional projection head. Reference identity validation is implemented in B1; publication/rollback and real-model quality acceptance remain pending. See [reference library operations](REFERENCE_LIBRARY.md).
 
 ## Design Principle
 
@@ -19,7 +19,7 @@ New-cat discovery review remains a human-admin workflow today. AI advisory revie
 ## Current Adapter Function
 
 ```python
-recognize_cat_image(image_bytes: bytes, filename: str = "") -> RecognizeResponse
+recognize_cat_image(image_bytes: bytes, filename: str = "", *, crop: bool = True) -> RecognizeResponse
 ```
 
 Used by:
@@ -34,10 +34,11 @@ Implementation boundary:
 cat-backend/app/services/ai.py
 cat-backend/app/services/model_loader.py
 models/finetuned_best.pt
-embeddings/cat_embeddings.json
+REFERENCE_DIR/manifest.json
+REFERENCE_DIR/vectors.json
 ```
 
-If PyTorch, model weights, or reference embeddings are unavailable, the adapter returns a controlled `unavailable` or `unknown` response instead of raising an unhandled server error.
+If the runtime, weights, detector, reference manifest or source identities cannot be validated, the adapter returns `unavailable`. A valid reference bundle with low matching similarity returns `unknown`. Legacy name-based JSON and independent numeric-ID FAISS files are not accepted as trusted reference snapshots.
 
 ## Recognition API Contract
 

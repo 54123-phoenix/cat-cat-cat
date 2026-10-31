@@ -1,0 +1,452 @@
+.........EEEEEEEEE.........                                              [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_job_api_authorization_and_enqueue_do_not_run_inference _
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:14.204601', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload0] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:15.103645', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload1] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:15.684091', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload2] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:16.195531', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload3] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:16.662213', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload4] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:17.159183', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload5] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:17.747545', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_____ ERROR at setup of test_job_api_rejects_invalid_contracts[payload6] ______
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:18.305079', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+____ ERROR at setup of test_job_api_diagnoses_missing_and_corrupt_journals ____
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: users.nickname
+
+The above exception was the direct cause of the following exception:
+tests\test_reference_lifecycle.py:180: in api
+    db.flush()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4312: in flush
+    self._flush(objects)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4447: in _flush
+    with util.safe_reraise():
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\session.py:4408: in _flush
+    flush_context.execute()
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1226: in _emit_insert_statements
+    result = connection.execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\.cat-review-venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: users.nickname
+E   [SQL: INSERT INTO users (username, password_hash, nickname, role, avatar, openid, session_key, created_at, xp, level, longest_streak, token_version, campus_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E   [parameters: ('jobs-admin', 'unused', None, 'admin', None, None, None, '2026-10-31 02:13:18.792391', 0, 1, 0, 1, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+============================== warnings summary ===============================
+..\..\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_reference_lifecycle.py::test_job_api_authorization_and_enqueue_do_not_run_inference
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload0]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload1]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload2]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload3]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload4]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload5]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload6]
+tests/test_reference_lifecycle.py::test_job_api_diagnoses_missing_and_corrupt_journals
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_reference_lifecycle.py::test_job_api_authorization_and_enqueue_do_not_run_inference
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload0]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload1]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload2]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload3]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload4]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload5]
+ERROR tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload6]
+ERROR tests/test_reference_lifecycle.py::test_job_api_diagnoses_missing_and_corrupt_journals
+18 passed, 25 warnings, 9 errors in 27.89s

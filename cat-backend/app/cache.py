@@ -2,6 +2,10 @@ import hashlib
 import json
 import logging
 import functools
+from collections import OrderedDict
+from fnmatch import fnmatchcase
+from threading import RLock
+from time import monotonic
 from typing import Optional, Callable
 
 logger = logging.getLogger("cat_community.cache")
@@ -15,37 +19,63 @@ try:
 except ImportError:
     _REDIS_AVAILABLE = False
 
-try:
-    from cachetools import TTLCache
-    _MEMORY_CACHE_AVAILABLE = True
-except ImportError:
-    _MEMORY_CACHE_AVAILABLE = False
-    _TTLCache = None
-    class TTLCache:
-        def __init__(self, maxsize=512, ttl=300):
-            self._store = {}
-            self._maxsize = maxsize
-            self._ttl = ttl
+class TTLCache:
+    def __init__(self, maxsize=512, ttl=300):
+        self._store = OrderedDict()
+        self._maxsize = maxsize
+        self._ttl = ttl
+        self._lock = RLock()
 
-        def get(self, key, default=None):
-            return self._store.get(key, default)
+    def get(self, key, default=None):
+        with self._lock:
+            entry = self._store.get(key)
+            if entry is None:
+                return default
+            expires, value = entry
+            if expires <= monotonic():
+                self._store.pop(key, None)
+                return default
+            self._store.move_to_end(key)
+            return value
 
-        def set(self, key, value):
-            self._store[key] = value
-
-        def delete(self, key):
+    def set(self, key, value, ttl=None):
+        with self._lock:
+            now = monotonic()
+            for old_key, (expires, _) in list(self._store.items()):
+                if expires <= now:
+                    self._store.pop(old_key, None)
+            lifetime = self._ttl if ttl is None else ttl
             self._store.pop(key, None)
+            if lifetime <= 0 or self._maxsize <= 0:
+                return
+            self._store[key] = (now + lifetime, value)
+            while len(self._store) > self._maxsize:
+                self._store.popitem(last=False)
+
+    def delete(self, pattern):
+        with self._lock:
+            for key in list(self._store):
+                if fnmatchcase(key, pattern):
+                    self._store.pop(key, None)
 
 
 def init_cache(redis_url: Optional[str] = None):
     global _redis_client, _memory_cache
+    _redis_client = None
+    _memory_cache = TTLCache(maxsize=512, ttl=300)
     if _REDIS_AVAILABLE and redis_url:
         try:
-            _redis_client = _redis_sync.from_url(redis_url, decode_responses=True)
+            _redis_client = _redis_sync.from_url(
+                redis_url, decode_responses=True, socket_connect_timeout=2, socket_timeout=2,
+                retry_on_timeout=False,
+            )
             _redis_client.ping()
             logger.info("Cache: Redis connected")
             return
         except Exception:
+            if _redis_client is not None:
+                _redis_client.close()
+            _redis_client = None
             logger.warning("Cache: Redis connection failed, using in-memory TTLCache")
     _memory_cache = TTLCache(maxsize=512, ttl=300)
     logger.info("Cache: Using in-memory TTLCache")
@@ -70,16 +100,15 @@ def cache_set(key: str, value: str, ttl: int = 300) -> None:
         except Exception:
             pass
     if _memory_cache:
-        _memory_cache.set(key, value)
+        _memory_cache.set(key, value, ttl=ttl)
 
 
 def cache_invalidate(pattern: str) -> None:
     if _redis_client:
         try:
-            keys = _redis_client.keys(pattern)
+            keys = list(_redis_client.scan_iter(match=pattern))
             if keys:
                 _redis_client.delete(*keys)
-            return
         except Exception:
             pass
     if _memory_cache:

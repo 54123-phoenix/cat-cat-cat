@@ -1,5 +1,7 @@
 # 上线步骤清单
 
+当前尚未通过发布验收。迁移 head 已更新为 `j20261031`，清单为 v2；旧参考向量及 B1 v1 候选必须重建，步骤见 [参考库操作说明](docs/REFERENCE_LIBRARY.md)。j20261031 修复身份唯一索引，存在重复记录时拒绝升级，不自动合并。下面是部署步骤，不是部署成功记录；本机 Redis 和 SQLite/附件恢复证据见 [C 验收](docs/validation/OPTIMIZATION_C.md)，Docker、微信真机及模型资产仍需实际验证。
+
 ## 第一阶段：账号准备（1-3 天）
 
 ### 1.1 注册微信小程序
@@ -18,7 +20,7 @@
 
 ### 1.3 安装微信开发者工具
 - [ ] 下载：https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html
-- [ ] 安装后，导入项目 → 目录选 `cat-miniprogram/dist/weapp`
+- [ ] 安装后，导入项目 → 目录选 `cat-miniprogram/dist`
 - [ ] AppID 填你的正式 AppID
 - [ ] 首次编译验证能否在模拟器中运行
 
@@ -39,14 +41,16 @@
    cd cat-cat-cat
    cp .env.example .env
    ```
-4. 下载模型和数据（~9 GB，首次部署需要）：
+4. 获取模型权重（外部下载及许可需另行确认；业务数据不会由此自动恢复）：
    ```bash
-   pip install huggingface_hub requests tqdm
-   python scripts/download_assets.py
+   cd cat-backend
+   pip install -r requirements-torch.txt huggingface-hub
+   python scripts/download_model.py
+   cd ..
    ```
 4. 编辑 `.env`，填入你的值：
    ```ini
-    DATABASE_URL=sqlite:///./cat_community.db
+    DATABASE_URL=sqlite:///./data/cat_community.db
    UPLOAD_DIR=./uploads
    VITE_API_TARGET=http://backend:8000
    ADMIN_PASSWORD=你的管理员密码
@@ -59,14 +63,37 @@
    ```bash
    docker compose up -d --build
    ```
-6. 确认后端可访问：`curl http://你的域名:8000/`
+6. Compose 启动时先执行 `alembic upgrade head`，再启动服务。SQLite 的容器路径 `/app/data/cat_community.db` 对应宿主机 `cat-backend/data/cat_community.db`。升级旧库前先按 [备份恢复说明](docs/BACKUP_RECOVERY.md) 制作一致快照。
+7. 确认后端可访问：`curl http://你的域名:8000/`
+
+Compose 另启动 `reference-worker`，与 backend 共享数据库、照片、模型及 `/app/reference-store`；它等待迁移完成，只处理队列，不执行迁移。首次无发布版本时识别返回 unavailable。维护档案和参考照片后，执行 `docker compose exec backend python scripts/reference_jobs.py enqueue`，再通过 `status` 或管理 API 核对任务结果。默认构建成功后发布，失败不替换当前指针；版本与当前数据库不兼容时旧结果也停止服务。仅启动容器不代表参考库就绪。本轮通过了 Compose 配置解析与共享环境/挂载检查，实际容器运行仍待专项验收。
+
+数据库结构只由显式 Alembic 迁移管理。直接运行后端镜像的默认命令也会先迁移再启动 Gunicorn；自行覆盖容器命令或本地运行 Uvicorn 时，须在后端目录先执行 `python -m alembic upgrade head`。迁移会读取 `cat-backend/.env`，环境变量优先。应用导入不再调用 `create_all`，启动时核对迁移 head、必需表、列和唯一索引；未迁移或结构残缺时停止启动，不在 worker 中偷偷修复。此检查不代替完整的约束、索引和数据一致性验收。
+
+C 补充：启动检查现已核对 ORM 声明的唯一索引。Compose 等待 Redis 健康检查后启动后端；PostgreSQL 处于 `postgres` profile，不随 SQLite 默认部署启动。镜像默认构建 inference 阶段，可用 `docker build --target api cat-backend` 单独准备不含 Torch 的 API 镜像；其运行成功也不能替代真实模型验证。数据库、uploads、模型、embeddings、reference-store 和环境文件从构建上下文排除，需通过正确挂载/环境配置提供。当前 Docker Desktop 启动受阻，尚未验证这两种镜像构建和容器运行。
+
+### 本地与 CI 浏览器门禁
+
+使用 Python 3.11、Node 24，先在 Web 目录执行 `npm ci`。随后在仓库根目录运行：
+
+```bash
+python -m pip install -r cat-backend/requirements-browser.txt
+python -m playwright install chromium
+python scripts/check_assets.py cat-frontend/public cat-miniprogram/src/assets showcase
+python scripts/verify_browser.py
+```
+
+Windows 可使用已安装的 Edge：`python scripts/verify_browser.py --browser-channel msedge`。支持 `--api-port`、`--web-port`、`--output-dir`；只有指定 `--screenshots` 才额外截取五张成功页面，不覆盖 showcase。默认结果位于忽略提交的 `artifacts/browser/时间戳/`。失败保留 result.json、服务日志和异常信息；页面测试失败另存截图与 Playwright trace。脚本只操作临时 SQLite、测试凭据和自己启动的进程。
+
+门禁覆盖实际 UI 登录、图鉴搜索、管理凭据过期隔离、503 保留凭据并重试，以及真实 API 的保存待审、权限拒绝、审核和公开列表/热力数据更新。审核由浏览器点击“通过”完成；保存步骤通过真实 API 发起，不代表拍照/上传 UI 或微信设备链路已经验收。CI 使用 Chromium；本地通过与 GitHub Actions 远端通过分别登记。
+
+参考库管理端专项命令：`python scripts/verify_reference_browser.py`。该脚本使用真实 Vite、API、SQLite、构建进程和临时参考照片，只有检测/向量推理使用测试替身；覆盖管理页面提交、进度刷新、失败重试、档案保存与照片上传失败、审核员只读、503/401，以及 360/390/1280 宽度与明暗主题。结果默认保存在 `artifacts/optimization-b4-browser`。CI 顺序执行两个浏览器脚本，不把测试推理当成模型验收；本地也建议顺序运行以便隔离开发服务异常。
 
 ### 选项 B：本机开发测试（队友无法远程访问）
 
-已有 Docker Desktop 即可，在 `D:\Desktop\Cat-new` 目录下：
+在项目根目录、Docker Desktop 已运行的条件下：
 ```bash
 # 创建 .env（从 .env.example 复制），填入 AppID/Secret
-docker compose down -v
 docker compose up -d --build
 ```
 验证：浏览器打开 `http://localhost:8000/docs`
@@ -91,7 +118,7 @@ docker compose up -d --build
 ## 第四阶段：小程序视觉收尾
 
 ### 4.1 替换 Tab 图标
-- [ ] 当前 `cat-miniprogram/src/assets/tab/*.png` 是 1x1 像素占位图
+- [ ] 当前 `cat-miniprogram/src/assets/tab/*.png` 已替换为 48×48 PNG，复用 Web 的 Lucide 图标；仍需真机显示验收
 - [ ] 需要 10 个 PNG（48x48 px），每个图标 2 个版本（灰色默认 + 橙色选中）：
   | 文件 | 内容 |
   |------|------|
@@ -100,7 +127,7 @@ docker compose up -d --build
   | `scan.png` / `scan-active.png` | 识猫图标 |
   | `community.png` / `community-active.png` | 社区图标 |
   | `profile.png` / `profile-active.png` | 我的图标 |
-- [ ] 用 Figma/Canva/即时设计 画，或用 iconfont 下载
+- [ ] 检查透明背景、尺寸以及灰色/橙色切换；来源许可见该目录 LICENSE-lucide
 
 ### 4.2 修改小程序名称
 - [ ] `project.config.json` 第 4 行 `"projectname"` 改为你的名字
@@ -158,11 +185,11 @@ docker compose up -d --build
 
 | 项目 | 状态 |
 |------|------|
-| 小程序代码 | ✅ 13 页面完成，编译通过 |
-| 后端 API | ✅ 微信登录 + 审核流 + 社区已就绪 |
-| Web 版 | ✅ React + Docker 运行中 |
+| 小程序代码 | 17 个页面，本地测试与构建记录见验收文档；真机未验收 |
+| 后端 API | 多个接口已通过隔离测试；正式微信与真实模型未验收 |
+| Web 版 | React 本地可构建、浏览器冒烟通过；Docker 未验收 |
 | 微信账号 | ⬜ 需注册 |
 | 服务器 | ⬜ 需购买/配置 |
-| Tab 图标 | ⬜ 占位图需替换 |
+| Tab 图标 | 已替换，待真机显示验收 |
 | 真机测试 | ⬜ 未测 |
 | 审核提交 | ⬜ 未提交 |

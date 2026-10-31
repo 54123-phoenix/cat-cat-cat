@@ -11,14 +11,16 @@ export default function PawRain({ count = 10, duration = 1500, onDone }) {
     return () => clearTimeout(t)
   }, [duration, onDone])
 
-  if (!active) return null
-
-  const paws = Array.from({ length: count }, () => ({
+  const [paws] = useState(() => Array.from({ length: count }, () => ({
     left: Math.random() * 100,
     delay: Math.random() * 0.5,
     dur: 1 + Math.random() * 0.5,
     size: 22 + Math.random() * 14,
-  }))
+  })))
+
+  if (!active) return null
+
+
 
   return (
     <div aria-hidden="true" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>

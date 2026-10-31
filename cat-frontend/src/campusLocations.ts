@@ -12,5 +12,20 @@ export const CAMPUS_CENTER: [number, number] = [121.5068, 31.3005]
 export const campusCenter = CAMPUS_CENTER
 
 export function findCampusLocation(name) {
-  return campusLocations.find((location) => location.name === name) || campusLocations[0]
+  return campusLocations.find((location) => location.name === name)
+}
+
+export function resolveSightingLocation(name: string, params: URLSearchParams) {
+  const known = findCampusLocation(name)
+  if (known) return known
+  const lat = params.get('lat')
+  const lng = params.get('lng')
+  if (params.get('point') === name && lat !== null && lng !== null && lat.trim() && lng.trim()) {
+    const latitude = Number(lat)
+    const longitude = Number(lng)
+    if (Number.isFinite(latitude) && Number.isFinite(longitude) && Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180) {
+      return { name, latitude, longitude }
+    }
+  }
+  return undefined
 }

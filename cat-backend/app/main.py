@@ -11,13 +11,15 @@ logging.basicConfig(
 )
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import os
 
 from app.config import settings
-from app.database import engine, SessionLocal, Base
+from app.database import engine, SessionLocal
+from app.schema_readiness import require_current_schema
 from app.api import (
     cats,
     sightings,
@@ -41,7 +43,7 @@ from app.api import (
     agents,
 )
 from app.api import events as events_api
-from app.crud import init_mock_data
+from app.bootstrap import ensure_row
 from app.models import User
 from passlib.context import CryptContext
 from app.ratelimit import limiter, _SLOWAPI_AVAILABLE
@@ -55,23 +57,28 @@ logger = logging.getLogger("cat_community")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    require_current_schema(engine)
     await events.init_redis(os.getenv("REDIS_URL"))
-    init_cache(os.getenv("REDIS_URL"))
+    try:
+        init_cache(os.getenv("REDIS_URL"))
+        _bootstrap_database()
+        yield
+    finally:
+        await events.close_redis()
+
+
+def _bootstrap_database():
     db = SessionLocal()
     try:
         pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
         admin_password = settings.ADMIN_PASSWORD
         if admin_password:
-            if not db.query(User).filter(User.username == "admin").first():
-                db.add(
-                    User(
-                        username="admin",
-                        password_hash=pwd_ctx.hash(admin_password),
-                        nickname="猫协管理员",
-                        role="admin",
-                    )
-                )
-                db.commit()
+            ensure_row(db, User, {"username": "admin"}, lambda: User(
+                username="admin",
+                password_hash=pwd_ctx.hash(admin_password),
+                nickname="猫协管理员",
+                role="admin",
+            ))
         else:
             logger.warning("ADMIN_PASSWORD not set. Admin account will not be created.")
         if settings.INIT_DEMO_USER:
@@ -79,33 +86,24 @@ async def lifespan(app: FastAPI):
                 logger.warning(
                     "INIT_DEMO_USER=1 but DEMO_PASSWORD is empty. Skipping demo user creation."
                 )
-            elif not db.query(User).filter(User.username == "demo").first():
-                db.add(
-                    User(
-                        username="demo",
-                        password_hash=pwd_ctx.hash(settings.DEMO_PASSWORD),
-                        nickname="猫猫爱好者",
-                        role="user",
-                    )
-                )
-                db.commit()
-            init_mock_data(db)
+            else:
+                ensure_row(db, User, {"username": "demo"}, lambda: User(
+                    username="demo",
+                    password_hash=pwd_ctx.hash(settings.DEMO_PASSWORD),
+                    nickname="猫猫爱好者",
+                    role="user",
+                ))
         from app.models import Campus
 
         if not db.query(Campus).first():
-            db.add(
-                Campus(
-                    name="复旦大学",
-                    slug="fudan",
-                    center_lat=31.3005,
-                    center_lng=121.5068,
-                )
-            )
-            db.commit()
+            ensure_row(db, Campus, {"slug": "fudan"}, lambda: Campus(
+                name="复旦大学",
+                slug="fudan",
+                center_lat=31.3005,
+                center_lng=121.5068,
+            ))
     finally:
         db.close()
-    yield
-    await events.close_redis()
 
 
 app = FastAPI(title="猫猫社区 API", version="1.0.0", lifespan=lifespan)
@@ -140,8 +138,6 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-Base.metadata.create_all(bind=engine)
-
 UPLOAD_DIR = settings.UPLOAD_DIR
 os.makedirs(os.path.join(UPLOAD_DIR, "cats"), exist_ok=True)
 os.makedirs(os.path.join(UPLOAD_DIR, "sightings"), exist_ok=True)
@@ -151,10 +147,19 @@ os.makedirs(os.path.join(UPLOAD_DIR, "discoveries"), exist_ok=True)
 
 @app.get("/uploads/{filepath:path}")
 async def serve_upload(filepath: str):
-    full_path = os.path.normpath(os.path.join(UPLOAD_DIR, filepath))
-    if not full_path.startswith(os.path.normpath(UPLOAD_DIR)):
+    upload_root = Path(UPLOAD_DIR).resolve()
+    requested_path = Path(filepath)
+    # Accept relative resource paths only, including on Windows (drive/UNC paths).
+    if requested_path.anchor:
         raise HTTPException(status_code=403, detail="Access denied")
-    if not os.path.isfile(full_path):
+    try:
+        # Resolve links and traversal before checking directory membership.
+        full_path = (upload_root / requested_path).resolve()
+    except (OSError, RuntimeError, ValueError):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not full_path.is_relative_to(upload_root):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not full_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(full_path)
 

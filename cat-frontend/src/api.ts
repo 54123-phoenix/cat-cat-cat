@@ -39,15 +39,40 @@ function clearAdminToken() {
   localStorage.removeItem('admin_token')
 }
 
-async function request(url: string, options: RequestInit = {}): Promise<any> {
-  const isAdminUrl = url.startsWith('/admin')
-  const token = isAdminUrl ? getAdminToken() : getToken()
+export const ADMIN_AUTH_EXPIRED = 'cat:admin-auth-expired'
+type AuthContext = 'user' | 'admin' | 'none'
+
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number, public readonly code?: string) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
+function apiErrorDetail(value: unknown): { message: string; code?: string } {
+  if (typeof value === 'string') return { message: value }
+  if (Array.isArray(value)) return { message: value.map(item => apiErrorDetail(item).message).join('; ') }
+  if (value && typeof value === 'object') {
+    const detail = value as Record<string, unknown>
+    return {
+      message: typeof detail.message === 'string' ? detail.message : typeof detail.msg === 'string' ? detail.msg : '请求失败',
+      code: typeof detail.code === 'string' ? detail.code : undefined,
+    }
+  }
+  return { message: '请求失败' }
+}
+
+async function request(url: string, options: RequestInit = {}, auth: AuthContext = 'user'): Promise<any> {
+  const token = auth === 'admin' ? getAdminToken() : auth === 'user' ? getToken() : null
   const headers: Record<string, string> = { ...(options.headers as Record<string, string>) }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
   const controller = new AbortController()
+  const onAbort = () => controller.abort()
+  if (options.signal?.aborted) controller.abort()
+  options.signal?.addEventListener('abort', onAbort, { once: true })
   const timeoutId = setTimeout(() => controller.abort(), 30000)
 
   try {
@@ -57,15 +82,17 @@ async function request(url: string, options: RequestInit = {}): Promise<any> {
       signal: controller.signal,
     })
     if (res.status === 401) {
-      if (isAdminUrl) {
+      if (auth === 'admin' && getAdminToken() === token) {
         clearAdminToken()
-      } else {
+        window.dispatchEvent(new Event(ADMIN_AUTH_EXPIRED))
+      } else if (auth === 'user' && getToken() === token) {
         clearToken()
       }
     }
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: '请求失败' }))
-      throw new Error(Array.isArray(err.detail) ? err.detail.map(e => e.msg || JSON.stringify(e)).join("; ") : (err.detail || `HTTP ${res.status}`))
+      const detail = apiErrorDetail(err.detail)
+      throw new ApiError(detail.message, res.status, detail.code)
     }
     if (res.status === 204 || res.headers.get('content-length') === '0') return null
     const text = await res.text()
@@ -73,7 +100,46 @@ async function request(url: string, options: RequestInit = {}): Promise<any> {
     return JSON.parse(text)
   } finally {
     clearTimeout(timeoutId)
+    options.signal?.removeEventListener('abort', onAbort)
   }
+}
+
+function adminRequest(url: string, options: RequestInit = {}) {
+  return request(url, options, 'admin')
+}
+
+// New feature boundaries validate unknown JSON before exposing business types.
+export function requestAdminData(url: string, options: RequestInit = {}): Promise<unknown> {
+  return adminRequest(url, options)
+}
+
+export interface Page<T = any> { items: T[]; total: number; has_more: boolean }
+
+async function requestPage(url: string, params: Record<string, any> = {}): Promise<Page> {
+  const { page, ...query } = params
+  if (page !== undefined) query.skip = (Math.max(1, Number(page)) - 1) * (query.limit || 20)
+  const qs = new URLSearchParams(query).toString()
+  const result = await request(`${url}${qs ? '?' + qs : ''}`)
+  if (!result || !Array.isArray(result.items)) throw new Error('列表返回格式错误')
+  return result
+}
+
+export function getPostsPage(params = {}) { return requestPage('/posts', params) }
+export function getSightingsPage(params = {}) { return requestPage('/sightings', params) }
+
+export async function getAdminSightings(params = {}) {
+  const query = new URLSearchParams({ status: 'all', ...params }).toString()
+  const result: Page = await adminRequest(`/sightings?${query}`)
+  if (!result || !Array.isArray(result.items)) throw new Error('列表返回格式错误')
+  return result.items
+}
+
+export function reviewSighting(id: number, action: 'approve' | 'reject') {
+  return adminRequest(`/admin/sightings/${id}/review`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action }),
+  })
 }
 
 // Auth
@@ -104,18 +170,18 @@ export function adminLogin(password) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password }),
-  }).then((res) => {
+  }, 'none').then((res) => {
     setAdminToken(res.token)
     return res
   })
 }
 
 export function getAdminMe() {
-  return request('/admin/me')
+  return adminRequest('/admin/me')
 }
 
 export function getAdminDashboard() {
-  return request('/admin/dashboard')
+  return adminRequest('/admin/dashboard')
 }
 
 export function getRouteRecommendations(params = {}) {
@@ -129,8 +195,7 @@ export function getSystemHealth(params = {}) {
 }
 
 export function getCats(params = {}) {
-  const qs = new URLSearchParams(params).toString()
-  return request(`/cats${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
+  return requestPage('/cats', params).then(result => result.items)
 }
 
 export function getCat(catId) {
@@ -138,7 +203,7 @@ export function getCat(catId) {
 }
 
 export function createCat(data) {
-  return request('/cats', {
+  return adminRequest('/cats', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -146,7 +211,7 @@ export function createCat(data) {
 }
 
 export function updateCat(catId, data) {
-  return request(`/cats/${catId}`, {
+  return adminRequest(`/cats/${catId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -154,13 +219,13 @@ export function updateCat(catId, data) {
 }
 
 export function deleteCat(catId) {
-  return request(`/cats/${catId}`, { method: 'DELETE' })
+  return adminRequest(`/cats/${catId}`, { method: 'DELETE' })
 }
 
 export function uploadCatImage(catId, file) {
   const form = new FormData()
   form.append('file', file)
-  return request(`/cats/${catId}/images`, { method: 'POST', body: form })
+  return adminRequest(`/cats/${catId}/images`, { method: 'POST', body: form })
 }
 
 export function recognize(file) {
@@ -184,8 +249,7 @@ export function createSighting({ catId, location, confidence, file, activity_typ
 }
 
 export function getSightings(params = {}) {
-  const qs = new URLSearchParams(params).toString()
-  return request(`/sightings${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
+  return requestPage('/sightings', params).then(result => result.items)
 }
 
 export function getSighting(sightingId) {
@@ -246,13 +310,11 @@ export function reviewDiscovery(id, data) {
 }
 
 export function getGalleryImages(params = {}) {
-  const qs = new URLSearchParams(params).toString()
-  return request(`/gallery${qs ? '?' + qs : ''}`)
+  return requestPage('/gallery', params)
 }
 
 export function getPosts(params = {}) {
-  const qs = new URLSearchParams(params).toString()
-  return request(`/posts${qs ? '?' + qs : ''}`).then(r => r.items ?? r)
+  return requestPage('/posts', params).then(result => result.items)
 }
 
 export function getPost(postId) {
@@ -297,11 +359,11 @@ export function reportPost(postId, data) {
 
 export function getReports(params = {}) {
   const qs = new URLSearchParams(params).toString()
-  return request(`/posts/reports${qs ? '?' + qs : ''}`)
+  return adminRequest(`/posts/reports${qs ? '?' + qs : ''}`)
 }
 
 export function handleReport(reportId, action) {
-  return request(`/posts/reports/${reportId}/handle`, {
+  return adminRequest(`/posts/reports/${reportId}/handle`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action }),
@@ -336,7 +398,7 @@ export function getHealthRecords(catId, params = {}) {
 }
 
 export function createHealthRecord(catId, data) {
-  return request(`/cats/${catId}/health`, {
+  return adminRequest(`/cats/${catId}/health`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -344,7 +406,7 @@ export function createHealthRecord(catId, data) {
 }
 
 export function deleteHealthRecord(catId, recordId) {
-  return request(`/cats/${catId}/health/${recordId}`, { method: 'DELETE' })
+  return adminRequest(`/cats/${catId}/health/${recordId}`, { method: 'DELETE' })
 }
 
 export function getFeedingPoints(params = {}) {
@@ -353,7 +415,7 @@ export function getFeedingPoints(params = {}) {
 }
 
 export function createFeedingPoint(data) {
-  return request('/feeding/points', {
+  return adminRequest('/feeding/points', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -361,7 +423,7 @@ export function createFeedingPoint(data) {
 }
 
 export function deleteFeedingPoint(pointId) {
-  return request(`/feeding/points/${pointId}`, { method: 'DELETE' })
+  return adminRequest(`/feeding/points/${pointId}`, { method: 'DELETE' })
 }
 
 export function getFeedingCheckIns(params = {}) {
@@ -498,3 +560,5 @@ export function askCatIntel(message: string, context: Record<string, unknown> = 
     body: JSON.stringify({ message, context }),
   })
 }
+
+export function getEncounteredCatIds(): Promise<number[]> { return request('/users/me/encountered-cats') }

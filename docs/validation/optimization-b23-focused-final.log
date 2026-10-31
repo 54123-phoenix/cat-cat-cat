@@ -1,0 +1,20 @@
+...........................                                              [100%]
+============================== warnings summary ===============================
+..\..\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_reference_lifecycle.py::test_job_api_authorization_and_enqueue_do_not_run_inference
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload0]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload1]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload2]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload3]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload4]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload5]
+tests/test_reference_lifecycle.py::test_job_api_rejects_invalid_contracts[payload6]
+tests/test_reference_lifecycle.py::test_job_api_diagnoses_missing_and_corrupt_journals
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+27 passed, 25 warnings in 25.76s

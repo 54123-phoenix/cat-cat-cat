@@ -1,0 +1,52 @@
+{
+  "status": "failed",
+  "checks": {
+    "four_process_bootstrap": "passed",
+    "redis_cache_shared_and_invalidated": "passed",
+    "sync_route_broadcast_to_two_processes": "passed",
+    "disconnect_releases_subscriptions": "passed"
+  },
+  "started_at": "2026-10-31T03:06:21.621963+00:00",
+  "environment": "WSL Redis + Windows API",
+  "redis_version": "7.4.2",
+  "api_pids": [
+    "37696",
+    "44640",
+    "5208",
+    "55100"
+  ],
+  "bootstrap_counts": {
+    "admin": 1,
+    "fudan": 1
+  },
+  "username_indexes": [
+    {
+      "seq": 0,
+      "name": "ix_users_username",
+      "unique": 1,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 1,
+      "name": "ix_users_openid",
+      "unique": 1,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 2,
+      "name": "ix_users_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 3,
+      "name": "ix_users_campus_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    }
+  ]
+}

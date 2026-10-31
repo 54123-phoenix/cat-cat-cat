@@ -1,6 +1,8 @@
 """YOLOv8m cat detector — crops cat from image before recognition."""
 
 import logging
+from threading import RLock
+from app.services.artifact_hash import sha256_file
 from pathlib import Path
 from typing import Optional
 
@@ -22,22 +24,35 @@ _MODEL_DIR = Path(__file__).parent.parent.parent / "models"
 _MODEL_PATH = _MODEL_DIR / "yolov8m.pt"
 
 _model: Optional = None
+_model_digest: str | None = None
+_model_lock = RLock()
 
 
 def _load_model():
-    """Load YOLOv8m singleton (local file first, auto-download fallback)."""
-    global _model
-    if not YOLO_AVAILABLE:
+    """Load a local checkpoint, invalidating the cache on content change."""
+    global _model, _model_digest
+    if not YOLO_AVAILABLE or not _MODEL_PATH.is_file():
+        _model = None
+        _model_digest = None
         return None
-    if _model is None:
-        model_path = str(_MODEL_PATH) if _MODEL_PATH.exists() else "yolov8m.pt"
-        logger.info("Loading YOLOv8m from %s ...", model_path)
-        _model = YOLO(model_path)
-        logger.info("YOLOv8m loaded")
+    digest = sha256_file(_MODEL_PATH)
+    if _model is None or _model_digest != digest:
+        _model = None
+        _model_digest = None
+        model = YOLO(str(_MODEL_PATH))
+        if sha256_file(_MODEL_PATH) != digest:
+            raise RuntimeError('Detector checkpoint changed while loading')
+        _model = model
+        _model_digest = digest
     return _model
 
 
-def detect_and_crop(image: Image.Image, margin: float = 0.1) -> Image.Image:
+def detect_and_crop(image: Image.Image, margin: float = 0.1, *, expected_digest: str | None = None) -> Image.Image:
+    with _model_lock:
+        return _detect_and_crop_locked(image, margin, expected_digest=expected_digest)
+
+
+def _detect_and_crop_locked(image: Image.Image, margin: float, *, expected_digest: str | None) -> Image.Image:
     """Detect cat in image and crop to the best detection.
 
     If no cat is detected or YOLO is unavailable, returns the original image.
@@ -50,12 +65,16 @@ def detect_and_crop(image: Image.Image, margin: float = 0.1) -> Image.Image:
         Cropped PIL image (or original if no cat detected).
     """
     model = _load_model()
+    if expected_digest is not None and (model is None or _model_digest != expected_digest):
+        raise RuntimeError('Detector does not match the reference pipeline')
     if model is None:
         return image
 
     try:
         results = model(image, verbose=False)
     except Exception as e:
+        if expected_digest is not None:
+            raise RuntimeError("Reference detector inference failed") from e
         logger.warning("YOLO inference failed: %s", e)
         return image
 

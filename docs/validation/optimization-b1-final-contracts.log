@@ -1,0 +1,19 @@
+..................................                                       [100%]
+============================== warnings summary ===============================
+..\..\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_repair_contracts.py::test_personal_collection_recognition_and_discoveries_are_isolated
+tests/test_repair_contracts.py::test_report_list_route_and_role_boundaries
+tests/test_repair_contracts.py::test_reference_diagnostics_require_a_review_role
+tests/test_repair_contracts.py::test_miniprogram_urlencoded_forms_create_readable_records
+tests/test_repair_contracts.py::test_review_rejects_with_valid_state_and_is_repeatable
+tests/test_repair_contracts.py::test_pending_sightings_are_private_until_approved_and_caches_follow_review
+tests/test_repair_contracts.py::test_sse_revocation_closes_active_stream_and_releases_subscription
+tests/test_repair_contracts.py::test_heatmap_offset_returns_distinct_stable_pages
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+34 passed, 24 warnings in 3.94s

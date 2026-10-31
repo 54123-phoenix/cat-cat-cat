@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, MessageSquare, Camera, PawPrint, Cat, ChevronRight, Zap, Navigation, Route as RouteIcon } from 'lucide-react'
-import { getCats, getPosts, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
+import { getCats, getPostsPage, getSightings, getUserProfile, getWeeklyReport, getMyStats } from '../api'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import DailyQuestCard from '../components/DailyQuestCard'
 import CatGachaCard from '../components/CatGachaCard'
@@ -45,7 +45,7 @@ export default function Home() {
     Promise.all([
       getCats(),
       getSightings({ limit: 5 }),
-      getPosts({ limit: 3 }),
+      getPostsPage({ limit: 3 }),
       getUserProfile().catch(() => null),
       getWeeklyReport().catch(() => null),
       getMyStats().catch(() => null),
@@ -53,8 +53,8 @@ export default function Home() {
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
-      const postsArr = Array.isArray(postsData) ? postsData : (postsData?.items || [])
-      setPostCount(postsArr.length)
+      const postsArr = postsData.items
+      setPostCount(postsData.total)
       setLatestPosts(postsArr.slice(0, 3))
       setProfile(userData)
       setWeeklyReport(reportData)

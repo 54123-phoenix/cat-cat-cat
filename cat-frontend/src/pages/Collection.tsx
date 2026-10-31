@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Cat, Star, Search, Trophy } from 'lucide-react'
 import ImageWithShimmer from '../components/ImageWithShimmer'
 import EmptyState from '../components/EmptyState'
-import { getCats, getFollowedCats, getSightings } from '../api'
+import { getCats, getFollowedCats, getEncounteredCatIds } from '../api'
 
 const RARE_CHARS = ['稀', '珍', '白', '黑', '三花', '玳瑁']
 
@@ -46,7 +46,7 @@ export default function Collection() {
     Promise.all([
       getCats(),
       getFollowedCats().catch(() => []),
-      getSightings({ limit: 200 }).catch(() => []),
+      getEncounteredCatIds().catch(() => []),
     ])
       .then(([catsData, followedData, sightingsData]) => {
         setCats(Array.isArray(catsData) ? catsData : [])
@@ -57,18 +57,8 @@ export default function Collection() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-2 gap-3">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="aspect-square rounded-2xl skeleton" />
-        ))}
-      </div>
-    )
-  }
-
   const followedIds = new Set(followed.map((f) => f.cat_id))
-  const metIds = new Set(sightings.map((s) => s.cat_id).filter(Boolean))
+  const metIds = new Set(sightings)
   const metCount = cats.filter((c) => metIds.has(c.id)).length
   const total = cats.length
   const pct = total > 0 ? metCount / total : 0
@@ -90,6 +80,16 @@ export default function Collection() {
     else if (filter === 'followed') result = result.filter((c) => followedIds.has(c.id))
     return result
   }, [cats, search, filter, metIds, followedIds])
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-2 gap-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="aspect-square rounded-2xl skeleton" />
+        ))}
+      </div>
+    )
+  }
 
   if (total === 0) {
     return (

@@ -12,7 +12,8 @@ export const THEMES = [
 
 export function getStoredTheme() {
   try {
-    return localStorage.getItem('theme') || 'original'
+    const stored = localStorage.getItem('theme')
+    return THEMES.some(t => t.key === stored) ? stored : 'original'
   } catch {
     return 'original'
   }
@@ -21,7 +22,7 @@ export function getStoredTheme() {
 export function applyTheme(key) {
   const theme = THEMES.some((t) => t.key === key) ? key : 'original'
   document.documentElement.dataset.theme = theme
-  try { localStorage.setItem('theme', theme) } catch {}
+  try { localStorage.setItem('theme', theme) } catch { /* Storage can be blocked; the DOM theme still applies. */ }
   return theme
 }
 
@@ -29,7 +30,7 @@ export default function ThemeSwitcher() {
   const [current, setCurrent] = useState(getStoredTheme)
 
   useEffect(() => {
-    setCurrent(applyTheme(getStoredTheme()))
+    applyTheme(getStoredTheme())
   }, [])
 
   const handlePick = (key) => {

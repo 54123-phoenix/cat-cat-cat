@@ -19,6 +19,8 @@
 param(
     [Parameter(Mandatory=$true)]
     [string]$BackupPath,
+    [string]$DatabasePath = "",
+    [string]$Python = "python",
     [switch]$ConfirmRestore,
     [switch]$SkipUploads,
     [switch]$DryRun
@@ -28,6 +30,12 @@ $ErrorActionPreference = "Stop"
 
 $Root = Resolve-Path "$PSScriptRoot\.."
 $BackendDir = Join-Path $Root "cat-backend"
+. (Join-Path $PSScriptRoot 'database_path.ps1')
+$DatabaseFile = Resolve-CatDatabasePath -BackendDir $BackendDir -DatabasePath $DatabasePath -AllowMissing
+$BackendBoundary = [IO.Path]::GetFullPath([string]$BackendDir).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+if (-not ([IO.Path]::GetFullPath($DatabaseFile).StartsWith($BackendBoundary, [StringComparison]::OrdinalIgnoreCase))) {
+    throw 'Restore database must be inside cat-backend.'
+}
 
 if (-not (Test-Path -LiteralPath $BackupPath)) {
     Write-Host "[ERROR] Backup directory not found: $BackupPath" -ForegroundColor Red
@@ -61,12 +69,13 @@ if (-not $IsDryRun) {
     $PreRestoreDir = Join-Path $Root "backups\pre-restore-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
     New-Item -ItemType Directory -Path $PreRestoreDir -Force | Out-Null
     Write-Host "[PRE ] Backing up current data -> $PreRestoreDir" -ForegroundColor Yellow
-    $currentDbs = Get-ChildItem -Path $BackendDir -Filter "*.db" -File -ErrorAction SilentlyContinue
+    $currentDbs = Get-Item -LiteralPath $DatabaseFile -ErrorAction SilentlyContinue
     foreach ($db in $currentDbs) {
-        Copy-Item -LiteralPath $db.FullName -Destination (Join-Path $PreRestoreDir $db.Name) -Force
+        & $Python (Join-Path $PSScriptRoot 'sqlite_backup.py') $db.FullName (Join-Path $PreRestoreDir 'cat_community.db')
+        if ($LASTEXITCODE -ne 0) { throw 'Pre-restore snapshot failed' }
     }
     $currentUploads = Join-Path $BackendDir "uploads"
-    if (Test-Path $currentUploads) {
+    if (-not $SkipUploads -and (Test-Path $currentUploads)) {
         Copy-Item -LiteralPath $currentUploads -Destination (Join-Path $PreRestoreDir "uploads") -Recurse -Force
     }
     Write-Host "[PRE ] Done." -ForegroundColor Green
@@ -75,11 +84,13 @@ if (-not $IsDryRun) {
 
 # 2. Restore database (target always inside project root)
 if ($dbBackups) {
+    if (@($dbBackups).Count -ne 1) { throw 'Restore requires a backup containing exactly one database.' }
     foreach ($db in $dbBackups) {
-        $target = Join-Path $BackendDir $db.Name
+        $target = $DatabaseFile
         Write-Host "[DB ] $($db.FullName) -> $target"
         if (-not $IsDryRun) {
-            Copy-Item -LiteralPath $db.FullName -Destination $target -Force
+            & $Python (Join-Path $PSScriptRoot 'sqlite_backup.py') $db.FullName $target --replace
+            if ($LASTEXITCODE -ne 0) { throw 'Database restore failed' }
         }
     }
 } else {

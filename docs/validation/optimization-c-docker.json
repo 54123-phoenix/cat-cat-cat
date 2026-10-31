@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-31",
+  "docker_desktop": "4.92.0",
+  "docker_cli": "29.8.0",
+  "context": "desktop-linux",
+  "status": "blocked",
+  "engine_pipe": "dockerDesktopLinuxEngine unavailable",
+  "start_attempts": 2,
+  "factory_reset": false,
+  "data_deleted": false,
+  "final_desktop_state": "stopped",
+  "error_log": "[2026-10-31T02:58:37.713423200Z][com.docker.backend.exe.ipc] (91b187c5) a8f96152-ErrorReportAPI S->C Docker-Desktop/4.92.0 (Windows; x64; GUI) GET /error (0s): {\"actions\":[\"Quit\",\"Reset to factory defaults\"],\"allowDiagnostics\":true,\"error\":\"starting services: initializing Ingest server: listening on unix://\\u003cHOME\\u003e/AppData/Local/Docker/run/sailor-ingest.sock: AF_UNIX listen (path=\\\"\\u003cHOME\\u003e/AppData/Local/Docker/run/sailor-ingest.sock\\\" len=60 cwd=\\\"\\u003cHOME\\u003e\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Docker\\\"): listen unix \\u003cHOME\\u003e/AppData/Local/Docker/run/sailor-ingest.sock: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted. (listener: The system cannot find the file specified.)\",\"message\":\"Docker Desktop encountered an unexpected error and needs to close.\\n\\nSearch our [troubleshooting documentation](https://docs.docker.com/desktop/troubleshoot/overview/) to find a solution or workaround. Alternatively, you can gather a diagnostics report and submit a support request or GitHub issue.\",\"title\":\"An unexpected error occurred\",\"unhandled\":true}"
+}

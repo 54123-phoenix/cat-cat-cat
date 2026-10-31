@@ -1,3 +1,4 @@
+from app.time_utils import utc_now, campus_date, campus_day_bounds
 from typing import List, Literal
 from datetime import datetime, date
 
@@ -206,25 +207,39 @@ def get_me(db: Session = Depends(get_db), user: User = Depends(require_auth)):
     }
 
 
+@me_router.get("/me/encountered-cats", response_model=List[int])
+def get_encountered_cat_ids(db: Session = Depends(get_db), user: User = Depends(require_auth)):
+    """Distinct approved encounters for this user, independent of list page size."""
+    return [cat_id for (cat_id,) in db.query(models.Sighting.cat_id).filter(
+        models.Sighting.user_id == user.id,
+        models.Sighting.status == 'approved',
+    ).distinct().order_by(models.Sighting.cat_id).all()]
+
+
 @me_router.get("/me/daily-quest")
 def get_daily_quest(db: Session = Depends(get_db), user: User = Depends(require_auth)):
-    today_start = datetime.combine(date.today(), datetime.min.time())
+    today_start, today_end = campus_day_bounds(campus_date())
     sighting_count = db.query(models.Sighting).filter(
         models.Sighting.user_id == user.id,
         models.Sighting.created_at >= today_start,
+        models.Sighting.created_at < today_end,
     ).count()
     photo_count = db.query(models.Sighting).filter(
         models.Sighting.user_id == user.id,
         models.Sighting.created_at >= today_start,
+        models.Sighting.created_at < today_end,
         models.Sighting.image_path.isnot(None),
     ).count()
     post_count = db.query(models.Post).filter(
         models.Post.user_id == user.id,
         models.Post.created_at >= today_start,
+        models.Post.created_at < today_end,
     ).count()
     recognize_count = db.query(models.AuditLog).filter(
+        models.AuditLog.user_id == user.id,
         models.AuditLog.action == "recognize",
         models.AuditLog.created_at >= today_start,
+        models.AuditLog.created_at < today_end,
     ).count()
 
     quests = [

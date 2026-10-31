@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
-import { getCats, getSightings, getPosts, getUserProfile } from '../../services/api'
+import { getCats, getSightings, getPostsPage, getUserProfile } from '../../services/api'
 
 function greeting(): string {
   const h = new Date().getHours()
@@ -27,26 +27,26 @@ export default function Index() {
     Promise.all([
       getCats(),
       getSightings({ limit: 5 }),
-      getPosts(),
+      getPostsPage(),
       getUserProfile().catch(() => null),
     ]).then(([catsData, sightingsData, postsData, userData]) => {
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       if (arr.length > 0) setFeatured(arr[Math.floor(Math.random() * arr.length)])
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
-      setPostCount(Array.isArray(postsData) ? postsData.length : 0)
+      setPostCount(postsData.total)
       setProfile(userData)
     }).catch(console.error).finally(() => setLoading(false))
   })
 
   usePullDownRefresh(() => {
-    Promise.all([getCats(), getSightings({ limit: 5 }), getPosts(), getUserProfile().catch(() => null)])
+    Promise.all([getCats(), getSightings({ limit: 5 }), getPostsPage(), getUserProfile().catch(() => null)])
       .then(([catsData, sightingsData, postsData, userData]) => {
         const arr = Array.isArray(catsData) ? catsData : []
         setCats(arr)
         if (arr.length > 0) setFeatured(arr[Math.floor(Math.random() * arr.length)])
         setSightings(Array.isArray(sightingsData) ? sightingsData : [])
-        setPostCount(Array.isArray(postsData) ? postsData.length : 0)
+        setPostCount(postsData.total)
         setProfile(userData)
       })
       .finally(() => Taro.stopPullDownRefresh())

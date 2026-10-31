@@ -7,13 +7,11 @@ os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("INIT_DEMO_USER", "0")
 
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.api.recognize import _enrich_result
-from app.database import Base, get_db
 from app.models import Cat, CatImage, User
 from app.schemas import RecognizeCandidate, RecognizeResponse
 
@@ -24,49 +22,16 @@ _test_engine = create_engine(
 )
 _TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_test_engine)
 
-import app.database as _db_mod
-import app.main as _main_mod
-_db_mod.engine = _test_engine
-_db_mod.SessionLocal = _TestSessionLocal
-_main_mod.engine = _test_engine
-_main_mod.SessionLocal = _TestSessionLocal
-
-app = _main_mod.app
+from app_fixture import isolated_client
 
 
-def _override_get_db():
-    db = _TestSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-app.dependency_overrides[get_db] = _override_get_db
-
-
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def client():
-    Base.metadata.create_all(bind=_test_engine)
-    db = _TestSessionLocal()
-    try:
-        if not db.query(User).filter(User.username == "admin").first():
-            from passlib.context import CryptContext
-            pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
-            db.add(User(
-                username="admin",
-                password_hash=pwd_ctx.hash("testadmin123"),
-                nickname="TestAdmin",
-                role="admin",
-            ))
-            db.commit()
-    finally:
-        db.close()
-    with TestClient(app) as c:
+    with isolated_client(_test_engine, _TestSessionLocal) as c:
         yield c
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def admin_token(client):
     resp = client.post("/api/auth/login", json={
         "username": "admin",
@@ -76,12 +41,12 @@ def admin_token(client):
     return resp.json()["token"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def auth_headers(admin_token):
     return {"Authorization": f"Bearer {admin_token}"}
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def test_user_token(client):
     resp = client.post("/api/auth/register", json={
         "username": "testuser1",
@@ -92,7 +57,7 @@ def test_user_token(client):
     return resp.json()["token"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def test_user_headers(test_user_token):
     return {"Authorization": f"Bearer {test_user_token}"}
 

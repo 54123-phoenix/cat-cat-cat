@@ -1,5 +1,8 @@
 from pathlib import Path
+import os
+import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -19,8 +22,6 @@ for required in ("JWT_SECRET: str", "ADMIN_PASSWORD: str"):
 main = read("cat-backend/app/main.py")
 if "SecurityHeadersMiddleware" not in main:
     errors.append("SecurityHeadersMiddleware is not installed in app.main")
-if "startswith(os.path.normpath(UPLOAD_DIR))" not in main:
-    errors.append("upload file serving should guard against path traversal")
 
 security_headers = read("cat-backend/app/middleware/security_headers.py")
 for header in ("X-Content-Type-Options", "X-Frame-Options", "Content-Security-Policy"):
@@ -53,6 +54,29 @@ upload = read("cat-backend/app/api/upload.py")
 for marker in ("MAX_UPLOAD_SIZE", "ALLOWED_IMAGE_TYPES", "ALLOWED_SUBDIRS", "Image.open", "image.verify()", "Uploaded file is empty"):
     if marker not in upload:
         errors.append(f"upload validation missing marker: {marker}")
+
+# Prove upload containment with HTTP requests, not a source-code marker.
+with tempfile.TemporaryDirectory(prefix="cat-upload-security-") as upload_dir:
+    test_env = os.environ.copy()
+    test_env.update({
+        "DATABASE_URL": "sqlite://",
+        "UPLOAD_DIR": upload_dir,
+        "JWT_SECRET": "upload-security-test-secret",
+        "ADMIN_PASSWORD": "upload-security-test-password",
+        "INIT_DEMO_USER": "0",
+    })
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests/test_upload_serving.py", "-q", "--tb=short"],
+        cwd=ROOT / "cat-backend",
+        env=test_env,
+        capture_output=True,
+        text=True,
+    )
+    print(result.stdout.strip())
+    if result.returncode != 0:
+        if result.stderr:
+            print(result.stderr.strip())
+        errors.append("upload path HTTP regression tests failed (backend test dependencies are required)")
 
 if warnings:
     print("Warnings:")

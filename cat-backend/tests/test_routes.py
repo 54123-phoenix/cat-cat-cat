@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from app.time_utils import CAMPUS_TIMEZONE, utc_now
 
 os.environ.setdefault("JWT_SECRET", "test-jwt-secret-key-for-pytest")
 os.environ.setdefault("ADMIN_PASSWORD", "testadmin123")
@@ -119,7 +120,7 @@ def test_recommendations_time_slot_filters(db):
     db.commit()
     db.refresh(user)
     db.refresh(cat)
-    night = datetime.now().replace(hour=20, minute=0, second=0, microsecond=0)
+    night = utc_now().astimezone(CAMPUS_TIMEZONE).replace(hour=20, minute=0, second=0, microsecond=0)
     db.add(
         models.Sighting(
             cat_id=cat.id,

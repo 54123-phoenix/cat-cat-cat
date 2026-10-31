@@ -1,3 +1,4 @@
+from app.time_utils import utc_now, as_utc, campus_date, campus_day_bounds
 import json
 import os
 from datetime import datetime, timedelta, timezone
@@ -160,7 +161,7 @@ def _tags_from_json(value: str) -> List[str]:
 
 
 def _relative_time(value: datetime) -> str:
-    seconds = max(0, int((datetime.now() - value).total_seconds()))
+    seconds = max(0, int((utc_now() - as_utc(value)).total_seconds()))
     if seconds < 60:
         return "刚刚"
     minutes = seconds // 60
@@ -583,8 +584,10 @@ def create_cat_image(db: Session, cat_id: int, image_path: str) -> models.CatIma
     return db_image
 
 
-def count_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None) -> int:
+def count_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None, user_id: Optional[int] = None) -> int:
     query = db.query(func.count(models.Sighting.id))
+    if user_id is not None:
+        query = query.filter(models.Sighting.user_id == user_id)
     if cat_id:
         query = query.filter(models.Sighting.cat_id == cat_id)
     if status:
@@ -592,33 +595,30 @@ def count_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[
     return query.scalar() or 0
 
 
-def get_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None, skip: int = 0, limit: int = 20) -> List[models.Sighting]:
+def get_sightings(db: Session, cat_id: Optional[int] = None, status: Optional[str] = None, skip: int = 0, limit: int = 20, user_id: Optional[int] = None) -> List[models.Sighting]:
     query = db.query(models.Sighting)
+    if user_id is not None:
+        query = query.filter(models.Sighting.user_id == user_id)
     if cat_id:
         query = query.filter(models.Sighting.cat_id == cat_id)
     if status:
         query = query.filter(models.Sighting.status == status)
-    return query.order_by(desc(models.Sighting.created_at)).offset(skip).limit(limit).all()
+    return query.order_by(desc(models.Sighting.created_at), desc(models.Sighting.id)).offset(skip).limit(limit).all()
 
 
 def count_heatmap_points(db: Session, days: int = 7) -> int:
-    query = db.query(func.count()).filter(
-        models.Sighting.latitude.isnot(None),
-        models.Sighting.longitude.isnot(None),
-    )
-    if days > 0:
-        query = query.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
     subq = db.query(
         models.Sighting.location_name,
         models.Sighting.location,
         models.Sighting.latitude,
         models.Sighting.longitude,
     ).filter(
+        models.Sighting.status == "approved",
         models.Sighting.latitude.isnot(None),
         models.Sighting.longitude.isnot(None),
     )
     if days > 0:
-        subq = subq.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
+        subq = subq.filter(models.Sighting.created_at >= utc_now() - timedelta(days=days))
     return db.query(func.count()).select_from(subq.group_by(
         models.Sighting.location_name,
         models.Sighting.location,
@@ -627,7 +627,7 @@ def count_heatmap_points(db: Session, days: int = 7) -> int:
     ).subquery()).scalar() or 0
 
 
-def get_heatmap_points(db: Session, days: int = 7, limit: int = 100) -> List[schemas.HeatmapPoint]:
+def get_heatmap_points(db: Session, days: int = 7, limit: int = 100, skip: int = 0) -> List[schemas.HeatmapPoint]:
     query = db.query(
         models.Sighting.location_name,
         models.Sighting.location,
@@ -635,19 +635,20 @@ def get_heatmap_points(db: Session, days: int = 7, limit: int = 100) -> List[sch
         models.Sighting.longitude,
         func.count(models.Sighting.id).label("count"),
     ).filter(
+        models.Sighting.status == "approved",
         models.Sighting.latitude.isnot(None),
         models.Sighting.longitude.isnot(None),
     )
 
     if days > 0:
-        query = query.filter(models.Sighting.created_at >= datetime.now() - timedelta(days=days))
+        query = query.filter(models.Sighting.created_at >= utc_now() - timedelta(days=days))
 
     rows = query.group_by(
         models.Sighting.location_name,
         models.Sighting.location,
         models.Sighting.latitude,
         models.Sighting.longitude,
-    ).order_by(desc("count")).limit(limit).all()
+    ).order_by(desc("count"), models.Sighting.latitude, models.Sighting.longitude, models.Sighting.location_name, models.Sighting.location).offset(skip).limit(limit).all()
 
     return [
         schemas.HeatmapPoint(
@@ -680,7 +681,8 @@ def get_nearby_sightings(db: Session, lat: float, lng: float, radius_km: float):
         )
         .join(models.Cat, models.Sighting.cat_id == models.Cat.id)
         .filter(
-            models.Sighting.latitude.isnot(None),
+            models.Sighting.status == "approved",
+        models.Sighting.latitude.isnot(None),
             models.Sighting.longitude.isnot(None),
             models.Sighting.latitude.between(lat_min, lat_max),
             models.Sighting.longitude.between(lng_min, lng_max),
@@ -738,8 +740,8 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
     cats_known = contribution["cats_known"]
     locations = contribution["locations_count"]
     photos = contribution["photos_count"]
-    discoveries = db.query(models.Discovery).filter(models.Discovery.status == "pending").count() if hasattr(models, 'Discovery') else 0
-    approved = db.query(models.Discovery).filter(models.Discovery.status == "approved").count() if hasattr(models, 'Discovery') else 0
+    discoveries = db.query(models.Discovery).filter(models.Discovery.status == "pending", models.Discovery.user_id == user_id).count() if hasattr(models, 'Discovery') else 0
+    approved = db.query(models.Discovery).filter(models.Discovery.status == "approved", models.Discovery.user_id == user_id).count() if hasattr(models, 'Discovery') else 0
     event_badges = get_event_badges(db, user_id)
 
     user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -748,13 +750,13 @@ def get_user_stats_full(db: Session, user_id: int) -> dict:
     progress = level_progress(xp)
 
     sighting_dates = sorted({
-        s.created_at.date()
+        campus_date(s.created_at)
         for s in db.query(models.Sighting.created_at).filter(models.Sighting.user_id == user_id).all()
         if s.created_at is not None
     })
     streak = 0
     if sighting_dates:
-        today = datetime.now().date()
+        today = campus_date()
         if sighting_dates[-1] == today:
             streak = 1
             for i in range(len(sighting_dates) - 1, 0, -1):
@@ -1087,10 +1089,11 @@ def get_audit_logs(db: Session, action: str = None, entity_type: str = None, lim
 
 # ─── Discovery ─────────────────────────────────────────────────
 
-def create_discovery(db, image_path=None, location_name=None, latitude=None, longitude=None, note=None):
+def create_discovery(db, image_path=None, location_name=None, latitude=None, longitude=None, note=None, user_id=None):
     from app import schemas
-    now = datetime.now()
+    now = utc_now()
     discovery = models.Discovery(
+        user_id=user_id,
         image_path=image_path,
         location_name=location_name,
         latitude=latitude,
@@ -1183,7 +1186,7 @@ def review_discovery(db, discovery_id, review):
 
 
 def get_weekly_report(db: Session, user_id: int = 1):
-    now = datetime.now()
+    now = utc_now()
     week_start = now - timedelta(days=7)
 
     week_sightings = db.query(models.Sighting).filter(
@@ -1204,7 +1207,7 @@ def get_weekly_report(db: Session, user_id: int = 1):
     top_location = max(location_counts, key=location_counts.get) if location_counts else None
     top_location_count = location_counts.get(top_location, 0) if top_location else 0
 
-    sighting_dates = sorted(set(s.created_at.date() for s in user_sightings))
+    sighting_dates = sorted(set(campus_date(s.created_at) for s in user_sightings))
     streak = 0
     if sighting_dates:
         streak = 1
@@ -1265,9 +1268,9 @@ def get_weekly_report(db: Session, user_id: int = 1):
 
 
 def get_wrapped_report(db: Session, user_id: int):
-    now = datetime.now()
-    year = now.year
-    year_start = datetime(year, 1, 1)
+    now = utc_now()
+    year = campus_date(now).year
+    year_start, _ = campus_day_bounds(datetime(year, 1, 1).date())
 
     sightings = db.query(models.Sighting).filter(
         models.Sighting.user_id == user_id,
@@ -1368,7 +1371,7 @@ def use_invite_code(db: Session, code: str, user_id: int) -> Optional[models.Inv
     if not invite:
         return None
     invite.used_by = user_id
-    invite.used_at = datetime.now(timezone.utc)
+    invite.used_at = utc_now()
     db.commit()
     db.refresh(invite)
     return invite

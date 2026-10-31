@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  getCats, getCat, getSightings, getPosts, getPost,
+  getCats, getCat, getSightings, getPosts, getPost, getSightingsPage, getPostsPage,
   getGalleryImages, getNearbyCats, getHeatmapData,
   getUserProfile, getMyStats, getDailyQuest, getLeaderboard,
   getBadges, getFollowedCats, getNotifications,
@@ -10,7 +10,7 @@ import {
 export function useCats(params?) {
   return useQuery({
     queryKey: ['cats', params],
-    queryFn: () => getCats(),
+    queryFn: () => getCats(params),
   })
 }
 
@@ -150,7 +150,7 @@ export function useFollowCat() {
 export function useInfinitePosts(params = {}) {
   return useInfiniteQuery({
     queryKey: ['posts', 'infinite', params],
-    queryFn: ({ pageParam = 1 }) => getPosts({ ...params, page: pageParam, limit: 20 }),
+    queryFn: ({ pageParam = 1 }) => getPostsPage({ ...params, page: pageParam, limit: 20 }),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage && typeof lastPage === 'object' && !Array.isArray(lastPage)) {
         return lastPage.has_more ? allPages.length + 1 : undefined
@@ -165,7 +165,7 @@ export function useInfinitePosts(params = {}) {
 export function useInfiniteSightings(params = {}) {
   return useInfiniteQuery({
     queryKey: ['sightings', 'infinite', params],
-    queryFn: ({ pageParam = 1 }) => getSightings({ ...params, page: pageParam, limit: 20 }),
+    queryFn: ({ pageParam = 1 }) => getSightingsPage({ ...params, page: pageParam, limit: 20 }),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage && typeof lastPage === 'object' && !Array.isArray(lastPage)) {
         return lastPage.has_more ? allPages.length + 1 : undefined

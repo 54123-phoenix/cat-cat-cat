@@ -5,7 +5,7 @@ import { identifyCat, createSighting, createDiscovery } from '../../services/api
 import { campusLocations } from '../../services/campusLocations'
 import ScanAnimation from '../../components/ScanAnimation'
 
-type Phase = 'idle' | 'ready' | 'loading' | 'confirmed' | 'uncertain' | 'unknown' | 'error'
+type Phase = 'idle' | 'ready' | 'loading' | 'confirmed' | 'uncertain' | 'unknown' | 'unavailable' | 'error'
 
 export default function Scan() {
   const [phase, setPhase] = useState<Phase>('idle')
@@ -58,10 +58,14 @@ export default function Scan() {
     try {
       const data = await identifyCat(filePath)
       setResult(data)
-      const status = data.status || 'confirmed'
+      const status = data.status
+      if (!['confirmed', 'uncertain', 'unknown', 'unavailable'].includes(status)) {
+        throw new Error('识别服务返回了无法识别的结果，请重试')
+      }
       setPhase(status as Phase)
+      if (status === 'unavailable') setMessage('识别服务暂时不可用，请稍后重试')
       if (status === 'confirmed' && data.cat_id) {
-        await createSighting({ catId: data.cat_id, confidence: data.confidence }).catch(() => {})
+        await createSighting({ catId: data.cat_id, confidence: data.confidence })
       }
     } catch (err: any) {
       setMessage(err.message || '识别服务暂时不可用，请稍后重试')
@@ -75,8 +79,12 @@ export default function Scan() {
       setMessage('无法确认猫咪身份')
       return
     }
-    await createSighting({ catId, confidence: candidate.confidence }).catch(() => {})
-    Taro.navigateTo({ url: `/pages/cat-detail/index?id=${catId}` })
+    try {
+      await createSighting({ catId, confidence: candidate.confidence })
+      Taro.navigateTo({ url: `/pages/cat-detail/index?id=${catId}` })
+    } catch (err: any) {
+      Taro.showToast({ title: err.message || '记录保存失败，请重试', icon: 'none' })
+    }
   }
 
   function openCatPhotos(e: any, catId: number) {
@@ -171,7 +179,7 @@ export default function Scan() {
         </View>
       )}
 
-      {preview && (phase === 'ready' || phase === 'loading' || phase === 'confirmed' || phase === 'uncertain' || phase === 'unknown' || phase === 'error') && (
+      {preview && (phase === 'ready' || phase === 'loading' || phase === 'confirmed' || phase === 'uncertain' || phase === 'unknown' || phase === 'unavailable' || phase === 'error') && (
         <View style={{ borderRadius: '24rpx', overflow: 'hidden', marginBottom: '24rpx', position: 'relative' }}>
           <Image src={preview} mode='aspectFill' style={{ width: '100%', height: '500rpx' }} />
           {phase === 'loading' && (
@@ -315,7 +323,7 @@ export default function Scan() {
         </View>
       )}
 
-      {phase === 'error' && (
+      {(phase === 'error' || phase === 'unavailable') && (
         <View>
           <View style={{ backgroundColor: '#FEE2E2', borderRadius: '16rpx', padding: '24rpx', marginBottom: '20rpx' }}>
             <Text style={{ color: '#DC2626', fontSize: '26rpx', textAlign: 'center', display: 'block' }}>{message || '识别失败，请重试'}</Text>

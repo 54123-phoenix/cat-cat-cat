@@ -1,3 +1,4 @@
+from app.time_utils import utc_now
 from datetime import datetime
 
 from fastapi import APIRouter
@@ -15,5 +16,5 @@ def system_health(warm_model: bool = False):
         "service": "cat-community",
         "status": model["status"],
         "model": model,
-        "checked_at": datetime.utcnow(),
+        "checked_at": utc_now(),
     }

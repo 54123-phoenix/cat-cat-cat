@@ -1,3 +1,4 @@
+from app.time_utils import utc_now
 import math
 from datetime import datetime, timedelta
 from typing import Optional
@@ -15,7 +16,7 @@ def _location_expr():
 def _approved_since(days: int):
     return (
         models.Sighting.status == "approved",
-        models.Sighting.created_at >= datetime.now() - timedelta(days=days),
+        models.Sighting.created_at >= utc_now() - timedelta(days=days),
     )
 
 

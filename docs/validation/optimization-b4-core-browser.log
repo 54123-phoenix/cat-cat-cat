@@ -1,0 +1,28 @@
+{"status": "failed", "checks": {"admin_login_logout_ui": "passed", "user_login_ui": "passed"}, "page_errors": [], "http_errors": [], "started_at": "2026-10-31T02:38:52.163937+00:00", "browser": "156.0.8078.4"}
+Artifacts: D:\Desktop\fdmm\cat-cat-cat\artifacts\optimization-b4-core-browser
+Traceback (most recent call last):
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_browser.py", line 267, in <module>
+    main()
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_browser.py", line 231, in main
+    smoke(page, base, report['checks'])
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_browser.py", line 91, in smoke
+    page.goto(base + '/collection')
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\sync_api\_generated.py", line 18528, in goto
+    self._sync(
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_sync_base.py", line 111, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_page.py", line 564, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_frame.py", line 157, in goto
+    await self._channel.send(
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_connection.py", line 78, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_connection.py", line 636, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5187/collection
+Call log:
+  - navigating to "http://127.0.0.1:5187/collection", waiting until "load"
+

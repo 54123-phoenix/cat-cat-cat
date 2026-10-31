@@ -1,3 +1,4 @@
+from app.time_utils import utc_now
 from datetime import datetime
 
 from sqlalchemy.orm import Session
@@ -91,4 +92,4 @@ def _cat_action(cat_id: int, name: str) -> CatIntelAction:
 
 
 def _response(answer, intent, confidence, evidence=None, actions=None, limitations=None):
-    return CatIntelResponse(answer=answer, intent=intent, confidence=confidence, evidence=evidence or [], actions=actions or [], limitations=limitations or [], generated_at=datetime.now())
+    return CatIntelResponse(answer=answer, intent=intent, confidence=confidence, evidence=evidence or [], actions=actions or [], limitations=limitations or [], generated_at=utc_now())

@@ -21,7 +21,7 @@ const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;'
 // WGS-84 → GCJ-02
 const PI = Math.PI
 const A = 6378245.0
-const EE = 0.00669342162296594323
+const EE = 0.006693421622965943
 
 function transformLat(x, y) {
   let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x))

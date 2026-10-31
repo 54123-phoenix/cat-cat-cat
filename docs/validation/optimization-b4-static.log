@@ -1,0 +1,1 @@
+compileall: passed; git diff --check: passed; typecheck: passed; new feature eslint --max-warnings 0: passed

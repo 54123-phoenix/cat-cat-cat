@@ -2,11 +2,10 @@ import uuid
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
 from app.database import get_db
 from app import crud, schemas, models
-from app.api.auth import require_auth
+from app.api.auth import require_auth, optional_auth
 from app.api.upload import save_upload
 from app.models import User
 from app.ratelimit import limit
@@ -17,17 +16,27 @@ router = APIRouter(prefix="/api/sightings", tags=["sightings"])
 
 
 @router.get("", response_model=schemas.PaginatedSightingsResponse)
-def list_sightings(cat_id: Optional[int] = None, status: Optional[str] = "approved", skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
-    total = crud.count_sightings(db, cat_id=cat_id, status=status)
-    items = crud.get_sightings(db, cat_id=cat_id, status=status, skip=skip, limit=limit)
+def list_sightings(cat_id: Optional[int] = None, status: str = "approved", skip: int = 0, limit: int = 20, mine: bool = False, db: Session = Depends(get_db), user=Depends(optional_auth)):
+    if status not in {"approved", "pending", "rejected", "all"}:
+        raise HTTPException(status_code=400, detail="Invalid sighting status")
+    if mine and user is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    if status != "approved" and not mine and (user is None or user.role not in {"admin", "reviewer"}):
+        raise HTTPException(status_code=403, detail="Review access required")
+    owner_id = user.id if mine else None
+    query_status = None if status == "all" else status
+    total = crud.count_sightings(db, cat_id=cat_id, status=query_status, user_id=owner_id)
+    items = crud.get_sightings(db, cat_id=cat_id, status=query_status, skip=skip, limit=limit, user_id=owner_id)
     has_more = (skip + limit) < total
     return schemas.PaginatedSightingsResponse(items=items, total=total, has_more=has_more)
 
 
 @router.get("/{sighting_id}", response_model=schemas.SightingResponse)
-def get_sighting(sighting_id: int, db: Session = Depends(get_db)):
+def get_sighting(sighting_id: int, db: Session = Depends(get_db), user=Depends(optional_auth)):
     sighting = crud.get_sighting(db, sighting_id)
     if not sighting:
+        raise HTTPException(status_code=404, detail="Sighting not found")
+    if sighting.status != "approved" and (user is None or (user.id != sighting.user_id and user.role not in {"admin", "reviewer"})):
         raise HTTPException(status_code=404, detail="Sighting not found")
     return sighting
 
@@ -58,18 +67,6 @@ async def create_sighting(
     sighting = schemas.SightingCreate(cat_id=cat_id, location=location, latitude=latitude, longitude=longitude, location_name=location_name, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)
     db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by=current_user.nickname, user_id=current_user.id, status=sighting_status)
 
-    cat = db.query(models.Cat).filter(models.Cat.id == cat_id).first()
-    if cat:
-        crud.notify_cat_followers(
-            db,
-            cat_id=cat_id,
-            title=f"{cat.name} 有新偶遇",
-            content=f"{cat.name} 在 {location_name or location or '校园某处'} 被观察到了",
-            related_id=db_sighting.id,
-            related_type="sighting",
-            exclude_user_id=current_user.id,
-        )
-
     return db_sighting
 
 
@@ -86,7 +83,7 @@ def _recompute_grade(sighting) -> str:
 
 @router.post("/{sighting_id}/confirm", response_model=schemas.SightingConfirmResponse)
 def confirm_sighting(sighting_id: int, db: Session = Depends(get_db), current_user: User = Depends(require_auth)):
-    sighting = db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
+    sighting = get_sighting(sighting_id, db, current_user)
     if not sighting:
         raise HTTPException(status_code=404, detail="Sighting not found")
     existing = db.query(models.SightingConfirmation).filter(
@@ -120,54 +117,18 @@ def confirm_sighting(sighting_id: int, db: Session = Depends(get_db), current_us
 
 @router.post("/{sighting_id}/vote", response_model=schemas.SightingVoteResponse)
 def vote_sighting(sighting_id: int, body: schemas.SightingVoteRequest, db: Session = Depends(get_db), current_user: User = Depends(require_auth)):
-    sighting = db.query(models.Sighting).filter(models.Sighting.id == sighting_id).first()
+    sighting = get_sighting(sighting_id, db, current_user)
     if not sighting:
         raise HTTPException(status_code=404, detail="Sighting not found")
     cat = db.query(models.Cat).filter(models.Cat.id == body.cat_id).first()
     if not cat:
         raise HTTPException(status_code=404, detail="Cat not found")
-    existing = db.query(models.SightingVote).filter(
-        models.SightingVote.sighting_id == sighting_id,
-        models.SightingVote.user_id == current_user.id,
-    ).first()
-    if existing:
-        existing.cat_id = body.cat_id
-    else:
-        db.add(models.SightingVote(sighting_id=sighting_id, user_id=current_user.id, cat_id=body.cat_id))
-    db.commit()
-
-    rows = db.query(
-        models.SightingVote.cat_id,
-        func.count(models.SightingVote.id),
-    ).filter(models.SightingVote.sighting_id == sighting_id).group_by(models.SightingVote.cat_id).all()
-    votes = {cid: cnt for cid, cnt in rows}
-
-    auto_confirmed = False
-    grade = sighting.grade or "casual"
-    top_cat = None
-    top_count = 0
-    for cid, cnt in votes.items():
-        if cnt > top_count:
-            top_count = cnt
-            top_cat = cid
-    if top_cat is not None and top_count >= 3:
-        if sighting.cat_id != top_cat:
-            sighting.cat_id = top_cat
-        sighting.grade = "research_grade"
-        grade = "research_grade"
-        auto_confirmed = True
-        db.commit()
-        correct_voters = db.query(models.SightingVote).filter(
-            models.SightingVote.sighting_id == sighting_id,
-            models.SightingVote.cat_id == top_cat,
-        ).all()
-        for v in correct_voters:
-            voter = db.query(models.User).filter(models.User.id == v.user_id).first()
-            if voter is not None:
-                crud.add_xp(db, voter, 3)
+    from app.services.voting import settle_vote
+    votes, auto_confirmed, grade, changed = settle_vote(db, sighting_id, current_user.id, body.cat_id)
+    if changed:
         events.publish("sighting_confirmed", {
             "sighting_id": sighting_id,
-            "cat_id": top_cat,
+            "cat_id": sighting.cat_id,
             "grade": grade,
             "auto": True,
         })

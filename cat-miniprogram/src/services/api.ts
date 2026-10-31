@@ -21,9 +21,7 @@ async function request<T = any>(url: string, options: any = {}): Promise<T> {
   if (token) {
     header['Authorization'] = `Bearer ${token}`
   }
-  if (!(options.body instanceof FormData)) {
-    header['Content-Type'] = 'application/json'
-  }
+  if (!header['Content-Type']) header['Content-Type'] = 'application/json'
 
   try {
     const res = await Taro.request({
@@ -46,6 +44,25 @@ async function request<T = any>(url: string, options: any = {}): Promise<T> {
   }
 }
 
+
+function requestForm(url: string, data: Record<string, unknown>) {
+  const body = Object.entries(data)
+    .filter(([, value]) => value !== undefined && value !== null)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+    .join('&')
+  return request(url, { method: 'POST', header: { 'Content-Type': 'application/x-www-form-urlencoded' }, body })
+}
+
+function parseUploadResponse(res: { statusCode: number; data: string }) {
+  let body: any
+  try { body = JSON.parse(res.data) } catch { throw new Error('服务器返回了无效的上传结果') }
+  if (res.statusCode < 200 || res.statusCode >= 300) {
+    if (res.statusCode === 401) clearToken()
+    throw new Error(body?.detail || `HTTP ${res.statusCode}`)
+  }
+  return body
+}
+
 export function wechatLogin(code: string, nickname?: string, avatarUrl?: string) {
   return request('/auth/wechat-login', {
     method: 'POST',
@@ -60,41 +77,51 @@ export function login(data: { username: string; password: string }) {
   })
 }
 
-export function getCats() { return request('/cats') }
+
+export interface Page<T = any> { items: T[]; total: number; has_more: boolean }
+
+async function requestPage(url: string, params: any = {}): Promise<Page> {
+  const { page, catId, ...query } = params
+  if (catId !== undefined) query.cat_id = catId
+  if (page !== undefined) query.skip = (Math.max(1, Number(page)) - 1) * (query.limit || 20)
+  const result = await request(`${url}${buildQS(query)}`)
+  if (Array.isArray(result)) return { items: result, total: result.length, has_more: false }
+  if (!result || !Array.isArray(result.items)) throw new Error('列表返回格式错误')
+  return result
+}
+
+export function getCatsPage(params: any = {}) { return requestPage('/cats', params) }
+export function getPostsPage(params: any = {}) { return requestPage('/posts', params) }
+export function getSightingsPage(params: any = {}) { return requestPage('/sightings', params) }
+
+export function getCats(params: any = {}) { return getCatsPage(params).then(page => page.items) }
 export function getCat(catId: number) { return request(`/cats/${catId}`) }
 
 export function getSightings(params: any = {}) {
-  return request(`/sightings${buildQS(params)}`)
+  return getSightingsPage(params).then(page => page.items)
 }
 
 export function createSighting(data: any) {
-  if (data.file) {
-    const formData: any = {}
-    if (data.catId) formData.cat_id = String(data.catId)
-    if (data.location) formData.location = data.location
-    if (data.confidence !== undefined) formData.confidence = String(data.confidence)
-    if (data.activity_type) formData.activity_type = data.activity_type
-    if (data.weather) formData.weather = data.weather
-    if (data.mood) formData.mood = data.mood
-    if (data.latitude !== undefined) formData.latitude = String(data.latitude)
-    if (data.longitude !== undefined) formData.longitude = String(data.longitude)
-    return Taro.uploadFile({
-      url: `${BASE}/sightings`,
-      filePath: data.file,
-      name: 'file',
-      formData,
-      header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
-    }).then(res => JSON.parse(res.data))
+  const { file, catId, ...fields } = data
+  const formData: Record<string, string> = {}
+  for (const [key, value] of Object.entries({ ...fields, cat_id: catId ?? fields.cat_id })) {
+    if (value !== undefined && value !== null && value !== '') formData[key] = String(value)
   }
-  return request('/sightings', { method: 'POST', body: data })
+  if (file) {
+    return Taro.uploadFile({
+      url: `${BASE}/sightings`, filePath: file, name: 'file', formData,
+      header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
+    }).then(parseUploadResponse)
+  }
+  return requestForm('/sightings', formData)
 }
 
 export function getPosts(params: any = {}) {
-  return request(`/posts${buildQS(params)}`)
+  return getPostsPage(params).then(page => page.items)
 }
 
-export function createPost(data: FormData) {
-  return request('/posts', { method: 'POST', body: data })
+export function createPost(data: Record<string, string>) {
+  return requestForm('/posts', data)
 }
 
 export function likePost(postId: number) {
@@ -122,7 +149,7 @@ export function uploadUserAvatar(filePath: string) {
     filePath,
     name: 'file',
     header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
-  }).then(res => JSON.parse(res.data))
+  }).then(parseUploadResponse)
 }
 export function followCat(catId: number) { return request(`/user/follows/${catId}`, { method: 'POST' }) }
 export function unfollowCat(catId: number) { return request(`/user/follows/${catId}`, { method: 'DELETE' }) }
@@ -134,7 +161,7 @@ export function recognize(filePath: string) {
     filePath,
     name: 'file',
     header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
-  }).then(res => JSON.parse(res.data))
+  }).then(parseUploadResponse)
 }
 
 export function getNotifications(params: any = {}) {
@@ -196,7 +223,7 @@ export function markNotificationRead(id: number) { return request(`/notification
 export function markAllNotificationsRead() { return request('/notifications/read-all', { method: 'POST' }) }
 
 export function getGalleryImages(params: any = {}) {
-  return request(`/gallery${buildQS(params)}`)
+  return requestPage('/gallery', params).then(page => page.items)
 }
 
 export function getFollowedCats() { return request('/user/follows') }
@@ -227,7 +254,7 @@ export function uploadCatImage(catId: number, filePath: string) {
     filePath,
     name: 'file',
     header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
-  }).then(res => JSON.parse(res.data))
+  }).then(parseUploadResponse)
 }
 
 export function createDiscovery(data: any) {
@@ -244,7 +271,7 @@ export function createDiscovery(data: any) {
         note: data.note || '',
       },
       header: getToken() ? { Authorization: `Bearer ${getToken()}` } : {},
-    }).then(res => JSON.parse(res.data))
+    }).then(parseUploadResponse)
   }
   return request('/discoveries', { method: 'POST', body: data })
 }
@@ -264,7 +291,7 @@ export function reviewDiscovery(id: number, data: any) {
 }
 
 export function getHeatmapData(params: any = {}) {
-  return request(`/map/heatmap${buildQS(params)}`)
+  return requestPage('/map/heatmap', params).then(page => page.items)
 }
 
 export function adminLogout() {
@@ -274,3 +301,5 @@ export function adminLogout() {
 export function getMyStats() { return request('/users/me') }
 
 export { getToken, setToken, clearToken, getStoredUser, setStoredUser } from '../utils/storage'
+
+export function getEncounteredCatIds(): Promise<number[]> { return request('/users/me/encountered-cats') }

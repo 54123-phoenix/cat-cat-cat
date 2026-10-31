@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, Text, Image, Input } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { getCats, getFollowedCats, getSightings } from '../../services/api'
+import { getCats, getFollowedCats, getEncounteredCatIds } from '../../services/api'
 
 const RARE_CHARS = ['稀', '珍', '白', '黑', '三花', '玳瑁']
 
@@ -32,14 +32,14 @@ export default function Collection() {
     Promise.all([
       getCats(),
       getFollowedCats().catch(() => []),
-      getSightings({ limit: 200 }).catch(() => []),
+      getEncounteredCatIds().catch(() => []),
     ]).then(([catsData, followedData, sightingsData]) => {
       const catList = Array.isArray(catsData) ? catsData : []
       const followed = Array.isArray(followedData) ? followedData : []
       const sightings = Array.isArray(sightingsData) ? sightingsData : []
       setCats(catList)
       setFollowedIds(new Set(followed.map((f: any) => f.cat_id)))
-      setMetIds(new Set(sightings.map((s: any) => s.cat_id).filter(Boolean)))
+      setMetIds(new Set(sightings))
     }).catch(console.error)
       .finally(() => setLoading(false))
   })

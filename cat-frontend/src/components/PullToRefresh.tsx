@@ -3,14 +3,14 @@ import { useState, useRef, useCallback } from 'react'
 export default function PullToRefresh({ onRefresh, children }) {
   const [state, setState] = useState('idle') // idle | pulling | ready | refreshing
   const startY = useRef(0)
-  const pullDist = useRef(0)
+  const [pullDist, setPullDist] = useState(0)
   const containerRef = useRef(null)
   const THRESHOLD = 60
 
   const handleTouchStart = useCallback((e) => {
     if (containerRef.current?.scrollTop > 0) return
     startY.current = e.touches[0].clientY
-    pullDist.current = 0
+    setPullDist(0)
   }, [])
 
   const handleTouchMove = useCallback((e) => {
@@ -18,7 +18,7 @@ export default function PullToRefresh({ onRefresh, children }) {
     if (containerRef.current?.scrollTop > 0) return
 
     const dist = Math.max(0, (e.touches[0].clientY - startY.current) * 0.5)
-    pullDist.current = dist
+    setPullDist(dist)
 
     if (dist > THRESHOLD) {
       setState('ready')
@@ -36,15 +36,15 @@ export default function PullToRefresh({ onRefresh, children }) {
         await onRefresh()
       } finally {
         setState('idle')
-        pullDist.current = 0
+        setPullDist(0)
       }
     } else {
       setState('idle')
-      pullDist.current = 0
+      setPullDist(0)
     }
   }, [state, onRefresh])
 
-  const progress = Math.min(pullDist.current / THRESHOLD, 1)
+  const progress = Math.min(pullDist / THRESHOLD, 1)
 
   return (
     <div
@@ -58,8 +58,8 @@ export default function PullToRefresh({ onRefresh, children }) {
       <div
         className="flex items-center justify-center transition-all"
         style={{
-          height: state === 'refreshing' ? 48 : Math.min(pullDist.current, 80),
-          opacity: state === 'idle' && pullDist.current < 5 ? 0 : 1,
+          height: state === 'refreshing' ? 48 : Math.min(pullDist, 80),
+          opacity: state === 'idle' && pullDist < 5 ? 0 : 1,
         }}
       >
         {state === 'refreshing' ? (
@@ -72,7 +72,7 @@ export default function PullToRefresh({ onRefresh, children }) {
             <CatStretch progress={1} />
             <span className="text-xs font-medium">释放刷新</span>
           </div>
-        ) : pullDist.current > 10 ? (
+        ) : pullDist > 10 ? (
           <div className="flex items-center gap-2 text-text-secondary">
             <CatStretch progress={progress} />
             <span className="text-xs">继续下拉…</span>

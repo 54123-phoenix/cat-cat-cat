@@ -1,0 +1,20 @@
+{
+  "completed_steps": [
+    "two real HTTP processes load the same first publication without Redis",
+    "failed extraction preserves a compatible published version",
+    "OS lock excludes concurrent writers and is released after process kill",
+    "SQL generation changes during construction prevent stale publication and invalidate both readers",
+    "both cached workers switch to new cat identity; incompatible rollback is refused",
+    "corrupt candidates do not replace current pointer; compatible rollback updates both processes",
+    "process death after atomic publication is reconciled as completed publication",
+    "corrupt pointer fails closed despite cache; server restart reloads valid publication"
+  ],
+  "http_process_ids": [
+    "14772",
+    "50648",
+    "5500"
+  ],
+  "model": "synthetic test adapters, no accuracy claim",
+  "redis": "disabled",
+  "all_scenarios_passed": true
+}

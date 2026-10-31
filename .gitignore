@@ -45,6 +45,7 @@ Agent.md
 .loop/
 scripts/ui_loop/node_modules/
 harness/reports/
+artifacts/
 backups/
 
 # OS/editor files
@@ -66,3 +67,6 @@ cat-frontend/_admin_script.b64
 
 # Model Weights
 cat-backend/models/
+
+# Managed reference versions, job journals and process lock
+cat-backend/reference-store/

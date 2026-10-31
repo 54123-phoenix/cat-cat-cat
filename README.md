@@ -2,538 +2,280 @@
 
 <div align="center">
 
-**5 人校园团队项目 · Web / API / 小程序 · 发布候选版**
+**5 人校园团队项目 · Web / API / 微信小程序 · 修复与验收中**
 
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)](https://sqlite.org)
 [![Taro](https://img.shields.io/badge/Taro-4-1677FF)](https://taro.zone)
 
-**首页寻猫入口 -> 拍照识猫 -> AI 识别 -> 偶遇纪念卡 -> 地图路线 -> 社区回流 -> 猫协审核**
-
-用 AI 让每一只校园猫被看见、被记录、被记住。
+校园猫档案、拍照识别、偶遇记录、社区交流与猫协审核。
 
 </div>
 
----
-
-## 目录
-
-- [项目状态](#项目状态)
-- [功能亮点](#功能亮点)
-- [界面预览](#界面预览)
-- [技术栈](#技术栈)
-- [快速启动](#快速启动)
-- [提交前检查](#提交前检查)
-- [演示路径](#演示路径)
-- [核心文档](#核心文档)
-- [项目结构](#项目结构)
-- [关键接口](#关键接口)
-- [小程序端](#小程序端)
-- [发布候选说明](#发布候选说明)
-- [当前限制](#当前限制)
-- [项目归属与个人贡献](#项目归属与个人贡献)
-- [团队](#团队)
-
----
-
 ## 项目状态
 
-当前仓库已经完成 P0-P6 主线，定位是 **feature-complete internal-trial build -> maintainable release candidate**。P6 阶段不再扩大功能面，重点是验收、文档一致性、harness 监督和可交接性。
+**更新于 2026-10-31：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
 
-| 维度 | 当前状态 |
-|------|----------|
-| Web 端 | React + Vite，覆盖首页寻猫入口、识猫、偶遇纪念卡、地图、社区、档案、个人中心、管理端、路线推荐等主流程 |
-| 后端 API | FastAPI + SQLAlchemy，默认 SQLite 文件库，已补权限、审计、速率限制、结构化日志和健康检查 |
-| AI 识别 | DINOv3 ViT + FAISS 向量检索 + YOLOv8m 猫检测，支持 `confirmed` / `uncertain` / `unknown` / `unavailable` 四态降级 |
-| 游戏化与回流 | 已有每日胶囊、每日抽签、贡献称号、收藏品、路线故事、路线打卡和路线印章等回流能力 |
-| Agent 训练营方向 | 已新增 [tasks/agent_student_schedule_task.md](tasks/agent_student_schedule_task.md) 作为交接实现文件，规划课表规划 Agent、课间寻猫路线 Agent、猫协审核 Agent 和学习复盘 Agent；当前尚未实现产品代码 |
-| 小程序端 | Taro 4，已保留 17 个页面和 5 个 tab，提交微信审核前仍需正式 AppID、服务域名、图标和真机测试 |
-| 运维与验收 | 已有发布清单、最终验收包、备份恢复、权限矩阵、观测手册和 quick/full harness |
-| 生产状态 | 适合作为课程展示、内测和发布候选审查；真实生产部署前仍需完成域名、密钥、恢复演练和模型校准 |
+当前台账共 37 项：**25 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
----
+| 验证范围 | 最近结果 | 证据与限制 |
+|---|---|---|
+| 后端完整回归 | 238 passed，66 warnings | [C 验收](docs/validation/OPTIMIZATION_C.md)；包含迁移、权限、参考库和故障回归，保留既有弃用警告 |
+| Web 回归 | 66 passed；类型检查、lint、构建通过 | [B4 验收](docs/validation/OPTIMIZATION_B4.md)；C 阶段未修改前端 |
+| 真实浏览器 | B4 管理端 8 组、核心流程 6 组通过 | Chromium；测试数据库，参考库推理使用合成向量 |
+| 参考库生命周期 | B1—B4 本地通过 | 持久身份、构建任务、独立 worker、原子发布、兼容回滚、管理状态和失败重试；不代表识别质量达标 |
+| Redis 多进程 | Redis 7.4.2 + 4 个独立 API 进程，10 项通过 | [C 验收](docs/validation/OPTIMIZATION_C.md)；本机跨进程广播、缓存、撤销、断线清理与恢复 |
+| SQLite 与附件恢复 | 4 组通过 | 旧库升级、重启持久性、备份/预演/恢复、HTTP 与图片哈希/解码核对 |
+| 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
+| Docker / 真实模型 / 外部服务 | 待验收 | Docker Desktop 启动受阻；真实模型质量、微信、地图、外部 LLM 和资源许可仍需各自证据 |
 
-## 功能亮点
+以上是本地验收记录。GitHub Actions 配置已包含两端检查、后端测试、浏览器和真实 Redis 任务；实际远端结果以 [Actions](https://github.com/54123-phoenix/cat-cat-cat/actions) 为准。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
-### 首页黄金链路与偶遇纪念卡
+## 已实现的功能
 
-首页第一屏会根据最近偶遇、猫猫档案和用户偏好生成「今日校园寻猫入口」，直接给出推荐起点、推荐猫猫、拍照识猫、路线和地图入口。评审或新用户不用先理解全部功能，就能沿着一条完整路径走完：
+- **猫猫档案与社区：** 档案、照片墙、健康记录、关注、帖子、评论、点赞、举报、勋章和个人统计。
+- **偶遇与审核：** 登录用户保存偶遇后进入待审状态，审核通过后进入公开列表和热力图；撤回后热力图直接按当前数据库状态查询。分享页同样受公开状态约束。
+- **识别四态：** YOLO 检测 → DINOv3 特征 → FAISS 检索，返回 `confirmed`、`uncertain`、`unknown` 或 `unavailable`。缺模型、参考资料不兼容或推理失败时保留手动线索和重试入口；相似度分数不是经过校准的正确概率。
+- **参考库管理：** 管理员维护档案和照片后手动发起全量重建，查看待发布变化、任务进度和失败原因，支持重试与兼容回滚。审核员可查看状态；档案保存成功与识别参考发布成功分别显示。
+- **角色与运维：** `user` / `reviewer` / `admin` 权限、审计、token 撤销、速率限制、结构化请求日志、健康检查、备份预演与恢复前快照。
+- **地图与路线：** 高德地图接入、校园点位、热力图、按偶遇热度推荐路线和路线打卡。真实坐标与定位尚待核验；站名打卡不证明实际到访，热度路线不代表路网最优。
+- **猫情报 Agent：** 已实现查询 API、工具调用和数据库/规则回退，真实外部 LLM 尚未验收。课表规划、课间路线规划、辅助审核与学习复盘仍是 [后续任务](tasks/agent_student_schedule_task.md)。
 
-```text
-从今日起点出发 -> 拍照识猫 -> 生成偶遇纪念卡 -> 查看路线或地图 -> 分享公开页 -> 回到社区和档案
-```
-
-识别成功后，`/scan` 会把结果呈现为「已记入偶遇」的纪念卡状态，并提供一键生成分享卡。猫猫详情页也提供猫猫身份卡，可指向免登录公开主页 `/cats/public/:id`，让每只猫和每次偶遇都能自然传播。
-
-### AI 识别与安全降级
-
-用户上传猫咪照片后，后端通过 `cat-backend/app/services/ai.py` 调用模型适配层，统一返回四态结果：
-
-- `confirmed`：高置信度命中已知猫，可继续记录偶遇。
-- `uncertain`：返回候选列表，由用户手动选择。
-- `unknown`：没有可靠匹配，引导提交新猫线索。
-- `unavailable`：模型资产、依赖或推理失败，页面保留重试和手动线索入口。
-
-模型权重、reference embedding、阈值配置和可选 warm load 由 `/api/system/health` 检查。
-
-### Agent 训练营优化路径（待实现）
-
-项目参加 Agent 训练营时，当前“AI 识猫社区”的表达还不够突出 Agent 的目标驱动、工具调用、记忆、规划、执行轨迹和人类确认。下一阶段建议把现有能力升级为「面向学生校园生活的多 Agent 实践平台」：
-
-```text
-学生课表 / 校园活动 -> Agent 生成今日实践计划 -> 学生执行识猫、路线、记录任务 -> 猫协审核 Agent 辅助复核 -> 学习复盘 Agent 生成课程实践总结
-```
-
-已新建交接任务 [tasks/agent_student_schedule_task.md](tasks/agent_student_schedule_task.md)，供后续实现者按范围落地。第一版建议不接真实教务系统，先用手动录入或 demo 课表，重点展示：
-
-- 课表规划 Agent：识别课程间空闲窗口，生成可执行校园实践计划。
-- 课间寻猫路线 Agent：复用路线推荐和路线故事，解释推荐依据、预计耗时和下一步行动。
-- 猫协审核 Agent：辅助未知猫线索复核，但最终通过、合并、拒绝仍由管理员确认。
-- 学习复盘 Agent：把识猫、路线、活动和贡献记录整理为课程实践总结。
-
-### 猫猫档案与偶遇闭环
-
-每只猫拥有档案、头像、性格标签、故事、健康记录、照片墙、最近偶遇、猫猫身份卡和公开主页。用户可从识别结果、首页寻猫入口、地图、路线或社区进入档案，并通过偶遇记录沉淀真实活动轨迹。
-
-### 地图、热力与路线推荐
-
-地图页基于高德地图 JS API 展示校园点位、热力图和猫猫标记。路线推荐页 `/routes` 基于近 14 天偶遇热度和时间段生成校园猫路线，可分享路线卡，并可跳转到地图与识猫打卡。路线故事能力还支持路线站点、线索、打卡进度和完成后的路线印章，为后续“课间寻猫路线 Agent”提供基础。
-
-### 社区、分享与回流
-
-社区支持发帖、评论、点赞、举报和帖子详情页；偶遇分享页 `/sightings/share/:id`、猫猫身份卡和公开猫猫主页 `/cats/public/:id` 可免登录访问，用于展示和外部传播。
-
-### 勋章、贡献与个人画像
-
-系统记录识别、偶遇、发帖、发现新猫、关注等行为，形成贡献分、分类排行榜、勋章墙、收藏和周报，帮助用户持续回流。当前还包含每日胶囊、每日抽签、贡献称号、收藏品和路线印章，可作为后续学习复盘 Agent 的输入数据。
-
-### 猫协管理端
-
-管理端包含总览、猫档案、健康/喂食、举报、偶遇和审核相关能力。当前已区分 `user`、`reviewer`、`admin` 三类角色；新猫线索、偶遇审核、举报处理和猫档案变更会写入审计日志。
-
-### 运维可见性
-
-后端响应包含 `X-Request-ID`，请求日志使用结构化 JSON，且不记录 token、请求 body、上传文件内容或私有凭据。备份和恢复脚本支持 dry run，真实恢复必须显式确认。
-
----
+新猫线索支持通过/拒绝和档案关联；独立的新猫合并工作流、发现者勋章、审核后自动重建参考库尚未实现。
 
 ## 界面预览
 
+截图来自 2026-10-30 的实际 Web 页面，使用临时库演示数据。地图截图为无 Key、未授权定位时的回退界面；不是模型或地图服务的验收证明。见 [截图来源](showcase/README.md)。
+
 | 首页 | 识猫 | 地图 |
-|------|------|------|
+|---|---|---|
 | ![首页](showcase/home.png) | ![识猫](showcase/scan.png) | ![地图](showcase/map.png) |
 
 | 社区 | 勋章 |
-|------|------|
+|---|---|
 | ![社区](showcase/community.png) | ![勋章](showcase/badges.png) |
-
----
 
 ## 技术栈
 
-### 前端
+| 层级 | 主要技术 |
+|---|---|
+| Web | React 18、TypeScript、Vite 5、React Router 6、Tailwind CSS、TanStack Query、Lucide |
+| API / 数据 | Python 3.11、FastAPI、Pydantic、SQLAlchemy、Alembic、SQLite |
+| 事件与缓存 | Redis Pub/Sub、SSE、有界内存 TTL 回退；无 Redis 时只适用于单进程事件流 |
+| 识别 | PyTorch、YOLOv8m、DINOv3、FAISS |
+| 微信小程序 | Taro 4、React、TypeScript、SCSS；17 个页面、5 个 tab |
+| 测试与运行 | pytest、Vitest、Testing Library、Playwright、GitHub Actions、Uvicorn / Gunicorn、Docker Compose |
 
-| 技术 | 用途 |
-|------|------|
-| React 18 | Web UI |
-| React Router v6 | Web 路由 |
-| Vite | 本地开发与构建 |
-| Tailwind CSS | 样式系统 |
-| TanStack Query | 前端数据请求状态 |
-| Lucide React | 图标 |
-| 高德地图 JS API | 地图、点位与热力展示 |
-| Vitest + Testing Library | 前端测试 |
-
-### 后端
-
-| 技术 | 用途 |
-|------|------|
-| FastAPI | API 服务 |
-| SQLAlchemy | ORM |
-| SQLite | 默认业务数据库 |
-| Redis | 事件流、缓存和部署辅助服务 |
-| PostgreSQL | Compose 中保留的后续迁移/部署辅助服务，默认业务仍走 SQLite |
-| SlowAPI | 速率限制 |
-| Python 3.11 | 后端运行环境 |
-| Docker Compose | 本地容器化启动 |
-
-### 小程序
-
-| 技术 | 用途 |
-|------|------|
-| Taro 4 | 微信小程序跨端工程 |
-| React 18 | 小程序页面层 |
-| SCSS | 小程序样式 |
-
----
+PostgreSQL 仅作为 Compose 的可选 `postgres` profile 保留，当前业务和已验收迁移使用 SQLite，尚未验收 PostgreSQL 迁移。
 
 ## 快速启动
 
-### 方式一：Docker Compose（推荐）
+### 本地开发
 
-**前置准备：**
+使用 **Python 3.11、Node.js 24、npm 与 Git LFS**。模型不是启动档案、社区和管理功能的前提；缺少模型时识别返回 `unavailable`。
 
 ```bash
-# 1. 配置环境变量
-cp .env.example .env
-# 编辑 .env，至少修改 JWT_SECRET、ADMIN_PASSWORD
-# 如需演示用户：设置 INIT_DEMO_USER=1 和 DEMO_PASSWORD
+git clone https://github.com/54123-phoenix/cat-cat-cat.git
+cd cat-cat-cat
+git lfs pull
 
-# 2. 下载模型权重（DINOv3 + YOLOv8m）
 cd cat-backend
-pip install huggingface-hub
-python scripts/download_model.py
-cd ..
-```
-
-**构建并启动：**
-
-```bash
-docker compose up -d --build
-```
-
-**初始化参考库（首次运行）：**
-
-```bash
-# 将 cat_embeddings.json 中的猫同步到数据库
-docker compose exec backend python scripts/seed_cats_from_embeddings.py
-
-# 如果还没有 embeddings，用裁剪好的猫图目录一键初始化
-# docker compose exec backend python scripts/build_reference_db.py \
-#     --crops-dir /data/data_crops --copy-uploads
-```
-
-访问：
-
-| 服务 | 地址 |
-|------|------|
-| Web 前端 | http://localhost |
-| 后端 API | http://localhost:8000 |
-| API 文档 | http://localhost:8000/docs |
-| 系统健康 | http://localhost:8000/api/system/health |
-
-说明：
-
-- Compose 中前端映射到 `80:80`，不是 Vite 开发端口 `5173`。
-- 默认业务数据库为 SQLite，挂载到 `cat-backend/cat_community.db`。
-- Compose 中的 Redis 用于事件/缓存链路；PostgreSQL 服务为后续迁移和部署预留，当前默认 `DATABASE_URL` 仍是 SQLite。
-
-### 方式二：本地开发
-
-后端：
-
-```bash
-cd cat-backend
-cp ../.env.example .env
-# 编辑 .env，至少填写 JWT_SECRET 和 ADMIN_PASSWORD
-
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pip install -r requirements-torch.txt
+# macOS / Linux
+source .venv/bin/activate
+# Windows PowerShell 改用：.\.venv\Scripts\Activate.ps1
 
-# 下载模型权重
-pip install huggingface-hub
-python scripts/download_model.py
+python -m pip install -r requirements-dev.txt
+cp ../.env.example .env
+# 编辑 .env，至少设置自己的 JWT_SECRET、ADMIN_PASSWORD
+# 单进程本地开发不设置 REDIS_URL；不用外部 Agent 时设置 AGENT_ENABLED=0
+# 默认 DATABASE_URL=sqlite:///./cat_community.db
 
-# 初始化数据库（表 + admin/demo 用户）
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-# 启动时会自动建表建用户，然后 Ctrl+C 停止
-
-# 同步猫数据
-python scripts/seed_cats_from_embeddings.py
-
-# 正式启动
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m alembic upgrade head
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-前端：
+在另一个终端启动 Web：
 
 ```bash
-cd cat-frontend
+cd cat-cat-cat/cat-frontend
 cp .env.example .env.local
-npm install
+npm ci
 npm run dev
 ```
 
-本地开发访问：
+Web：[http://localhost:5173](http://localhost:5173)；API 文档：[http://localhost:8000/docs](http://localhost:8000/docs)。Vite 默认代理到本机 8000 端口；自定义目标需向启动进程注入 `VITE_API_TARGET`。
 
-| 服务 | 地址 |
-|------|------|
-| Vite 前端 | http://localhost:5173 |
-| 后端 API | http://localhost:8000 |
+普通用户可注册账号；管理员启动时按 `ADMIN_PASSWORD` 创建。已有管理员密码不会因更改环境变量而被覆盖。演示账号仅在 `INIT_DEMO_USER=1` 且设置 `DEMO_PASSWORD` 时创建。
 
-演示账号：
+当前迁移 head 是 **`j20261031`**。应用启动检查结构，不自动迁移；旧库升级前先停写并备份。发现重复用户名、openid、校园 slug 或邀请码时，迁移会拒绝继续，不会自动删除或合并身份。见 [备份与恢复](docs/BACKUP_RECOVERY.md)。
 
-- 普通用户：`demo`，需 `INIT_DEMO_USER=1` 且由 `DEMO_PASSWORD` 设置口令。
-- 管理员：启动时根据 `ADMIN_PASSWORD` 创建或使用已有 `admin` 用户。
+### 启用识别与托管参考库
 
----
+先核对模型、图片和数据的来源及使用许可，再安装推理依赖和准备资源。在后端虚拟环境中：
 
-## 提交前检查
-
-发布清单见 [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)。提交前至少完成下面几组检查。
-
-### 1. 文档与 harness 合同
-
-```powershell
-python harness\checks\docs_check.py
-powershell -NoProfile -ExecutionPolicy Bypass -File harness\run.ps1 -Mode quick -ContinueOnFailure
+```bash
+python -m pip install -r requirements-torch.txt huggingface-hub
+python scripts/download_model.py
 ```
 
-阶段验收或合并前运行 full harness：
+将后端 `.env` 中的 `REFERENCE_STORE` 设为独立目录的**绝对路径**，重启 API，再从同一后端目录启动构建 worker：
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File harness\run.ps1 -Mode full -ContinueOnFailure
+```bash
+python scripts/reference_jobs.py worker --wait-schema 60
 ```
 
-### 2. 后端测试
+通过管理页面创建猫档案、上传参考照片，再在“识别参考库”中重建；也可在另一终端执行：
 
-```powershell
-cd cat-backend
-.\.venv\Scripts\python.exe -m pytest tests -q
+```bash
+python scripts/reference_jobs.py enqueue
+python scripts/reference_jobs.py status
 ```
 
-### 3. 前端测试与构建
+API 和 worker 必须使用相同数据库、照片、模型与 store 配置。旧 `cat_embeddings.json` / FAISS 文件不能自动作为可信身份参考库使用；清单为 v2，旧候选需重建。失败构建不替换当前版本，回滚需通过当前数据库兼容性检查。完整操作见 [参考库说明](docs/REFERENCE_LIBRARY.md)。
 
-```powershell
-cd cat-frontend
-npm test -- --run
+### Docker Compose（容器验收未完成）
+
+需要可用的 Docker 引擎。在仓库根目录配置环境后启动：
+
+```bash
+cp .env.example .env
+# 设置 JWT_SECRET、ADMIN_PASSWORD；按需配置模型和外部服务
+docker compose up -d --build
+```
+
+默认启动 frontend、backend、reference-worker、Redis。后端等待 Redis 健康检查，先迁移再启动四个 Gunicorn worker；reference-worker 等待结构就绪。Web 为 [http://localhost](http://localhost)，API 为 [http://localhost:8000](http://localhost:8000)。
+
+| 资源 | 宿主机 | 容器 |
+|---|---|---|
+| SQLite | `cat-backend/data/cat_community.db` | `/app/data/cat_community.db` |
+| 上传图片 | `cat-backend/uploads/` | `/app/uploads/` |
+| 模型 | `cat-backend/models/` | `/app/models/` |
+| 托管参考库 | `cat-backend/reference-store/` | `/app/reference-store/` |
+
+本地开发默认数据库是 `cat-backend/cat_community.db`，与 Compose 路径不同。数据库、附件、模型和参考库不打进镜像；模型和参考照片需要另行准备。默认构建 inference 阶段，`docker build --target api cat-backend` 可构建不含 Torch 的 API 阶段。
+
+本次 Docker Desktop 因本地 socket 绑定错误未能启动，仅验证了 Compose 配置解析，**未验证镜像构建、容器重启或卷恢复**。部署步骤与范围见 [DEPLOY.md](DEPLOY.md) 和 [C 验收](docs/validation/OPTIMIZATION_C.md)。
+
+## 开发检查与复验
+
+后端测试使用隔离数据库；以下命令在已激活后端虚拟环境的仓库根目录执行：
+
+```bash
+python scripts/check_assets.py cat-frontend/public cat-miniprogram/src/assets showcase
+python -m pytest cat-backend/tests -q
+python scripts/verify_browser.py
+python scripts/verify_reference_browser.py
+```
+
+浏览器脚本另需安装 `cat-backend/requirements-browser.txt` 和 Playwright Chromium：
+
+```bash
+python -m pip install -r cat-backend/requirements-browser.txt
+python -m playwright install chromium
+```
+
+Web 与小程序各自目录：
+
+```bash
+# cat-frontend
+npm ci
+npm run typecheck
+npm test
+npm run lint
 npm run build
+
+# cat-miniprogram
+npm ci
+npm run typecheck
+npm test
+npm run build:weapp
 ```
 
-### 4. 备份 dry run
+专项复验：
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\backup.ps1 -DryRun
+```bash
+# 原生 Redis；脚本创建自己的实例和测试数据
+python scripts/verify_redis_runtime.py --redis-server redis-server
+# 需要 PowerShell；只操作临时项目和隔离数据库/附件
+python scripts/verify_sqlite_recovery.py
 ```
 
-提交前还需要确认：
-
-- `README.md`、`harness/TODO.md`、`harness/roadmap.yml`、`docs/FINAL_ACCEPTANCE.md` 的发布状态一致。
-- `.env`、真实 AppSecret、JWT secret、管理员口令不进入 git。
-- 不降低 harness 检查标准，不用 hard reset 处理发布回滚。
-- 真实恢复操作只在明确确认后执行，优先先做 dry run。
-
----
-
-## 演示路径
-
-完整 5-8 分钟话术见 [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)。推荐现场演示顺序：
-
-1. `/` 首页：今日校园寻猫入口，说明从推荐地点开始的黄金链路。
-2. `/scan` 识猫：展示 confirmed / uncertain / unknown / unavailable 的兜底设计，confirmed 后生成偶遇纪念卡。
-3. `/cats/:catId` 与 `/cats/public/:catId`：档案、照片墙、猫猫身份卡、公开传播页。
-4. `/map` 与 `/routes`：地图热力、时间段路线推荐、路线分享卡、跳转打卡。
-5. `/community` 与 `/posts/:postId`：帖子、评论、点赞、举报。
-6. `/profile`、`/league`、`/weekly-report`：贡献画像、排行、周报。
-7. `/admin`：总览、审核、举报处理、审计闭环。
-8. `/api/system/health`：健康检查和模型状态说明。
-
-Agent 训练营方向当前是交接任务，不属于已上线演示路径。后续实现时建议新增 `/agents`，把“课表规划、路线规划、猫协审核、学习复盘”放在同一工作台中展示。
-
----
-
-## 核心文档
-
-| 文档 | 用途 |
-|------|------|
-| [docs/FINAL_ACCEPTANCE.md](docs/FINAL_ACCEPTANCE.md) | P6 发布候选目标、验收清单、人工冒烟路径和风险登记 |
-| [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) | 发布前逐项检查清单 |
-| [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | 5-8 分钟评审/新成员演示路线 |
-| [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md) | AI 识别适配层、四态契约和新猫线索边界 |
-| [docs/MODEL_HEALTH.md](docs/MODEL_HEALTH.md) | 模型健康检查、阈值校准和 warm load 说明 |
-| [docs/PERMISSIONS.md](docs/PERMISSIONS.md) | `user` / `reviewer` / `admin` 权限矩阵与审计规则 |
-| [docs/OBSERVABILITY.md](docs/OBSERVABILITY.md) | 请求追踪、结构化日志和健康检查入口 |
-| [docs/OBSERVABILITY_RUNBOOK.md](docs/OBSERVABILITY_RUNBOOK.md) | 事故排查、模型不可用、上传失败、恢复流程 |
-| [docs/BACKUP_RECOVERY.md](docs/BACKUP_RECOVERY.md) | SQLite 与 uploads 的备份、恢复、dry run 和演练说明 |
-| [docs/COLLABORATION.md](docs/COLLABORATION.md) | Codex / opencode / 外部代理的协作边界与交接规范 |
-| [docs/GAMIFICATION_PATH.md](docs/GAMIFICATION_PATH.md) | 勋章、贡献、分享卡和后续游戏化路径 |
-| [tasks/agent_student_schedule_task.md](tasks/agent_student_schedule_task.md) | Agent 训练营优化交接任务：学生课表、校园活动、路线、审核和课程复盘 |
-| [docx/猫猫社区技术文档.md](docx/猫猫社区技术文档.md) | MVP 技术架构、数据流和 AI 识别模块设计 |
-
----
+Windows 的 WSL Redis 用法见 [C 验收](docs/validation/OPTIMIZATION_C.md)。Windows 可从仓库根目录执行 `powershell -NoProfile -File harness/run.ps1 -Mode quick -ContinueOnFailure` 检查项目合同；harness 分数不能替代功能、环境和模型质量验收。
 
 ## 项目结构
 
 ```text
-.
-├── cat-backend/              # FastAPI 后端
-│   ├── app/
-│   │   ├── api/              # cats / sightings / recognize / posts / admin / system 等路由
-│   │   ├── middleware/       # 请求日志、安全响应头
-│   │   ├── services/         # AI 识别、DINOv3 模型、YOLO 检测、FAISS 检索
-│   │   ├── config/           # 后端配置
-│   │   ├── crud.py           # 数据访问与业务辅助
-│   │   ├── models.py         # SQLAlchemy 模型
-│   │   └── schemas.py        # Pydantic 数据模型
-│   ├── tests/                # 后端测试
-│   ├── uploads/              # 用户上传与猫猫图片
-│   ├── embeddings/           # 猫猫 reference embedding
-│   ├── models/               # 本地模型权重
-│   └── Dockerfile
-├── cat-frontend/             # React Web 前端
-│   ├── src/
-│   │   ├── components/       # 通用组件、插画、反馈组件
-│   │   ├── pages/            # Home / Scan / Map / Community / Admin / Routes 等页面
-│   │   ├── constants/        # 路由、徽章、活动、猫路线常量
-│   │   ├── hooks/            # API 与事件流 hooks
-│   │   ├── api.ts            # API 封装
-│   │   └── index.css         # 全局样式与动画
-│   └── Dockerfile
-├── cat-miniprogram/          # Taro 4 微信小程序端
-├── docs/                     # 发布、验收、权限、观测、备份等文档
-├── harness/                  # quick/full gate、roadmap、TODO、opencode 任务
-├── scripts/                  # 备份、恢复、数据导入与 UI 辅助脚本
-├── showcase/                 # README 与展示用截图
-├── tasks/                    # 分阶段实现任务与 Agent 训练营优化交接
-├── docker-compose.yml
-└── README.md
+cat-backend/
+  app/api/                 # 业务接口、认证、管理和事件流
+  app/agents/              # 猫情报工具与运行时
+  app/services/            # 识别、参考库生命周期、奖励结算
+  app/models.py            # 数据模型
+  app/schemas.py           # 请求与响应
+  alembic/                 # 显式迁移
+  scripts/                 # 参考库构建、任务 worker、识别评测
+  tests/                   # 单元、API、迁移和多进程回归
+cat-frontend/src/
+  pages/                   # 页面
+  features/                # 管理认证、参考库面板等业务模块
+  components/              # 通用 UI
+  hooks/                   # 请求与事件订阅
+cat-miniprogram/           # Taro 微信小程序
+scripts/                   # 资源检查、浏览器/Redis/恢复验收
+docs/validation/           # 各轮验收结果与历史文件指纹
+harness/                   # 检查入口、历史阶段计划
+showcase/                  # 实际页面演示截图
 ```
-
----
 
 ## 关键接口
 
-### 识别
+完整请求模型与鉴权要求以运行后的 `/docs` 为准。管理接口需相应角色，创建记录需有效用户 token。
 
-```text
-POST /api/recognize
-Content-Type: multipart/form-data
-file: image
-```
+| 用途 | 接口 |
+|---|---|
+| 认证 | `POST /api/auth/register`、`POST /api/auth/login`、`POST /api/admin/login` |
+| 猫档案 | `GET /api/cats`、`POST /api/cats`、`POST /api/cats/{id}/images` |
+| 识别 / 偶遇 | `POST /api/recognize`、`POST /api/sightings`、`GET /api/sightings` |
+| 审核 | `POST /api/admin/sightings/{id}/review`、`POST /api/discoveries/{id}/review` |
+| 参考库 | `GET /api/admin/reference/status`、`GET/POST /api/admin/reference/jobs` |
+| 社区 | `GET/POST /api/posts`、`POST /api/posts/{id}/like`、`POST /api/posts/{id}/comments` |
+| 猫情报 | `POST /api/agents/cat-intel/messages` |
+| 事件 / 健康 | `GET /api/events/stream`、`GET /api/system/health` |
 
-返回：
+Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据库接口重新查询。Web 重连目前不会自动刷新所有页面状态，部署网络与浏览器恢复仍需验收。
 
-```json
-{
-  "status": "confirmed | uncertain | unknown | unavailable",
-  "confidence": 0.92,
-  "cat_id": 1,
-  "cat_name": "小白",
-  "candidates": []
-}
-```
+## 后续工作与限制
 
-### 社区
+1. 修复 Docker 宿主机启动条件，在隔离挂载中验收镜像、Gunicorn、worker、持久化和完整恢复。
+2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
+3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
+4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。
+5. 确认代码、图片、档案和模型的许可。仓库尚无 LICENSE，公开可见不代表已授予开源使用许可。
 
-```text
-GET  /api/posts?topic=all&limit=20
-POST /api/posts
-GET  /api/posts/{id}
-POST /api/posts/{id}/like
-GET  /api/posts/{id}/comments
-POST /api/posts/{id}/comments
-POST /api/posts/{id}/reports
-```
+执行顺序与退出条件见 [下一阶段优化路径](docs/NEXT_OPTIMIZATION_PATH.md)。
 
-### 管理与审核
+## 文档入口
 
-```text
-GET  /api/admin/dashboard
-GET  /api/discoveries
-POST /api/discoveries/{id}/review
-GET  /api/posts/reports
-POST /api/posts/reports/{id}/handle
-GET  /api/audit/logs
-```
+| 文档 | 内容 |
+|---|---|
+| [已知问题台账](docs/KNOWN_ISSUES.md) | 当前状态、证据、关闭条件 |
+| [连续修复](docs/validation/REPAIR_PROGRESS.md) / [优化 A](docs/validation/OPTIMIZATION_A.md) | 核心修复、资源与交付门禁 |
+| [B1](docs/validation/OPTIMIZATION_B1.md) / [B2—B3](docs/validation/OPTIMIZATION_B23.md) / [B4](docs/validation/OPTIMIZATION_B4.md) | 参考库身份、任务、发布回滚和管理可见性 |
+| [C 验收](docs/validation/OPTIMIZATION_C.md) | Redis 多进程、SQLite/附件恢复、Docker 阻塞 |
+| [参考库操作](docs/REFERENCE_LIBRARY.md) / [备份恢复](docs/BACKUP_RECOVERY.md) | 配置、迁移、构建、恢复边界 |
+| [部署](DEPLOY.md) / [发布清单](docs/RELEASE_CHECKLIST.md) | 待完成的发布步骤 |
+| [权限矩阵](docs/PERMISSIONS.md) / [观测手册](docs/OBSERVABILITY_RUNBOOK.md) | 角色边界与排障 |
+| [贡献说明](CONTRIBUTIONS.md) | 团队职责与代表性提交 |
 
-`reviewer` 可处理线索、偶遇和举报；`admin` 保留猫档案、健康记录、喂食点、用户状态和完整审计能力。
-
-### 游戏化、路线故事与收藏
-
-```text
-GET  /api/daily-capsule
-POST /api/daily-capsule/claim
-GET  /api/gacha/today
-POST /api/gacha/draw
-GET  /api/users/me/titles
-GET  /api/users/me/collectibles
-GET  /api/routes/story
-POST /api/routes/story/check-in
-GET  /api/routes/story/progress
-```
-
-这些接口支撑每日回流、贡献称号、收藏品、路线故事、路线打卡和路线印章，也可作为后续 Agent 工作台的工具调用与记忆输入。
-
-### 健康检查
-
-```text
-GET /api/system/health
-GET /api/system/health?warm_model=true
-```
-
-默认健康检查保持轻量；发布前、部署后首轮验收或模型排障时再使用 `warm_model=true`。
-
----
-
-## 小程序端
-
-小程序工程位于 `cat-miniprogram/`，当前页面包括首页、地图、识猫、社区、我的、猫详情、帖子详情、动态、照片墙、管理端、勋章、通知、周报、排行榜、每日任务、收藏、年度回顾。
-
-构建：
-
-```powershell
-cd cat-miniprogram
-npm install
-npm run build:weapp
-```
-
-提交微信审核前仍需完成：
-
-- 注册微信小程序并替换 `cat-miniprogram/project.config.json` 中的 AppID。
-- 配置 `cat-miniprogram/config/prod.ts` 的线上 `API_BASE`。
-- 配置 HTTPS 合法域名、uploadFile/downloadFile 域名。
-- 替换 `cat-miniprogram/src/assets/tab/*.png` 的占位图标。
-- 在微信开发者工具和真机上测试登录、识猫、地图、社区、个人中心、下拉刷新。
-
-详细上线步骤见 [DEPLOY.md](DEPLOY.md)。
-
----
-
-## 发布候选说明
-
-P6 当前目标是冻结广泛功能开发，证明项目可交接、可演示、可继续维护。发布候选验收关注：
-
-- 核心产品闭环稳定：首页寻猫入口、识别、偶遇纪念卡、档案、公开分享、社区、个人中心、管理审核、管理看板、路线推荐。
-- 失败路径可理解：模型不可用、空数据、上传失败、未授权访问、审核/审计状态异常。
-- 运维第一版可用：系统健康、模型健康、request id、结构化日志、备份、恢复 dry run、权限矩阵、协作手册、发布清单、演示脚本。
-- README、roadmap、TODO、docs 和 harness 报告状态一致。
-
-下一阶段建议按五条线推进：
-
-- 部署：生产环境矩阵、密钥管理、进程/容器部署、外部日志或 APM。
-- 数据：正式迁移纪律、一次性恢复演练、种子数据重置、可选 PostgreSQL 迁移。
-- 模型：真实校园样本集、阈值校准报告、推理延迟预算、不可用/降级监控。
-- 产品：来源统计、路线完成记录、更强路线叙事、更细管理端筛选。
-- Agent：按 [tasks/agent_student_schedule_task.md](tasks/agent_student_schedule_task.md) 落地 Agent 工作台、学生课表/活动输入、课间路线规划、猫协审核建议和学习复盘报告。
-- 协作：issue 模板、release notes、版本 tag、每个里程碑一份验收报告。
-
----
-
-## 当前限制
-
-- 真实生产部署前仍需正式密钥、域名、HTTPS、CORS 白名单和外部日志策略。
-- SQLite 适合课程展示和轻量内测；多人长期使用前应补正式迁移和恢复演练。
-- 模型链路已经接入，但识别质量仍依赖当前权重、reference embedding 和演示数据；真实上线前需要固定样本集与阈值校准。
-- 小程序端已具备页面结构，但仍需 AppID、服务域名、图标替换和真机测试。
-- 高德地图坐标仍以演示级校园点位为主，真实运营时需要验证位置来源。
-- Agent 训练营优化目前只有交接任务文件，尚未实现 `/agents` 页面、Agent API、课表/活动输入或审核建议接口。
-- 本仓库当前没有单独的 `LICENSE` 文件；如要公开开源发布，需要补齐许可证。
-
----
+验收文件中的“未提交/未推送”及 SHA256 描述的是当轮验收时点，保留为历史记录；当前仓库状态以 Git 提交和 Actions 为准。早期审查报告在仓库外的本地目录，台账已注明这些链接的适用范围。
 
 ## 项目归属与个人贡献
 
-这是 5 人校园团队项目，不是个人独立作品。
-
-具体职责边界、代表性提交和团队成员的仓库贡献，见 [CONTRIBUTIONS.md](CONTRIBUTIONS.md)。
-
-## 团队
+这是 **5 人校园团队项目，不是个人独立作品**。职责边界、代表性提交和团队成员贡献见 [CONTRIBUTIONS.md](CONTRIBUTIONS.md)。
 
 - **指导教师：** 复旦大学计算机科学技术学院
-- **仓库地址：** [github.com/54123-phoenix/cat-cat-cat](https://github.com/54123-phoenix/cat-cat-cat)
+- **仓库：** [54123-phoenix/cat-cat-cat](https://github.com/54123-phoenix/cat-cat-cat)
 
 <div align="center">
   <sub>用 AI 让每一只校园猫被看见 · 课程项目 · 2026</sub>

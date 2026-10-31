@@ -2,7 +2,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.database import get_db
 from app.models import Cat, CatImage, Sighting
@@ -44,7 +44,7 @@ def get_gallery(
         cat_query = cat_query.filter(Cat.location.ilike(f"%{location}%"))
     cat_rows = cat_query.order_by(CatImage.created_at.desc()).all()
 
-    sighting_query = db.query(Sighting).join(Cat, Sighting.cat_id == Cat.id)
+    sighting_query = db.query(Sighting).join(Cat, Sighting.cat_id == Cat.id).filter(Sighting.status == "approved")
     if color:
         sighting_query = sighting_query.filter(Cat.color.ilike(f"%{color}%"))
     if location:
@@ -71,7 +71,7 @@ def get_gallery(
             "created_at": s.created_at,
         })
 
-    items.sort(key=lambda x: x["created_at"] or datetime.min, reverse=True)
+    items.sort(key=lambda x: (x["created_at"] or datetime.min.replace(tzinfo=timezone.utc), x["type"], x["id"]), reverse=True)
     total = len(items)
     page = items[skip : skip + limit]
     return {"items": page, "total": total, "has_more": (skip + limit) < total}

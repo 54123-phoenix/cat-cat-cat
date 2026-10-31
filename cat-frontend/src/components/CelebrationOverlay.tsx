@@ -16,14 +16,16 @@ export default function CelebrationOverlay({ badgeName, onClose, autoMs = 3500 }
     return () => clearTimeout(t)
   }, [autoMs, onClose])
 
-  if (!visible) return null
-
-  const pieces = Array.from({ length: 36 }, (_, i) => ({
+  const [pieces] = useState(() => Array.from({ length: 36 }, (_, i) => ({
     left: Math.random() * 100,
     bg: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
     delay: Math.random() * 0.4,
     dur: 1.6 + Math.random() * 0.8,
-  }))
+  })))
+
+  if (!visible) return null
+
+
 
   return (
     <div className="celebration-overlay" role="dialog" aria-modal="true" aria-label={`解锁勋章 ${badgeName || ''}`}>

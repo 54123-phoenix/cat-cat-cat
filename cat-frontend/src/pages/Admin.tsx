@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { QrCode, X, Download, MapPin, Trophy, History, AlertTriangle, Cat, Users } from 'lucide-react'
 import QRCode from 'qrcode'
-import { adminLogin, clearAdminToken, createCat, getAdminDashboard, getAdminMe, getAdminToken, getCat, getCats, getSightings, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
+import ReferencePanel from '../features/reference/ReferencePanel'
+import { ADMIN_AUTH_EXPIRED, ApiError, getAdminSightings, reviewSighting } from '../api'
+import { adminLogin, clearAdminToken, createCat, getAdminDashboard, getAdminMe, getAdminToken, getCat, getCats, updateCat, uploadCatImage, getReports, handleReport, getHealthRecords, createHealthRecord, deleteHealthRecord, getFeedingPoints, createFeedingPoint, deleteFeedingPoint } from '../api'
 
 const emptyForm = {
   name: '', nickname: '', gender: '', neutered: '', age_estimate: '',
@@ -42,6 +44,7 @@ const RECORD_TYPES = [
 const TABS = [
   { key: 'overview', label: '总览' },
   { key: 'cats', label: '猫档案' },
+  { key: 'reference', label: '识别参考库' },
   { key: 'health', label: '健康' },
   { key: 'feeding', label: '喂食' },
   { key: 'reports', label: '举报' },
@@ -50,10 +53,14 @@ const TABS = [
 
 export default function Admin() {
   const [authenticated, setAuthenticated] = useState(Boolean(getAdminToken()))
+  const [authCheckFailed, setAuthCheckFailed] = useState(false)
+  const [authRetry, setAuthRetry] = useState(0)
+  const [adminRole, setAdminRole] = useState<'admin' | 'reviewer' | null>(null)
   const [password, setPassword] = useState('')
   const [dashboard, setDashboard] = useState(null)
   const [cats, setCats] = useState([])
   const [sightings, setSightings] = useState([])
+  const [reviewingId, setReviewingId] = useState<number | null>(null)
   const [reports, setReports] = useState([])
   const [healthRecords, setHealthRecords] = useState([])
   const [healthCats, setHealthCats] = useState([])
@@ -73,7 +80,7 @@ export default function Admin() {
   const [qrDataUrl, setQrDataUrl] = useState('')
 
   const loadCats = () => getCats().then(setCats).catch(e => setError(e.message))
-  const loadSightings = () => getSightings({ limit: 20 }).then(data => setSightings(Array.isArray(data) ? data : [])).catch(e => setError(e.message))
+  const loadSightings = () => getAdminSightings({ limit: 20 }).then(setSightings).catch(e => setError(e.message))
   const loadReports = () => getReports({ status: 'pending', limit: 20 }).then(data => setReports(Array.isArray(data) ? data : [])).catch(e => setError(e.message))
   const loadFeeding = () => getFeedingPoints().then(setFeedingPoints).catch(e => setError(e.message))
   const loadHealthCats = () => getCats().then(setHealthCats).catch(e => setError(e.message))
@@ -87,9 +94,35 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    if (!authenticated) { setLoading(false); return }
-    getAdminMe().then(loadData).catch(() => { clearAdminToken(); setAuthenticated(false); setError('登录已过期'); setLoading(false) })
-  }, [authenticated])
+    if (!authenticated) { setLoading(false); return undefined }
+    let active = true
+    setLoading(true)
+    setAuthCheckFailed(false)
+    setError('')
+    getAdminMe().then((identity) => { if (active) { setAdminRole(identity.role === 'admin' ? 'admin' : 'reviewer'); loadData() } }).catch((err) => {
+      if (!active) return
+      if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
+        clearAdminToken()
+        setAuthenticated(false)
+        setError(err.status === 403 ? '当前账号没有管理权限' : '登录已过期')
+      } else {
+        setAuthCheckFailed(true)
+        setError('暂时无法验证管理身份，请重试')
+      }
+      setLoading(false)
+    })
+    return () => { active = false }
+  }, [authenticated, authRetry])
+
+  useEffect(() => {
+    const onExpired = () => {
+      setAuthenticated(false)
+      setLoading(false)
+      setError('登录已过期')
+    }
+    window.addEventListener(ADMIN_AUTH_EXPIRED, onExpired)
+    return () => window.removeEventListener(ADMIN_AUTH_EXPIRED, onExpired)
+  }, [])
 
   useEffect(() => {
     if (!healthCatId) { setHealthRecords([]); return }
@@ -104,16 +137,32 @@ export default function Admin() {
 
   const handleLogin = async (e) => {
     e.preventDefault(); setSaving(true); setError('')
-    try { await adminLogin(password); setPassword(''); setAuthenticated(true); setMessage('猫协管理员登录成功') }
+    try { await adminLogin(password); setPassword(''); setLoading(true); setAuthenticated(true); setMessage('猫协管理员登录成功') }
     catch (err) { setError(err.message || '登录失败') }
     finally { setSaving(false) }
   }
 
   const handleLogout = () => {
+    setAdminRole(null)
     clearAdminToken(); setAuthenticated(false); resetForm(); setCats([]); setSightings([]); setMessage('已退出')
   }
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+
+  async function handleReview(id: number, action: 'approve' | 'reject') {
+    setReviewingId(id)
+    setError('')
+    setMessage('')
+    try {
+      await reviewSighting(id, action)
+      setMessage(action === 'approve' ? '偶遇已通过审核，现已公开' : '偶遇已拒绝，未公开')
+      await Promise.all([loadSightings(), loadDashboard()])
+    } catch (err) {
+      setError(err.message || '审核失败，请重试')
+    } finally {
+      setReviewingId(null)
+    }
+  }
 
   const selectCat = async (cat) => {
     setSelectedCatId(cat.id); setError(''); setMessage('')
@@ -140,8 +189,15 @@ export default function Admin() {
     try {
       if (!form.name.trim()) throw new Error('猫猫名字不能为空')
       const saved = selectedCatId ? await updateCat(selectedCatId, form) : await createCat(form)
-      if (imageFile) await uploadCatImage(saved.id, imageFile)
-      setMessage(selectedCatId ? '猫档案已更新' : '新猫档案已创建')
+      if (imageFile) {
+        try { await uploadCatImage(saved.id, imageFile) }
+        catch {
+          setSelectedCatId(saved.id)
+          loadCats()
+          throw new Error('档案已保存，但参考照片上传失败。请保留当前档案重试保存，照片尚未进入参考库。')
+        }
+      }
+      setMessage(`${selectedCatId ? '猫档案已更新' : '新猫档案已创建'}；识别参考状态请到“识别参考库”核对。`)
       resetForm(true)
       loadCats()
     } catch (err) { setError(err.message || '保存失败') }
@@ -201,6 +257,16 @@ export default function Admin() {
 
   if (loading) return <div className="flex items-center justify-center h-screen"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>
 
+  if (authenticated && authCheckFailed) {
+    return (
+      <div className="card p-5 space-y-4 max-w-[480px] mx-auto">
+        <p role="alert">{error}</p>
+        <button className="btn btn-primary" onClick={() => setAuthRetry(value => value + 1)}>重试</button>
+        <button className="btn" onClick={handleLogout}>退出</button>
+      </div>
+    )
+  }
+
   if (!authenticated) {
     return (
       <div className="space-y-5 p-4 max-w-[480px] mx-auto">
@@ -209,7 +275,7 @@ export default function Admin() {
           <h1 className="text-2xl font-bold text-text">猫协管理登录</h1>
           <p className="text-sm text-text-secondary mt-1">请输入猫协管理员口令</p>
         </div>
-        {(message || error) && <div className={`rounded-2xl px-4 py-3 text-sm font-bold ${error ? 'bg-red-50 text-red-500' : 'bg-green-50 text-success'}`}>{error || message}</div>}
+        {(message || error) && <div role={error ? 'alert' : 'status'} className={`rounded-2xl px-4 py-3 text-sm font-bold ${error ? 'bg-rose-50 text-rose-900' : 'bg-emerald-50 text-emerald-900'}`}>{error || message}</div>}
         <form onSubmit={handleLogin} className="card p-5 space-y-4">
           <label className="space-y-1 block">
             <span className="block text-xs font-bold text-text-secondary">管理员口令</span>
@@ -229,11 +295,12 @@ export default function Admin() {
           <h1 className="text-lg font-bold text-text">管理台</h1>
           <button onClick={handleLogout} className="text-sm text-red-400 font-medium">退出</button>
         </div>
-        <div className="flex mt-3 -mb-3 space-x-1">
+        <div className="flex mt-3 -mb-3 space-x-1 overflow-x-auto" aria-label="管理栏目">
           {TABS.map(t => (
             <button key={t.key} onClick={() => setAdminTab(t.key)}
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                adminTab === t.key ? 'border-primary text-primary' : 'border-transparent text-text-secondary hover:text-text'
+              aria-pressed={adminTab === t.key}
+              className={`shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                adminTab === t.key ? 'border-primary text-text' : 'border-transparent text-text-secondary hover:text-text'
               }`}>
               {t.label}
             </button>
@@ -242,12 +309,13 @@ export default function Admin() {
       </header>
 
       {(message || error) && (
-        <div className={`mx-4 mt-3 rounded-2xl px-4 py-3 text-sm font-bold ${error ? 'bg-red-50 text-red-500' : 'bg-green-50 text-success'}`}>
+        <div role={error ? 'alert' : 'status'} className={`mx-4 mt-3 rounded-2xl px-4 py-3 text-sm font-bold ${error ? 'bg-rose-50 text-rose-900' : 'bg-emerald-50 text-emerald-900'}`}>
           {error || message}
         </div>
       )}
 
       <div className="p-4 space-y-4">
+        {adminTab === 'reference' && <ReferencePanel canManage={adminRole === 'admin'} />}
         {/* Tab: 总览 */}
         {adminTab === 'overview' && (
           <section className="space-y-4">
@@ -339,6 +407,7 @@ export default function Admin() {
         {/* Tab: 猫档案 */}
         {adminTab === 'cats' && (
           <>
+            <p className="text-sm text-text-secondary">档案保存与参考库发布是两个步骤。新增猫或参考照片后，请到<button className="underline font-semibold text-text px-1 py-2" onClick={() => setAdminTab('reference')}>识别参考库</button>核对并重建。</p>
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg text-text">猫档案列表</h2>
               <button onClick={() => { resetForm(); setAdminTab('cats') }} className="btn btn-primary btn-sm">+ 新增</button>
@@ -483,6 +552,17 @@ export default function Admin() {
                 </div>
                 <p className="text-sm text-text-secondary mt-1">{s.location_name || s.location || '校园某处'}</p>
                 {s.note && <p className="text-xs text-text-secondary mt-1">"{s.note}"</p>}
+                <div className="flex items-center justify-between gap-3 mt-3">
+                  <span className="text-xs text-text-secondary">{{ pending: '待审核', approved: '已通过', rejected: '已拒绝' }[s.status] || '状态未知'}</span>
+                  {s.status === 'pending' && (
+                    <div className="flex gap-2">
+                      <button className="btn text-sm" disabled={reviewingId !== null} onClick={() => handleReview(s.id, 'reject')}>拒绝</button>
+                      <button className="btn btn-primary text-sm" disabled={reviewingId !== null} onClick={() => handleReview(s.id, 'approve')}>
+                        {reviewingId === s.id ? '提交中…' : '通过'}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </article>
             ))}
           </section>

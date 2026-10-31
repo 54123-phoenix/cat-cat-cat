@@ -6,7 +6,7 @@ import Sidebar from './Sidebar'
 import Toast, { toast } from './Toast'
 import CelebrationOverlay from './CelebrationOverlay'
 import { useEventStream } from '../hooks/useEventStream'
-import { getUserProfile, getToken, clearToken, setToken } from '../api'
+import { ApiError, getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
 import Logo from './illustrations/Logo'
 
@@ -56,15 +56,17 @@ export default function Layout() {
     let cancelled = false
     getUserProfile()
       .then((u) => {
-        if (!cancelled) {
+        if (!cancelled && getToken() === token) {
           updateUser(u)
           setToken(token, u)
         }
       })
-      .catch(() => {
-        if (!cancelled) {
+      .catch((error) => {
+        if (!cancelled && error instanceof ApiError && error.status === 401 && (!getToken() || getToken() === token)) {
           clearToken()
           navigate('/login')
+        } else if (!cancelled) {
+          toast('个人资料暂时无法加载，请稍后重试')
         }
       })
     return () => { cancelled = true }

@@ -27,7 +27,7 @@ export default function League() {
     setError('')
     getLeaderboard()
       .then((data) => setLeaders(Array.isArray(data) ? data : []))
-      .catch((e) => setError('加载失败，请稍后重试'))
+      .catch(() => setError('加载失败，请稍后重试'))
       .finally(() => setLoading(false))
   })
 

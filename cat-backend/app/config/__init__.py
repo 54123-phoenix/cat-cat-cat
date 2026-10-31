@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     TOKEN_TTL_MINUTES: int = 60 * 24 * 7
     CORS_ORIGINS: str = "http://localhost:5173"
     UPLOAD_DIR: str = "./uploads"
+    REFERENCE_DIR: str = ""
+    REFERENCE_STORE: str = ""
     DATABASE_URL: str = "sqlite:///./cat_community.db"
     ADMIN_PASSWORD: str
     DEMO_PASSWORD: str = ""
@@ -34,6 +36,7 @@ class Settings(BaseSettings):
 
     WECHAT_APPID: str = ""
     WECHAT_SECRET: str = ""
+    WECHAT_DEV_MODE: bool = False
 
     @model_validator(mode="after")
     def validate_thresholds(self):

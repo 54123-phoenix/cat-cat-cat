@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "checks": {
+    "queued_is_not_published": "passed",
+    "worker_progress_and_automatic_refresh": "passed",
+    "failed_build_preserves_old_version_and_ui_retry": "passed",
+    "archive_save_upload_failure_and_pending_changes": "passed",
+    "responsive_and_text_contrast": "passed",
+    "refresh_failure_and_keyboard_retry": "passed",
+    "reviewer_read_only": "passed",
+    "expired_admin_session_isolated": "passed"
+  },
+  "page_errors": [],
+  "contrasts": {
+    "original-390": [
+      16.76,
+      7.31
+    ],
+    "dark-360": [
+      13.9,
+      10.18
+    ],
+    "original-1280": [
+      16.76,
+      7.31
+    ]
+  },
+  "model": "synthetic inference adapter; no quality claim",
+  "started_at": "2026-10-31T02:38:51.882733+00:00",
+  "browser": "156.0.8078.4"
+}

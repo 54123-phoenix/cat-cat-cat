@@ -1,4 +1,5 @@
 import logging
+import hashlib
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
@@ -91,6 +92,10 @@ def require_auth(user: User = Depends(get_current_user_from_header)) -> User:
     return user
 
 
+def optional_auth(authorization: str = Header(default=""), db: Session = Depends(get_db)):
+    return get_current_user_from_header(authorization, db) if authorization else None
+
+
 @router.post("/register", response_model=TokenResponse)
 @limit(f"{settings.RATE_REGISTER_PER_MIN}/minute")
 def register(request: Request, payload: UserRegister, db: Session = Depends(get_db)):
@@ -141,7 +146,7 @@ async def wechat_login(request: Request, payload: schemas.WechatLoginRequest, db
 
     if not user:
         is_new = True
-        username = f"wx_{openid[:12]}"
+        username = f"wx_{hashlib.sha256(openid.encode('utf-8')).hexdigest()[:32]}"
         nickname = payload.nickname or f"猫友{openid[-4:]}"
         user = User(
             username=username,

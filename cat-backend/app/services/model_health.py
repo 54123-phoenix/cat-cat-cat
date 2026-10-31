@@ -1,12 +1,15 @@
-import json
-from datetime import datetime
+from app.time_utils import utc_now
 from pathlib import Path
 from typing import Any
 
 from app.config import settings
 from app.services.model_loader import MODEL_PATH, TORCH_AVAILABLE, load_model
 
-EMBEDDINGS_PATH = Path(__file__).parent.parent.parent / "embeddings" / "cat_embeddings.json"
+from app.services.reference_snapshot import (
+    reference_directory, load_snapshot, load_active_snapshot, runtime_identity, ReferenceUnavailable,
+)
+
+EMBEDDINGS_PATH = reference_directory() / "vectors.json"
 
 
 def _check_status(checks: list[dict[str, Any]]) -> str:
@@ -56,53 +59,38 @@ def _threshold_check() -> tuple[dict[str, Any], dict[str, Any]]:
 
 
 def _embeddings_check(path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    managed = bool(settings.REFERENCE_STORE)
     metadata: dict[str, Any] = {
-        "exists": path.exists(),
-        "size_bytes": path.stat().st_size if path.exists() else 0,
+        "path": str(Path(settings.REFERENCE_STORE).resolve()) if managed else str(path),
+        "exists": False,
+        "size_bytes": 0,
         "reference_cat_count": 0,
         "embedding_dimensions": None,
+        "managed": managed,
     }
-
-    if not path.exists() or metadata["size_bytes"] <= 0:
-        return metadata, {
-            "name": "reference_embeddings",
-            "status": "fail",
-            "detail": str(path),
-            "metadata": metadata,
-        }
-
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        metadata["error"] = str(exc)
-        return metadata, {
-            "name": "reference_embeddings",
-            "status": "fail",
-            "detail": "embedding file cannot be parsed",
-            "metadata": metadata,
-        }
-
-    dimensions: set[int] = set()
-    valid_cats = 0
-    for cat_data in data.values():
-        embeddings = cat_data.get("embeddings") if isinstance(cat_data, dict) else None
-        if not embeddings:
-            continue
-        first_embedding = embeddings[0]
-        if isinstance(first_embedding, list) and first_embedding:
-            dimensions.add(len(first_embedding))
-            valid_cats += 1
-
-    metadata["reference_cat_count"] = valid_cats
-    metadata["embedding_dimensions"] = sorted(dimensions)
-    status = "pass" if valid_cats > 0 and len(dimensions) == 1 else "fail"
-
-    return metadata, {
-        "name": "reference_embeddings",
-        "status": status,
-        "detail": str(path),
-        "metadata": metadata,
-    }
+        if managed:
+            snapshot = load_active_snapshot()
+            path = Path(settings.REFERENCE_STORE).resolve() / 'versions' / snapshot.manifest.snapshot_id / 'vectors.json'
+            metadata['publication_id'] = snapshot.publication_id
+        else:
+            if not path.is_file():
+                raise ReferenceUnavailable('manifest_missing', 'Reference embeddings are missing')
+            from app.database import SessionLocal
+            digest, pipeline = runtime_identity()
+            with SessionLocal() as db:
+                snapshot = load_snapshot(path.parent, db, Path(settings.UPLOAD_DIR), digest, pipeline)
+        metadata.update(path=str(path), exists=path.is_file(), size_bytes=path.stat().st_size)
+        metadata['reference_cat_count'] = len({v.reference_id for v in snapshot.vectors})
+        metadata['embedding_dimensions'] = [snapshot.manifest.dimension]
+        metadata['snapshot_id'] = snapshot.manifest.snapshot_id
+        status, detail = 'pass', 'Reference identity and content validated'
+    except ReferenceUnavailable as exc:
+        status, detail = 'fail', exc.code
+    except Exception:
+        status, detail = 'fail', 'reference_validation_failed'
+    return metadata, {'name': 'reference_embeddings', 'status': status,
+                      'detail': detail, 'metadata': metadata}
 
 
 def get_model_health(warm_model: bool = False) -> dict[str, Any]:
@@ -152,15 +140,15 @@ def get_model_health(warm_model: bool = False) -> dict[str, Any]:
             "size_bytes": MODEL_PATH.stat().st_size if MODEL_PATH.exists() else 0,
         },
         "embeddings_file": {
-            "path": str(EMBEDDINGS_PATH),
-            "exists": EMBEDDINGS_PATH.exists(),
-            "size_bytes": EMBEDDINGS_PATH.stat().st_size if EMBEDDINGS_PATH.exists() else 0,
+            "path": embeddings['path'],
+            "exists": embeddings['exists'],
+            "size_bytes": embeddings['size_bytes'],
         },
         "reference_cat_count": embeddings["reference_cat_count"],
         "embedding_dimensions": embeddings["embedding_dimensions"] or [],
         "thresholds": thresholds,
         "warm_model_requested": warm_model,
         "warm_model_loaded": warm_loaded,
-        "checked_at": datetime.utcnow(),
+        "checked_at": utc_now(),
         "checks": checks,
     }

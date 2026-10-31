@@ -8,7 +8,7 @@ import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
 import CatIdentityCard from '../components/CatIdentityCard'
 import { createDiscovery, createSighting, identifyCat } from '../api'
-import { campusLocations, findCampusLocation } from '../campusLocations'
+import { campusLocations, resolveSightingLocation } from '../campusLocations'
 import { ACTIVITY_OPTIONS, WEATHER_OPTIONS, MOOD_OPTIONS } from '../constants/activities'
 
 export default function Scan() {
@@ -23,7 +23,6 @@ export default function Scan() {
   const [savedSighting, setSavedSighting] = useState(null)
   const [showPawRain, setShowPawRain] = useState(false)
   const [showIdentityCard, setShowIdentityCard] = useState(false)
-  const [selectedLocation, setSelectedLocation] = useState(campusLocations[0].name)
   const [customLocation, setCustomLocation] = useState('')
   const [activity, setActivity] = useState('')
   const [weather, setWeather] = useState('')
@@ -38,7 +37,6 @@ export default function Scan() {
     const lng = searchParams.get('lng')
     if (point) {
       setCustomLocation(point)
-      setSelectedLocation(point)
       const matched = campusLocations.find((l) => l.name === point)
       if (!matched && lat && lng) {
         setMessage(`已预选地点：${point}（${lat}, ${lng}）`)
@@ -64,12 +62,13 @@ export default function Scan() {
   }
 
   function getLocationName() {
-    return customLocation.trim() || selectedLocation
+    return customLocation.trim()
   }
 
   async function saveConfirmedSighting(data) {
     if (!data.cat_id) return null
     const file = selectedFileRef.current
+    const location = resolveSightingLocation(getLocationName(), searchParams)
     return createSighting({
       catId: data.cat_id,
       location: getLocationName(),
@@ -78,8 +77,8 @@ export default function Scan() {
       weather: weather || undefined,
       mood: mood || undefined,
       file,
-      latitude: undefined,
-      longitude: undefined,
+      latitude: location?.latitude,
+      longitude: location?.longitude,
     })
   }
 
@@ -126,7 +125,7 @@ export default function Scan() {
 
   async function submitDiscovery() {
     const file = selectedFileRef.current
-    const location = findCampusLocation(selectedLocation)
+    const location = resolveSightingLocation(getLocationName(), searchParams)
     setMessage('')
     try {
       const created = await createDiscovery({
@@ -205,10 +204,6 @@ export default function Scan() {
               list="location-options"
               value={customLocation}
               onChange={(e) => setCustomLocation(e.target.value)}
-              onBlur={(e) => {
-                if (!e.target.value.trim()) setSelectedLocation(campusLocations[0].name)
-                else setSelectedLocation(e.target.value)
-              }}
               placeholder="搜索或输入地点..."
               className="w-full bg-primary-light rounded-full px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary/30"
             />
@@ -219,6 +214,12 @@ export default function Scan() {
             </datalist>
           </div>
         </label>
+
+        <p className="text-xs text-gray-500">
+          {resolveSightingLocation(getLocationName(), searchParams)
+            ? '将保存所选点位的坐标，审核通过后可在地图显示。'
+            : '尚未选择有坐标的点位。仍可保存文字记录，但暂不会显示在地图上。'}
+        </p>
 
         <div className="bg-white rounded-xl border border-gray-100 p-3 space-y-3">
           <div>

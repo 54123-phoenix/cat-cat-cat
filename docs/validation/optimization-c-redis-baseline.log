@@ -1,0 +1,24 @@
+{"status": "failed", "checks": {}, "started_at": "2026-10-31T03:02:00.065611+00:00", "environment": "WSL Redis + Windows API"}
+Traceback (most recent call last):
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_redis_runtime.py", line 293, in <module>
+    main()
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_redis_runtime.py", line 281, in main
+    asyncio.run(scenario(args, output, report))
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_redis_runtime.py", line 114, in scenario
+    await wait_until(redis_ready)
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_redis_runtime.py", line 80, in wait_until
+    if await check():
+       ^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_redis_runtime.py", line 109, in redis_ready
+    assert redis_process.poll() is None, 'Acceptance Redis exited'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Acceptance Redis exited

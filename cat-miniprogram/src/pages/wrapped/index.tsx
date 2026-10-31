@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
-import { getMyStats, getFollowedCats, getSightings } from '../../services/api'
+import { useDidShow } from '@tarojs/taro'
+import { getMyStats, getFollowedCats } from '../../services/api'
 
 const SLIDES = [
   { key: 'intro', title: '你的猫猫年度', subtitle: '回顾这一年与猫猫的故事' },
@@ -24,8 +24,7 @@ export default function Wrapped() {
     Promise.all([
       getMyStats().catch(() => ({})),
       getFollowedCats().catch(() => []),
-      getSightings({ limit: 200 }).catch(() => []),
-    ]).then(([statsData, followsData, sightingsData]) => {
+    ]).then(([statsData, followsData]) => {
       setStats(statsData || {})
       setFollowCount(Array.isArray(followsData) ? followsData.length : 0)
     }).finally(() => setLoading(false))

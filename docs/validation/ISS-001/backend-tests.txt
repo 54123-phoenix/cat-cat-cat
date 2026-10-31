@@ -1,0 +1,19 @@
+........................................................................ [ 61%]
+..............................................                           [100%]
+============================== warnings summary ===============================
+..\..\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_api.py::TestAuth::test_register_success
+tests/test_cat_intel_agent.py::test_api_requires_auth_and_returns_structured_answer
+tests/test_extended.py::TestNotifications::test_list_requires_auth
+tests/test_request_logging.py::test_request_logging_preserves_valid_request_id
+tests/test_request_logging.py::test_request_logging_replaces_invalid_request_id
+tests/test_security.py::test_upload_non_image_rejected
+tests/test_upload_serving.py::test_upload_serves_files_inside_root[absolute-cats/sample.txt]
+  D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+118 passed, 23 warnings in 11.05s

@@ -1,3 +1,4 @@
+from app.time_utils import utc_now
 import json
 from datetime import datetime
 
@@ -35,7 +36,7 @@ def run_cat_intel(db: Session, request: CatIntelRequest) -> CatIntelResponse:
                 content = (reply.get("content") or "").strip()
                 if not content or not evidence:
                     break
-                return CatIntelResponse(answer=content, mode="agent", intent="tool_answer", confidence=_quality(evidence), evidence=evidence, actions=actions, limitations=[GENERIC_LIMITATION], generated_at=datetime.now())
+                return CatIntelResponse(answer=content, mode="agent", intent="tool_answer", confidence=_quality(evidence), evidence=evidence, actions=actions, limitations=[GENERIC_LIMITATION], generated_at=utc_now())
             messages.append(reply)
             for call in calls:
                 result, new_evidence, new_actions = _execute(db, call, request)

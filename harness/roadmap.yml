@@ -1,4 +1,18 @@
 version: 1
+# P0-P6 statuses below are historical implementation records. They do not
+# override the issue ledger or prove that release acceptance is complete.
+acceptance_status:
+  updated: "2026-10-31"
+  release_candidate: false
+  ledger: "docs/KNOWN_ISSUES.md"
+  execution_path: "docs/NEXT_OPTIMIZATION_PATH.md"
+  latest_evidence: "docs/validation/OPTIMIZATION_C.md"
+  locally_passed_issues: 25
+  specialty_pending_issues: 9
+  partially_completed_issues: 3
+  docker: "blocked-host-engine"
+  redis: "local-four-process-passed"
+  sqlite_recovery: "local-database-and-upload-passed"
 name: cat-community-upgrade
 theme: "passionate but steady"
 north_star: "识别可信、档案可靠、社区活跃、传播自然、猫协可用"

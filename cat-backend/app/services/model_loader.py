@@ -1,10 +1,13 @@
 """DINOv3 ViT model loader for cat recognition.
 
 Uses official Meta dinov3 vit_base_patch16_dinov3 model.
-If torch is not installed, recognition gracefully degrades to unknown status.
+Missing runtime or invalid weights make recognition unavailable.
 """
 
 import logging
+import hashlib
+import io
+from threading import RLock
 from pathlib import Path
 from typing import Optional
 
@@ -121,24 +124,41 @@ if TORCH_AVAILABLE and nn is not None:
 # ─── Singleton Model Loader ──────────────────────────────────────────
 
 _model: Optional = None
+_model_digest: str | None = None
+_model_lock = RLock()
 
 MODEL_DIR = Path(__file__).parent.parent.parent / "models"
 MODEL_PATH = MODEL_DIR / "finetuned_best.pt"
 
 
 def load_model() -> Optional:
-    """Load dinov3 (vit_base_patch16_dinov3) model with optional finetuned weights.
+    with _model_lock:
+        return _load_model_locked()
+
+
+def _load_model_locked() -> Optional:
+    """Load dinov3 only after required finetuned weights pass strict loading.
     
     Returns None if torch/timm unavailable.
     """
-    global _model
+    global _model, _model_digest
 
     if not TORCH_AVAILABLE or not TIMM_AVAILABLE:
         logger.warning("torch or timm not available")
         return None
 
-    if _model is not None:
+    try:
+        checkpoint_bytes = MODEL_PATH.read_bytes()
+        digest = hashlib.sha256(checkpoint_bytes).hexdigest()
+    except OSError:
+        _model = None
+        _model_digest = None
+        logger.error("Required checkpoint missing or unreadable at %s", MODEL_PATH)
+        return None
+    if _model is not None and digest == _model_digest:
         return _model
+    _model = None
+    _model_digest = None
 
     try:
         # Load official dinov3 model
@@ -154,7 +174,7 @@ def load_model() -> Optional:
         if MODEL_PATH.exists():
             try:
                 logger.info("Loading finetuned weights from %s ...", MODEL_PATH)
-                checkpoint = torch.load(str(MODEL_PATH), map_location="cpu", weights_only=False)
+                checkpoint = torch.load(io.BytesIO(checkpoint_bytes), map_location="cpu", weights_only=True)
 
                 # Handle both direct state dict and checkpoint wrapper
                 if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
@@ -169,19 +189,24 @@ def load_model() -> Optional:
                     state_dict = {k.replace('module.', ''): v for k, v in state_dict.items()}
 
                 # Load into wrapped model
-                missing, unexpected = model.load_state_dict(state_dict, strict=False)
+                missing, unexpected = model.load_state_dict(state_dict, strict=True)
                 if missing:
                     logger.warning("Missing keys in checkpoint: %d keys", len(missing))
                 if unexpected:
                     logger.warning("Unexpected keys in checkpoint: %d keys", len(unexpected))
+                if missing or unexpected:
+                    return None
 
                 logger.info("Finetuned weights loaded successfully (including projection head)")
             except Exception as e:
-                logger.warning("Failed to load finetuned weights (%s), using model with random projection", e)
+                logger.error("Failed to load required finetuned weights: %s", e)
+                return None
         else:
-            logger.warning("Checkpoint not found at %s, using model with random weights", MODEL_PATH)
+            logger.error("Required checkpoint disappeared at %s", MODEL_PATH)
+            return None
 
         _model = model
+        _model_digest = digest
         logger.info("Model ready for inference (DINOv3 + 768->256 projection)")
         return _model
 
@@ -190,7 +215,12 @@ def load_model() -> Optional:
         return None
 
 
-def extract_embedding(image: Image.Image) -> list[float]:
+def extract_embedding(image: Image.Image, *, expected_digest: str | None = None) -> list[float]:
+    with _model_lock:
+        return _extract_embedding_locked(image, expected_digest=expected_digest)
+
+
+def _extract_embedding_locked(image: Image.Image, *, expected_digest: str | None) -> list[float]:
     """Extract embedding from image using dinov3 + projection head.
     
     Returns a normalized 256-dim embedding vector from the projection head.
@@ -200,7 +230,7 @@ def extract_embedding(image: Image.Image) -> list[float]:
         return []
 
     model = load_model()
-    if model is None:
+    if model is None or (expected_digest is not None and _model_digest != expected_digest):
         return []
 
     try:

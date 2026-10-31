@@ -11,14 +11,17 @@ services:
     build: ./cat-backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./cat-backend/cat_community.db:/app/data
+    volumes: &backend-volumes
+      - ./cat-backend/data:/app/data
       - ./cat-backend/uploads:/app/uploads
       - ./cat-backend/models:/app/models
       - ./cat-backend/embeddings:/app/embeddings
-    environment:
+      - ./cat-backend/reference-store:/app/reference-store
+    environment: &backend-environment
       - DATABASE_URL=sqlite:///./data/cat_community.db
       - UPLOAD_DIR=./uploads
+      - REFERENCE_DIR=${REFERENCE_DIR:-}
+      - REFERENCE_STORE=${REFERENCE_STORE:-/app/reference-store}
       - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set in .env}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?ADMIN_PASSWORD must be set in .env}
       - INIT_DEMO_USER=${INIT_DEMO_USER:-0}
@@ -43,18 +46,34 @@ services:
       - AGENT_MAX_TOOL_CALLS=${AGENT_MAX_TOOL_CALLS:-3}
       - REDIS_URL=redis://redis:6379/0
     depends_on:
-      - redis
-      - postgres
-    command: gunicorn app.main:app -c gunicorn.conf.py
+      redis:
+        condition: service_healthy
+    command: /bin/sh -c "alembic upgrade head && exec gunicorn app.main:app -c gunicorn.conf.py"
+    restart: on-failure
+
+  reference-worker:
+    build: ./cat-backend
+    volumes: *backend-volumes
+    environment: *backend-environment
+    depends_on:
+      - backend
+    command: python scripts/reference_jobs.py worker --wait-schema 60
     restart: on-failure
 
   redis:
     image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
     ports:
       - "6379:6379"
     restart: on-failure
 
   postgres:
+    # Current backend uses SQLite. Opt in only for separate PostgreSQL work.
+    profiles: ["postgres"]
     image: postgres:16-alpine
     ports:
       - "5432:5432"

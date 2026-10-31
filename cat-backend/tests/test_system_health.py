@@ -56,7 +56,7 @@ def test_model_health_reports_missing_embeddings(monkeypatch, tmp_path):
     assert embeddings_check["status"] == "fail"
 
 
-def test_model_health_accepts_consistent_embedding_dimensions(monkeypatch, tmp_path):
+def test_model_health_rejects_legacy_vectors_even_with_consistent_dimensions(monkeypatch, tmp_path):
     embeddings_path = tmp_path / "cat_embeddings.json"
     embeddings_path.write_text(
         json.dumps({"TestCat": {"embeddings": [[0.1, 0.2, 0.3], [0.2, 0.1, 0.4]]}}),
@@ -69,6 +69,6 @@ def test_model_health_accepts_consistent_embedding_dimensions(monkeypatch, tmp_p
     embeddings_check = next(
         check for check in health["checks"] if check["name"] == "reference_embeddings"
     )
-    assert health["reference_cat_count"] == 1
-    assert health["embedding_dimensions"] == [3]
-    assert embeddings_check["status"] == "pass"
+    assert health["reference_cat_count"] == 0
+    assert health["embedding_dimensions"] == []
+    assert embeddings_check["status"] == "fail"

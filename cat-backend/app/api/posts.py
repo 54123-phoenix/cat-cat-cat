@@ -92,6 +92,17 @@ async def create_post(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/reports", response_model=List[schemas.ReportResponse])
+def list_reports(
+    status: str = "pending",
+    skip: int = 0,
+    limit: int = 50,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_reviewer_or_admin),
+):
+    return crud.get_reports(db, status=status, skip=skip, limit=limit)
+
+
 @router.get("/{post_id}", response_model=schemas.PostResponse)
 def get_post(
     post_id: int,
@@ -193,17 +204,6 @@ def report_post(
     if not ok:
         raise HTTPException(status_code=400, detail="Already reported or post not found")
     return {"ok": True}
-
-
-@router.get("/reports", response_model=List[schemas.ReportResponse])
-def list_reports(
-    status: str = "pending",
-    skip: int = 0,
-    limit: int = 50,
-    db: Session = Depends(get_db),
-    user: User = Depends(require_reviewer_or_admin),
-):
-    return crud.get_reports(db, status=status, skip=skip, limit=limit)
 
 
 @router.post("/reports/{report_id}/handle")

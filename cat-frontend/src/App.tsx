@@ -5,7 +5,7 @@ import Layout from './components/Layout'
 import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
 import DailyCapsuleModal from './components/DailyCapsuleModal'
-import { getToken, getStoredUser, getAdminToken } from './api'
+import { getToken, getStoredUser } from './api'
 import { ROUTES } from './constants/routes'
 import { toast } from './components/Toast'
 
@@ -72,22 +72,22 @@ export function updateUser(newUser: any) {
   emitChange()
 }
 
-function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
-  const token = adminOnly ? getAdminToken() : getToken()
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const token = getToken()
   const [showCapsule, setShowCapsule] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
-    if (!adminOnly && token && location.pathname === ROUTES.HOME) {
+    if (token && location.pathname === ROUTES.HOME) {
       const t = setTimeout(() => setShowCapsule(true), 800)
       return () => clearTimeout(t)
     }
     setShowCapsule(false)
     return undefined
-  }, [adminOnly, token, location.pathname])
+  }, [token, location.pathname])
 
-  if (!token) return <Navigate to={adminOnly ? "/admin" : "/login"} replace />
+  if (!token) return <Navigate to="/login" replace />
   return (
     <>
       {children}
@@ -142,9 +142,7 @@ export default function App() {
           <Route
             path={ROUTES.ADMIN}
             element={
-              <ProtectedRoute adminOnly>
-                <Admin />
-              </ProtectedRoute>
+              <Admin />
             }
           />
         </Routes>

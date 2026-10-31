@@ -1,0 +1,511 @@
+{
+  "tables": {
+    "audit_logs": "\nCREATE TABLE audit_logs (\n\tid INTEGER NOT NULL, \n\taction VARCHAR(20) NOT NULL, \n\tentity_type VARCHAR(20) NOT NULL, \n\tentity_id INTEGER, \n\told_value TEXT, \n\tnew_value TEXT, \n\tperformed_by VARCHAR(50) NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id)\n)\n\n",
+    "campuses": "\nCREATE TABLE campuses (\n\tid INTEGER NOT NULL, \n\tname VARCHAR(100) NOT NULL, \n\tslug VARCHAR(50) NOT NULL, \n\tcenter_lat FLOAT NOT NULL, \n\tcenter_lng FLOAT NOT NULL, \n\tbounds_ne_lat FLOAT, \n\tbounds_ne_lng FLOAT, \n\tbounds_sw_lat FLOAT, \n\tbounds_sw_lng FLOAT, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id)\n)\n\n",
+    "discoveries": "\nCREATE TABLE discoveries (\n\tid INTEGER NOT NULL, \n\timage_path VARCHAR(200), \n\tlocation_name VARCHAR(100), \n\tlatitude FLOAT, \n\tlongitude FLOAT, \n\tnote TEXT, \n\tstatus VARCHAR(20), \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id)\n)\n\n",
+    "cats": "\nCREATE TABLE cats (\n\tid INTEGER NOT NULL, \n\tname VARCHAR(50) NOT NULL, \n\tnickname VARCHAR(100), \n\tgender VARCHAR(10), \n\tneutered VARCHAR(10), \n\tage_estimate VARCHAR(20), \n\tcolor VARCHAR(50), \n\tpersonality TEXT, \n\tstory TEXT, \n\tlocation VARCHAR(100), \n\tavatar VARCHAR(200), \n\tpersonality_radar TEXT, \n\tquote VARCHAR(120), \n\taliases VARCHAR(120), \n\trelationships TEXT, \n\tcreated_at DATETIME, \n\tcampus_id INTEGER, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(campus_id) REFERENCES campuses (id)\n)\n\n",
+    "feeding_points": "\nCREATE TABLE feeding_points (\n\tid INTEGER NOT NULL, \n\tname VARCHAR(100) NOT NULL, \n\tdescription TEXT, \n\tlatitude FLOAT NOT NULL, \n\tlongitude FLOAT NOT NULL, \n\tis_active BOOLEAN NOT NULL, \n\tcreated_at DATETIME, \n\tcampus_id INTEGER, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(campus_id) REFERENCES campuses (id)\n)\n\n",
+    "users": "\nCREATE TABLE users (\n\tid INTEGER NOT NULL, \n\tusername VARCHAR(50) NOT NULL, \n\tpassword_hash VARCHAR(200) NOT NULL, \n\tnickname VARCHAR(50) NOT NULL, \n\trole VARCHAR(20), \n\tavatar VARCHAR(200), \n\topenid VARCHAR(100), \n\tsession_key VARCHAR(100), \n\tcreated_at DATETIME, \n\txp INTEGER, \n\tlevel INTEGER, \n\tlongest_streak INTEGER, \n\ttoken_version INTEGER, \n\tcampus_id INTEGER, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(campus_id) REFERENCES campuses (id)\n)\n\n",
+    "cat_images": "\nCREATE TABLE cat_images (\n\tid INTEGER NOT NULL, \n\tcat_id INTEGER NOT NULL, \n\timage_path VARCHAR(200) NOT NULL, \n\tembedding_path VARCHAR(200), \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id)\n)\n\n",
+    "daily_capsule_claims": "\nCREATE TABLE daily_capsule_claims (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tclaim_date VARCHAR(10) NOT NULL, \n\tcat_id INTEGER, \n\tsticker VARCHAR(10), \n\ttitle VARCHAR(50), \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_daily_capsule_claim UNIQUE (user_id, claim_date), \n\tFOREIGN KEY(user_id) REFERENCES users (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id)\n)\n\n",
+    "feeding_check_ins": "\nCREATE TABLE feeding_check_ins (\n\tid INTEGER NOT NULL, \n\tpoint_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tfood_remaining VARCHAR(20), \n\tcats_seen INTEGER, \n\tnote TEXT, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(point_id) REFERENCES feeding_points (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "health_records": "\nCREATE TABLE health_records (\n\tid INTEGER NOT NULL, \n\tcat_id INTEGER NOT NULL, \n\trecord_type VARCHAR(20) NOT NULL, \n\ttitle VARCHAR(100) NOT NULL, \n\tdescription TEXT, \n\trecord_date DATETIME NOT NULL, \n\tlocation VARCHAR(100), \n\tstatus VARCHAR(20) NOT NULL, \n\tcreated_at DATETIME, \n\tcreated_by INTEGER NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id), \n\tFOREIGN KEY(created_by) REFERENCES users (id)\n)\n\n",
+    "invite_codes": "\nCREATE TABLE invite_codes (\n\tid INTEGER NOT NULL, \n\tcode VARCHAR(20) NOT NULL, \n\tcreated_by INTEGER NOT NULL, \n\tused_by INTEGER, \n\tused_at DATETIME, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(created_by) REFERENCES users (id), \n\tFOREIGN KEY(used_by) REFERENCES users (id)\n)\n\n",
+    "notifications": "\nCREATE TABLE notifications (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\ttype VARCHAR(20) NOT NULL, \n\ttitle VARCHAR(100) NOT NULL, \n\tcontent TEXT, \n\trelated_id INTEGER, \n\trelated_type VARCHAR(20), \n\tis_read BOOLEAN NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "posts": "\nCREATE TABLE posts (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\ttopic VARCHAR(20) NOT NULL, \n\tcontent TEXT NOT NULL, \n\ttags TEXT, \n\trelated_cat_id INTEGER, \n\tstatus VARCHAR(20), \n\tlikes_count INTEGER, \n\tcomments_count INTEGER, \n\tpost_type VARCHAR(20), \n\tpoll_options TEXT, \n\tpoll_data TEXT, \n\taccepted_comment_id INTEGER, \n\tcreated_at DATETIME, \n\tupdated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id), \n\tFOREIGN KEY(related_cat_id) REFERENCES cats (id)\n)\n\n",
+    "route_checkins": "\nCREATE TABLE route_checkins (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\ttime_slot VARCHAR(20) NOT NULL, \n\tstop_name VARCHAR(100) NOT NULL, \n\tcat_id INTEGER, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_route_checkin UNIQUE (user_id, time_slot, stop_name), \n\tFOREIGN KEY(user_id) REFERENCES users (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id)\n)\n\n",
+    "sightings": "\nCREATE TABLE sightings (\n\tid INTEGER NOT NULL, \n\tcat_id INTEGER NOT NULL, \n\tuser_id INTEGER, \n\timage_path VARCHAR(200), \n\tlocation VARCHAR(100), \n\tlocation_name VARCHAR(100), \n\tlatitude FLOAT, \n\tlongitude FLOAT, \n\tconfidence FLOAT, \n\tactivity_type VARCHAR(20), \n\tnote TEXT, \n\tstatus VARCHAR(20), \n\tspotted_by VARCHAR(50), \n\tconfirmations INTEGER, \n\tgrade VARCHAR(20), \n\tweather VARCHAR(20), \n\tmood VARCHAR(20), \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "user_badges": "\nCREATE TABLE user_badges (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tbadge_key VARCHAR(50) NOT NULL, \n\tearned_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_user_badge UNIQUE (user_id, badge_key), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "user_cat_follows": "\nCREATE TABLE user_cat_follows (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tcat_id INTEGER NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_user_cat_follow UNIQUE (user_id, cat_id), \n\tFOREIGN KEY(user_id) REFERENCES users (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id)\n)\n\n",
+    "user_collectibles": "\nCREATE TABLE user_collectibles (\n\tid INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tcollectible_type VARCHAR(30) NOT NULL, \n\t\"key\" VARCHAR(100) NOT NULL, \n\tdisplay_name VARCHAR(100) NOT NULL, \n\temoji VARCHAR(10), \n\textra_data TEXT, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_user_collectible UNIQUE (user_id, collectible_type, \"key\"), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "post_comments": "\nCREATE TABLE post_comments (\n\tid INTEGER NOT NULL, \n\tpost_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tcontent TEXT NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(post_id) REFERENCES posts (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "post_images": "\nCREATE TABLE post_images (\n\tid INTEGER NOT NULL, \n\tpost_id INTEGER NOT NULL, \n\timage_path VARCHAR(200) NOT NULL, \n\tsort_order INTEGER, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(post_id) REFERENCES posts (id)\n)\n\n",
+    "post_likes": "\nCREATE TABLE post_likes (\n\tid INTEGER NOT NULL, \n\tpost_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(post_id) REFERENCES posts (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "post_poll_votes": "\nCREATE TABLE post_poll_votes (\n\tid INTEGER NOT NULL, \n\tpost_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\toption_index INTEGER NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_post_poll_vote UNIQUE (post_id, user_id), \n\tFOREIGN KEY(post_id) REFERENCES posts (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "reports": "\nCREATE TABLE reports (\n\tid INTEGER NOT NULL, \n\tpost_id INTEGER NOT NULL, \n\treported_by INTEGER NOT NULL, \n\treason VARCHAR(200) NOT NULL, \n\tstatus VARCHAR(20), \n\thandled_by INTEGER, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(post_id) REFERENCES posts (id), \n\tFOREIGN KEY(reported_by) REFERENCES users (id), \n\tFOREIGN KEY(handled_by) REFERENCES users (id)\n)\n\n",
+    "sighting_confirmations": "\nCREATE TABLE sighting_confirmations (\n\tid INTEGER NOT NULL, \n\tsighting_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_sighting_confirmation UNIQUE (sighting_id, user_id), \n\tFOREIGN KEY(sighting_id) REFERENCES sightings (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "sighting_votes": "\nCREATE TABLE sighting_votes (\n\tid INTEGER NOT NULL, \n\tsighting_id INTEGER NOT NULL, \n\tuser_id INTEGER NOT NULL, \n\tcat_id INTEGER NOT NULL, \n\tcreated_at DATETIME, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_sighting_vote UNIQUE (sighting_id, user_id), \n\tFOREIGN KEY(sighting_id) REFERENCES sightings (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id), \n\tFOREIGN KEY(cat_id) REFERENCES cats (id)\n)\n\n"
+  },
+  "indexes": [
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_action",
+      "columns": [
+        "action"
+      ],
+      "sql": "CREATE INDEX ix_audit_logs_action ON audit_logs (action)"
+    },
+    {
+      "table": "audit_logs",
+      "name": "ix_audit_logs_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_audit_logs_id ON audit_logs (id)"
+    },
+    {
+      "table": "campuses",
+      "name": "ix_campuses_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_campuses_id ON campuses (id)"
+    },
+    {
+      "table": "campuses",
+      "name": "ix_campuses_slug",
+      "columns": [
+        "slug"
+      ],
+      "sql": "CREATE UNIQUE INDEX ix_campuses_slug ON campuses (slug)"
+    },
+    {
+      "table": "discoveries",
+      "name": "ix_discoveries_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_discoveries_id ON discoveries (id)"
+    },
+    {
+      "table": "cats",
+      "name": "ix_cats_campus_id",
+      "columns": [
+        "campus_id"
+      ],
+      "sql": "CREATE INDEX ix_cats_campus_id ON cats (campus_id)"
+    },
+    {
+      "table": "cats",
+      "name": "ix_cats_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_cats_id ON cats (id)"
+    },
+    {
+      "table": "cats",
+      "name": "ix_cats_location",
+      "columns": [
+        "location"
+      ],
+      "sql": "CREATE INDEX ix_cats_location ON cats (location)"
+    },
+    {
+      "table": "feeding_points",
+      "name": "ix_feeding_points_campus_id",
+      "columns": [
+        "campus_id"
+      ],
+      "sql": "CREATE INDEX ix_feeding_points_campus_id ON feeding_points (campus_id)"
+    },
+    {
+      "table": "feeding_points",
+      "name": "ix_feeding_points_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_feeding_points_id ON feeding_points (id)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_campus_id",
+      "columns": [
+        "campus_id"
+      ],
+      "sql": "CREATE INDEX ix_users_campus_id ON users (campus_id)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_users_id ON users (id)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_openid",
+      "columns": [
+        "openid"
+      ],
+      "sql": "CREATE UNIQUE INDEX ix_users_openid ON users (openid)"
+    },
+    {
+      "table": "users",
+      "name": "ix_users_username",
+      "columns": [
+        "username"
+      ],
+      "sql": "CREATE UNIQUE INDEX ix_users_username ON users (username)"
+    },
+    {
+      "table": "cat_images",
+      "name": "ix_cat_images_cat_id",
+      "columns": [
+        "cat_id"
+      ],
+      "sql": "CREATE INDEX ix_cat_images_cat_id ON cat_images (cat_id)"
+    },
+    {
+      "table": "cat_images",
+      "name": "ix_cat_images_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_cat_images_id ON cat_images (id)"
+    },
+    {
+      "table": "daily_capsule_claims",
+      "name": "ix_daily_capsule_claims_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_daily_capsule_claims_id ON daily_capsule_claims (id)"
+    },
+    {
+      "table": "daily_capsule_claims",
+      "name": "ix_daily_capsule_claims_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_daily_capsule_claims_user_id ON daily_capsule_claims (user_id)"
+    },
+    {
+      "table": "feeding_check_ins",
+      "name": "ix_feeding_check_ins_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_feeding_check_ins_id ON feeding_check_ins (id)"
+    },
+    {
+      "table": "feeding_check_ins",
+      "name": "ix_feeding_check_ins_point_id",
+      "columns": [
+        "point_id"
+      ],
+      "sql": "CREATE INDEX ix_feeding_check_ins_point_id ON feeding_check_ins (point_id)"
+    },
+    {
+      "table": "feeding_check_ins",
+      "name": "ix_feeding_check_ins_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_feeding_check_ins_user_id ON feeding_check_ins (user_id)"
+    },
+    {
+      "table": "health_records",
+      "name": "ix_health_records_cat_id",
+      "columns": [
+        "cat_id"
+      ],
+      "sql": "CREATE INDEX ix_health_records_cat_id ON health_records (cat_id)"
+    },
+    {
+      "table": "health_records",
+      "name": "ix_health_records_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_health_records_id ON health_records (id)"
+    },
+    {
+      "table": "health_records",
+      "name": "ix_health_records_record_type",
+      "columns": [
+        "record_type"
+      ],
+      "sql": "CREATE INDEX ix_health_records_record_type ON health_records (record_type)"
+    },
+    {
+      "table": "invite_codes",
+      "name": "ix_invite_codes_code",
+      "columns": [
+        "code"
+      ],
+      "sql": "CREATE UNIQUE INDEX ix_invite_codes_code ON invite_codes (code)"
+    },
+    {
+      "table": "invite_codes",
+      "name": "ix_invite_codes_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_invite_codes_id ON invite_codes (id)"
+    },
+    {
+      "table": "notifications",
+      "name": "ix_notifications_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_notifications_id ON notifications (id)"
+    },
+    {
+      "table": "notifications",
+      "name": "ix_notifications_type",
+      "columns": [
+        "type"
+      ],
+      "sql": "CREATE INDEX ix_notifications_type ON notifications (type)"
+    },
+    {
+      "table": "notifications",
+      "name": "ix_notifications_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_notifications_user_id ON notifications (user_id)"
+    },
+    {
+      "table": "posts",
+      "name": "ix_posts_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_posts_id ON posts (id)"
+    },
+    {
+      "table": "posts",
+      "name": "ix_posts_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_posts_user_id ON posts (user_id)"
+    },
+    {
+      "table": "route_checkins",
+      "name": "ix_route_checkins_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_route_checkins_id ON route_checkins (id)"
+    },
+    {
+      "table": "route_checkins",
+      "name": "ix_route_checkins_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_route_checkins_user_id ON route_checkins (user_id)"
+    },
+    {
+      "table": "sightings",
+      "name": "ix_sightings_cat_id",
+      "columns": [
+        "cat_id"
+      ],
+      "sql": "CREATE INDEX ix_sightings_cat_id ON sightings (cat_id)"
+    },
+    {
+      "table": "sightings",
+      "name": "ix_sightings_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_sightings_id ON sightings (id)"
+    },
+    {
+      "table": "sightings",
+      "name": "ix_sightings_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_sightings_user_id ON sightings (user_id)"
+    },
+    {
+      "table": "user_badges",
+      "name": "ix_user_badges_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_user_badges_id ON user_badges (id)"
+    },
+    {
+      "table": "user_cat_follows",
+      "name": "ix_user_cat_follows_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_user_cat_follows_id ON user_cat_follows (id)"
+    },
+    {
+      "table": "user_collectibles",
+      "name": "ix_user_collectibles_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_user_collectibles_id ON user_collectibles (id)"
+    },
+    {
+      "table": "user_collectibles",
+      "name": "ix_user_collectibles_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_user_collectibles_user_id ON user_collectibles (user_id)"
+    },
+    {
+      "table": "post_comments",
+      "name": "ix_post_comments_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_post_comments_id ON post_comments (id)"
+    },
+    {
+      "table": "post_comments",
+      "name": "ix_post_comments_post_id",
+      "columns": [
+        "post_id"
+      ],
+      "sql": "CREATE INDEX ix_post_comments_post_id ON post_comments (post_id)"
+    },
+    {
+      "table": "post_comments",
+      "name": "ix_post_comments_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_post_comments_user_id ON post_comments (user_id)"
+    },
+    {
+      "table": "post_images",
+      "name": "ix_post_images_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_post_images_id ON post_images (id)"
+    },
+    {
+      "table": "post_images",
+      "name": "ix_post_images_post_id",
+      "columns": [
+        "post_id"
+      ],
+      "sql": "CREATE INDEX ix_post_images_post_id ON post_images (post_id)"
+    },
+    {
+      "table": "post_likes",
+      "name": "ix_post_likes_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_post_likes_id ON post_likes (id)"
+    },
+    {
+      "table": "post_likes",
+      "name": "ix_post_likes_post_id",
+      "columns": [
+        "post_id"
+      ],
+      "sql": "CREATE INDEX ix_post_likes_post_id ON post_likes (post_id)"
+    },
+    {
+      "table": "post_likes",
+      "name": "ix_post_likes_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_post_likes_user_id ON post_likes (user_id)"
+    },
+    {
+      "table": "post_poll_votes",
+      "name": "ix_post_poll_votes_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_post_poll_votes_id ON post_poll_votes (id)"
+    },
+    {
+      "table": "post_poll_votes",
+      "name": "ix_post_poll_votes_post_id",
+      "columns": [
+        "post_id"
+      ],
+      "sql": "CREATE INDEX ix_post_poll_votes_post_id ON post_poll_votes (post_id)"
+    },
+    {
+      "table": "post_poll_votes",
+      "name": "ix_post_poll_votes_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_post_poll_votes_user_id ON post_poll_votes (user_id)"
+    },
+    {
+      "table": "reports",
+      "name": "ix_reports_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_reports_id ON reports (id)"
+    },
+    {
+      "table": "reports",
+      "name": "ix_reports_post_id",
+      "columns": [
+        "post_id"
+      ],
+      "sql": "CREATE INDEX ix_reports_post_id ON reports (post_id)"
+    },
+    {
+      "table": "sighting_confirmations",
+      "name": "ix_sighting_confirmations_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_confirmations_id ON sighting_confirmations (id)"
+    },
+    {
+      "table": "sighting_confirmations",
+      "name": "ix_sighting_confirmations_sighting_id",
+      "columns": [
+        "sighting_id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_confirmations_sighting_id ON sighting_confirmations (sighting_id)"
+    },
+    {
+      "table": "sighting_confirmations",
+      "name": "ix_sighting_confirmations_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_confirmations_user_id ON sighting_confirmations (user_id)"
+    },
+    {
+      "table": "sighting_votes",
+      "name": "ix_sighting_votes_cat_id",
+      "columns": [
+        "cat_id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_votes_cat_id ON sighting_votes (cat_id)"
+    },
+    {
+      "table": "sighting_votes",
+      "name": "ix_sighting_votes_id",
+      "columns": [
+        "id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_votes_id ON sighting_votes (id)"
+    },
+    {
+      "table": "sighting_votes",
+      "name": "ix_sighting_votes_sighting_id",
+      "columns": [
+        "sighting_id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_votes_sighting_id ON sighting_votes (sighting_id)"
+    },
+    {
+      "table": "sighting_votes",
+      "name": "ix_sighting_votes_user_id",
+      "columns": [
+        "user_id"
+      ],
+      "sql": "CREATE INDEX ix_sighting_votes_user_id ON sighting_votes (user_id)"
+    }
+  ]
+}

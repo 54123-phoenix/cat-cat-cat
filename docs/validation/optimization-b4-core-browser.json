@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "checks": {
+    "admin_login_logout_ui": "passed",
+    "user_login_ui": "passed",
+    "collection_search_ui": "passed",
+    "save_api_pending_review_ui_public_api": "passed",
+    "admin_503_preserves_credentials_and_retry_ui": "passed",
+    "expired_admin_isolated_from_user_ui": "passed"
+  },
+  "page_errors": [],
+  "http_errors": [
+    {
+      "status": 503,
+      "path": "/api/admin/me"
+    },
+    {
+      "status": 503,
+      "path": "/api/admin/me"
+    },
+    {
+      "status": 401,
+      "path": "/api/admin/me"
+    },
+    {
+      "status": 401,
+      "path": "/api/admin/me"
+    }
+  ],
+  "started_at": "2026-10-31T02:40:32.722804+00:00",
+  "browser": "156.0.8078.4"
+}

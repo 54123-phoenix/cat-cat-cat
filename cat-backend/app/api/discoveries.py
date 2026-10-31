@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from app import crud, schemas, models
-from app.api.auth import require_reviewer_or_admin
+from app.api.auth import require_reviewer_or_admin, require_auth
 from app.api.upload import save_upload
 from app.database import get_db
 
@@ -19,12 +19,13 @@ async def create_discovery(
     note: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
+    user=Depends(require_auth),
 ):
     image_path = None
     if file:
         image_path = await save_upload(file, "discoveries")
 
-    return crud.create_discovery(db, image_path=image_path, location_name=location_name, latitude=latitude, longitude=longitude, note=note)
+    return crud.create_discovery(db, image_path=image_path, location_name=location_name, latitude=latitude, longitude=longitude, note=note, user_id=user.id)
 
 
 @router.get("", response_model=List[schemas.DiscoveryResponse])

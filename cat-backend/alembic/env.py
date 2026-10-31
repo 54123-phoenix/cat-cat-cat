@@ -1,5 +1,7 @@
 from logging.config import fileConfig
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -7,10 +9,15 @@ from alembic import context
 
 config = context.config
 
+# Match application startup when DATABASE_URL is configured in cat-backend/.env.
+# Explicit environment values still take precedence.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base

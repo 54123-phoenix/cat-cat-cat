@@ -7,12 +7,10 @@ os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("INIT_DEMO_USER", "0")
 
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.database import Base, get_db
 from app.models import User
 
 _test_engine = create_engine(
@@ -22,25 +20,16 @@ _test_engine = create_engine(
 )
 _TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_test_engine)
 
-import app.database as _db_mod
-import app.main as _main_mod
-_db_mod.engine = _test_engine
-_db_mod.SessionLocal = _TestSessionLocal
-_main_mod.engine = _test_engine
-_main_mod.SessionLocal = _TestSessionLocal
-
-Base.metadata.create_all(bind=_test_engine)
-
-app = _main_mod.app
+from app_fixture import isolated_client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def client():
-    with TestClient(app) as c:
+    with isolated_client(_test_engine, _TestSessionLocal) as c:
         yield c
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def admin_token(client):
     pwd_ctx = __import__("passlib.context", fromlist=["CryptContext"]).CryptContext(schemes=["bcrypt"], deprecated="auto")
     db = _TestSessionLocal()
@@ -53,7 +42,7 @@ def admin_token(client):
     return resp.json()["token"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def test_user_token(client):
     resp = client.post("/api/auth/register", json={
         "username": "testext_user",

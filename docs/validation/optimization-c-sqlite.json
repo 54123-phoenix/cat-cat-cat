@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "checks": {
+    "migration_and_process_restart_persist_records_and_attachment": "passed",
+    "restore_preview_does_not_mutate_data": "passed",
+    "restore_recovers_snapshot_and_keeps_pre_restore_copy": "passed",
+    "restored_api_serves_verified_records_and_decodable_attachment": "passed"
+  },
+  "started_at": "2026-10-31T03:10:56.142500+00:00",
+  "source": {
+    "revision": "j20261031",
+    "counts": {
+      "users": 2,
+      "cats": 2,
+      "cat_images": 1,
+      "sightings": 1,
+      "posts": 1,
+      "audit_logs": 2
+    },
+    "identity": [
+      "1c8173e0e2114fa49624e98f6644196f",
+      2
+    ]
+  },
+  "attachment_sha256": "c750f750896084a24e354e240a6fab4b0e41705217ac14b507a97fb203a4dbfe",
+  "restored": {
+    "revision": "j20261031",
+    "counts": {
+      "users": 2,
+      "cats": 2,
+      "cat_images": 1,
+      "sightings": 1,
+      "posts": 1,
+      "audit_logs": 2
+    },
+    "identity": [
+      "1c8173e0e2114fa49624e98f6644196f",
+      2
+    ]
+  }
+}

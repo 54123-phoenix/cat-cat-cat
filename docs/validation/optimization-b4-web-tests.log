@@ -1,0 +1,38 @@
+
+> cat-frontend@1.0.0 test
+> vitest run
+
+10:37:21 [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+10:37:21 [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.9 D:/Desktop/fdmm/cat-cat-cat/cat-frontend
+
+Error: test
+    at Throw (D:/Desktop/fdmm/cat-cat-cat/cat-frontend/src/__tests__/components.test.tsx:14:33)
+    at renderWithHooks (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:114:17)
+Error: test
+    at Throw (D:/Desktop/fdmm/cat-cat-cat/cat-frontend/src/__tests__/components.test.tsx:14:33)
+    at renderWithHooks (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (D:\Desktop\fdmm\cat-cat-cat\cat-frontend\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:114:17)
+
+ Test Files  12 passed (12)
+      Tests  66 passed (66)
+   Start at  10:37:21
+   Duration  3.61s (transform 951ms, setup 3.20s, import 2.91s, tests 2.16s, environment 24.75s)
+

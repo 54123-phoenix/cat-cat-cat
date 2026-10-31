@@ -123,6 +123,7 @@ class CatListResponse(BaseModel):
 class SightingBase(BaseModel):
     cat_id: int
     location: Optional[str] = None
+    location_name: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     confidence: Optional[float] = None

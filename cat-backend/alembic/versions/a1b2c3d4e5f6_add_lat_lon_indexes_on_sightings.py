@@ -18,9 +18,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    with op.batch_alter_table('sightings', schema=None) as batch_op:
-        batch_op.create_index('ix_sightings_latitude', ['latitude'], unique=False)
-        batch_op.create_index('ix_sightings_longitude', ['longitude'], unique=False)
+    from schema_support import ensure_index
+    ensure_index('sightings', 'ix_sightings_latitude', ['latitude'])
+    ensure_index('sightings', 'ix_sightings_longitude', ['longitude'])
 
 
 def downgrade() -> None:

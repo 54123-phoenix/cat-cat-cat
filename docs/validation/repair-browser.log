@@ -1,0 +1,16 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 4cf3161f45b4, baseline_capture_current_schema
+INFO  [alembic.runtime.migration] Running upgrade 4cf3161f45b4 -> f55904ce2b93, boolean_fix_and_schema_improvements
+INFO  [alembic.runtime.migration] Running upgrade f55904ce2b93 -> a1b2c3d4e5f6, add_lat_lon_indexes_on_sightings
+INFO  [alembic.runtime.migration] Running upgrade a1b2c3d4e5f6 -> d0313e2b50e6, add_missing_columns
+INFO  [alembic.runtime.migration] Running upgrade d0313e2b50e6 -> e20261030, Adopt missing tables and normalize known legacy data without guessing timestamps.
+INFO  [alembic.runtime.migration] Running upgrade e20261030 -> f20261030, Persist unique vote reward receipts without guessing historical XP.
+INFO  [alembic.runtime.migration] Running upgrade f20261030 -> g20261030, Attribute new discoveries and recognition audits; legacy owners stay NULL.
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "D:\Desktop\fdmm\.cat-review-venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+{"admin_login_logout": "passed", "user_login": "passed", "collection_search": "passed", "page_errors": [], "screenshots": 5}
