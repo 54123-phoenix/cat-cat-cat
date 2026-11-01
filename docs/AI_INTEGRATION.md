@@ -1,6 +1,6 @@
 # AI Integration Contract
 
-This document defines the AI integration boundary for the campus cat archive. The backend uses a DINOv3 extractor with a 256-dimensional projection head. Reference identity validation is implemented in B1; publication/rollback and real-model quality acceptance remain pending. See [reference library operations](REFERENCE_LIBRARY.md).
+This document defines the AI integration boundary for the campus cat archive. The backend uses a DINOv3 extractor with a 256-dimensional projection head. Reference identity validation, publication and rollback are implemented in B1–B4. The public holdout met the empirical targets; campus quality acceptance remains pending. See [reference library operations](REFERENCE_LIBRARY.md).
 
 ## Design Principle
 
@@ -82,7 +82,7 @@ RECOGNIZE_THRESHOLD_CONFIRMED
 RECOGNIZE_THRESHOLD_UNCERTAIN
 ```
 
-Current defaults are tuned for demonstration data and should be recalibrated with real campus photos before production deployment.
+Current defaults (center224, confirmed 0.57, uncertain 0.49, margin 0) have not passed campus quality acceptance. The public-data candidate (letterbox224, four references per identity, confirmed 0.70) has not replaced them. See [photo preparation and remaining evidence](CAMPUS_DATA_PREPARATION.md) before freezing a campus calibration study.
 
 ## New-Cat Discovery Contract
 

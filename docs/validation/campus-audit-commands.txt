@@ -1,0 +1,89 @@
+Source retrieval and archive inspection used for the 2026-11-01 audit. Run from repository root in a fresh audit directory. These are archived diagnostic commands, not a production restore tool. The downloads use the recorded HF revision and verify all published LFS hashes. The archive inspection saves only complete individual image files; an EOF is a failed full restore.
+
+=== fetch_backup.py ===
+import json,hashlib,httpx,time
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor,as_completed
+root=Path('artifacts/campus/source-audit'); tree=json.loads((root/'hf-tree.json').read_text(encoding='utf-8'))
+out=root/'restored'; out.mkdir(exist_ok=True)
+files=[v for v in tree['entries'] if v['type']=='file' and v.get('lfs')]
+# Public backup only, pinned revision, each exact published LFS hash.
+def fetch(row):
+ path=out/row['path']; path.parent.mkdir(parents=True,exist_ok=True); digest=hashlib.sha256(); n=0
+ if path.exists():
+  with path.open('rb') as f:
+   for data in iter(lambda:f.read(1024*1024),b''):digest.update(data); n+=len(data)
+ else:
+  url='https://huggingface.co/datasets/'+tree['repository']+'/resolve/'+tree['revision']+'/'+row['path']
+  with httpx.Client(proxy='http://127.0.0.1:7897',follow_redirects=True,timeout=120) as c, c.stream('GET',url) as resp:
+   resp.raise_for_status()
+   with path.with_suffix(path.suffix+'.partial').open('xb') as f:
+    for data in resp.iter_bytes(1024*1024):
+     n+=len(data)
+     if n>row['size']:raise ValueError('Remote size overflow')
+     digest.update(data); f.write(data)
+  if n!=row['size'] or digest.hexdigest()!=row['lfs']['oid']:raise ValueError('Hash/size mismatch '+row['path'])
+  path.with_suffix(path.suffix+'.partial').rename(path)
+ if n!=row['size'] or digest.hexdigest()!=row['lfs']['oid']:raise ValueError('Hash/size mismatch '+row['path'])
+ return {'path':row['path'],'size':n,'sha256':digest.hexdigest()}
+start=time.time(); results=[]
+with ThreadPoolExecutor(max_workers=4) as pool:
+ futures={pool.submit(fetch,row):row for row in files}
+ for future in as_completed(futures):
+  try:results.append(future.result())
+  except Exception as exc:results.append({'path':futures[future]['path'],'error':str(exc)})
+  if len(results)%20==0 or len(results)==len(files):print('downloaded',len(results),'of',len(files),'seconds',round(time.time()-start),flush=True)
+(root/'download-results.json').write_text(json.dumps({'revision':tree['revision'],'files':sorted(results,key=lambda r:r['path']),'elapsed_seconds':time.time()-start},ensure_ascii=False,indent=2),encoding='utf-8')
+print('errors',[r for r in results if 'error' in r],flush=True)
+
+
+=== inspect_archive.py ===
+import io,gzip,tarfile,json,hashlib
+from pathlib import Path,PurePosixPath
+root=Path('artifacts/campus/source-audit'); source=root/'restored'; dest=(root/'archive-images').resolve(); dest.mkdir(exist_ok=True)
+class Parts(io.RawIOBase):
+ def __init__(self, paths): self.paths=iter(paths); self.current=None
+ def readable(self):return True
+ def readinto(self,b):
+  while True:
+   if self.current is None:
+    try:self.current=next(self.paths).open('rb')
+    except StopIteration:return 0
+   n=self.current.readinto(b)
+   if n:return n
+   self.current.close(); self.current=None
+ def close(self):
+  if self.current:self.current.close()
+  super().close()
+rows=[]; total=0; status='complete'; failure=None
+try:
+ with Parts(sorted(source.glob('uploads.tar.gz.part[0-9][0-9][0-9]'))) as parts, io.BufferedReader(parts) as buf, gzip.GzipFile(fileobj=buf) as data:
+  with tarfile.open(fileobj=data,mode='r|') as archive:
+   for member in archive:
+    name=PurePosixPath(member.name); row={'name':member.name,'size':member.size,'type':'file' if member.isfile() else 'directory' if member.isdir() else 'other'}; rows.append(row)
+    if member.isdir():continue
+    if not member.isfile() or name.is_absolute() or '..' in name.parts or '\\' in member.name or ':' in member.name:raise ValueError('Unsafe member')
+    total+=member.size
+    if member.size>64*1024*1024 or total>16*1024**3:raise ValueError('Extraction budget exceeded')
+    path=dest.joinpath(*name.parts).resolve()
+    if not path.is_relative_to(dest):raise ValueError('Path escape')
+    stream=archive.extractfile(member); digest=hashlib.sha256(); n=0
+    keep=path.suffix.lower() in {'.jpg','.jpeg','.png','.gif','.webp','.json','.csv','.txt'}
+    if keep:path.parent.mkdir(parents=True,exist_ok=True)
+    output=path.with_suffix(path.suffix+'.partial').open('xb') if keep else None
+    try:
+     while block:=stream.read(1024*1024):
+      n+=len(block); digest.update(block)
+      if output:output.write(block)
+    finally:
+     if output:output.close()
+    if n!=member.size:raise ValueError('Member size mismatch')
+    row.update(sha256=digest.hexdigest(),restored=keep)
+    if keep:path.with_suffix(path.suffix+'.partial').rename(path)
+    if len(rows)%500==0:print('archive members',len(rows),'bytes',total,flush=True)
+  while data.read(1024*1024):pass
+except Exception as exc:status='incomplete'; failure=type(exc).__name__+': '+str(exc)
+report={'status':status,'failure':failure,'listed_members':len(rows),'declared_member_bytes':total,'complete_regular_files':sum('sha256' in r for r in rows),'members':rows}
+(root/'archive-inspection.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+print(json.dumps({k:v for k,v in report.items() if k!='members'},ensure_ascii=False),flush=True)
+print('first',rows[:8],flush=True)

@@ -29,8 +29,8 @@ uploads/sightings/
 uploads/posts/
 uploads/discoveries/
 
-# Scraper image cache (8GB+, backed up on HuggingFace)
-# Download via: python scripts/download_assets.py
+# Runtime/scraper images are not included in Git.
+# Legacy HF backup is incomplete; see docs/CAMPUS_DATA_PREPARATION.md (ISS-043).
 cat-backend/uploads/
 
 # Local tool state

@@ -1,4 +1,8 @@
-"""Import cat photos from meowzart_scraper into cat project.
+"""Legacy demo import from meowzart_scraper into cat project.
+
+Locations, sex, age, neutering status and descriptions below are generated demo
+values; created_at is import time. They are not verified campus observations or
+recognition ground truth. See docs/CAMPUS_DATA_PREPARATION.md before reusing data.
 
 Usage: python scripts/import_cats_from_meowzart.py
 

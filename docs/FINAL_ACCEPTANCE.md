@@ -1,5 +1,7 @@
 # Final Acceptance
 
+> **2026-11-01 status:** 43 tracked issues: 32 locally accepted, 7 pending specialty checks, 3 partial and 1 unresolved. Backend regression: 303 passed. Public recognition holdout met the empirical targets; campus acceptance remains open. Existing photo backup is truncated (ISS-043); 936 unique stills were recovered, 272 with unverified capture-date candidates. See [campus photo preparation](validation/CAMPUS_ASSETS_20261101.md). Older status paragraphs below are historical.
+
 > **2026-10-31 status:** The current candidate has 25 locally accepted issues, 9 pending specialty checks and 3 partial items. Reference lifecycle B1–B4, 238 backend tests, four-process Redis (10 checks), and SQLite/upload recovery (4 groups) passed locally; the latest Web baseline is 66 tests. Docker engine startup, deployment integration, real model/platform validation and licensing remain open. See [C evidence](validation/OPTIMIZATION_C.md). This is not release approval; P0–P6 labels below describe historical implementation work.
 
 > **Review update — 2026-10-30:** Source review and local verification found unresolved core-flow, authorization, data-integrity, and deployment defects. The current baseline has not passed release-candidate acceptance. See the [known-issues ledger](KNOWN_ISSUES.md) for evidence, priorities, and closure criteria. The goals and checklist below are acceptance targets, not proof of completion; passing the current tests or harness alone does not close the ledger.
