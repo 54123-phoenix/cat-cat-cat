@@ -1,0 +1,71 @@
+Traceback (most recent call last):
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_reconnect_browser.py", line 236, in main
+    asyncio.run(scenario(output, report))
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\Desktop\fdmm\cat-cat-cat\scripts\verify_reconnect_browser.py", line 150, in scenario
+    await expect(page.get_by_text('断线期间的新帖子', exact=True)).to_be_visible()
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\async_api\_generated.py", line 14711, in to_be_visible
+    await self._impl_obj.to_be_visible(
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_assertions.py", line 852, in to_be_visible
+    await self._expect_impl(
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to be visible
+Actual value: None
+Error: element(s) not found 
+Call log:
+  - Expect "to_be_visible" get_by_text("断线期间的新帖子", exact=True) with timeout 15000ms
+  - waiting for get_by_text("断线期间的新帖子", exact=True)
+
+Aria snapshot:
+- link "跳到主要内容":
+  - /url: "#main-content"
+- banner:
+  - button "打开菜单"
+  - img "猫猫社区 Logo"
+  - heading "猫猫社区" [level=1]
+- main:
+  - heading "社区" [level=1]
+  - paragraph: 和其他铲屎官一起聊聊
+  - button "广场"
+  - button "寻猫"
+  - button "日常"
+  - button "健康"
+  - button "建议"
+  - paragraph: 还没有帖子
+  - paragraph: 来发第一条吧
+  - button "发帖"
+- navigation:
+  - link "首页":
+    - /url: /
+  - link "地图":
+    - /url: /map
+  - button "拍照识猫": 识猫
+  - link "社区":
+    - /url: /community
+  - link "我的":
+    - /url: /profile
+- dialog "侧边菜单":
+  - text: 重 重连验收用户 猫友
+  - button "关闭菜单"
+  - navigation:
+    - button "猫情报 Agent"
+    - button "通知中心"
+    - button "猫猫图鉴"
+    - button "联赛"
+    - button "年度报告"
+    - button "猫猫路线"
+    - button "勋章墙"
+    - button "猫猫图库"
+    - button "周报"
+  - button "退出登录"

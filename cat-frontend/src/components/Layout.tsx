@@ -1,11 +1,13 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
 import Sidebar from './Sidebar'
 import Toast, { toast } from './Toast'
 import CelebrationOverlay from './CelebrationOverlay'
-import { useEventStream } from '../hooks/useEventStream'
+import { useEventStream, type StreamEvent } from '../hooks/useEventStream'
+import { LiveDataContext } from '../hooks/useLiveData'
 import { ApiError, getUserProfile, getToken, clearToken, setToken } from '../api'
 import { useUserStore, updateUser } from '../App'
 import Logo from './illustrations/Logo'
@@ -30,6 +32,20 @@ export default function Layout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [, setTabIndex] = useState(0)
+  const queryClient = useQueryClient()
+  const [revision, setRevision] = useState(0)
+  const [event, setEvent] = useState<StreamEvent | null>(null)
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const refresh = useCallback(() => {
+    if (refreshTimer.current) return
+    refreshTimer.current = setTimeout(() => {
+      refreshTimer.current = null
+      if (!getToken()) return
+      void queryClient.invalidateQueries()
+      setRevision(value => value + 1)
+    }, 200)
+  }, [queryClient])
+  useEffect(() => () => { if (refreshTimer.current) clearTimeout(refreshTimer.current) }, [])
 
   const getTitle = () => {
     const exact = routeTitles[location.pathname]
@@ -70,16 +86,19 @@ export default function Layout() {
         }
       })
     return () => { cancelled = true }
-  }, [])
+  }, [revision, navigate])
 
   const handleLogout = () => {
     clearToken()
+    queryClient.clear()
     updateUser(null)
     navigate('/login')
   }
 
   const handleEvent = useCallback((payload) => {
     if (!payload || !payload.type) return
+    setEvent(payload)
+    refresh()
     const data = payload.data || {}
     const nick = data.user_nickname || '有人'
     switch (payload.type) {
@@ -105,11 +124,12 @@ export default function Layout() {
       default:
         toast('收到新通知', {})
     }
-  }, [])
+  }, [refresh])
 
-  useEventStream(handleEvent)
+  useEventStream(handleEvent, { onOpen: refresh, onUnauthorized: handleLogout })
 
   return (
+    <LiveDataContext.Provider value={{ revision, event }}>
     <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-0 focus:left-0 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:text-sm">
         跳到主要内容
@@ -156,5 +176,6 @@ export default function Layout() {
         />
       )}
     </div>
+    </LiveDataContext.Provider>
   )
 }

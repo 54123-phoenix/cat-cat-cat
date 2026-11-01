@@ -17,13 +17,14 @@
 
 **更新于 2026-11-01：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
 
-当前台账共 38 项：**26 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
+当前台账共 39 项：**27 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
 | 验证范围 | 最近结果 | 证据与限制 |
 |---|---|---|
 | 后端完整回归 | 243 passed，68 warnings | [SQLite 启动复验](docs/validation/SQLITE_STARTUP_20261101.md)；CI 密码环境，包含测试隔离与真实持锁回归，保留弃用警告 |
-| Web 回归 | 66 passed；类型检查、lint、构建通过 | [B4 验收](docs/validation/OPTIMIZATION_B4.md)；C 阶段未修改前端 |
+| Web 回归 | 78 passed；类型检查、lint、构建通过 | [重连验收](docs/validation/RECONNECT_20261101.md)；包含会话/断线生命周期、迟到响应、草稿和点赞/投票状态同步 |
 | 真实浏览器 | B4 管理端 8 组、核心流程 6 组通过 | Chromium；测试数据库，参考库推理使用合成向量 |
+| 浏览器断线恢复 | 本机 Chromium + Redis，10 组通过 | [重连验收](docs/validation/RECONNECT_20261101.md)；实际切断 Redis TCP 与浏览器网络，自动补回当前状态并保留输入 |
 | 参考库生命周期 | B1—B4 本地通过 | 持久身份、构建任务、独立 worker、原子发布、兼容回滚、管理状态和失败重试；不代表识别质量达标 |
 | Redis 多进程 | Redis 7.4.2 + 4 个独立 API 进程，10 项通过 | [C 验收](docs/validation/OPTIMIZATION_C.md)；本机跨进程广播、缓存、撤销、断线清理与恢复 |
 | SQLite 与附件恢复 | 4 组通过 | 旧库升级、重启持久性、备份/预演/恢复、HTTP 与图片哈希/解码核对 |
@@ -199,6 +200,8 @@ npm run build:weapp
 ```bash
 # 原生 Redis；脚本创建自己的实例和测试数据
 python scripts/verify_redis_runtime.py --redis-server redis-server
+# 浏览器断线恢复；需要 Linux Docker 引擎，自动创建临时 Redis
+python scripts/verify_reconnect_browser.py
 # 需要 PowerShell；只操作临时项目和隔离数据库/附件
 python scripts/verify_sqlite_recovery.py
 ```
@@ -244,11 +247,11 @@ showcase/                  # 实际页面演示截图
 | 猫情报 | `POST /api/agents/cat-intel/messages` |
 | 事件 / 健康 | `GET /api/events/stream`、`GET /api/system/health` |
 
-Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据库接口重新查询。Web 重连目前不会自动刷新所有页面状态，部署网络与浏览器恢复仍需验收。
+Redis Pub/Sub 不保存离线事件；Web 通过统一 SSE 连接在首次打开、重连和业务事件后重新查询当前数据。断线自动重试，浏览器恢复联网后重连，明确会话失效时退出。帖子、评论、通知、图鉴、首页及草稿保留已完成真实浏览器验收；不表示能逐条重放离线事件，生产网络和容量仍需验证。
 
 ## 后续工作与限制
 
-1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复，验证实际部署使用的业务挂载。API 阶段在 CI 与本机命名卷上的容器演练已通过，客户端断线重连后的自动状态同步仍待验收。
+1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复，验证实际部署使用的业务挂载。API 阶段容器演练及列明范围内的浏览器重连验收已通过，生产网络和容量验收仍需完成。
 2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
 3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
 4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。
@@ -266,6 +269,7 @@ Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据
 | [C 验收](docs/validation/OPTIMIZATION_C.md) | Redis 多进程、SQLite/附件恢复、Docker 阻塞 |
 | [CI 修复](docs/validation/CI_REPAIR_20261101.md) / [SQLite 启动](docs/validation/SQLITE_STARTUP_20261101.md) | 测试环境问题、WAL 锁竞争、远端六项门禁结果 |
 | [Docker 验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md) | API/nginx 镜像、四 worker、事件、重启与新卷恢复及剩余边界 |
+| [浏览器重连](docs/validation/RECONNECT_20261101.md) | 丢失更新补回、长断线恢复、草稿保留和会话清理 |
 | [参考库操作](docs/REFERENCE_LIBRARY.md) / [备份恢复](docs/BACKUP_RECOVERY.md) | 配置、迁移、构建、恢复边界 |
 | [部署](DEPLOY.md) / [发布清单](docs/RELEASE_CHECKLIST.md) | 待完成的发布步骤 |
 | [权限矩阵](docs/PERMISSIONS.md) / [观测手册](docs/OBSERVABILITY_RUNBOOK.md) | 角色边界与排障 |

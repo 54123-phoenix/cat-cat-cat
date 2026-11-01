@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import BadgeIcon from '../components/BadgeIcon'
@@ -8,17 +9,20 @@ import { Medal } from 'lucide-react'
 import { SERIES_LABEL } from '../constants/badges'
 
 export default function BadgeGallery() {
+  const { revision } = useLiveData()
   const [badges, setBadges] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let cancelled = false
     getBadges()
       .then((data) => {
-        if (Array.isArray(data)) setBadges(data)
+        if (!cancelled && Array.isArray(data)) setBadges(data)
       })
       .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   const grouped: Record<string, any[]> = {}
   badges.forEach((b) => {

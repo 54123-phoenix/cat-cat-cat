@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useNavigate } from 'react-router-dom'
 import { User, Award, MapPin, Cat, PawPrint, Heart, Sparkles, Camera, Compass, CheckCircle2, ShieldCheck, Pencil } from 'lucide-react'
 import CatCard from '../components/CatCard'
@@ -13,6 +14,7 @@ import ImageWithShimmer from '../components/ImageWithShimmer'
 import type { Collectible } from '../types'
 
 export default function Profile() {
+  const { revision } = useLiveData()
   const [user, setUser] = useState(null)
   const [cats, setCats] = useState([])
   const [followedCats, setFollowedCats] = useState([])
@@ -30,11 +32,12 @@ export default function Profile() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    let cancelled = false
     const storedUser = getStoredUser()
     if (!storedUser) {
       setAuthError(true)
       setLoading(false)
-      return
+      return undefined
     }
     Promise.all([
       getUserProfile(),
@@ -44,6 +47,7 @@ export default function Profile() {
       getCollectibles().catch(() => ({ collectibles: [], total: 0 })),
     ])
       .then(([userData, catsData, followedData, statsData, collData]) => {
+        if (cancelled) return
         setUser(userData)
         setCats(Array.isArray(catsData) ? catsData : [])
         setFollowedCats(Array.isArray(followedData) ? followedData : [])
@@ -52,12 +56,14 @@ export default function Profile() {
         setCollectibles(collData.collectibles || [])
       })
       .catch((err) => {
+        if (cancelled) return
         if (err.message?.includes('401') || err.message?.includes('Not authenticated')) {
           setAuthError(true)
         }
       })
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   useEffect(() => {
     return () => {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Heart, Trash2 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
@@ -6,7 +7,7 @@ import CommentSection from '../components/CommentSection'
 import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
 import ImageWithShimmer from '../components/ImageWithShimmer'
-import { getPost, likePost, deletePost, getStoredUser } from '../api'
+import { ApiError, getPost, likePost, deletePost, getStoredUser } from '../api'
 import { TOPIC_LABEL, TOPIC_COLORS } from '../constants/topics'
 
 import PollView from '../components/PollView'
@@ -18,6 +19,7 @@ const POST_TYPE_BADGE = {
 }
 
 export default function PostDetail() {
+  const { revision } = useLiveData()
   const { postId } = useParams()
   const navigate = useNavigate()
   const mountedRef = useRef(true)
@@ -33,17 +35,29 @@ export default function PostDetail() {
   const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
+    setPost(null)
     setLoading(true)
+    setShowDeleteConfirm(false)
+  }, [postId])
+
+  useEffect(() => {
+    let cancelled = false
     setError(null)
     getPost(postId)
       .then((data) => {
+        if (cancelled) return
         setPost(data)
         setLiked(Boolean(data.liked))
         setLikes(data.likes || 0)
       })
-      .catch((err) => setError(err.message || '帖子加载失败'))
-      .finally(() => setLoading(false))
-  }, [postId])
+      .catch((err) => {
+        if (cancelled) return
+        setError(err.message || '帖子加载失败')
+        if (err instanceof ApiError && (err.status === 403 || err.status === 404)) setPost(null)
+      })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [postId, revision])
 
   async function handleLike() {
     if (liking) return
@@ -100,7 +114,7 @@ export default function PostDetail() {
     )
   }
 
-  if (error || !post) {
+  if (!post) {
     return (
       <div className="pb-6">
         <PageHeader title="帖子详情" />

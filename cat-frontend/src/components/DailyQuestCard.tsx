@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { Camera, PawPrint, MessageSquare, ScanLine, Check } from 'lucide-react'
 import { getDailyQuest } from '../api'
 
@@ -10,15 +11,18 @@ const QUEST_ICONS = {
 }
 
 export default function DailyQuestCard() {
+  const { revision } = useLiveData()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let cancelled = false
     getDailyQuest()
-      .then(setData)
+      .then(data => { if (!cancelled) setData(data) })
       .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   if (loading) {
     return <div className="card p-4 h-24 skeleton" />

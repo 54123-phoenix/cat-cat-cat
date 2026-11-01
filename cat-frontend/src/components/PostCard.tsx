@@ -19,6 +19,10 @@ export default function PostCard({ post, onReport, onDeleted, onTagClick }) {
   const navigate = useNavigate()
   const [liked, setLiked] = useState(Boolean(post.liked))
   const [likes, setLikes] = useState(post.likes || 0)
+  useEffect(() => {
+    setLiked(Boolean(post.liked))
+    setLikes(post.likes || 0)
+  }, [post.liked, post.likes])
   const [liking, setLiking] = useState(false)
   const [burst, setBurst] = useState(null)
   const [deleting, setDeleting] = useState(false)

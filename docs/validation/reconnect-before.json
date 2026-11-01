@@ -1,0 +1,8 @@
+{
+  "status": "failed",
+  "checks": {},
+  "page_errors": [],
+  "started_at": "2026-11-01T08:51:39.682755+00:00",
+  "redis_version": "7.4.9",
+  "browser": "156.0.8078.4"
+}

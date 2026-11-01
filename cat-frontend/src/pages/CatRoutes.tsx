@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { Clock, MapPin, PawPrint, Share2, Sparkles } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
@@ -22,6 +23,7 @@ function formatTime(v) {
 }
 
 export default function CatRoutes() {
+  const { revision } = useLiveData()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const initialSlot = searchParams.get('time_slot') || 'anytime'
@@ -36,13 +38,15 @@ export default function CatRoutes() {
   const leadStop = stops[0]
 
   useEffect(() => {
+    let cancelled = false
     setLoading(true)
     setError('')
     getRouteRecommendations({ time_slot: timeSlot, limit: 4, days: 14 })
-      .then(setData)
-      .catch((e) => setError(e.message || '路线加载失败'))
-      .finally(() => setLoading(false))
-  }, [timeSlot])
+      .then(data => { if (!cancelled) setData(data) })
+      .catch((e) => { if (!cancelled) setError(e.message || '路线加载失败') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [timeSlot, revision])
 
   const switchSlot = (key) => {
     setTimeSlot(key)

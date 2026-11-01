@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { Trophy, Crown, Sparkles, Camera, Compass, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react'
 import EmptyState from '../components/EmptyState'
 import { getLeaderboard, getStoredUser } from '../api'
@@ -26,6 +27,7 @@ const CATEGORIES = [
 ]
 
 export default function League() {
+  const { revision } = useLiveData()
   const [data, setData] = useState(null)
   const [category, setCategory] = useState('overall')
   const [loading, setLoading] = useState(true)
@@ -33,13 +35,15 @@ export default function League() {
   const myId = getStoredUser()?.id
 
   useEffect(() => {
+    let cancelled = false
     setLoading(true)
     setError('')
     getLeaderboard(category)
-      .then(setData)
-      .catch((err) => setError(err.message || '排行榜加载失败'))
-      .finally(() => setLoading(false))
-  }, [category])
+      .then(data => { if (!cancelled) setData(data) })
+      .catch((err) => { if (!cancelled) setError(err.message || '排行榜加载失败') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [category, revision])
 
   if (loading) {
     return (

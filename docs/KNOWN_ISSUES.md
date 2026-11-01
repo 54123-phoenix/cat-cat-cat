@@ -4,7 +4,7 @@
 
 **当前结论：项目已有真实业务实现，但关键流程、权限边界、数据正确性和交付流程仍有缺陷，尚未达到稳定发布候选版的质量。** 本台账记录本次源码审查和本地验证结果，不把历史文档中的“已完成”当作验收结论，也不追溯推断缺陷最早出现的时间。
 
-初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），合计 38 项。当前 **26 项通过本地验收，9 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)及 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
+初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），合计 39 项。当前 **27 项通过本地验收，9 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[浏览器重连](validation/RECONNECT_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
 
 ## 阅读与关闭规则
 
@@ -221,7 +221,7 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 - 现象与影响：后端未声明 redis 包，本次新环境回退到进程内缓存/广播；部署配置为 4 workers，内存队列无法跨进程广播。E02 `cache_runtime` 证明依赖回退，没有完成多 worker 丢事件实测。
 - 验收：按锁定依赖安装后确实连接 Redis；不同 worker 的生产者和 SSE 客户端收到预期事件；断连行为明确、可观测；若选择只支持单 worker，必须限制部署并同步文档。见 VER-004。
 
-- 本轮结果：Redis 7.4.2 与四个独立 API 进程实测通过同步/异步广播、缓存共享与失效、撤销 token、订阅清理和中断恢复。按本机后端范围关闭；Linux Gunicorn 容器和客户端自动同步仍待验证。见 [C 验收](validation/OPTIMIZATION_C.md)。
+- 本轮结果：Redis 7.4.2 与四个独立 API 进程实测通过同步/异步广播、缓存共享与失效、撤销 token、订阅清理和中断恢复。按本机后端范围关闭，见 [C 验收](validation/OPTIMIZATION_C.md)。后续 Linux Gunicorn 容器和浏览器核心页面重连同步分别通过 [Docker](validation/DOCKER_ACCEPTANCE_20261101.md)与[重连验收](validation/RECONNECT_20261101.md)，生产网络及容量仍待验证。
 
 ### ISS-020 内存缓存未落实 TTL 和容量上限
 
@@ -385,6 +385,14 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 - 修复：已有 WAL/内存模式不重复切换；只对初始化期间的 SQLITE_BUSY/LOCKED 最多等待 5 秒，其它错误立即传播。成功后保留业务 busy_timeout 与外键约束，不重放业务写入。
 - 验收：同一真实持锁回归在旧实现失败，修复后通过；持续占锁按截止时间退出，只读错误不被吞掉；本机真实 Redis 加四 API 十项通过。修复提交 ec8ad5a 的远端六个任务全部成功，后端 243 项、Redis 十项、Docker 七组通过。见 [SQLite 启动记录](validation/SQLITE_STARTUP_20261101.md)。不声明已经验证持续高并发写入容量。
 
+### ISS-039 浏览器重连不刷新数据且有限重试后停止
+
+**P2 · 已修复 · 本地验收通过（2026-11-01）。** 旧 `useEventStream` 的 `onopen` 不触发业务查询，五次失败后停止重试；首页与 Layout 重复订阅。点赞/投票局部状态也不响应新 props。
+
+- 复现：真实 API 在 Redis TCP 中断期间写入帖子并确认落库；恢复后 SSE 已打开，但浏览器仍无新帖子。投票 props 更新后票数仍旧的回归也失败。
+- 修复：统一连接与刷新通知、持续退避重试、离线恢复与会话终止清理；刷新查询和局部 state，保留输入，忽略迟到结果，并同步点赞/投票/展开评论。
+- 验收：真实 Chromium + Redis 十组通过，覆盖帖子/评论/通知/图鉴/首页、草稿与筛选保留、60 秒断线、浏览器离线、登出与撤销。Web 全量 78 项通过。按列明页面和连接生命周期关闭；不代表逐条离线事件重放、地图/微信实机或生产容量已经验证。见[证据与边界](validation/RECONNECT_20261101.md)。
+
 ## 待验证或待决策事项
 
 这些事项不能因测试未运行而直接判断失败，也不能因存在代码就判断完成。
@@ -394,7 +402,7 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 | VER-001 真实识别质量 | P1 / 待验证 | 已有 YOLO→DINOv3→投影→FAISS 实现及 91 只猫、1,421 条 256 维参考向量；本次没有运行真实模型和独立样本。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
 | VER-002 微信真机全流程 | P1 / 待验证 | 只完成构建与隔离 JS 模拟；尚未配置正式平台条件并执行真机测试。 | 修复 ISS-007/008/009/010/032 后，在明确 AppID、域名、基础库和设备版本下，关闭 demoMode 验证登录、列表、拍照、识别、保存、发帖、错误重试，并保存记录。 |
 | VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复通过；Linux CI 和更新后的本机 Desktop 4.97.0 均通过 API/nginx 镜像、四 worker、真实任务、重启及新卷恢复七组。本机引擎现已恢复。 | [C](validation/OPTIMIZATION_C.md) 与 [Docker 证据](validation/DOCKER_ACCEPTANCE_20261101.md)。继续验证完整 inference 镜像、模型与已发布向量 store 的整体恢复、实际业务挂载及容量。 |
-| VER-004 Redis 与多 worker | P1 / 后端及容器集成通过，浏览器重连待验收 | Redis 7.4.2 + 四 API 十项通过；Linux Gunicorn 四 worker 加 Redis/nginx 的真实 HTTP 写入与 SSE 推送通过。远端复验暴露的 SQLite 启动锁竞争另记 ISS-038。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md) 与 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。继续验收浏览器重连后的当前状态同步；Pub/Sub 不提供离线重放，Web onopen 当前不会自动刷新所有页面数据。 |
+| VER-004 Redis 与多 worker | P1 / 后端、容器及核心页面重连集成通过 | Redis + 四 API 十项、Gunicorn 四 worker 经 Redis/nginx 的真实 SSE 推送通过；浏览器十组故障恢复通过。SQLite 启动竞争与浏览器缺陷分别记录 ISS-038/039。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[浏览器重连](validation/RECONNECT_20261101.md)。Pub/Sub 不提供离线重放，通过接口补回当前状态；生产网络代理、容量和未列明客户端仍须按环境验证。 |
 | VER-005 地图和外部 LLM | P2 / 待验证 | 本地缺地图 Key；猫情报数据库/规则回退已在浏览器跑通，但真实地图与外部 LLM 工具循环未验收。 | 使用有效配置验证地图加载、坐标转换和定位；验证真实 LLM 工具调用、超时、错误响应及回退。分别保存结果，不能用回退成功替代 LLM 成功。 |
 | VER-006 性能与路线产品边界 | P2 / 待验证、待决策 | 源码存在图库全量读取后排序分页、排行榜逐用户统计、通知逐收件人提交；未压测，不能声称已测得容量不足。路线按热度组织，打卡校验站名，不证明实际到达。 | 先明确目标数据量、并发、延迟和是否需要可信到访/路线优化；对图库、排行榜、通知压测并记录查询数/延迟/内存，按结果优化。轻量路线玩法可保留，但文案不得暗示已验证到访或路网最优。 |
 | VER-007 代码、数据与模型许可 | P2 / 待决策 | 仓库未发现 LICENSE；不能替作者选择许可，也不能据此认定已发生侵权。 | 由权利人明确代码许可，核对图片、猫档案数据、模型权重和其他素材的来源、授权与使用范围，补充可核验说明。 |
@@ -425,5 +433,8 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 | 2026-10-31 | B4 / ISS-028 | 管理状态、进度、待发布变化、权限与重试闭环完成，ISS-028 按本地生命周期范围关闭；22 项本地通过、10 项待专项、3 项部分完成 | [B4 验收](validation/OPTIMIZATION_B4.md)：后端 229、Web 66、B4 浏览器 8 组及核心 6 组通过；模型和环境专项状态不变 |
 
 | 2026-10-31 | C / ISS-019、036、037 | 真实 Redis 四进程、SQLite/附件恢复；补唯一约束和并发初始化，修复审核撤回后旧热力图复现；25 项本地通过、9 项待专项、3 项部分完成 | [C 验收](validation/OPTIMIZATION_C.md)；Docker Desktop 启动失败，容器验收未完成；无提交或部署 |
+
+| 2026-11-01 | ISS-038 / Docker 本机与 CI | 修复 WAL 启动竞争，更新后的本机 Docker 七组通过；26 项本地通过、9 项待专项、3 项部分完成 | [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[Docker](validation/DOCKER_ACCEPTANCE_20261101.md) |
+| 2026-11-01 | ISS-039 / 浏览器重连 | 统一订阅、长断线恢复和状态同步；39 项中 27 项本地通过、9 项待专项、3 项部分完成 | [重连验收](validation/RECONNECT_20261101.md)：Web 78 项、真实浏览器十组通过 |
 
 后续每次关闭或降级条目，应在本表追加原因及证据，并同步条目状态和顶部数量；保留稳定编号，不删除已修复问题的历史记录。

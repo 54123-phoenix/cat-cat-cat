@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { Download, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
 import QRCode from 'qrcode'
 import MascotCat from '../components/MascotCat'
@@ -110,6 +111,7 @@ function getPersonalityLabel(data) {
 }
 
 export default function Wrapped() {
+  const { revision } = useLiveData()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -117,11 +119,14 @@ export default function Wrapped() {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
+    let cancelled = false
+    setError('')
     getWrapped()
-      .then(setData)
-      .catch((e) => setError(e.message || '加载失败'))
-      .finally(() => setLoading(false))
-  }, [])
+      .then(data => { if (!cancelled) setData(data) })
+      .catch((e) => { if (!cancelled) setError(e.message || '加载失败') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   useEffect(() => {
     if (!data) return undefined

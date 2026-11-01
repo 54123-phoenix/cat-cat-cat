@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useNavigate } from 'react-router-dom'
 import { Cat, Star, Search, Trophy } from 'lucide-react'
 import ImageWithShimmer from '../components/ImageWithShimmer'
@@ -34,6 +35,7 @@ function StatusPill({ status }) {
 }
 
 export default function Collection() {
+  const { revision } = useLiveData()
   const [cats, setCats] = useState([])
   const [followed, setFollowed] = useState([])
   const [sightings, setSightings] = useState([])
@@ -43,19 +45,22 @@ export default function Collection() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    let cancelled = false
     Promise.all([
       getCats(),
       getFollowedCats().catch(() => []),
       getEncounteredCatIds().catch(() => []),
     ])
       .then(([catsData, followedData, sightingsData]) => {
+        if (cancelled) return
         setCats(Array.isArray(catsData) ? catsData : [])
         setFollowed(Array.isArray(followedData) ? followedData : [])
         setSightings(Array.isArray(sightingsData) ? sightingsData : [])
       })
       .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   const followedIds = new Set(followed.map((f) => f.cat_id))
   const metIds = new Set(sightings)

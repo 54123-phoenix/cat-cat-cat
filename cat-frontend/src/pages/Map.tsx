@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useNavigate } from 'react-router-dom'
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { MapPin, Navigation, HelpCircle } from 'lucide-react'
@@ -57,6 +58,7 @@ function wgs84ToGcj02(wgsLng, wgsLat) {
 }
 
 export default function Map() {
+  const { revision } = useLiveData()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -268,7 +270,7 @@ export default function Map() {
         catMarkersRef.current = []
       }
     }
-  }, [days, navigate, mapReady])
+  }, [days, navigate, mapReady, revision])
 
   return (
     <div className="fixed inset-0 z-30 top-[52px] bottom-16">

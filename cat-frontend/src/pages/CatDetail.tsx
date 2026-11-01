@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { useParams, useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
@@ -112,6 +113,7 @@ const RECORD_TYPE_ICON = {
 }
 
 export default function CatDetail() {
+  const { revision } = useLiveData()
   const { catId } = useParams()
   const navigate = useNavigate()
   const [cat, setCat] = useState(null)
@@ -126,23 +128,31 @@ export default function CatDetail() {
   const [showIdentityCard, setShowIdentityCard] = useState(false)
 
   useEffect(() => {
+    setCat(null)
     setLoading(true)
+    setShowIdentityCard(false)
+  }, [catId])
+
+  useEffect(() => {
+    let cancelled = false
     setError(null)
 
     Promise.all([
       getCat(catId),
       getSightings({ catId, limit: 100 }),
       getHealthRecords(catId),
-      checkFollow(catId).then(r => setFollowing(r.following)).catch(() => {}),
+      checkFollow(catId).then(r => { if (!cancelled) setFollowing(r.following) }).catch(() => {}),
     ])
       .then(([catData, sightingsData, healthData]) => {
+        if (cancelled) return
         setCat(catData)
         setSightings(Array.isArray(sightingsData) ? sightingsData : [])
         setHealthRecords(Array.isArray(healthData) ? healthData : [])
       })
-      .catch((err) => setError(err.message || '猫猫档案加载失败'))
-      .finally(() => setLoading(false))
-  }, [catId])
+      .catch((err) => { if (!cancelled) setError(err.message || '猫猫档案加载失败') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [catId, revision])
 
   async function toggleFollow() {
     if (followLoading) return

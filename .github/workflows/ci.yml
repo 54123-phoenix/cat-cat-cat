@@ -121,6 +121,7 @@ jobs:
       - run: cd cat-frontend && npm ci
       - run: python scripts/verify_browser.py --output-dir artifacts/browser-ci
       - run: python scripts/verify_reference_browser.py --output-dir artifacts/reference-browser-ci
+      - run: python scripts/verify_reconnect_browser.py --output-dir artifacts/reconnect-browser-ci
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -128,4 +129,5 @@ jobs:
           path: |
             artifacts/browser-ci/
             artifacts/reference-browser-ci/
+            artifacts/reconnect-browser-ci/
           if-no-files-found: warn

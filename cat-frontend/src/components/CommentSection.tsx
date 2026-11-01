@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { MessageCircle, Send, CheckCircle2 } from 'lucide-react'
 import { getPostComments, createComment, acceptAnswer, getStoredUser } from '../api'
 import Avatar from './Avatar'
@@ -20,6 +21,7 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand, isQuestion, acceptedCommentId, canAccept }: CommentSectionProps) {
+  const { revision } = useLiveData()
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
@@ -31,27 +33,23 @@ export default function CommentSection({ postId, initialCount = 0, expanded: exp
 
   const expanded = expandedProp ?? internalExpanded
 
-  async function loadComments() {
+  useEffect(() => {
+    setAcceptedId(acceptedCommentId || null)
+  }, [acceptedCommentId])
+
+  useEffect(() => {
+    if (!expanded) return undefined
     const rid = ++requestIdRef.current
     setLoading(true)
-    try {
-      const data = await getPostComments(postId)
-      if (rid === requestIdRef.current) {
-        setComments(Array.isArray(data) ? data : [])
-      }
-    } catch {
-      if (rid === requestIdRef.current) {
-        setComments([])
-      }
-    } finally {
-      if (rid === requestIdRef.current) {
-        setLoading(false)
-      }
-    }
-  }
+    getPostComments(postId).then(data => {
+      if (rid === requestIdRef.current) setComments(Array.isArray(data) ? data : [])
+    }).catch(() => {}).finally(() => {
+      if (rid === requestIdRef.current) setLoading(false)
+    })
+    return () => { requestIdRef.current++ }
+  }, [revision, postId, expanded])
 
   function toggleExpanded() {
-    if (!expanded) loadComments()
     if (onExpand) onExpand()
     else setInternalExpanded(true)
   }

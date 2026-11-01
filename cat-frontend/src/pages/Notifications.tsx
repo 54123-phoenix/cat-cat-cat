@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { CheckCheck, Heart, MessageCircle, PawPrint, Award } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
@@ -13,15 +14,18 @@ const TYPE_ICONS = {
 }
 
 export default function Notifications() {
+  const { revision } = useLiveData()
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let cancelled = false
     getNotifications({ limit: 50 })
-      .then((data) => setNotifications(Array.isArray(data) ? data : []))
+      .then((data) => { if (!cancelled) setNotifications(Array.isArray(data) ? data : []) })
       .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   async function handleMarkRead(id) {
     try {

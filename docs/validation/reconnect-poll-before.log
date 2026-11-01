@@ -1,0 +1,100 @@
+17:06:03 [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+17:06:03 [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.9 D:/Desktop/fdmm/cat-cat-cat/cat-frontend
+
+ ❯ src/__tests__/liveData.test.tsx (6 tests | 1 failed | 5 skipped) 27ms
+   × updates an existing poll when the refreshed post contains new vote totals 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/liveData.test.tsx > updates an existing poll when the refreshed post contains new vote totals
+TestingLibraryElementError: Unable to find an element with the text: 共 3 票，点击选项投票. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="space-y-2 mt-2"
+    >
+      <button
+        class="w-full text-left relative overflow-hidden rounded-lg border border-border px-3 py-2 active:bg-surface-3"
+      >
+        <div
+          class="absolute inset-y-0 left-0 bg-primary/10"
+          style="width: 0%;"
+        />
+        <div
+          class="relative flex items-center justify-between text-sm"
+        >
+          <span
+            class="text-text"
+          >
+            选项一
+          </span>
+          <span
+            class="text-text-secondary text-xs"
+          >
+            0
+             票 · 
+            0
+            %
+          </span>
+        </div>
+      </button>
+      <button
+        class="w-full text-left relative overflow-hidden rounded-lg border border-border px-3 py-2 active:bg-surface-3"
+      >
+        <div
+          class="absolute inset-y-0 left-0 bg-primary/10"
+          style="width: 0%;"
+        />
+        <div
+          class="relative flex items-center justify-between text-sm"
+        >
+          <span
+            class="text-text"
+          >
+            选项二
+          </span>
+          <span
+            class="text-text-secondary text-xs"
+          >
+            0
+             票 · 
+            0
+            %
+          </span>
+        </div>
+      </button>
+      <p
+        class="text-xs text-text-muted"
+      >
+        共 
+        0
+         票，点击选项投票
+      </p>
+    </div>
+  </div>
+</body>
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/__tests__/liveData.test.tsx:55:17
+     53|   const { rerender } = render(<PollView post={post} />)
+     54|   rerender(<PollView post={{ ...post, pollData: [2, 1] }} />)
+     55|   expect(screen.getByText('共 3 票，点击选项投票')).toBeVisible()
+       |                 ^
+     56| })
+     57|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  17:06:04
+   Duration  2.22s (transform 173ms, setup 190ms, import 397ms, tests 27ms, environment 1.41s)
+

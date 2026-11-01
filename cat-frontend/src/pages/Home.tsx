@@ -8,7 +8,7 @@ import CatGachaCard from '../components/CatGachaCard'
 import StreakBadge from '../components/StreakBadge'
 import Avatar from '../components/Avatar'
 import { getPrefs } from '../components/Onboarding'
-import { useEventStream } from '../hooks/useEventStream'
+import { useLiveData } from '../hooks/useLiveData'
 
 function greeting() {
   const h = new Date().getHours()
@@ -31,6 +31,7 @@ function greetingGradient() {
 }
 
 export default function Home() {
+  const { revision, event } = useLiveData()
   const [cats, setCats] = useState([])
   const [sightings, setSightings] = useState([])
   const [postCount, setPostCount] = useState(0)
@@ -42,6 +43,7 @@ export default function Home() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    let cancelled = false
     Promise.all([
       getCats(),
       getSightings({ limit: 5 }),
@@ -50,6 +52,7 @@ export default function Home() {
       getWeeklyReport().catch(() => null),
       getMyStats().catch(() => null),
     ]).then(([catsData, sightingsData, postsData, userData, reportData, statsData]) => {
+      if (cancelled) return
       const arr = Array.isArray(catsData) ? catsData : []
       setCats(arr)
       setSightings(Array.isArray(sightingsData) ? sightingsData : [])
@@ -59,15 +62,21 @@ export default function Home() {
       setProfile(userData)
       setWeeklyReport(reportData)
       setMyStats(statsData)
-    }).catch(console.error).finally(() => setLoading(false))
-  }, [])
+    }).catch(console.error).finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   const [liveSighting, setLiveSighting] = useState(null)
 
-  useEventStream((data) => {
-    setLiveSighting(data)
-    setTimeout(() => setLiveSighting(null), 4000)
-  })
+  useEffect(() => {
+    if (event?.type !== 'sighting_confirmed') {
+      setLiveSighting(null)
+      return undefined
+    }
+    setLiveSighting(event.data)
+    const timer = setTimeout(() => setLiveSighting(null), 4000)
+    return () => clearTimeout(timer)
+  }, [event])
 
   const streakDays = myStats?.streak || 0
   const streakWeek = Array.from({ length: 7 }, (_, i) => i < Math.min(streakDays, 7))

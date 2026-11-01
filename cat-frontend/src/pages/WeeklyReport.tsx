@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react'
+import { useLiveData } from '../hooks/useLiveData'
 import { TrendingUp, TrendingDown, Minus, Flame, Trophy } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import { getWeeklyReport } from '../api'
 
 export default function WeeklyReport() {
+  const { revision } = useLiveData()
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let cancelled = false
     getWeeklyReport()
-      .then(setReport)
+      .then(data => { if (!cancelled) setReport(data) })
       .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [revision])
 
   const pctChange = report && report.last_week_sightings > 0
     ? Math.round(((report.total_sightings - report.last_week_sightings) / report.last_week_sightings) * 100)

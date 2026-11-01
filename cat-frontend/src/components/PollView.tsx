@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { pollVote } from '../api'
 import { toast } from './Toast'
 
 export default function PollView({ post }) {
   const [pollData, setPollData] = useState(post.pollData || [])
+  useEffect(() => { setPollData(post.pollData || []) }, [post.pollData])
   const [voting, setVoting] = useState(false)
   const total = pollData.reduce((a, b) => a + b, 0)
   async function handleVote(idx) {
