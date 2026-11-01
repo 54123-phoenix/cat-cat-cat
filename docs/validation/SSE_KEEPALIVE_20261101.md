@@ -25,6 +25,17 @@ Uvicorn 0.24.0 完成前一响应后安排 keep-alive 定时器，再处理连�
 
 **真实 Redis 7.4.2（WSL Ubuntu）与 Windows 四个独立 API 进程十项通过**，见[结果](sse-keepalive-redis-local.json)，包括活动 SSE 撤销与拒绝重连、订阅清理、网络故障后恢复。所有本机运行使用测试数据库、唯一端口和临时 Redis 实例；不连接或修改业务库及其它项目容器。
 
-修复提交的七项远端 CI 结果待实际完成后补记，包含重新构建的 API/完整推理容器与浏览器故障恢复。
+修复提交 **`e2f1bd489e1ec61f271addc569e553bae673d38e`** 的[远端运行 41295461226](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41295461226) **七项全部成功**，见[任务结果](inference-sse-ci.json)：
+
+| 范围 | 实际结果 |
+|---|---|
+| 后端全量 | 244 passed / 69 warnings / 84.40 秒，含 TCP 回归；[原始 CI 日志](sse-keepalive-backend-ci.log) |
+| Redis 四进程 | 原生 Linux Redis 7.0.15，十项通过；[结果](sse-keepalive-redis-ci.json) |
+| Docker API 阶段 | 四 Gunicorn worker、HTTP/SSE、重启和新卷恢复，七组通过；[结果](sse-keepalive-docker-ci.json) |
+| 完整 CPU 推理 | 重新构建后十二组通过，真实坏权重拒绝通过；实际 Uvicorn 0.54.0、Gunicorn 26.2.0；[结果](inference-ci-final.json) |
+| 浏览器 | Chromium 156.0.8078.4，[核心六组](sse-keepalive-browser-ci.json)、[参考库八组](sse-keepalive-reference-browser-ci.json)、[重连十组](sse-keepalive-reconnect-ci.json) 全部通过；三套 page_errors 均为空 |
+| Web / 小程序 | 两项构建与既有测试、类型检查门禁通过 |
+
+重连检查使用 Redis 7.4.12，长断线含恢复等待耗时 76.36 秒；故障期间出现预期连接错误，不把这些注入错误算作页面崩溃。没有在 Redis 脚本中忽略 RemoteProtocolError，也没有更改此轮业务断言以换取通过。后续证据补记只修改文档，不改变这里验收的生产代码。
 
 本次只关闭这一 HTTP 定时器缺陷。Redis Pub/Sub 不持久化离线事件，生产代理配置、并发容量与未列明客户端仍需各自验收。

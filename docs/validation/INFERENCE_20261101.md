@@ -65,6 +65,8 @@ python scripts/verify_docker_runtime.py --models-dir artifacts/inference-models 
 
 修复提交 `4cd6a2e` 的[首次远端运行 41294796254](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41294796254) 中，**inference-runtime 十二组全部通过**，见[首次远端结果](inference-ci-first.json)。Linux/amd64 Docker Engine 28.0.4，包含真实 Torch 错误权重检查、四 Gunicorn worker、新卷恢复与资产故障拒绝。同轮其余五项通过，Redis 任务失败并暴露活动 SSE 被旧 Uvicorn keep-alive 定时器截断的问题，已另记 [ISS-041](SSE_KEEPALIVE_20261101.md)，因此此轮不能称为整个 CI 全绿。
 
+SSE 修复提交 `e2f1bd489e1ec61f271addc569e553bae673d38e` 的[远端运行 41295461226](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41295461226) 重新构建完整镜像，**十二组及真实错误权重检查再次全部通过**，见[最终推理结果](inference-ci-final.json)。实际运行 Uvicorn 0.54.0、Gunicorn 26.2.0、Torch 2.6.0+cpu；四 worker 与 SSE 均通过。恢复后的两次自匹配请求为 3.461 秒、1.817 秒，仍只作为链路证据，不用于估计识别精度或生产容量。
+
 ## 未关闭的范围
 
 生产宿主机 bind mount、真实业务数据恢复、容量/并发、ARM/GPU、断电及跨主机文件系统未验收。当前 PowerShell 运维脚本仍只覆盖数据库与默认 uploads，完整 store/模型需在统一停写窗口另行备份；本轮容器演练不代表已完成通用生产恢复工具。

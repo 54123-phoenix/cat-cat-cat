@@ -1,0 +1,473 @@
+check-backend	Set up job	﻿2026-11-01T09:59:32.0348489Z Current runner version: '2.338.2'
+check-backend	Set up job	2026-11-01T09:59:32.0375631Z ##[group]Runner Image Provisioner
+check-backend	Set up job	2026-11-01T09:59:32.0376640Z Hosted Compute Agent
+check-backend	Set up job	2026-11-01T09:59:32.0377288Z Version: 20261021.618
+check-backend	Set up job	2026-11-01T09:59:32.0377978Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+check-backend	Set up job	2026-11-01T09:59:32.0378781Z Build Date: 2026-10-21T00:45:21Z
+check-backend	Set up job	2026-11-01T09:59:32.0379467Z Worker ID: {b3349e8d-8654-453f-80aa-2926e7e27eb2}
+check-backend	Set up job	2026-11-01T09:59:32.0380245Z Region: westus
+check-backend	Set up job	2026-11-01T09:59:32.0381321Z Cloud: Azure
+check-backend	Set up job	2026-11-01T09:59:32.0381957Z ##[endgroup]
+check-backend	Set up job	2026-11-01T09:59:32.0383511Z ##[group]Operating System
+check-backend	Set up job	2026-11-01T09:59:32.0384192Z Ubuntu
+check-backend	Set up job	2026-11-01T09:59:32.0384800Z 24.04.5
+check-backend	Set up job	2026-11-01T09:59:32.0385362Z LTS
+check-backend	Set up job	2026-11-01T09:59:32.0385856Z ##[endgroup]
+check-backend	Set up job	2026-11-01T09:59:32.0386518Z ##[group]Runner Image
+check-backend	Set up job	2026-11-01T09:59:32.0387116Z Image: ubuntu-24.04
+check-backend	Set up job	2026-11-01T09:59:32.0387733Z Version: 20261025.353.1
+check-backend	Set up job	2026-11-01T09:59:32.0388837Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+check-backend	Set up job	2026-11-01T09:59:32.0391027Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+check-backend	Set up job	2026-11-01T09:59:32.0392050Z ##[endgroup]
+check-backend	Set up job	2026-11-01T09:59:32.0393328Z ##[group]GITHUB_TOKEN Permissions
+check-backend	Set up job	2026-11-01T09:59:32.0395558Z Contents: read
+check-backend	Set up job	2026-11-01T09:59:32.0396628Z Metadata: read
+check-backend	Set up job	2026-11-01T09:59:32.0397231Z Packages: read
+check-backend	Set up job	2026-11-01T09:59:32.0397780Z ##[endgroup]
+check-backend	Set up job	2026-11-01T09:59:32.0400042Z Secret source: Actions
+check-backend	Set up job	2026-11-01T09:59:32.0401250Z Cache mode: write
+check-backend	Set up job	2026-11-01T09:59:32.0402088Z Prepare workflow directory
+check-backend	Set up job	2026-11-01T09:59:32.0779253Z Prepare all required actions
+check-backend	Set up job	2026-11-01T09:59:32.0853689Z Getting action download info
+check-backend	Set up job	2026-11-01T09:59:32.4491148Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+check-backend	Set up job	2026-11-01T09:59:32.7899928Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+check-backend	Set up job	2026-11-01T09:59:32.8832736Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+check-backend	Set up job	2026-11-01T09:59:33.1705691Z Complete job name: check-backend
+check-backend	Run actions/checkout@v4	﻿2026-11-01T09:59:33.2642789Z ##[group]Run actions/checkout@v4
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2643790Z with:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2644262Z   lfs: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2644744Z   repository: 54123-phoenix/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2649307Z   token: ***
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2649817Z   ssh-strict: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2650294Z   ssh-user: git
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2651151Z   persist-credentials: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2651707Z   clean: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2652192Z   sparse-checkout-cone-mode: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2652762Z   fetch-depth: 1
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2653232Z   fetch-tags: false
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2653715Z   show-progress: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2654225Z   submodules: false
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2654737Z   set-safe-directory: true
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2655282Z   allow-unsafe-pr-checkout: false
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.2656182Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8467803Z Syncing repository: 54123-phoenix/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8471066Z ##[group]Getting Git version info
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8472370Z Working directory is '/home/runner/work/cat-cat-cat/cat-cat-cat'
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8474565Z [command]/usr/bin/git version
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8573765Z git version 2.56.0
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.8615567Z [command]/usr/bin/git lfs version
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9838915Z git-lfs/3.8.1 (GitHub; linux amd64; go 1.27.3)
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9857263Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9875805Z Temporarily overriding HOME='/home/runner/work/_temp/17f933fe-54c4-4a01-ba12-7168bcf8d3b6' before making global git config changes
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9880002Z Adding repository directory to the temporary git global config as a safe directory
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9883631Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cat-cat-cat/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9946769Z Deleting the contents of '/home/runner/work/cat-cat-cat/cat-cat-cat'
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9950816Z ##[group]Initializing the repository
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:33.9955578Z [command]/usr/bin/git init /home/runner/work/cat-cat-cat/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0236651Z hint: Using 'master' as the name for the initial branch. This default branch name
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0239461Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0242548Z hint: to use in all of your new repositories, which will suppress this warning,
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0244581Z hint: call:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0245750Z hint:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0247300Z hint: 	git config --global init.defaultBranch <name>
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0249031Z hint:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0250909Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0253443Z hint: 'development'. The just-created branch can be renamed via this command:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0255422Z hint:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0256471Z hint: 	git branch -m <name>
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0258429Z hint:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0261351Z hint: Disable this message with "git config set advice.defaultBranchName false"
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0265193Z Initialized empty Git repository in /home/runner/work/cat-cat-cat/cat-cat-cat/.git/
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0269556Z [command]/usr/bin/git remote add origin https://github.com/54123-phoenix/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0341713Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0344026Z ##[group]Disabling automatic garbage collection
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0346522Z [command]/usr/bin/git config --local gc.auto 0
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0388818Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0390798Z ##[group]Setting up auth
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0396592Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0445707Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0905834Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.0966414Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.1253258Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.1308811Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.1610081Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.1801939Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.1806572Z [command]/usr/bin/git lfs install --local
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.2370664Z Updated Git hooks.
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.2372042Z Git LFS initialized.
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.2390122Z ##[group]Fetching the repository
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.2405052Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e2f1bd489e1ec61f271addc569e553bae673d38e:refs/remotes/origin/main
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9958934Z From https://github.com/54123-phoenix/cat-cat-cat
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9960008Z  * [new ref]         e2f1bd489e1ec61f271addc569e553bae673d38e -> origin/main
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9965152Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9965987Z ##[group]Determining the checkout info
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9968015Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9969164Z ##[group]Fetching LFS objects
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:34.9974288Z [command]/usr/bin/git lfs fetch origin refs/remotes/origin/main
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.0436968Z Fetching reference refs/remotes/origin/main
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.8839056Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.8839563Z [command]/usr/bin/git sparse-checkout disable
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.8906654Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.8950272Z ##[group]Checking out the ref
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:35.8955679Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:36.0207025Z Switched to a new branch 'main'
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:36.0211564Z branch 'main' set up to track 'origin/main'.
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:36.0523345Z ##[endgroup]
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:36.0580243Z [command]/usr/bin/git log -1 --format=%H
+check-backend	Run actions/checkout@v4	2026-11-01T09:59:36.0616274Z e2f1bd489e1ec61f271addc569e553bae673d38e
+check-backend	Run actions/setup-python@v5	﻿2026-11-01T09:59:36.0905914Z ##[group]Run actions/setup-python@v5
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0906264Z with:
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0906480Z   python-version: 3.11
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0906716Z   check-latest: false
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0909372Z   token: ***
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0909594Z   update-environment: true
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0909846Z   allow-prereleases: false
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0986148Z   freethreaded: false
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.0986583Z ##[endgroup]
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.2429749Z ##[group]Installed versions
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.2525717Z (node:2408) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.2526837Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.2544699Z Successfully set up CPython (3.11.17)
+check-backend	Run actions/setup-python@v5	2026-11-01T09:59:36.2545713Z ##[endgroup]
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	﻿2026-11-01T09:59:36.2685076Z ##[group]Run pip install -r cat-backend/requirements-dev.txt
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2685640Z ^[[36;1mpip install -r cat-backend/requirements-dev.txt^[[0m
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2722839Z shell: /usr/bin/bash -e {0}
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2723134Z env:
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2723439Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2723920Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2724415Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2724809Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2725215Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2725609Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:36.2725953Z ##[endgroup]
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.2173902Z Collecting fastapi==0.104.1 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 1))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.2638272Z   Downloading fastapi-0.104.1-py3-none-any.whl.metadata (24 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.2935480Z Collecting uvicorn==0.54.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.2968426Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.3145001Z Collecting gunicorn>=21.2.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 3))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.3177402Z   Downloading gunicorn-26.2.0-py3-none-any.whl.metadata (5.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6141749Z Collecting sqlalchemy==2.0.23 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 4))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6216346Z   Downloading SQLAlchemy-2.0.23-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6427209Z Collecting pymysql==1.1.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 5))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6488205Z   Downloading PyMySQL-1.1.0-py3-none-any.whl.metadata (4.4 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6627296Z Collecting python-dotenv==1.0.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 6))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6667259Z   Downloading python_dotenv-1.0.0-py3-none-any.whl.metadata (21 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6802278Z Collecting python-multipart==0.0.6 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 7))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.6831293Z   Downloading python_multipart-0.0.6-py3-none-any.whl.metadata (2.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.7949419Z Collecting pydantic==2.5.2 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 8))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.7993850Z   Downloading pydantic-2.5.2-py3-none-any.whl.metadata (65 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8189852Z Collecting pydantic-settings==2.2.1 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 9))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8223262Z   Downloading pydantic_settings-2.2.1-py3-none-any.whl.metadata (3.1 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8424950Z Collecting alembic>=1.13.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 10))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8458558Z   Downloading alembic-1.20.1-py3-none-any.whl.metadata (7.3 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8598723Z Collecting python-jose>=3.3.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 11))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8626366Z   Downloading python_jose-3.5.0-py2.py3-none-any.whl.metadata (5.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8757574Z Collecting passlib>=1.7.4 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 12))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.8787181Z   Downloading passlib-1.7.4-py2.py3-none-any.whl.metadata (1.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.9137423Z Collecting bcrypt==4.1.3 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 13))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:37.9170079Z   Downloading bcrypt-4.1.3-cp39-abi3-manylinux_2_28_x86_64.whl.metadata (9.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.0852283Z Collecting cryptography>=41.0.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 14))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.0885117Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.2688807Z Collecting Pillow>=10.0.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 15))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.2719591Z   Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.4607398Z Collecting numpy>=1.24.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 16))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.4638717Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.4789496Z Collecting httpx==0.27.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 17))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.4829788Z   Downloading httpx-0.27.0-py3-none-any.whl.metadata (7.2 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.4977838Z Collecting httpcore==1.0.9 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 18))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.5009474Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.5152710Z Collecting slowapi>=0.1.9 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 19))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.5184483Z   Downloading slowapi-0.1.10-py3-none-any.whl.metadata (3.3 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.5535994Z Collecting faiss-cpu>=1.8.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 20))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.5576633Z   Downloading faiss_cpu-1.15.1-cp310-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (7.8 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6158829Z Collecting psycopg2-binary>=2.9.9 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 21))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6194546Z   Downloading psycopg2_binary-2.9.13-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6431364Z Collecting redis<6.0,>=5.0 (from -r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 23))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6463300Z   Downloading redis-5.3.1-py3-none-any.whl.metadata (9.2 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6707865Z Collecting pytest<9.0,>=8.0 (from -r cat-backend/requirements-dev.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6738859Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6918736Z Collecting anyio<4.0.0,>=3.7.1 (from fastapi==0.104.1->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 1))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.6951278Z   Downloading anyio-3.7.1-py3-none-any.whl.metadata (4.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7187073Z Collecting starlette<0.28.0,>=0.27.0 (from fastapi==0.104.1->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 1))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7227428Z   Downloading starlette-0.27.0-py3-none-any.whl.metadata (5.8 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7376218Z Collecting typing-extensions>=4.8.0 (from fastapi==0.104.1->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 1))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7406666Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7511395Z Collecting annotated-types>=0.4.0 (from pydantic==2.5.2->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 8))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:38.7542392Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4526663Z Collecting pydantic-core==2.14.5 (from pydantic==2.5.2->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 8))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4564576Z   Downloading pydantic_core-2.14.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4736746Z Collecting click>=7.0 (from uvicorn==0.54.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4764780Z   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4859516Z Collecting h11>=0.8 (from uvicorn==0.54.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.4886244Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6217879Z Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.23->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 4))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6248778Z   Downloading greenlet-3.5.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6470662Z Collecting certifi (from httpx==0.27.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 17))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6500644Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6637097Z Collecting idna (from httpx==0.27.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 17))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6666146Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6766160Z Collecting sniffio (from httpx==0.27.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 17))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6797238Z   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6964895Z Collecting PyJWT>=2.9.0 (from redis<6.0,>=5.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 23))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.6993200Z   Downloading pyjwt-2.15.1-py3-none-any.whl.metadata (3.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7095301Z Collecting iniconfig>=1 (from pytest<9.0,>=8.0->-r cat-backend/requirements-dev.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7125489Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7260321Z Collecting packaging>=20 (from pytest<9.0,>=8.0->-r cat-backend/requirements-dev.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7288744Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7399431Z Collecting pluggy<2,>=1.5 (from pytest<9.0,>=8.0->-r cat-backend/requirements-dev.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7430890Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7589408Z Collecting pygments>=2.7.2 (from pytest<9.0,>=8.0->-r cat-backend/requirements-dev.txt (line 2))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7623328Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7859375Z Collecting Mako (from alembic>=1.13.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 10))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.7891951Z   Downloading mako-1.4.3-py3-none-any.whl.metadata (2.9 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8025915Z Collecting ecdsa!=0.15 (from python-jose>=3.3.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 11))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8055018Z   Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8210055Z Collecting rsa!=4.1.1,!=4.4,<5.0,>=4.0 (from python-jose>=3.3.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 11))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8243866Z   Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8801339Z Collecting pyasn1>=0.5.0 (from python-jose>=3.3.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 11))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.8831601Z   Downloading pyasn1-0.6.5-py3-none-any.whl.metadata (8.4 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.9806340Z Collecting cffi>=2.0.0 (from cryptography>=41.0.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 14))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:39.9839186Z   Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0048010Z Collecting limits>=2.3 (from slowapi>=0.1.9->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 19))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0077488Z   Downloading limits-5.8.0-py3-none-any.whl.metadata (10 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0246202Z Collecting pycparser (from cffi>=2.0.0->cryptography>=41.0.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 14))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0274395Z   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0401163Z Collecting six>=1.9.0 (from ecdsa!=0.15->python-jose>=3.3.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 11))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0430934Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0646277Z Collecting deprecated>=1.2 (from limits>=2.3->slowapi>=0.1.9->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 19))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.0675611Z   Downloading deprecated-1.3.1-py2.py3-none-any.whl.metadata (5.9 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.4523722Z Collecting wrapt<3,>=1.10 (from deprecated>=1.2->limits>=2.3->slowapi>=0.1.9->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 19))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.4558260Z   Downloading wrapt-2.5.2-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (7.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5129757Z Collecting MarkupSafe>=2.0 (from Mako->alembic>=1.13.0->-r /home/runner/work/cat-cat-cat/cat-cat-cat/cat-backend/requirements.txt (line 10))
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5162034Z   Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5246042Z Downloading fastapi-0.104.1-py3-none-any.whl (92 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5315237Z Downloading pydantic-2.5.2-py3-none-any.whl (381 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5392025Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5451768Z Downloading SQLAlchemy-2.0.23-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5680085Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 155.5 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5731144Z Downloading PyMySQL-1.1.0-py3-none-any.whl (44 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5780188Z Downloading python_dotenv-1.0.0-py3-none-any.whl (19 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5826829Z Downloading python_multipart-0.0.6-py3-none-any.whl (45 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5873071Z Downloading pydantic_settings-2.2.1-py3-none-any.whl (13 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5938797Z Downloading bcrypt-4.1.3-cp39-abi3-manylinux_2_28_x86_64.whl (283 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.5996060Z Downloading httpx-0.27.0-py3-none-any.whl (75 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6047095Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6143338Z Downloading pydantic_core-2.14.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6253181Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 207.5 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6286297Z Downloading redis-5.3.1-py3-none-any.whl (272 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6343424Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6401200Z Downloading anyio-3.7.1-py3-none-any.whl (80 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6450896Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6511131Z Downloading starlette-0.27.0-py3-none-any.whl (66 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6563593Z Downloading gunicorn-26.2.0-py3-none-any.whl (228 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6624885Z Downloading alembic-1.20.1-py3-none-any.whl (270 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6683660Z Downloading python_jose-3.5.0-py2.py3-none-any.whl (34 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6732252Z Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6779127Z Downloading passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6826525Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 525.6/525.6 kB 103.5 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.6858352Z Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7020222Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 323.2 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7053222Z Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7270015Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 365.9 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7303703Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7781753Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 367.3 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7814338Z Downloading slowapi-0.1.10-py3-none-any.whl (14 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.7887242Z Downloading faiss_cpu-1.15.1-cp310-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (18.8 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.8855953Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.8/18.8 MB 196.7 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.8891160Z Downloading psycopg2_binary-2.9.13-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.3 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9107546Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 223.6 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9139133Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9185521Z Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9242118Z Downloading click-8.5.0-py3-none-any.whl (125 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9294257Z Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9344245Z Downloading greenlet-3.5.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (624 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9398265Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 624.4/624.4 kB 122.9 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9431182Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9520885Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9567330Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9613691Z Downloading limits-5.8.0-py3-none-any.whl (60 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9660271Z Downloading deprecated-1.3.1-py2.py3-none-any.whl (11 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9718739Z Downloading wrapt-2.5.2-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (240 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9769561Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9817938Z Downloading pyasn1-0.6.5-py3-none-any.whl (84 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9875592Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9939769Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 234.2 MB/s  0:00:00
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:40.9972733Z Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0023782Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0072701Z Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0117597Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0164170Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0213510Z Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0266603Z Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.0315194Z Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:41.2838136Z Installing collected packages: passlib, wrapt, typing-extensions, sniffio, six, python-multipart, python-dotenv, pymysql, PyJWT, pygments, pycparser, pyasn1, psycopg2-binary, pluggy, Pillow, packaging, numpy, MarkupSafe, iniconfig, idna, h11, gunicorn, greenlet, click, certifi, bcrypt, annotated-types, uvicorn, sqlalchemy, rsa, redis, pytest, pydantic-core, Mako, httpcore, faiss-cpu, ecdsa, deprecated, cffi, anyio, starlette, python-jose, pydantic, limits, httpx, cryptography, alembic, slowapi, pydantic-settings, fastapi
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:48.2404333Z 
+check-backend	Run pip install -r cat-backend/requirements-dev.txt	2026-11-01T09:59:48.2431370Z Successfully installed Mako-1.4.3 MarkupSafe-3.0.4 Pillow-13.0.0 PyJWT-2.15.1 alembic-1.20.1 annotated-types-0.8.0 anyio-3.7.1 bcrypt-4.1.3 certifi-2026.10.23 cffi-2.1.1 click-8.5.0 cryptography-50.0.2 deprecated-1.3.1 ecdsa-0.19.2 faiss-cpu-1.15.1 fastapi-0.104.1 greenlet-3.5.6 gunicorn-26.2.0 h11-0.16.0 httpcore-1.0.9 httpx-0.27.0 idna-3.20 iniconfig-2.3.1 limits-5.8.0 numpy-2.4.6 packaging-26.3 passlib-1.7.4 pluggy-1.7.0 psycopg2-binary-2.9.13 pyasn1-0.6.5 pycparser-3.12 pydantic-2.5.2 pydantic-core-2.14.5 pydantic-settings-2.2.1 pygments-2.21.0 pymysql-1.1.0 pytest-8.4.2 python-dotenv-1.0.0 python-jose-3.5.0 python-multipart-0.0.6 redis-5.3.1 rsa-4.9.1 six-1.17.0 slowapi-0.1.10 sniffio-1.3.1 sqlalchemy-2.0.23 starlette-0.27.0 typing-extensions-4.16.0 uvicorn-0.54.0 wrapt-2.5.2
+check-backend	Run cd cat-backend && python -m compileall app/	﻿2026-11-01T09:59:48.4796782Z ##[group]Run cd cat-backend && python -m compileall app/
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4797269Z ^[[36;1mcd cat-backend && python -m compileall app/^[[0m
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4818774Z shell: /usr/bin/bash -e {0}
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4819035Z env:
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4819318Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4819765Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4820208Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4820969Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4821392Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4821800Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.4822124Z ##[endgroup]
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5941413Z Listing 'app/'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5941993Z Compiling 'app/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5942638Z Listing 'app/agents'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5943131Z Compiling 'app/agents/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5943813Z Compiling 'app/agents/cat_intel.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5944397Z Compiling 'app/agents/provider.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5944969Z Compiling 'app/agents/runtime.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5945532Z Compiling 'app/agents/schemas.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5946092Z Compiling 'app/agents/tools.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5946615Z Listing 'app/api'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5947069Z Compiling 'app/api/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5947627Z Compiling 'app/api/admin.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5948067Z Compiling 'app/api/agents.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5948399Z Compiling 'app/api/audit.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5948724Z Compiling 'app/api/auth.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5949050Z Compiling 'app/api/campus.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5949382Z Compiling 'app/api/cats.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5949718Z Compiling 'app/api/discoveries.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5950077Z Compiling 'app/api/events.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5950855Z Compiling 'app/api/feeding.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5951237Z Compiling 'app/api/gallery.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5951591Z Compiling 'app/api/gamification.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5951977Z Compiling 'app/api/health.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5952398Z Compiling 'app/api/invite.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5952725Z Compiling 'app/api/map.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5953062Z Compiling 'app/api/notifications.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5953428Z Compiling 'app/api/posts.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5954043Z Compiling 'app/api/recognize.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5954408Z Compiling 'app/api/routes.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5954751Z Compiling 'app/api/sightings.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5955072Z Compiling 'app/api/system.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5955329Z Compiling 'app/api/upload.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5955580Z Compiling 'app/api/user.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5955840Z Compiling 'app/bootstrap.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5956093Z Compiling 'app/cache.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5956326Z Listing 'app/config'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5956555Z Compiling 'app/config/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5956863Z Compiling 'app/config/badges.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5957108Z Listing 'app/core'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5957331Z Compiling 'app/core/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5957579Z Compiling 'app/crud.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5957816Z Compiling 'app/database.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5958057Z Compiling 'app/events.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5958291Z Compiling 'app/main.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5958527Z Listing 'app/middleware'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5958774Z Compiling 'app/middleware/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5959083Z Compiling 'app/middleware/request_logging.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5959413Z Compiling 'app/middleware/security_headers.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5959722Z Compiling 'app/migrate.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5959966Z Compiling 'app/models.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5960213Z Compiling 'app/ratelimit.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5960805Z Compiling 'app/schema_readiness.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5961110Z Compiling 'app/schemas.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5961578Z Listing 'app/services'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5961816Z Compiling 'app/services/__init__.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5962094Z Compiling 'app/services/ai.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5962370Z Compiling 'app/services/artifact_hash.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5962666Z Compiling 'app/services/detector.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5962948Z Compiling 'app/services/faiss_index.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5963244Z Compiling 'app/services/model_health.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5963546Z Compiling 'app/services/model_loader.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5963857Z Compiling 'app/services/reference_admin.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5964181Z Compiling 'app/services/reference_lifecycle.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5964513Z Compiling 'app/services/reference_snapshot.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5964844Z Compiling 'app/services/reference_store.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5965144Z Compiling 'app/services/voting.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5965419Z Compiling 'app/services/wechat.py'...
+check-backend	Run cd cat-backend && python -m compileall app/	2026-11-01T09:59:48.5965694Z Compiling 'app/time_utils.py'...
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	﻿2026-11-01T09:59:48.6037735Z ##[group]Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6039298Z ^[[36;1mcd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q^[[0m
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6060865Z shell: /usr/bin/bash -e {0}
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6061132Z env:
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6061406Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6061863Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6062306Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6062695Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6063085Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6063505Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:48.6063831Z ##[endgroup]
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T09:59:59.9336225Z ........................................................................ [ 29%]
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:00:42.3856775Z ........................................................................ [ 59%]
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:10.8357015Z ........................................................................ [ 88%]
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2835058Z ............................                                             [100%]
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2835930Z =============================== warnings summary ===============================
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2837134Z ../../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pydantic/_internal/_config.py:271: 16 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2839888Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pydantic/_internal/_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2842568Z     warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2842983Z 
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2843482Z ../../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/passlib/utils/__init__.py:854
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2845033Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2846317Z     from crypt import crypt as _crypt
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2846606Z 
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2846753Z tests/test_api.py: 1 warning
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2847151Z tests/test_app_fixture.py: 2 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2847587Z tests/test_cat_intel_agent.py: 1 warning
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2848010Z tests/test_extended.py: 1 warning
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2848444Z tests/test_reference_lifecycle.py: 13 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2848945Z tests/test_repair_contracts.py: 8 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2849405Z tests/test_request_logging.py: 2 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2849830Z tests/test_security.py: 1 warning
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2850221Z tests/test_upload_serving.py: 1 warning
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2850895Z tests/test_vote_rewards.py: 12 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2851324Z tests/test_wechat_auth.py: 10 warnings
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2852629Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/httpx/_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2853995Z     warnings.warn(message, DeprecationWarning)
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2854310Z 
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2854608Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+check-backend	Run cd cat-backend && DATABASE_URL=sqlite:// INIT_DEMO_USER=0 JWT_SECRET=ci-test-secret ADMIN_PASSWORD=ci-admin-pass REFERENCE_STORE= REFERENCE_TEST_EVIDENCE_DIR=../artifacts/reference-processes pytest tests/ -q	2026-11-01T10:01:14.2855239Z 244 passed, 69 warnings in 84.40s (0:01:24)
+check-backend	Run actions/upload-artifact@v4	﻿2026-11-01T10:01:14.9871759Z ##[group]Run actions/upload-artifact@v4
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9872087Z with:
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9872300Z   name: reference-process-results
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9872588Z   path: artifacts/reference-processes/
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9872871Z   if-no-files-found: warn
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9873106Z   compression-level: 6
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9873319Z   overwrite: false
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9873551Z   include-hidden-files: false
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9873778Z env:
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9874193Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9874623Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9875047Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9875423Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9875804Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9876192Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:14.9876552Z ##[endgroup]
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.1680316Z (node:3032) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.1681863Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.1789571Z With the provided path, there will be 18 files uploaded
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.1796624Z Artifact name is valid!
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.1797191Z Root directory input is valid!
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.5680091Z Beginning upload of artifact content to blob storage
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.6205679Z (node:3032) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.9145535Z Uploaded bytes 11083
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.9951764Z Finished uploading artifact content to blob storage!
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.9952914Z SHA256 digest of uploaded artifact zip is d042f67824dac44f3a4571470ff1c2b33fff262cbbdcbe06063db19dbd27400d
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:15.9954360Z Finalizing artifact upload
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:16.5324275Z Artifact reference-process-results.zip successfully finalized. Artifact ID 13078463492
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:16.5326511Z Artifact reference-process-results has been successfully uploaded! Final size is 11083 bytes. Artifact ID is 13078463492
+check-backend	Run actions/upload-artifact@v4	2026-11-01T10:01:16.5334306Z Artifact download URL: https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41295461226/artifacts/13078463492
+check-backend	Post Run actions/setup-python@v5	﻿2026-11-01T10:01:16.5557530Z Post job cleanup.
+check-backend	Post Run actions/setup-python@v5	2026-11-01T10:01:16.6908202Z (node:3045) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+check-backend	Post Run actions/setup-python@v5	2026-11-01T10:01:16.6909561Z (Use `node --trace-deprecation ...` to show where the warning was created)
+check-backend	Post Run actions/checkout@v4	﻿2026-11-01T10:01:16.7066372Z Post job cleanup.
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8111533Z [command]/usr/bin/git version
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8164588Z git version 2.56.0
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8233518Z Temporarily overriding HOME='/home/runner/work/_temp/7ab34c04-966d-4f93-b573-9d62c114b77c' before making global git config changes
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8235275Z Adding repository directory to the temporary git global config as a safe directory
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8243758Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cat-cat-cat/cat-cat-cat
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8313240Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8410025Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8783871Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8828660Z http.https://github.com/.extraheader
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8859883Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.8908227Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.9206422Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+check-backend	Post Run actions/checkout@v4	2026-11-01T10:01:16.9260793Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+check-backend	Complete job	﻿2026-11-01T10:01:16.9672286Z Cleaning up orphan processes
+check-backend	Complete job	2026-11-01T10:01:17.0123596Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
