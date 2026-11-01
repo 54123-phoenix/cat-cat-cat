@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_health_response_serialization_preserves_configured_margin ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F0679A390>
+
+    def test_health_response_serialization_preserves_configured_margin(monkeypatch):
+        monkeypatch.setattr(model_health.settings, 'RECOGNIZE_MIN_MARGIN', .125)
+        payload = SystemHealthResponse.model_validate(system_health()).model_dump()
+>       assert payload['model']['thresholds']['minimum_margin'] == .125
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'minimum_margin'
+
+cat-backend\tests\test_system_health.py:18: KeyError
+============================== warnings summary ===============================
+..\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED cat-backend/tests/test_system_health.py::test_health_response_serialization_preserves_configured_margin
+1 failed, 16 warnings in 1.30s

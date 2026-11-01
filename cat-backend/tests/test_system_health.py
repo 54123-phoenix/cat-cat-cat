@@ -9,6 +9,13 @@ os.environ.setdefault("INIT_DEMO_USER", "0")
 
 from app.api.system import system_health
 from app.services import model_health
+from app.schemas import SystemHealthResponse
+
+
+def test_health_response_serialization_preserves_configured_margin(monkeypatch):
+    monkeypatch.setattr(model_health.settings, 'RECOGNIZE_MIN_MARGIN', .125)
+    payload = SystemHealthResponse.model_validate(system_health()).model_dump()
+    assert payload['model']['thresholds']['minimum_margin'] == .125
 
 
 def test_system_health_handler_returns_model_contract():

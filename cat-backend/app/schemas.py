@@ -234,6 +234,7 @@ class HealthCheckItem(BaseModel):
 class RecognitionThresholdHealth(BaseModel):
     confirmed: float
     uncertain: float
+    minimum_margin: float = 0.0
     valid: bool
 
 

@@ -250,6 +250,7 @@ export interface ModelHealth {
   thresholds: {
     confirmed: number
     uncertain: number
+    minimum_margin: number
     valid: boolean
   }
   warm_model_requested: boolean

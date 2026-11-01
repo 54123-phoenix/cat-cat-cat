@@ -26,7 +26,27 @@
 
 `calibrate_recognition.py` 检查分区、完整图库、身份/图像泄漏、真实预测数量、图像哈希及固定模型。选择阶段拒绝测试集结果；测试阶段核对冻结策略、清单、模型、预处理以及实际推理参数，并逐图比对线上策略与离线重算。输出逐组指标、失败身份集中情况及带独立性限制说明的区间。
 
-初版完整后端回归 **271 passed / 68 warnings / 177.07 秒**；补充健康检查、固定模型约束与实际识别分差合同后，定向 **60 passed / 16 warnings**。真实模型校准和最终 CI 尚未完成，后续在此补记。
+初版完整后端回归 **271 passed / 68 warnings / 177.07 秒**，见[全量日志](recognition-calibration-backend-local.log)；补充健康检查、固定模型约束与实际识别分差合同后，定向 **60 passed / 16 warnings**，见[定向日志](recognition-calibration-focused.log)。[分区校验](recognition-calibration-boundaries.json)确认 280 张唯一图片、24 个参考身份和各 116 张查询。
+
+补查发现健康响应的 Pydantic 模型会过滤新增分差字段；[序列化回归先失败](recognition-calibration-health-before.log)，补齐 API 模型和前端类型后[19 项通过](recognition-calibration-health-after.log)，前端类型检查也通过。此处只给健康响应增加 `minimum_margin`，识别响应字段不变。
+
+模型、协议、清单和校准代码在 `c972a99` 冻结并推送，随后启动[校准运行 41301115350](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41301115350)。该提交的[七项常规 CI](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41301114160)全部成功，见[摘要](recognition-calibration-ci-first-summary.json)。
+
+## 校准结果与冻结候选
+
+校准真实推理完整完成 116 张查询，[运行状态](recognition-calibration-run.json)、[逐图结果](recognition-calibration-ci.json)、[48 张参考图的构建任务](recognition-calibration-build.json)与[日志](recognition-calibration-inference.log)已保存。32 个预先固定候选中有 5 个满足全部校准目标；按既定排序选中 **confirmed=0.65、uncertain=0.49、minimum_margin=0.15**。本机离线重算全部 32 个候选，与远端选择结果完全一致。
+
+| 校准集，固定相同原始排名 | 旧策略 0.57 / 0.49 / 分差 0 | 选定候选 0.65 / 0.49 / 分差 0.15 |
+|---|---|---|
+| 已知猫正确确认 | 35/36，97.22% | 33/36，91.67% |
+| 已知猫错误确认 | 0/36 | 0/36 |
+| 未知猫误确认 | 24/60，40% | 3/60，5% |
+| 狗图误确认 | 0/20 | 0/20 |
+| 全部确认中的正确率 | 35/59，59.32% | 33/36，91.67% |
+
+已知猫 Top-1/Top-3 均为 36/36；调整确认策略不改变检索排名。候选把 37/60 张未知猫留在待确认状态，仍会显示候选猫，不能将“没有自动确认”解读为系统完全不会误导手动选择。前两名分差也不是经过校准的正确概率。
+
+[冻结策略](recognition-selected-policy.json)保留全部候选、协议/校准结果/两组清单/图库/策略代码哈希、模型与预处理版本。冻结策略之后才会启动留出测试；当前结论只适用于校准集。业务默认值和现有业务环境配置未替换，留出结果随后补记。
 
 ## 可复跑入口
 
