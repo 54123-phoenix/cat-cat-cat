@@ -15,13 +15,13 @@
 
 ## 项目状态
 
-**更新于 2026-11-01：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
+**更新于 2026-11-01：核心缺陷修复与列明的运行验收已完成；公开识别预评测发现未知猫误确认 9/18，识别质量未通过，尚未达到正式发布条件。**
 
-当前台账共 41 项：**30 项本地验收通过、8 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
+当前台账共 42 项：**32 项本地验收通过、7 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
 | 验证范围 | 最近结果 | 证据与限制 |
 |---|---|---|
-| 后端完整回归 | 244 passed，68 warnings | [SSE 协议修复](docs/validation/SSE_KEEPALIVE_20261101.md)；CI 密码环境，包含真实 TCP 活动流回归，保留弃用警告 |
+| 后端完整回归 | 本机与 CI 均 257 passed；分别 68 / 69 warnings | [识别评测工具](docs/validation/RECOGNITION_PILOT_20261101.md)；包含身份、排名、数据泄漏与不完整输入回归，保留弃用警告 |
 | Web 回归 | 78 passed；类型检查、lint、构建通过 | [重连验收](docs/validation/RECONNECT_20261101.md)；包含会话/断线生命周期、迟到响应、草稿和点赞/投票状态同步 |
 | 真实浏览器 | B4 管理端 8 组、核心流程 6 组通过 | Chromium；测试数据库，参考库推理使用合成向量 |
 | 浏览器断线恢复 | 本机与 Linux CI 各 10 组通过 | [重连验收](docs/validation/RECONNECT_20261101.md)；实际切断 Redis TCP 与浏览器网络，自动补回当前状态并保留输入 |
@@ -31,9 +31,10 @@
 | 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
 | Docker API 阶段 | Linux CI 与本机 Desktop 均七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
 | 完整 CPU 推理与恢复 | 本机与远端十二组通过 | [完整推理](docs/validation/INFERENCE_20261101.md)；真实权重、两张参考照片自匹配、模型/store 新卷恢复及资产损坏拒绝 |
-| 识别质量 / 外部服务 | 待验收 | 独立样本、阈值、微信、地图、外部 LLM 和资源许可仍需各自证据 |
+| 公开识别预评测 | 本机与 CI 指标一致，质量未通过 | [62 张查询](docs/validation/RECOGNITION_PILOT_20261101.md)：已知猫 Top-1 33/36；未知猫误确认 9/18；简单无猫误确认 0/8，不代表校园效果 |
+| 识别质量 / 外部服务 | 待专项验收 | 校准集与新独立测试集、微信、地图、外部 LLM 和资源许可仍需各自证据 |
 
-完整推理与 SSE 修复后的 [远端 CI / e2f1bd4](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41295461226) **七个任务全部通过**：后端 244 项（69 条警告）、Web 78 项、小程序、浏览器核心 6 组/参考库 8 组/重连 10 组、真实 Redis 10 项、Docker API 阶段 7 组、完整推理阶段 12 组。首次推理 CI 暴露的 Uvicorn 活动流截断问题及修复前后证据见 [ISS-041](docs/validation/SSE_KEEPALIVE_20261101.md)。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
+本轮评测工具与浏览器测试时序修复后的 [远端 CI / 2c829ff](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41298934883) **七个任务全部通过**：后端 257 项（69 条警告）、Web 78 项、小程序、浏览器核心 6 组/参考库 8 组/重连 10 组、真实 Redis 10 项、Docker API 阶段 7 组、完整推理阶段 12 组。独立的[公开预评测运行](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41298488843)基于 `15a58f0`，完整执行通过但识别质量未通过。浏览器时序失败与修复见[本轮记录](docs/validation/RECOGNITION_PILOT_20261101.md)，此前 Uvicorn 活动流截断见 [ISS-041](docs/validation/SSE_KEEPALIVE_20261101.md)。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
 ## 已实现的功能
 
@@ -256,7 +257,7 @@ Redis Pub/Sub 不保存离线事件；Web 通过统一 SSE 连接在首次打开
 ## 后续工作与限制
 
 1. 完成实际部署业务挂载、通用模型/store 备份流程、生产网络和容量验收。完整 CPU 推理与隔离新卷恢复、API 阶段及核心浏览器重连已通过列明范围内的验收。
-2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
+2. 优先处理未知猫误确认：另建校准集和新的测试集，补校园实拍与困难负样本，明确业务目标后选择阈值或确认策略。当前 62 张公开查询只用于回归，不能调参后重复用它证明独立验收通过。
 3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
 4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。
 5. 确认代码、图片、档案和模型的许可。仓库尚无 LICENSE，公开可见不代表已授予开源使用许可。
@@ -275,6 +276,7 @@ Redis Pub/Sub 不保存离线事件；Web 通过统一 SSE 连接在首次打开
 | [Docker 验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md) | API/nginx 镜像、四 worker、事件、重启与新卷恢复及剩余边界 |
 | [浏览器重连](docs/validation/RECONNECT_20261101.md) | 丢失更新补回、长断线恢复、草稿保留和会话清理 |
 | [完整 CPU 推理](docs/validation/INFERENCE_20261101.md) | 固定真实权重、依赖修复、自匹配与模型/store 新卷恢复 |
+| [公开识别预评测](docs/validation/RECOGNITION_PILOT_20261101.md) | 评测口径修复、冻结样本、两环境结果与未知猫误确认问题 |
 | [参考库操作](docs/REFERENCE_LIBRARY.md) / [备份恢复](docs/BACKUP_RECOVERY.md) | 配置、迁移、构建、恢复边界 |
 | [部署](DEPLOY.md) / [发布清单](docs/RELEASE_CHECKLIST.md) | 待完成的发布步骤 |
 | [权限矩阵](docs/PERMISSIONS.md) / [观测手册](docs/OBSERVABILITY_RUNBOOK.md) | 角色边界与排障 |

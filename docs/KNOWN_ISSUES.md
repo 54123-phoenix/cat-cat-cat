@@ -4,7 +4,7 @@
 
 **当前结论：项目已有真实业务实现，但关键流程、权限边界、数据正确性和交付流程仍有缺陷，尚未达到稳定发布候选版的质量。** 本台账记录本次源码审查和本地验证结果，不把历史文档中的“已完成”当作验收结论，也不追溯推断缺陷最早出现的时间。
 
-初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），完整推理复验新增 ISS-040（P1），同轮 Redis 复验新增 ISS-041（P1），合计 41 项。当前 **30 项通过本地验收，8 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)、[浏览器重连](validation/RECONNECT_20261101.md)、[完整推理](validation/INFERENCE_20261101.md)及[SSE 协议修复](validation/SSE_KEEPALIVE_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
+初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），完整推理复验新增 ISS-040（P1），同轮 Redis 复验新增 ISS-041（P1），评测复验新增 ISS-042（P2），合计 42 项。当前 **32 项通过本地验收，7 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)、[浏览器重连](validation/RECONNECT_20261101.md)、[完整推理](validation/INFERENCE_20261101.md)及[SSE 协议修复](validation/SSE_KEEPALIVE_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
 
 ## 阅读与关闭规则
 
@@ -182,12 +182,14 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 
 ### ISS-015 识别评测脚本与当前函数接口不兼容
 
-**P1 · 代码已有修复 · 待专项验收（2026-10-30）。** [eval_recognition.py](../cat-backend/scripts/eval_recognition.py) 第 50 行传入识别函数不支持的 `crop` 参数。
+**P1 · 已修复 · 本机与远端真实模型评测执行通过（2026-11-01）。** 审查基线的 [eval_recognition.py](../cat-backend/scripts/eval_recognition.py) 第 50 行传入识别函数不支持的 `crop` 参数。
 
 - 现象与影响：调用得到 `TypeError: recognize_cat_image() got an unexpected keyword argument 'crop'`，不能用该脚本直接复现精度报告。见 E02 `eval_script_call_contract`。
 - 验收：在固定环境、固定模型和已标注样本上完整跑通，输出可核对的预测、指标、失败样本和版本；脚本通过只是评测工具修复，识别质量本身另按 VER-001 验收。
 
 - 本轮结果：见 [ISS-015 修复、证据与剩余边界](validation/REPAIR_PROGRESS.md#每项修复及关闭范围)。
+
+- 专项补验：固定模型、24 张参考图和 62 张查询，本机与 CI 真实构建/发布/评测完整执行，逐图文件哈希、身份排名、业务状态及汇总一致。脚本输出模型/参考库/依赖/预处理/源码版本、指标和失败样本；按工具执行范围关闭。未知猫误接受 9/18，识别质量仍未通过，见[公开预评测](validation/RECOGNITION_PILOT_20261101.md)。
 
 ### ISS-016 Alembic 无法从空数据库迁移
 
@@ -325,6 +327,8 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 
 - 远端复验（2026-11-01）：首次 CI 的 Web、小程序、Redis 通过；后端测试夹具密码依赖环境、浏览器等待与 5 秒轮询竞争导致两条任务失败。修复后本地后端 240 项、参考库浏览器 8 组通过；提交 971c937 的远端五个任务也全部通过。告警治理仍未完成，本条保持部分完成。见 [CI 修复记录](validation/CI_REPAIR_20261101.md)。
 
+- 评测轮补验（2026-11-01）：修复首次 SSE 打开后帖子刷新与断线写入竞争的测试时序，保留真实断线前后断言；`2c829ff` 本机和 CI 重连各 10 组、远端全部 7 个任务通过。后端本机 68 / CI 69 条弃用告警仍在，本条保持部分完成，见[同轮门禁记录](validation/RECOGNITION_PILOT_20261101.md#同轮浏览器门禁时序修复)。
+
 - 本轮结果：见 [ISS-030 修复、证据与剩余边界](validation/REPAIR_PROGRESS.md#每项修复及关闭范围)。
 
 ### ISS-031 文档完成状态和部分功能描述缺少实现支持
@@ -410,13 +414,20 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 - 修复：固定 Uvicorn 0.54.0，包含处理新请求时取消旧 timer 的上游修复；增加同一 TCP 连接连续普通请求/SSE 的回归，断言跨过 idle timeout 后消息和结束标记完整。
 - 验收：同一测试旧版失败、新版通过，本机后端 244 项、真实 Redis 四进程十项通过；修复提交 `e2f1bd4` 的七项远端门禁全部通过，包括完整推理十二组、API 容器七组及浏览器重连十组。生产代理和容量不在关闭范围。见[协议修复证据](validation/SSE_KEEPALIVE_20261101.md)。
 
+### ISS-042 评测把业务判定当作检索排名且缺少数据与版本约束
+
+**P2 · 已修复 · 本地回归与真实评测通过（2026-11-01）。** 旧脚本按 `cat_name` 计分，第一候选正确但返回 uncertain 时 Top-1 为 0；confirmed/unknown 隐藏的排名也无法用于 Top-3。没有未知猫/无猫分组和输入/参考库版本校验，读文件失败会静默跳过。
+
+- 修复：内部诊断共享实际 API 推理路径，使用未筛选排名与持久 reference_id 计分；清单绑定数据库/快照/图像哈希并检查重复与身份映射，记录全部查询、失败和版本，缺图/坏图/不可用明确使评测不完整。
+- 验收：旧统计回归失败，新版定向 44 项及后端全量 257 项通过；同一公开清单在本机、Linux CI 真实执行结果一致。HTTP 结构、识别决策与阈值保持不变；不将执行通过当作模型质量合格。见[数据、指标与证据](validation/RECOGNITION_PILOT_20261101.md)。
+
 ## 待验证或待决策事项
 
 这些事项不能因测试未运行而直接判断失败，也不能因存在代码就判断完成。
 
 | 编号 | 优先级 / 状态 | 已知事实与边界 | 完成条件 |
 |---|---|---|---|
-| VER-001 真实识别质量 | P1 / 待验证 | 固定权重的真实 YOLO→DINOv3→投影→FAISS 已跑通两张参考照片自匹配及新卷恢复；尚无独立样本质量评测。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
+| VER-001 真实识别质量 | P1 / 已有公开预评测，质量未通过 | 24 张参考图与 62 张分离查询在本机/CI 指标一致：已知猫 Top-1 33/36，未知猫误确认 9/18，简单无猫误确认 0/8；默认阈值有明显误接受。训练重叠与拍摄场景独立性未知。 | [预评测证据](validation/RECOGNITION_PILOT_20261101.md)。另建校准集与新的独立测试集，补校园/困难负样本、身份和拍摄分组，约定误接受/误拒绝目标后校准；不能用已查看的测试结果调参后再宣称独立通过。相似度文案、目标硬件及容量仍需专项。 |
 | VER-002 微信真机全流程 | P1 / 待验证 | 只完成构建与隔离 JS 模拟；尚未配置正式平台条件并执行真机测试。 | 修复 ISS-007/008/009/010/032 后，在明确 AppID、域名、基础库和设备版本下，关闭 demoMode 验证登录、列表、拍照、识别、保存、发帖、错误重试，并保存记录。 |
 | VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复、API 阶段本机与 CI 七组通过；完整 CPU inference 本机与 CI 十二组通过，包含真实模型/store 新卷恢复和故障拒绝。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)及[完整推理](validation/INFERENCE_20261101.md)。实际业务挂载、通用生产备份工具、容量与目标硬件仍待验证。 |
 | VER-004 Redis 与多 worker | P1 / 后端、容器及核心页面重连集成通过 | Redis + 四 API 十项、Gunicorn 四 worker 经 Redis/nginx 的真实 SSE 推送通过；浏览器十组故障恢复通过。SQLite 启动竞争与浏览器缺陷分别记录 ISS-038/039。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[浏览器重连](validation/RECONNECT_20261101.md)。Pub/Sub 不提供离线重放，通过接口补回当前状态；生产网络代理、容量和未列明客户端仍须按环境验证。 |
@@ -457,5 +468,7 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 | 2026-11-01 | ISS-014/040 / 完整推理 | 真实权重与失配拒绝、依赖及系统库修复、完整新卷恢复；40 项中 29 项本地通过、8 项待专项、3 项部分完成 | [推理验收](validation/INFERENCE_20261101.md)：十二组容器及真实 Torch 四类坏权重检查通过 |
 
 | 2026-11-01 | ISS-041 / SSE 协议 | 旧版 Uvicorn TCP 回归失败，升级后通过；41 项中 30 项本地通过、8 项待专项、3 项部分完成 | [SSE 验收](validation/SSE_KEEPALIVE_20261101.md)：本机后端 244 项、Redis 十项，修复提交七项远端 CI 全部通过 |
+
+| 2026-11-01 | ISS-015/042 / 公开识别预评测 | 工具真实执行通过、修复排名/身份/数据门禁；42 项中 32 项本地通过、7 项待专项、3 项部分完成 | [评测记录](validation/RECOGNITION_PILOT_20261101.md)：257 项后端、62 张真实查询两环境一致；未知猫误接受 50%，VER-001 未关闭 |
 
 后续每次关闭或降级条目，应在本表追加原因及证据，并同步条目状态和顶部数量；保留稳定编号，不删除已修复问题的历史记录。

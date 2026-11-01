@@ -1,0 +1,61 @@
+{
+  "same_summary": true,
+  "same_sample_hashes_statuses_and_ranked_identities": true,
+  "queries": 62,
+  "maximum_absolute_score_difference": 2.6226043701171875e-06,
+  "local_latency": {
+    "first_query_seconds": 8.232143,
+    "subsequent_queries_n": 61,
+    "subsequent_p50_seconds": 6.789068,
+    "subsequent_p95_seconds": 7.634802,
+    "scope": "Sequential internal recognition calls; includes reference checks, excludes HTTP; not capacity"
+  },
+  "ci_latency": {
+    "first_query_seconds": 4.056982,
+    "subsequent_queries_n": 61,
+    "subsequent_p50_seconds": 2.221442,
+    "subsequent_p95_seconds": 2.400325,
+    "scope": "Sequential internal recognition calls; includes reference checks, excludes HTTP; not capacity"
+  },
+  "source_comparison": {
+    "commit": "15a58f0fd1b839c4536f6dd183b445f33aabe4a7",
+    "note": "Raw byte hashes differ for three Windows CRLF files; every recorded local hash matches the worktree and every CI hash matches the committed LF blob. All five files are identical after CRLF-to-LF normalization.",
+    "files": [
+      {
+        "file": "scripts/eval_recognition.py",
+        "local_record_matches_worktree_bytes": true,
+        "ci_record_matches_git_blob": true,
+        "equal_after_crlf_to_lf": true,
+        "normalized_sha256": "65593e2af7afda30a809352517b79c2c1e8c8c07e9cd762a264b77ca99794b8c"
+      },
+      {
+        "file": "app/services/ai.py",
+        "local_record_matches_worktree_bytes": true,
+        "ci_record_matches_git_blob": true,
+        "equal_after_crlf_to_lf": true,
+        "normalized_sha256": "2f732e8e228935191f6e5de3c82fbeed778d44f73fd7e1b6e6e54dc5f62442b1"
+      },
+      {
+        "file": "app/services/detector.py",
+        "local_record_matches_worktree_bytes": true,
+        "ci_record_matches_git_blob": true,
+        "equal_after_crlf_to_lf": true,
+        "normalized_sha256": "0b047ed959090a1707c160a2f1496e47380d8b44b8d887ab9980372a2c538395"
+      },
+      {
+        "file": "app/services/model_loader.py",
+        "local_record_matches_worktree_bytes": true,
+        "ci_record_matches_git_blob": true,
+        "equal_after_crlf_to_lf": true,
+        "normalized_sha256": "c5e2ed41a81e65e6c9b8b0eadb7b443487c84375b0cc0d5816c2b05e376505da"
+      },
+      {
+        "file": "app/services/reference_snapshot.py",
+        "local_record_matches_worktree_bytes": true,
+        "ci_record_matches_git_blob": true,
+        "equal_after_crlf_to_lf": true,
+        "normalized_sha256": "c251928e3d0d37af630bff6a1a9519fa2ee8a678dbe964fe0fe23ca3a1686f56"
+      }
+    ]
+  }
+}

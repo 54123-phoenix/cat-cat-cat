@@ -39,7 +39,37 @@ ISS-015 的函数参数兼容修改此前只经过模拟测试。本次检查又
 
 本地使用完整 CPU 镜像，固定上轮已验证的 DINOv3 与 YOLO 权重；隔离新 SQLite、uploads 与托管参考库，真实 worker 构建并发布 24 条向量，查询在另一个进程中执行。容器运行时禁网，模型与原始数据只读挂载，不连接业务数据库。
 
-本地后端全量 **257 passed / 68 warnings / 200.27 秒**；评测、快照和检测器定向回归 44 项通过。真实推理结果及远端执行结果完成后补记。
+本地后端全量 **257 passed / 68 warnings / 200.27 秒**，见[日志](recognition-backend-local.log)；评测、快照和检测器定向回归 44 项通过。评测代码提交 `15a58f0fd1b839c4536f6dd183b445f33aabe4a7`，本地与[手动远端运行 41298488843](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41298488843) 均完整执行 62 张查询。见[本地结果](recognition-pilot-local.json)、[远端结果](recognition-pilot-ci.json)、[运行状态](recognition-pilot-ci-run.json)及[对照](recognition-cross-environment.json)。
+
+[本机构建任务](recognition-build-local.json)和[远端构建任务](recognition-build-ci.json)均为 succeeded / published，完成 24/24 张参考图；[本地逐图运行日志](recognition-pilot-local.log)保留实际执行过程。两次运行各自创建新的数据库与发布版本，按冻结来源标签和图像哈希核对，不要求随机生成的数据库身份或快照 ID 相同。
+
+| 分组 | 本地与远端一致的结果 | 解释 |
+|---|---|---|
+| 已知猫，36 张 / 12 个身份 | Top-1 33/36 = 91.67%；Top-3 36/36 = 100% | 33 张正确确认，1 张错误确认，1 张待确认，1 张 unknown |
+| 未知猫，18 张 / 6 个身份 | **9/18 错误确认 = 50%**；3 张待确认，6 张 unknown | 错误确认涉及 4 个未知身份，不能当作 18 个独立个体实验 |
+| 无猫，8 张 | 0/8 错误确认；全部 unknown | 仅限所列简单负样本；不证明困难负样本稳健性 |
+| 三组全部确认 | 43 次 confirmed 中 33 次正确，精确率 76.74% | 强烈依赖本次三组的构成比例，不能外推到真实流量 |
+| 可用性 / 输入 | unavailable=0，输入错误=0；无 exact/pixel 重复或 dHash<=4 候选 | 不代表没有近似姿态、相同背景或同场拍摄相关性 |
+
+已知身份 0318 的三张查询分别返回 uncertain、错误的 0372、unknown，均未得到正确确认。未知身份 0068、0078、0181、0243 中有样本被确认成参考库里的其他猫；逐图路径、分数和候选在 JSON 中保留。不能通过只展示已知猫 Top-1 来掩盖未知猫误接受。
+
+两环境逐图标签、业务状态和排名完全一致，最高分差不超过 2.63e-6。**评测工具按 ISS-015/042 范围通过，识别质量 VER-001 保持未关闭：当前默认阈值在此预评测中存在明显误接受。** 没有根据这组查询修改阈值。由于结果已经被查看，这份清单以后可以用作回归样本，不能再作为阈值校准后的独立最终测试集。
+
+源码原始字节哈希有三项因 Windows CRLF 与 Linux LF 换行不同而不相等。已分别核对本机实际文件和 `15a58f0` 的 Git blob，五项源码在统一换行后完全相同；原始哈希保留不改，核对结果附在[两环境对照](recognition-cross-environment.json)中。
+
+本机 Docker Desktop/Windows bind mount：首个查询 8.23 秒，其余串行查询 p50=6.79 秒、p95=7.63 秒。远端 Linux 限制 2 CPU/8 GiB：首个 4.06 秒，其余 p50=2.22 秒、p95=2.40 秒。两者包含图片/模型/参考库完整性检查和推理，硬件与挂载方式不同，没有拆分计时，不能将差异归因于某一个组件，也不能当作 HTTP 并发容量结果。
+
+## 同轮浏览器门禁时序修复
+
+评测提交的[首次常规 CI 41298469285](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41298469285)六项通过，浏览器重连项失败，见[原断言](recognition-reconnect-ci-before.log)。失败发生在首次 SSE 建立后的帖子刷新：服务日志显示同一时间窗口内新帖写入与浏览器 GET /api/posts 并发，页面合法地提前取得了新帖，但测试要求断线时它必须不存在。
+
+修复提交 `2c829fff877b1dda4a7d5c32a22e2c0b149a1611` 在测试脚本里记录真实 fetch 的完成状态，等待首次 onopen 引发的帖子读取结束，再启动断线与写帖步骤。返回原始 fetch promise，不替换响应、不删除“断线时缺失/重连后可见”的断言，也没有修改产品刷新逻辑。归入 ISS-030 的验收时序维护。
+
+修复后[本机重连](recognition-reconnect-local.json)和[远端重连](recognition-reconnect-ci.json)均为 **10/10 passed、page_errors=[]**，初始帖子读取均为 pending=0 / completedAfterOpen=1；[本机日志](recognition-reconnect-local.log)保留执行顺序。长断线场景分别持续 88.44 / 76.43 秒，均自动恢复。Chromium 均为 156.0.8078.4，Redis 分别为 7.4.9 / 7.4.12。
+
+[最终常规 CI 41298934883](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41298934883)对应修复提交 `2c829ff`，**七项全部成功**，见[运行摘要](recognition-ci-summary.json)。后端 **257 passed / 69 warnings / 74.72 秒**，见[CI 日志摘录](recognition-backend-ci.log)；比本机多一条 Linux `crypt` 弃用警告，未关闭告警规则。Web、小程序、Redis、Docker API 和完整 CPU 推理通过；[核心浏览器 6 组](recognition-core-browser-ci.json)与[参考库浏览器 8 组](recognition-reference-browser-ci.json)也全部通过。浏览器参考库场景使用合成推理适配器；真实模型质量证据来自前述独立手动评测。
+
+本轮评测与浏览器临时容器已退出并清理，本轮专用评测镜像已删除；下载样本、模型和本地隔离评测资料保留在忽略的 artifacts 目录，便于复核。没有改动业务数据库或其他项目容器。后续提交仅补本文、README、台账及证据，代码验收版本以上述 SHA 为准。
 
 ## 复跑
 

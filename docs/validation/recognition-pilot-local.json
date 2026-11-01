@@ -1,0 +1,3317 @@
+{
+  "status": "completed",
+  "started_at": "2026-11-01T10:38:21.818015+00:00",
+  "errors": [],
+  "predictions": [
+    {
+      "sample_id": "cat-0050-4",
+      "file": "images/cats/0050/0050_000.JPG",
+      "sha256": "202ffbdd78f768dd981d706f7a82d1be75718e105efeb75de1c646a624c96fc5",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "expected_reference_id": "c49e25824afb5d0a88aa7c4c27950e19",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8684177398681641,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.8684177398681641,
+        0.5150868892669678,
+        0.3837027847766876,
+        0.31106507778167725,
+        0.29331913590431213
+      ],
+      "confirmed_correct": true,
+      "seconds": 8.232143,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0350-3",
+      "file": "images/cats/0350/0350_003.jpg",
+      "sha256": "ba716a891b0d4da437be16ff3475e99d35d688ef08641838af167a4de7fc8c23",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "expected_reference_id": "e1928e2267cf59a58927474dcc0bbe45",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 6,
+        "cat_name": "pilot-catindividuals-v1:0350",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8780937194824219,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.8780937194824219,
+        0.5097534656524658,
+        0.4624820649623871,
+        0.2719264626502991,
+        0.1976344883441925
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.731769,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0510-2",
+      "file": "images/cats/0510/0510_024.jpg",
+      "sha256": "3677f5b004a1acb40e0e321d39c4c5aa04e71436b4b5ef74ba7645485eb4b903",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.336811900138855,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "32671314e8585d59b5f16ae1409c943d",
+        "6b508131eeae517984b88bda598f2489"
+      ],
+      "ranking_scores": [
+        0.336811900138855,
+        0.27179405093193054,
+        0.2296845018863678,
+        0.13554668426513672,
+        0.12553834915161133
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.061797,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0301-1",
+      "file": "images/cats/0301/0301_002.jpg",
+      "sha256": "0a6044de1177a03f829b7d761c72b95c35370242703a95bcef70c03fe3850a36",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.3585212230682373,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "ffb47b5de04a54408901730b56f81ff5",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.3585212230682373,
+        0.2782464623451233,
+        0.24707496166229248,
+        0.1978248655796051,
+        0.13744424283504486
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.634802,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0372-4",
+      "file": "images/cats/0372/0372_011.jpg",
+      "sha256": "74cc75bd4a88e920962b71c480e11bf87d770e59fd30168b73f2fdc289a4a144",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "expected_reference_id": "59438d9ac8395a0ab51c379fd35f0e7f",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 3,
+        "cat_name": "pilot-catindividuals-v1:0372",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.6371788382530212,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "6b508131eeae517984b88bda598f2489",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.6371788382530212,
+        0.49179625511169434,
+        0.26652687788009644,
+        0.21421298384666443,
+        0.17255812883377075
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.247768,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0124-4",
+      "file": "images/cats/0124/0124_011.JPG",
+      "sha256": "5685a0a75722af98b368f29db66cedc4b1da880e6cbe41f2be072e33087ff517",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "expected_reference_id": "1245c61123665fdf928a50e5307653f9",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9220907688140869,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "e4213cc43dab50a987e05617f4920a32",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.9220907688140869,
+        0.5179860591888428,
+        0.33762648701667786,
+        0.3099631071090698,
+        0.2912505269050598
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.903578,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-brick",
+      "file": "images/no-cat/brick.png",
+      "sha256": "7966caf324f6ba843118d98f7a07746d22f6a343430add0233eca5f6eaaa8fcf",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.17859694361686707,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.17859694361686707,
+        0.05835714191198349,
+        0.047833945602178574,
+        0.03285294771194458,
+        0.0194400604814291
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.627669,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0372-2",
+      "file": "images/cats/0372/0372_009.jpg",
+      "sha256": "c3df7c169534b75cb2308e44b69840a505cac1c6c26506cf2ffdabb2ef734a51",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "expected_reference_id": "59438d9ac8395a0ab51c379fd35f0e7f",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 3,
+        "cat_name": "pilot-catindividuals-v1:0372",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7139371633529663,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "6b508131eeae517984b88bda598f2489",
+        "1245c61123665fdf928a50e5307653f9"
+      ],
+      "ranking_scores": [
+        0.7139371633529663,
+        0.6062721014022827,
+        0.3640214502811432,
+        0.33678069710731506,
+        0.295576274394989
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.4584,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0359-4",
+      "file": "images/cats/0359/0359_008.jpg",
+      "sha256": "285916f2bdd9d1d19dc85890c0d23cd64b1c5d14774933336ed08e339bca3b88",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "expected_reference_id": "32671314e8585d59b5f16ae1409c943d",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 2,
+        "cat_name": "pilot-catindividuals-v1:0359",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.853638768196106,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "32671314e8585d59b5f16ae1409c943d",
+        "6b508131eeae517984b88bda598f2489",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.853638768196106,
+        0.25268131494522095,
+        0.25002220273017883,
+        0.23421774804592133,
+        0.22139018774032593
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.665626,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0050-3",
+      "file": "images/cats/0050/0050_014.JPG",
+      "sha256": "b5f090df9731a86a5d964500e7b266b9e389744162692ceee11d06ba68cc545b",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "expected_reference_id": "c49e25824afb5d0a88aa7c4c27950e19",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9034942388534546,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "e4213cc43dab50a987e05617f4920a32",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.9034942388534546,
+        0.520571768283844,
+        0.3940228819847107,
+        0.3796788156032562,
+        0.37636110186576843
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.709874,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-astronaut",
+      "file": "images/no-cat/astronaut.png",
+      "sha256": "88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.07681216299533844,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "32671314e8585d59b5f16ae1409c943d",
+        "1245c61123665fdf928a50e5307653f9",
+        "ffb47b5de04a54408901730b56f81ff5",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.07681216299533844,
+        0.06737549602985382,
+        0.05802048370242119,
+        0.03653319925069809,
+        0.026476817205548286
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.683031,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0394-2",
+      "file": "images/cats/0394/0394_005.jpg",
+      "sha256": "8015450b21a96e2ad478e00a129379a1215799dd357a164953b257f1a5d689b5",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "expected_reference_id": "6b508131eeae517984b88bda598f2489",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 8,
+        "cat_name": "pilot-catindividuals-v1:0394",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9629173278808594,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "6b508131eeae517984b88bda598f2489",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269",
+        "c49e25824afb5d0a88aa7c4c27950e19"
+      ],
+      "ranking_scores": [
+        0.9629173278808594,
+        0.43966376781463623,
+        0.2587936520576477,
+        0.20291799306869507,
+        0.1948770135641098
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.747767,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0068-1",
+      "file": "images/cats/0068/0068_012.JPG",
+      "sha256": "24b178f7a5865a34d9a010589003a9f945a36cedd4eb461b27d81d9a62ee155c",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "expected_reference_id": null,
+      "result": {
+        "status": "uncertain",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5698899030685425,
+        "candidates": [
+          {
+            "cat_id": 9,
+            "cat_name": "pilot-catindividuals-v1:0215",
+            "confidence": 0.5698899030685425,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 12,
+            "cat_name": "pilot-catindividuals-v1:0050",
+            "confidence": 0.5330755114555359,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 4,
+            "cat_name": "pilot-catindividuals-v1:0124",
+            "confidence": 0.5106220245361328,
+            "cat_avatar": null,
+            "photo_count": 0
+          }
+        ],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.5698899030685425,
+        0.5330755114555359,
+        0.5106220245361328,
+        0.28072869777679443,
+        0.25558099150657654
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.374783,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-grass",
+      "file": "images/no-cat/grass.png",
+      "sha256": "b6b6022426b38936c43a4ac09635cd78af074e90f42ffa8227ac8b7452d39f89",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.17469200491905212,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "ffb47b5de04a54408901730b56f81ff5",
+        "6b508131eeae517984b88bda598f2489",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.17469200491905212,
+        0.06633666157722473,
+        0.0524120032787323,
+        0.04612429067492485,
+        0.043887607753276825
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.204547,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0068-2",
+      "file": "images/cats/0068/0068_022.JPG",
+      "sha256": "d3822bb1020a9297319cfd18c0a5676a6be6d76f77909f6da623197c74fba2af",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 9,
+        "cat_name": "pilot-catindividuals-v1:0215",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5948981046676636,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.5948981046676636,
+        0.548201322555542,
+        0.4112606644630432,
+        0.33528751134872437,
+        0.27790915966033936
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.486091,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0215-4",
+      "file": "images/cats/0215/0215_002.JPG",
+      "sha256": "1addba8cb9e9f8c753796236b0ece25760acee0d4d6aa3ea3a78138e328bea16",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "expected_reference_id": "e4213cc43dab50a987e05617f4920a32",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 9,
+        "cat_name": "pilot-catindividuals-v1:0215",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7784355282783508,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "1245c61123665fdf928a50e5307653f9",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.7784355282783508,
+        0.43478018045425415,
+        0.4264565110206604,
+        0.3458325266838074,
+        0.2892647087574005
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.518542,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0215-3",
+      "file": "images/cats/0215/0215_014.JPG",
+      "sha256": "5730cdc1ed5db57ae56ea4c787e3d84683d39f75db6658a483708eb6e4040d2e",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "expected_reference_id": "e4213cc43dab50a987e05617f4920a32",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 9,
+        "cat_name": "pilot-catindividuals-v1:0215",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9208461046218872,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "1245c61123665fdf928a50e5307653f9",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.9208461046218872,
+        0.4103694558143616,
+        0.39197760820388794,
+        0.36476850509643555,
+        0.3424440026283264
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.316084,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0218-2",
+      "file": "images/cats/0218/0218_011.JPG",
+      "sha256": "d09607bfd499145b231d5645a5e10f5f0c830697a8c1b6659ec4e65db9243d23",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "expected_reference_id": "4b86ea7baff4571b98b07ae41f5b7b98",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 1,
+        "cat_name": "pilot-catindividuals-v1:0218",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8834702968597412,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "6b508131eeae517984b88bda598f2489",
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "c49e25824afb5d0a88aa7c4c27950e19"
+      ],
+      "ranking_scores": [
+        0.8834702968597412,
+        0.4362454414367676,
+        0.40441784262657166,
+        0.37901875376701355,
+        0.19480431079864502
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.367366,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0078-0",
+      "file": "images/cats/0078/0078_027.JPG",
+      "sha256": "1bfc853a622b2c3be4500fe2561c8edf81fd68f1723166283ca311de7e06265a",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "expected_reference_id": null,
+      "result": {
+        "status": "uncertain",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5110174417495728,
+        "candidates": [
+          {
+            "cat_id": 3,
+            "cat_name": "pilot-catindividuals-v1:0372",
+            "confidence": 0.5110174417495728,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 12,
+            "cat_name": "pilot-catindividuals-v1:0050",
+            "confidence": 0.4893990755081177,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 7,
+            "cat_name": "pilot-catindividuals-v1:0318",
+            "confidence": 0.48291265964508057,
+            "cat_avatar": null,
+            "photo_count": 0
+          }
+        ],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.5110174417495728,
+        0.4893990755081177,
+        0.48291265964508057,
+        0.3808174133300781,
+        0.3568360209465027
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.867214,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0301-0",
+      "file": "images/cats/0301/0301_007.jpg",
+      "sha256": "025335fd7f76e602a5f5da8ef72e98ca78b2bc47b29eae69f41c86dbbe2c73a2",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.38981160521507263,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "44721e4157d05752964545e8a3b86269",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.38981160521507263,
+        0.2231065034866333,
+        0.1697615087032318,
+        0.1639222502708435,
+        0.1448555737733841
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.668655,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0243-1",
+      "file": "images/cats/0243/0243_007.jpg",
+      "sha256": "3522f72fb76e56e58e6ef35061b85f8c6ddc37fcc0956bc56d36c7d4896ca32b",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5949616432189941,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "e4213cc43dab50a987e05617f4920a32",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.5949616432189941,
+        0.4488368332386017,
+        0.3754121959209442,
+        0.3610514998435974,
+        0.27806293964385986
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.520487,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0353-4",
+      "file": "images/cats/0353/0353_009.jpg",
+      "sha256": "99400ee4426631f509dbd822806be9b401ac6869b9bdfd5417ddf9acc91f1a43",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "expected_reference_id": "ffb47b5de04a54408901730b56f81ff5",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 5,
+        "cat_name": "pilot-catindividuals-v1:0353",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8346864581108093,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "1245c61123665fdf928a50e5307653f9",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98"
+      ],
+      "ranking_scores": [
+        0.8346864581108093,
+        -0.015707552433013916,
+        -0.05630544200539589,
+        -0.09182083606719971,
+        -0.09487803280353546
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.117523,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0394-4",
+      "file": "images/cats/0394/0394_007.jpg",
+      "sha256": "8d7f8b6c60fdf9d998229a57190ee1f8dd6bd7b06c20a1e13ccc4c1936238e10",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "expected_reference_id": "6b508131eeae517984b88bda598f2489",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 8,
+        "cat_name": "pilot-catindividuals-v1:0394",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9609169960021973,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "6b508131eeae517984b88bda598f2489",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269",
+        "32671314e8585d59b5f16ae1409c943d"
+      ],
+      "ranking_scores": [
+        0.9609169960021973,
+        0.42263317108154297,
+        0.28682440519332886,
+        0.18961101770401,
+        0.1777043640613556
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.416957,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0318-2",
+      "file": "images/cats/0318/0318_017.jpg",
+      "sha256": "71af6075ab4491b8ac3fc3eea940f312aaa4623df8d8685b7a8b176369abe426",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "expected_reference_id": "3f63f7f04d0e5fc1a788f945added7e8",
+      "result": {
+        "status": "uncertain",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5349228978157043,
+        "candidates": [
+          {
+            "cat_id": 3,
+            "cat_name": "pilot-catindividuals-v1:0372",
+            "confidence": 0.5349228978157043,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 7,
+            "cat_name": "pilot-catindividuals-v1:0318",
+            "confidence": 0.5249851942062378,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 12,
+            "cat_name": "pilot-catindividuals-v1:0050",
+            "confidence": 0.36513739824295044,
+            "cat_avatar": null,
+            "photo_count": 0
+          }
+        ],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.5349228978157043,
+        0.5249851942062378,
+        0.36513739824295044,
+        0.29165029525756836,
+        0.20807944238185883
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.420112,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0353-2",
+      "file": "images/cats/0353/0353_006.jpg",
+      "sha256": "3018b72787997d98b67516a8c5c3924eee956cf37edcd00cb8dbea7303a4a144",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "expected_reference_id": "ffb47b5de04a54408901730b56f81ff5",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 5,
+        "cat_name": "pilot-catindividuals-v1:0353",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9154617786407471,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "1245c61123665fdf928a50e5307653f9",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98"
+      ],
+      "ranking_scores": [
+        0.9154617786407471,
+        -0.07730724662542343,
+        -0.08963516354560852,
+        -0.0915406122803688,
+        -0.14580345153808594
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.354712,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-hubble_deep_field",
+      "file": "images/no-cat/hubble_deep_field.jpg",
+      "sha256": "3a19c5dd8a927a9334bb1229a6d63711b1c0c767fb27e2286e7c84a3e2c2f5f4",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.1991889327764511,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "32671314e8585d59b5f16ae1409c943d",
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "ffb47b5de04a54408901730b56f81ff5",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.1991889327764511,
+        0.1339525729417801,
+        0.09278091788291931,
+        0.06942291557788849,
+        0.007945101708173752
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.886213,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0215-2",
+      "file": "images/cats/0215/0215_004.JPG",
+      "sha256": "38faeeb8e97b917e4dfc98f9ae6390f2318706604a475a062a1b2e9d4d590f9d",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "expected_reference_id": "e4213cc43dab50a987e05617f4920a32",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 9,
+        "cat_name": "pilot-catindividuals-v1:0215",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7770443558692932,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.7770443558692932,
+        0.4093288481235504,
+        0.3641820549964905,
+        0.3599756956100464,
+        0.2544953525066376
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.009861,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0301-2",
+      "file": "images/cats/0301/0301_005.jpg",
+      "sha256": "4f8a9461b33ac0c0f88c71e537d41a338ae94d1367b654fab9e550b1af6da3af",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.28117355704307556,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "1245c61123665fdf928a50e5307653f9",
+        "ffb47b5de04a54408901730b56f81ff5",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.28117355704307556,
+        0.26979905366897583,
+        0.24149319529533386,
+        0.2373681366443634,
+        0.22667747735977173
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.255087,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0181-1",
+      "file": "images/cats/0181/0181_001.JPG",
+      "sha256": "3d2413f9bb3add7c1c2902c65f882f100bced319d2c62c74b28fb04a1de59cc7",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5854312777519226,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.5854312777519226,
+        0.5078211426734924,
+        0.4601486921310425,
+        0.3900831341743469,
+        0.2033405900001526
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.925031,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0350-2",
+      "file": "images/cats/0350/0350_006.jpg",
+      "sha256": "55ae5eaa2e92bdd47fd457f441ecd9339ec8f41eb6841e4a2723807dcfb5e7e5",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "expected_reference_id": "e1928e2267cf59a58927474dcc0bbe45",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 6,
+        "cat_name": "pilot-catindividuals-v1:0350",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7453670501708984,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.7453670501708984,
+        0.4853879511356354,
+        0.40206652879714966,
+        0.19397784769535065,
+        0.09591344743967056
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.47843,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-camera",
+      "file": "images/no-cat/camera.png",
+      "sha256": "b0793d2adda0fa6ae899c03989482bff9a42d3d5690fc7e3648f2795d730c23a",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.17037177085876465,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "6b508131eeae517984b88bda598f2489",
+        "32671314e8585d59b5f16ae1409c943d",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.17037177085876465,
+        0.1620219498872757,
+        0.11714614927768707,
+        0.10495467483997345,
+        0.092218317091465
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.446844,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0353-3",
+      "file": "images/cats/0353/0353_003.jpg",
+      "sha256": "a6d1eeea71fe52a1e6c4c370ad4a896f7e0f43fc0b86cd10a4e59fa4edda2d49",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "expected_reference_id": "ffb47b5de04a54408901730b56f81ff5",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 5,
+        "cat_name": "pilot-catindividuals-v1:0353",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7832176685333252,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "44721e4157d05752964545e8a3b86269",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "32671314e8585d59b5f16ae1409c943d",
+        "4b86ea7baff4571b98b07ae41f5b7b98"
+      ],
+      "ranking_scores": [
+        0.7832176685333252,
+        -0.0245254784822464,
+        -0.04684848338365555,
+        -0.07621454447507858,
+        -0.12579360604286194
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.501088,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0078-1",
+      "file": "images/cats/0078/0078_022.JPG",
+      "sha256": "f9428f6468df2917e5058d9116e801fb186649b7f74565af77db9afc5673f623",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5705567598342896,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e4213cc43dab50a987e05617f4920a32",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.5705567598342896,
+        0.5222282409667969,
+        0.49973031878471375,
+        0.38282066583633423,
+        0.3552776575088501
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.431634,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0372-3",
+      "file": "images/cats/0372/0372_008.jpg",
+      "sha256": "b9ecdd7d80694b7b9fa3cb09ee7a4eeab9b5360d2d9006302315dc3dd0945c38",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "expected_reference_id": "59438d9ac8395a0ab51c379fd35f0e7f",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 3,
+        "cat_name": "pilot-catindividuals-v1:0372",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7649708986282349,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "6b508131eeae517984b88bda598f2489",
+        "1245c61123665fdf928a50e5307653f9"
+      ],
+      "ranking_scores": [
+        0.7649708986282349,
+        0.4795490503311157,
+        0.3110692501068115,
+        0.25677961111068726,
+        0.16800260543823242
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.497062,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0078-2",
+      "file": "images/cats/0078/0078_012.JPG",
+      "sha256": "cbe9b49343f9867886add212bc15a61f4bcaf126520a86767a65906e275182f1",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5923734903335571,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e4213cc43dab50a987e05617f4920a32",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.5923734903335571,
+        0.5555700063705444,
+        0.5418980121612549,
+        0.35501372814178467,
+        0.2992897629737854
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.756051,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0218-4",
+      "file": "images/cats/0218/0218_004.JPG",
+      "sha256": "692bfbef466c7f7426d5e4e9f2d6d1e480093ddbdf64f3aeefb23b734d5fe7cd",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "expected_reference_id": "4b86ea7baff4571b98b07ae41f5b7b98",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 1,
+        "cat_name": "pilot-catindividuals-v1:0218",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9453893303871155,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "6b508131eeae517984b88bda598f2489",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.9453893303871155,
+        0.5034733414649963,
+        0.4513501524925232,
+        0.38780245184898376,
+        0.2890896201133728
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.637536,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0124-3",
+      "file": "images/cats/0124/0124_004.JPG",
+      "sha256": "ecc4a0ab58826de58a16c18c15e87a84fe5b8b6e45a5b3e66b5029dec99879db",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "expected_reference_id": "1245c61123665fdf928a50e5307653f9",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9223078489303589,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.9223078489303589,
+        0.4731752276420593,
+        0.33129602670669556,
+        0.3275792598724365,
+        0.27131444215774536
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.789068,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0153-3",
+      "file": "images/cats/0153/0153_004.JPG",
+      "sha256": "e0b4eccdbab4e0f9a0f7a266e67e92f06083b356e398d5ef9e7db9c1709da4c9",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "expected_reference_id": "44721e4157d05752964545e8a3b86269",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 11,
+        "cat_name": "pilot-catindividuals-v1:0153",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9575631618499756,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "e4213cc43dab50a987e05617f4920a32",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.9575631618499756,
+        0.5524990558624268,
+        0.457264244556427,
+        0.2709885537624359,
+        0.21437525749206543
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.541327,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0124-2",
+      "file": "images/cats/0124/0124_009.JPG",
+      "sha256": "82b2a32d2fac699ebd083203482b679b4ba55e8a0444ca31bb0baff5fb61c319",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "expected_reference_id": "1245c61123665fdf928a50e5307653f9",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9220927953720093,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.9220927953720093,
+        0.441654235124588,
+        0.3284044861793518,
+        0.28903770446777344,
+        0.27083057165145874
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.652078,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0040-4",
+      "file": "images/cats/0040/0040_002.JPG",
+      "sha256": "6695697d8ff6012d97ab13ee4e6c8d75ed5d48c172a229948a382439183e31c4",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "expected_reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 10,
+        "cat_name": "pilot-catindividuals-v1:0040",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9143606424331665,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32",
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.9143606424331665,
+        0.449849009513855,
+        0.3771927058696747,
+        0.37405505776405334,
+        0.24705874919891357
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.647765,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0181-0",
+      "file": "images/cats/0181/0181_016.JPG",
+      "sha256": "de9005b565fa914d14def54e2b5b878d0fac23256719897ac0f78fe5ac6fec9d",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5713144540786743,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.5713144540786743,
+        0.5279848575592041,
+        0.5163751244544983,
+        0.3473289906978607,
+        0.2379712164402008
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.708864,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-coffee",
+      "file": "images/no-cat/coffee.png",
+      "sha256": "cc02f8ca188b167c775a7101b5d767d1e71792cf762c33d6fa15a4599b5a8de7",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.11544612795114517,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "32671314e8585d59b5f16ae1409c943d",
+        "1245c61123665fdf928a50e5307653f9",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.11544612795114517,
+        0.09599156677722931,
+        0.029225129634141922,
+        0.010281544178724289,
+        -0.027750065550208092
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.573603,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-gravel",
+      "file": "images/no-cat/gravel.png",
+      "sha256": "c48615b451bf1e606fbd72c0aa9f8cc0f068ab7111ef7d93bb9b0f2586440c12",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.1421099454164505,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "ffb47b5de04a54408901730b56f81ff5",
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "44721e4157d05752964545e8a3b86269",
+        "32671314e8585d59b5f16ae1409c943d"
+      ],
+      "ranking_scores": [
+        0.1421099454164505,
+        0.091883085668087,
+        0.04496061056852341,
+        0.04495367035269737,
+        0.04066845402121544
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.756114,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0359-3",
+      "file": "images/cats/0359/0359_005.jpg",
+      "sha256": "bb96fb3ac03b6ddc891160354ce225afd6f4cfb973ede6b2343eaabdb5f717ac",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "expected_reference_id": "32671314e8585d59b5f16ae1409c943d",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 2,
+        "cat_name": "pilot-catindividuals-v1:0359",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7823671698570251,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "32671314e8585d59b5f16ae1409c943d",
+        "6b508131eeae517984b88bda598f2489",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98"
+      ],
+      "ranking_scores": [
+        0.7823671698570251,
+        0.28386926651000977,
+        0.25379109382629395,
+        0.2441248595714569,
+        0.21923553943634033
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.688603,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0510-1",
+      "file": "images/cats/0510/0510_045.jpg",
+      "sha256": "273c046ae760adfb142e5b9a026c259d82b644f268a6627eae33f21f40393f52",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.3920667767524719,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.3920667767524719,
+        0.312244176864624,
+        0.28279435634613037,
+        0.21439394354820251,
+        0.1967347264289856
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.220353,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0153-4",
+      "file": "images/cats/0153/0153_006.JPG",
+      "sha256": "5eb75bbe49758c8dd4bc71a4659f775346512c1277f6596f317e530cdc30da51",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "expected_reference_id": "44721e4157d05752964545e8a3b86269",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 11,
+        "cat_name": "pilot-catindividuals-v1:0153",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9266458749771118,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "e4213cc43dab50a987e05617f4920a32",
+        "6b508131eeae517984b88bda598f2489"
+      ],
+      "ranking_scores": [
+        0.9266458749771118,
+        0.49100643396377563,
+        0.48298177123069763,
+        0.2359236180782318,
+        0.21450507640838623
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.845361,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0243-0",
+      "file": "images/cats/0243/0243_013.jpg",
+      "sha256": "b6a39930d07bd8765647d0543d1b87e187eb3480894e9ad7926388f834060fc9",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "expected_reference_id": null,
+      "result": {
+        "status": "uncertain",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5642528533935547,
+        "candidates": [
+          {
+            "cat_id": 12,
+            "cat_name": "pilot-catindividuals-v1:0050",
+            "confidence": 0.5642528533935547,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 4,
+            "cat_name": "pilot-catindividuals-v1:0124",
+            "confidence": 0.44008898735046387,
+            "cat_avatar": null,
+            "photo_count": 0
+          },
+          {
+            "cat_id": 9,
+            "cat_name": "pilot-catindividuals-v1:0215",
+            "confidence": 0.4163099229335785,
+            "cat_avatar": null,
+            "photo_count": 0
+          }
+        ],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.5642528533935547,
+        0.44008898735046387,
+        0.4163099229335785,
+        0.28950026631355286,
+        0.28034135699272156
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.884339,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0068-0",
+      "file": "images/cats/0068/0068_010.JPG",
+      "sha256": "2a317acff5acec16b8a7a549027bc9e9a1586da939ceba38fad272396fe59987",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 9,
+        "cat_name": "pilot-catindividuals-v1:0215",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.6363141536712646,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.6363141536712646,
+        0.5289656519889832,
+        0.44096052646636963,
+        0.3511838912963867,
+        0.27261510491371155
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.076913,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0318-3",
+      "file": "images/cats/0318/0318_010.jpg",
+      "sha256": "19d68a799a4101b0722c28f5462cbe4df80b02617772c6532c26b3b83641eb82",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "expected_reference_id": "3f63f7f04d0e5fc1a788f945added7e8",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 3,
+        "cat_name": "pilot-catindividuals-v1:0372",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5970744490623474,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.5970744490623474,
+        0.5527316927909851,
+        0.3512166440486908,
+        0.2649294435977936,
+        0.1965959519147873
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.469792,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0350-4",
+      "file": "images/cats/0350/0350_008.jpg",
+      "sha256": "1f5e9ab9b139a1cdb89391395aad9d7498becd57f73ee741751ca9d313a56e28",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "expected_reference_id": "e1928e2267cf59a58927474dcc0bbe45",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 6,
+        "cat_name": "pilot-catindividuals-v1:0350",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.7208260297775269,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "44721e4157d05752964545e8a3b86269",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.7208260297775269,
+        0.45746883749961853,
+        0.37898701429367065,
+        0.12945514917373657,
+        0.07740084826946259
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.739947,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0510-0",
+      "file": "images/cats/0510/0510_007.jpg",
+      "sha256": "75591ddd97f821929e13ac4303dd0fcc43b6a2f691c0bf3d883e14a456a6f980",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.3190309703350067,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "1245c61123665fdf928a50e5307653f9",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.3190309703350067,
+        0.3044697940349579,
+        0.21635952591896057,
+        0.1885467767715454,
+        0.14262016117572784
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.75981,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0394-3",
+      "file": "images/cats/0394/0394_004.jpg",
+      "sha256": "e3c08b317bb326a6f29b91b0d198ed418123ae8090f8d1d037e0dbb6093d173e",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "expected_reference_id": "6b508131eeae517984b88bda598f2489",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 8,
+        "cat_name": "pilot-catindividuals-v1:0394",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9581618309020996,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "6b508131eeae517984b88bda598f2489",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "44721e4157d05752964545e8a3b86269",
+        "c49e25824afb5d0a88aa7c4c27950e19"
+      ],
+      "ranking_scores": [
+        0.9581618309020996,
+        0.42612677812576294,
+        0.2550506889820099,
+        0.19643676280975342,
+        0.1878720223903656
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.383795,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0040-2",
+      "file": "images/cats/0040/0040_007.JPG",
+      "sha256": "224c33df571456d777733328c02f4c577d1594d542c5d230361bc8b2d0d100a1",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "expected_reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 10,
+        "cat_name": "pilot-catindividuals-v1:0040",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8919467926025391,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "44721e4157d05752964545e8a3b86269"
+      ],
+      "ranking_scores": [
+        0.8919467926025391,
+        0.4081549048423767,
+        0.32586634159088135,
+        0.3106083273887634,
+        0.2884056866168976
+      ],
+      "confirmed_correct": true,
+      "seconds": 6.824442,
+      "failure_code": null
+    },
+    {
+      "sample_id": "no-cat-rocket",
+      "file": "images/no-cat/rocket.jpg",
+      "sha256": "c2dd0de7c538df8d111e479619b129464d0269d0ae5fd18ca91d33a7fdfea95c",
+      "kind": "no_cat",
+      "identity": null,
+      "expected_reference_id": null,
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.14960764348506927,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "3f63f7f04d0e5fc1a788f945added7e8"
+      ],
+      "ranking_scores": [
+        0.14960764348506927,
+        0.11823905259370804,
+        0.10950013250112534,
+        0.10767759382724762,
+        0.09127139300107956
+      ],
+      "confirmed_correct": false,
+      "seconds": 6.574607,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0181-2",
+      "file": "images/cats/0181/0181_003.JPG",
+      "sha256": "37c2dd4ae672c382b9a82956db6869602ae72be9d3840e92a021c45f67239c98",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 4,
+        "cat_name": "pilot-catindividuals-v1:0124",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.6227118968963623,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "1245c61123665fdf928a50e5307653f9",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "e4213cc43dab50a987e05617f4920a32",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "4b86ea7baff4571b98b07ae41f5b7b98"
+      ],
+      "ranking_scores": [
+        0.6227118968963623,
+        0.46330317854881287,
+        0.4342395067214966,
+        0.3206441402435303,
+        0.1407172828912735
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.335805,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0243-2",
+      "file": "images/cats/0243/0243_005.jpg",
+      "sha256": "d7e831d03315eb98fe343df06ce0b51364e0ec780c8aa571bf39614a947e4418",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "expected_reference_id": null,
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.5944129228591919,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "e4213cc43dab50a987e05617f4920a32",
+        "1245c61123665fdf928a50e5307653f9",
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.5944129228591919,
+        0.4269578456878662,
+        0.426689088344574,
+        0.35605284571647644,
+        0.29366037249565125
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.42032,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0153-2",
+      "file": "images/cats/0153/0153_011.JPG",
+      "sha256": "85453557c8a853befd2ae8618e7a859ab599a9b19dfeaf259f1aba7ea5fa2f87",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "expected_reference_id": "44721e4157d05752964545e8a3b86269",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 11,
+        "cat_name": "pilot-catindividuals-v1:0153",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9444633722305298,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "44721e4157d05752964545e8a3b86269",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "e4213cc43dab50a987e05617f4920a32",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e"
+      ],
+      "ranking_scores": [
+        0.9444633722305298,
+        0.504621148109436,
+        0.4519125521183014,
+        0.27382758259773254,
+        0.21190372109413147
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.377185,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0040-3",
+      "file": "images/cats/0040/0040_001.JPG",
+      "sha256": "9e4a5a988121ea54180dddcc321e32184e95ce7c7cecfa440cb7836e83beb601",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "expected_reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 10,
+        "cat_name": "pilot-catindividuals-v1:0040",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8977991342544556,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "e4213cc43dab50a987e05617f4920a32",
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "e1928e2267cf59a58927474dcc0bbe45"
+      ],
+      "ranking_scores": [
+        0.8977991342544556,
+        0.4161992073059082,
+        0.38138487935066223,
+        0.2905449867248535,
+        0.27425357699394226
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.9156,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0359-2",
+      "file": "images/cats/0359/0359_006.jpg",
+      "sha256": "cc2307c21be7208d21350a24b967a13e67f04e2d39ef3e94ebe96696f6b61956",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "expected_reference_id": "32671314e8585d59b5f16ae1409c943d",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 2,
+        "cat_name": "pilot-catindividuals-v1:0359",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.8863462805747986,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "32671314e8585d59b5f16ae1409c943d",
+        "44721e4157d05752964545e8a3b86269",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "6b508131eeae517984b88bda598f2489",
+        "59438d9ac8395a0ab51c379fd35f0e7f"
+      ],
+      "ranking_scores": [
+        0.8863462805747986,
+        0.25310224294662476,
+        0.1883537769317627,
+        0.1857212632894516,
+        0.12567979097366333
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.430068,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0218-3",
+      "file": "images/cats/0218/0218_008.JPG",
+      "sha256": "dea8f7cdb5c39ccf68783a776fd7e827a184a28b59a9882f1690ed6490cdfe6b",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "expected_reference_id": "4b86ea7baff4571b98b07ae41f5b7b98",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 1,
+        "cat_name": "pilot-catindividuals-v1:0218",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.959942102432251,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "4b86ea7baff4571b98b07ae41f5b7b98",
+        "44721e4157d05752964545e8a3b86269",
+        "6b508131eeae517984b88bda598f2489",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.959942102432251,
+        0.4845670461654663,
+        0.4417444169521332,
+        0.4191676378250122,
+        0.23564645648002625
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.513773,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0050-2",
+      "file": "images/cats/0050/0050_020.JPG",
+      "sha256": "616a4db3a7b18b52dc8727f879c1e17df6b7b04f00b2088a9292d603623d53a2",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "expected_reference_id": "c49e25824afb5d0a88aa7c4c27950e19",
+      "result": {
+        "status": "confirmed",
+        "cat_id": 12,
+        "cat_name": "pilot-catindividuals-v1:0050",
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.9529339075088501,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "c49e25824afb5d0a88aa7c4c27950e19",
+        "1245c61123665fdf928a50e5307653f9",
+        "97aaea2cbe225b84a7b1b37fb32e7a9e",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "e4213cc43dab50a987e05617f4920a32"
+      ],
+      "ranking_scores": [
+        0.9529339075088501,
+        0.48362237215042114,
+        0.34772828221321106,
+        0.33217936754226685,
+        0.3210855722427368
+      ],
+      "confirmed_correct": true,
+      "seconds": 7.661356,
+      "failure_code": null
+    },
+    {
+      "sample_id": "cat-0318-4",
+      "file": "images/cats/0318/0318_015.jpg",
+      "sha256": "f9de2f178df866709c80adfac05191e8b30f95c1bf43a0f2e2d2ebf3e743652d",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "expected_reference_id": "3f63f7f04d0e5fc1a788f945added7e8",
+      "result": {
+        "status": "unknown",
+        "cat_id": null,
+        "cat_name": null,
+        "name": null,
+        "cat_avatar": null,
+        "confidence": 0.4518085718154907,
+        "candidates": [],
+        "photo_count": 0,
+        "personality_tags": null,
+        "campus_zone": null,
+        "collector_status": null
+      },
+      "ranking": [
+        "59438d9ac8395a0ab51c379fd35f0e7f",
+        "3f63f7f04d0e5fc1a788f945added7e8",
+        "32671314e8585d59b5f16ae1409c943d",
+        "e1928e2267cf59a58927474dcc0bbe45",
+        "c49e25824afb5d0a88aa7c4c27950e19"
+      ],
+      "ranking_scores": [
+        0.4518085718154907,
+        0.43621981143951416,
+        0.15650971233844757,
+        0.11171817034482956,
+        0.09132707864046097
+      ],
+      "confirmed_correct": false,
+      "seconds": 7.330766,
+      "failure_code": null
+    }
+  ],
+  "summary": {
+    "total": 62,
+    "groups": {
+      "known": {
+        "n": 36,
+        "statuses": {
+          "confirmed": 34,
+          "uncertain": 1,
+          "unknown": 1
+        },
+        "top1": 33,
+        "top3": 36,
+        "top1_rate": 0.9166666666666666,
+        "top3_rate": 1.0,
+        "confirmed_correct": 33,
+        "confirmed_wrong": 1,
+        "false_rejection_rate": 0.027777777777777776,
+        "not_correctly_confirmed_rate": 0.08333333333333333
+      },
+      "unknown_cat": {
+        "n": 18,
+        "statuses": {
+          "unknown": 6,
+          "uncertain": 3,
+          "confirmed": 9
+        },
+        "false_accepts": 9,
+        "false_accept_rate": 0.5,
+        "candidate_exposure_rate": 0.16666666666666666
+      },
+      "no_cat": {
+        "n": 8,
+        "statuses": {
+          "unknown": 8
+        },
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "candidate_exposure_rate": 0.0
+      }
+    },
+    "confirmed": 43,
+    "confirmed_correct": 33,
+    "confirmed_precision": 0.7674418604651163,
+    "unavailable": 0
+  },
+  "dataset_id": "public-cat-pilot-20261101",
+  "dataset_sha256": "d388d72b635e9f215013504295f3c37587a7162ba278482bbe20a1054189baab",
+  "provenance": {
+    "purpose": "Small public pilot; not campus acceptance or a training-independent benchmark",
+    "cat_source": "https://www.kaggle.com/datasets/timost1234/cat-individuals",
+    "cat_author": "Tzu-Yuan Lin; hosted by timost1234",
+    "cat_version": 1,
+    "cat_license": "CC BY 4.0",
+    "negative_source_revision": "e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae",
+    "negative_license_reference": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/_fetchers.py",
+    "negative_labels": "Eight named scikit-image images visually reviewed as no-cat before inference",
+    "seed": 20261101,
+    "sampling": "12 known IDs x (2 reference + 3 query); 6 unseen-in-reference IDs x 3 query; 8 no-cat controls",
+    "selection": "Seeded eligible IDs and per-ID shuffled files; reject pixel duplicates or dhash <= 4 before inference",
+    "excluded": [
+      {
+        "source_path": "cat_individuals_dataset/0050/0050_010.JPG",
+        "reason": "duplicate pixels or dhash distance <= 4"
+      },
+      {
+        "source_path": "cat_individuals_dataset/0050/0050_012.JPG",
+        "reason": "duplicate pixels or dhash distance <= 4"
+      }
+    ],
+    "visual_identity_exclusions_before_inference": {
+      "0023": "Suspected cross-ID overlap with 0026 in the pre-inference contact sheet",
+      "0026": "Suspected mixed identities; first selected references resemble 0023, queries differ",
+      "0031": "Multiple cats without a target identity bounding box",
+      "0063": "Multiple cats without a target identity bounding box",
+      "0509": "Multiple cats without a target identity bounding box"
+    },
+    "training_overlap": "unknown: model provider did not publish its 131-cat training manifest",
+    "session_independence": "unknown: source lacks capture-session grouping; different files do not prove different sessions",
+    "assets": {
+      "cat-0394-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_018.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_018.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 133175
+      },
+      "cat-0394-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 135587
+      },
+      "cat-0394-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 135231
+      },
+      "cat-0394-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 139087
+      },
+      "cat-0394-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 155281
+      },
+      "cat-0050-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_018.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_018.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 470407
+      },
+      "cat-0050-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_008.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_008.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 665131
+      },
+      "cat-0050-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_020.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_020.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 551897
+      },
+      "cat-0050-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_014.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_014.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 676946
+      },
+      "cat-0050-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_000.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_000.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 453084
+      },
+      "cat-0318-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_013.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_013.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 41395
+      },
+      "cat-0318-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 46923
+      },
+      "cat-0318-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_017.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_017.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 62933
+      },
+      "cat-0318-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_010.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_010.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 76433
+      },
+      "cat-0318-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_015.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_015.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 75082
+      },
+      "cat-0040-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 823260
+      },
+      "cat-0040-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 843137
+      },
+      "cat-0040-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 835759
+      },
+      "cat-0040-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_001.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_001.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 843377
+      },
+      "cat-0040-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 817060
+      },
+      "cat-0215-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_013.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_013.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 631491
+      },
+      "cat-0215-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 595007
+      },
+      "cat-0215-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 591582
+      },
+      "cat-0215-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_014.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_014.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 639247
+      },
+      "cat-0215-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 667398
+      },
+      "cat-0218-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 704815
+      },
+      "cat-0218-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_009.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_009.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 712678
+      },
+      "cat-0218-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 638083
+      },
+      "cat-0218-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_008.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_008.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 717174
+      },
+      "cat-0218-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 706367
+      },
+      "cat-0372-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 123764
+      },
+      "cat-0372-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 77765
+      },
+      "cat-0372-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_009.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_009.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 87454
+      },
+      "cat-0372-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 71041
+      },
+      "cat-0372-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_011.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_011.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 177030
+      },
+      "cat-0353-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 49122
+      },
+      "cat-0353-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 72774
+      },
+      "cat-0353-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 65229
+      },
+      "cat-0353-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_003.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_003.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 58047
+      },
+      "cat-0353-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_009.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_009.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 50465
+      },
+      "cat-0359-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 151800
+      },
+      "cat-0359-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_010.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_010.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 213300
+      },
+      "cat-0359-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 110839
+      },
+      "cat-0359-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 142346
+      },
+      "cat-0359-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 149637
+      },
+      "cat-0350-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 393299
+      },
+      "cat-0350-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 266334
+      },
+      "cat-0350-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 325233
+      },
+      "cat-0350-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_003.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_003.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 355928
+      },
+      "cat-0350-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 311713
+      },
+      "cat-0124-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 622128
+      },
+      "cat-0124-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_003.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_003.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 732643
+      },
+      "cat-0124-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_009.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_009.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 625415
+      },
+      "cat-0124-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 659177
+      },
+      "cat-0124-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 708498
+      },
+      "cat-0153-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_025.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_025.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 462624
+      },
+      "cat-0153-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 511118
+      },
+      "cat-0153-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 454369
+      },
+      "cat-0153-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 428329
+      },
+      "cat-0153-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_006.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_006.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 518283
+      },
+      "cat-0181-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_016.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_016.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1097713
+      },
+      "cat-0181-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_001.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_001.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1086946
+      },
+      "cat-0181-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_003.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_003.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1024595
+      },
+      "cat-0068-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_010.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_010.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 749587
+      },
+      "cat-0068-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 655916
+      },
+      "cat-0068-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_022.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_022.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 667262
+      },
+      "cat-0078-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_027.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_027.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 720131
+      },
+      "cat-0078-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_022.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_022.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 628020
+      },
+      "cat-0078-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 647967
+      },
+      "cat-0243-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_013.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_013.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1234413
+      },
+      "cat-0243-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1236887
+      },
+      "cat-0243-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1320832
+      },
+      "cat-0510-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 907102
+      },
+      "cat-0510-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_045.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_045.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 998491
+      },
+      "cat-0510-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_024.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_024.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 807455
+      },
+      "cat-0301-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 147487
+      },
+      "cat-0301-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 124543
+      },
+      "cat-0301-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 129939
+      },
+      "no-cat-astronaut": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/astronaut.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 791555
+      },
+      "no-cat-camera": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/camera.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 139512
+      },
+      "no-cat-coffee": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 466706
+      },
+      "no-cat-brick": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/brick.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 106634
+      },
+      "no-cat-grass": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/grass.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 217893
+      },
+      "no-cat-gravel": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/gravel.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 194247
+      },
+      "no-cat-hubble_deep_field": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/hubble_deep_field.jpg",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 527940
+      },
+      "no-cat-rocket": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/rocket.jpg",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 112525
+      }
+    },
+    "visual_review": {
+      "date": "2026-11-01",
+      "review": "All 86 retained samples inspected in contact sheets before inference; eight controls contain no visible cats. Cat identities follow source labels, not owner-verified identities.",
+      "excluded_identity_count": 5,
+      "remaining_limit": "Many same-background/near-pose pairs; session and training independence remain unverified."
+    }
+  },
+  "crop": true,
+  "reference": {
+    "manifest": {
+      "format_version": 2,
+      "snapshot_id": "5981db24de4e48b1930343a0fa596809",
+      "database_id": "09930073524843e98a8a44a9589b928d",
+      "catalog_revision": "d8c43118d429cd2b72cbf5d8bdbc7ebd7d3e71ed9fb14fd0466ec40bdfc5aeb8",
+      "catalog_generation": 36,
+      "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "pipeline": {
+        "preprocessing": "rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1",
+        "crop": "yolov8m-cat15-conf0.3-margin0.1-or-original-v1",
+        "detector_sha256": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+      },
+      "dimension": 256,
+      "created_at": "2026-11-01T10:38:11.739569+00:00",
+      "cats": [
+        {
+          "cat_id": 1,
+          "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+        },
+        {
+          "cat_id": 2,
+          "reference_id": "32671314e8585d59b5f16ae1409c943d"
+        },
+        {
+          "cat_id": 3,
+          "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+        },
+        {
+          "cat_id": 4,
+          "reference_id": "1245c61123665fdf928a50e5307653f9"
+        },
+        {
+          "cat_id": 5,
+          "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+        },
+        {
+          "cat_id": 6,
+          "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+        },
+        {
+          "cat_id": 7,
+          "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+        },
+        {
+          "cat_id": 8,
+          "reference_id": "6b508131eeae517984b88bda598f2489"
+        },
+        {
+          "cat_id": 9,
+          "reference_id": "e4213cc43dab50a987e05617f4920a32"
+        },
+        {
+          "cat_id": 10,
+          "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+        },
+        {
+          "cat_id": 11,
+          "reference_id": "44721e4157d05752964545e8a3b86269"
+        },
+        {
+          "cat_id": 12,
+          "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+        }
+      ],
+      "sources": [
+        {
+          "image_id": 1,
+          "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98",
+          "path": "/uploads/cats/e5d388c7103baaca91ac8546147b8522e03cf44979fa6bb2fbbe8fae396fb3aa.jpg",
+          "sha256": "e5d388c7103baaca91ac8546147b8522e03cf44979fa6bb2fbbe8fae396fb3aa"
+        },
+        {
+          "image_id": 8,
+          "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98",
+          "path": "/uploads/cats/50341c9ac9d6e66cbfaa842c3bc4462a68ca1bbf0099bb8d5cd6eaac81f98d53.jpg",
+          "sha256": "50341c9ac9d6e66cbfaa842c3bc4462a68ca1bbf0099bb8d5cd6eaac81f98d53"
+        },
+        {
+          "image_id": 2,
+          "reference_id": "32671314e8585d59b5f16ae1409c943d",
+          "path": "/uploads/cats/36199fc5a0a0cbadad9cf0bbe04c240536856e1e2fecf2c0086de9a6a543319f.jpg",
+          "sha256": "36199fc5a0a0cbadad9cf0bbe04c240536856e1e2fecf2c0086de9a6a543319f"
+        },
+        {
+          "image_id": 14,
+          "reference_id": "32671314e8585d59b5f16ae1409c943d",
+          "path": "/uploads/cats/da19826408e16659d1e4e9ea4b79b9b0941929457dca92b0274fd874a6bb1870.jpg",
+          "sha256": "da19826408e16659d1e4e9ea4b79b9b0941929457dca92b0274fd874a6bb1870"
+        },
+        {
+          "image_id": 3,
+          "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f",
+          "path": "/uploads/cats/23bda5b7a606078945547fe672617b4517992ce67bc8acbbca955ef4bdc04291.jpg",
+          "sha256": "23bda5b7a606078945547fe672617b4517992ce67bc8acbbca955ef4bdc04291"
+        },
+        {
+          "image_id": 5,
+          "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f",
+          "path": "/uploads/cats/64f385e277fbf1267ddd088a31111cdd6a997ffa2e9cabfd06e891da26a63263.jpg",
+          "sha256": "64f385e277fbf1267ddd088a31111cdd6a997ffa2e9cabfd06e891da26a63263"
+        },
+        {
+          "image_id": 4,
+          "reference_id": "1245c61123665fdf928a50e5307653f9",
+          "path": "/uploads/cats/076f321f83252ed734205eb005873068f2d177258ab7f83a680841e2b2499720.jpg",
+          "sha256": "076f321f83252ed734205eb005873068f2d177258ab7f83a680841e2b2499720"
+        },
+        {
+          "image_id": 23,
+          "reference_id": "1245c61123665fdf928a50e5307653f9",
+          "path": "/uploads/cats/979150f20c3acee297b4f6ce46085c057679c61e24949a5f2079d6e79f8b0c4e.jpg",
+          "sha256": "979150f20c3acee297b4f6ce46085c057679c61e24949a5f2079d6e79f8b0c4e"
+        },
+        {
+          "image_id": 6,
+          "reference_id": "ffb47b5de04a54408901730b56f81ff5",
+          "path": "/uploads/cats/ed7a73dc712178f8d4e37f922755d5833c6b70425c4efc546bde2441fd4a544d.jpg",
+          "sha256": "ed7a73dc712178f8d4e37f922755d5833c6b70425c4efc546bde2441fd4a544d"
+        },
+        {
+          "image_id": 20,
+          "reference_id": "ffb47b5de04a54408901730b56f81ff5",
+          "path": "/uploads/cats/30a0497972929dfc7e69e0d0f7caa5948878c6a7b82f7c5c3f04bd6d00c2b5ec.jpg",
+          "sha256": "30a0497972929dfc7e69e0d0f7caa5948878c6a7b82f7c5c3f04bd6d00c2b5ec"
+        },
+        {
+          "image_id": 7,
+          "reference_id": "e1928e2267cf59a58927474dcc0bbe45",
+          "path": "/uploads/cats/8dfa561a2496787c2a33a7f2893850210c2478a80763c147e6c6890aab635441.jpg",
+          "sha256": "8dfa561a2496787c2a33a7f2893850210c2478a80763c147e6c6890aab635441"
+        },
+        {
+          "image_id": 17,
+          "reference_id": "e1928e2267cf59a58927474dcc0bbe45",
+          "path": "/uploads/cats/b641b6d13fa796600df220575bb51faac31568db55b9abe30dec1bbb67355477.jpg",
+          "sha256": "b641b6d13fa796600df220575bb51faac31568db55b9abe30dec1bbb67355477"
+        },
+        {
+          "image_id": 9,
+          "reference_id": "3f63f7f04d0e5fc1a788f945added7e8",
+          "path": "/uploads/cats/35d3e0a5a7a19e31f8fdda418a3a661cbcfaac56bd66817679094dc93d4a4920.jpg",
+          "sha256": "35d3e0a5a7a19e31f8fdda418a3a661cbcfaac56bd66817679094dc93d4a4920"
+        },
+        {
+          "image_id": 24,
+          "reference_id": "3f63f7f04d0e5fc1a788f945added7e8",
+          "path": "/uploads/cats/074b45541b22c2707f0f897e4efd7eb934b8b06da283c4063ae30bb3b27bc059.jpg",
+          "sha256": "074b45541b22c2707f0f897e4efd7eb934b8b06da283c4063ae30bb3b27bc059"
+        },
+        {
+          "image_id": 10,
+          "reference_id": "6b508131eeae517984b88bda598f2489",
+          "path": "/uploads/cats/389b89e4e0c1d1843b5def5c82d08e101bf747055649930d56145e007e30a883.jpg",
+          "sha256": "389b89e4e0c1d1843b5def5c82d08e101bf747055649930d56145e007e30a883"
+        },
+        {
+          "image_id": 18,
+          "reference_id": "6b508131eeae517984b88bda598f2489",
+          "path": "/uploads/cats/60279dd2291213f00fa55111b233b438d040844bf51e71c8f235f1933ddb2f9a.jpg",
+          "sha256": "60279dd2291213f00fa55111b233b438d040844bf51e71c8f235f1933ddb2f9a"
+        },
+        {
+          "image_id": 11,
+          "reference_id": "e4213cc43dab50a987e05617f4920a32",
+          "path": "/uploads/cats/ea60675ad18e3c02b6b6df36bd2a50e10e919961eb5c42a3ae6a488eda2c990b.jpg",
+          "sha256": "ea60675ad18e3c02b6b6df36bd2a50e10e919961eb5c42a3ae6a488eda2c990b"
+        },
+        {
+          "image_id": 13,
+          "reference_id": "e4213cc43dab50a987e05617f4920a32",
+          "path": "/uploads/cats/3abc91f9b956a8ce69d26cfe5330ba0d19cb9756d79f1ae929185165a304ef1f.jpg",
+          "sha256": "3abc91f9b956a8ce69d26cfe5330ba0d19cb9756d79f1ae929185165a304ef1f"
+        },
+        {
+          "image_id": 12,
+          "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e",
+          "path": "/uploads/cats/c76b0f8f4ea79df3f2e8019ede3bbfc3992200ed164d4e8c0532399d03dab56f.jpg",
+          "sha256": "c76b0f8f4ea79df3f2e8019ede3bbfc3992200ed164d4e8c0532399d03dab56f"
+        },
+        {
+          "image_id": 19,
+          "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e",
+          "path": "/uploads/cats/7036cf0cc98ae40b1cbed283dc30ed764d218e384bb408f92f2f2ba4f5559ebe.jpg",
+          "sha256": "7036cf0cc98ae40b1cbed283dc30ed764d218e384bb408f92f2f2ba4f5559ebe"
+        },
+        {
+          "image_id": 15,
+          "reference_id": "44721e4157d05752964545e8a3b86269",
+          "path": "/uploads/cats/dc72a4f8c3b78b032c049c6bba1a63b2288b4059019b640f66cfbdb769958323.jpg",
+          "sha256": "dc72a4f8c3b78b032c049c6bba1a63b2288b4059019b640f66cfbdb769958323"
+        },
+        {
+          "image_id": 16,
+          "reference_id": "44721e4157d05752964545e8a3b86269",
+          "path": "/uploads/cats/0fa9c319bcd73f7396d670e815e9f04fbd18884a48c9b4851248e1d484902e35.jpg",
+          "sha256": "0fa9c319bcd73f7396d670e815e9f04fbd18884a48c9b4851248e1d484902e35"
+        },
+        {
+          "image_id": 21,
+          "reference_id": "c49e25824afb5d0a88aa7c4c27950e19",
+          "path": "/uploads/cats/be9dc05eaa2b1e7677d58514b4fb5d01a4f5f1de61ae5b16d9903e1a50b6d2c0.jpg",
+          "sha256": "be9dc05eaa2b1e7677d58514b4fb5d01a4f5f1de61ae5b16d9903e1a50b6d2c0"
+        },
+        {
+          "image_id": 22,
+          "reference_id": "c49e25824afb5d0a88aa7c4c27950e19",
+          "path": "/uploads/cats/4df18b68451d3652d0eaa35beb38a62144e9047b9acdadd126dd102507935eff.jpg",
+          "sha256": "4df18b68451d3652d0eaa35beb38a62144e9047b9acdadd126dd102507935eff"
+        }
+      ],
+      "artifacts": {
+        "vectors.json": "ad80e984c0c0d512ccdf790d10d6863380dd58735c8dbdbe6c2cf9e45edf9ce7"
+      }
+    },
+    "publication_id": "4efe857d2d4044879d41dc5948bc885c"
+  },
+  "near_duplicate_candidates": [],
+  "thresholds": {
+    "confirmed": 0.57,
+    "uncertain": 0.49,
+    "tuned_on_this_run": false
+  },
+  "environment": {
+    "python": "3.11.18",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "cpu_count": 32,
+    "packages": {
+      "torch": "2.6.0+cpu",
+      "torchvision": "0.21.0+cpu",
+      "timm": "1.0.22",
+      "ultralytics": "8.3.221",
+      "faiss-cpu": "1.15.1",
+      "Pillow": "13.0.0",
+      "numpy": "2.4.6"
+    },
+    "threads": {
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    }
+  },
+  "code_sha256": {
+    "scripts/eval_recognition.py": "65593e2af7afda30a809352517b79c2c1e8c8c07e9cd762a264b77ca99794b8c",
+    "app/services/ai.py": "8ce3522feacc76f9d53bec97033b0f9e95ddda5ac54a9068e133163829f87ac1",
+    "app/services/detector.py": "2703d7d893c66136504e1f24b5601f249ad01ed22cf2a0c8e099a10f6ae13953",
+    "app/services/model_loader.py": "e64ccd4a4537cbfe63e461837be5d177114474b5300eeb0cea79185b63a559d0",
+    "app/services/reference_snapshot.py": "c251928e3d0d37af630bff6a1a9519fa2ee8a678dbe964fe0fe23ca3a1686f56"
+  },
+  "latency": {
+    "first_query_seconds": 8.232143,
+    "subsequent_queries_n": 61,
+    "subsequent_p50_seconds": 6.789068,
+    "subsequent_p95_seconds": 7.634802,
+    "scope": "Sequential internal recognition calls; includes reference checks, excludes HTTP; not capacity"
+  },
+  "failed_samples": [
+    "cat-0068-2",
+    "cat-0243-1",
+    "cat-0318-2",
+    "cat-0181-1",
+    "cat-0078-1",
+    "cat-0078-2",
+    "cat-0181-0",
+    "cat-0068-0",
+    "cat-0318-3",
+    "cat-0181-2",
+    "cat-0243-2",
+    "cat-0318-4"
+  ]
+}

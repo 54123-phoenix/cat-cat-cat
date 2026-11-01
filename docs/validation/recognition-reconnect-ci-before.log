@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "/home/runner/work/cat-cat-cat/cat-cat-cat/scripts/verify_reconnect_browser.py", line 283, in main
+    asyncio.run(scenario(output, report))
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/cat-cat-cat/cat-cat-cat/scripts/verify_reconnect_browser.py", line 150, in scenario
+    await expect(page.get_by_text('断线期间的新帖子', exact=True)).to_have_count(0)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 15100, in to_have_count
+    await self._impl_obj.to_have_count(
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/playwright/_impl/_assertions.py", line 465, in to_have_count
+    await self._expect_impl(
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/playwright/_impl/_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/playwright/_impl/_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to have count '0'
+Actual value: 1 
+Call log:
+  - Expect "to_have_count" get_by_text("断线期间的新帖子", exact=True) with timeout 15000ms
+  - waiting for get_by_text("断线期间的新帖子", exact=True)
+    34 × locator resolved to 1 element
+       - unexpected value "1"
+

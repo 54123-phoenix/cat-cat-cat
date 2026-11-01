@@ -1,0 +1,76 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 4cf3161f45b4, baseline_capture_current_schema
+INFO  [alembic.runtime.migration] Running upgrade 4cf3161f45b4 -> f55904ce2b93, boolean_fix_and_schema_improvements
+INFO  [alembic.runtime.migration] Running upgrade f55904ce2b93 -> a1b2c3d4e5f6, add_lat_lon_indexes_on_sightings
+INFO  [alembic.runtime.migration] Running upgrade a1b2c3d4e5f6 -> d0313e2b50e6, add_missing_columns
+INFO  [alembic.runtime.migration] Running upgrade d0313e2b50e6 -> e20261030, Adopt missing tables and normalize known legacy data without guessing timestamps.
+INFO  [alembic.runtime.migration] Running upgrade e20261030 -> f20261030, Persist unique vote reward receipts without guessing historical XP.
+INFO  [alembic.runtime.migration] Running upgrade f20261030 -> g20261030, Attribute new discoveries and recognition audits; legacy owners stay NULL.
+INFO  [alembic.runtime.migration] Running upgrade g20261030 -> h20261030, Persistent database and cat identities; numeric API IDs remain unchanged.
+INFO  [alembic.runtime.migration] Running upgrade h20261030 -> i20261031, Track reference catalog mutations in the same SQLite transaction.
+INFO  [alembic.runtime.migration] Running upgrade i20261031 -> j20261031, Restore unique indexes omitted by the legacy snapshot adoption helper.
+{"job_id":"d308756ec06c409590cba6c8a3050f2f","kind":"rebuild","status":"succeeded","created_at":"2026-11-01T10:37:07.217683+00:00","updated_at":"2026-11-01T10:38:16.283868+00:00","requested_by":null,"requested_generation":36,"crop":true,"publish":true,"target_snapshot_id":null,"input_revision":"d8c43118d429cd2b72cbf5d8bdbc7ebd7d3e71ed9fb14fd0466ec40bdfc5aeb8","input_generation":36,"model_sha256":"32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e","snapshot_id":"5981db24de4e48b1930343a0fa596809","publication_id":"4efe857d2d4044879d41dc5948bc885c","completed_photos":24,"total_photos":24,"code":"published","detail":null,"recovered":false}
+cat-0050-4: confirmed score=0.8684 seconds=8.232
+cat-0350-3: confirmed score=0.8781 seconds=6.732
+cat-0510-2: unknown score=0.3368 seconds=7.062
+cat-0301-1: unknown score=0.3585 seconds=7.635
+cat-0372-4: confirmed score=0.6372 seconds=7.248
+cat-0124-4: confirmed score=0.9221 seconds=6.904
+no-cat-brick: unknown score=0.1786 seconds=6.628
+cat-0372-2: confirmed score=0.7139 seconds=6.458
+cat-0359-4: confirmed score=0.8536 seconds=6.666
+cat-0050-3: confirmed score=0.9035 seconds=6.710
+no-cat-astronaut: unknown score=0.0768 seconds=6.683
+cat-0394-2: confirmed score=0.9629 seconds=6.748
+cat-0068-1: uncertain score=0.5699 seconds=7.375
+no-cat-grass: unknown score=0.1747 seconds=7.205
+cat-0068-2: confirmed score=0.5949 seconds=6.486
+cat-0215-4: confirmed score=0.7784 seconds=7.519
+cat-0215-3: confirmed score=0.9208 seconds=7.316
+cat-0218-2: confirmed score=0.8835 seconds=7.367
+cat-0078-0: uncertain score=0.5110 seconds=6.867
+cat-0301-0: unknown score=0.3898 seconds=6.669
+cat-0243-1: confirmed score=0.5950 seconds=7.520
+cat-0353-4: confirmed score=0.8347 seconds=7.118
+cat-0394-4: confirmed score=0.9609 seconds=6.417
+cat-0318-2: uncertain score=0.5349 seconds=6.420
+cat-0353-2: confirmed score=0.9155 seconds=6.355
+no-cat-hubble_deep_field: unknown score=0.1992 seconds=6.886
+cat-0215-2: confirmed score=0.7770 seconds=7.010
+cat-0301-2: unknown score=0.2812 seconds=7.255
+cat-0181-1: confirmed score=0.5854 seconds=6.925
+cat-0350-2: confirmed score=0.7454 seconds=6.478
+no-cat-camera: unknown score=0.1704 seconds=6.447
+cat-0353-3: confirmed score=0.7832 seconds=6.501
+cat-0078-1: confirmed score=0.5706 seconds=6.432
+cat-0372-3: confirmed score=0.7650 seconds=6.497
+cat-0078-2: confirmed score=0.5924 seconds=6.756
+cat-0218-4: confirmed score=0.9454 seconds=7.638
+cat-0124-3: confirmed score=0.9223 seconds=6.789
+cat-0153-3: confirmed score=0.9576 seconds=6.541
+cat-0124-2: confirmed score=0.9221 seconds=6.652
+cat-0040-4: confirmed score=0.9144 seconds=6.648
+cat-0181-0: confirmed score=0.5713 seconds=6.709
+no-cat-coffee: unknown score=0.1154 seconds=6.574
+no-cat-gravel: unknown score=0.1421 seconds=6.756
+cat-0359-3: confirmed score=0.7824 seconds=6.689
+cat-0510-1: unknown score=0.3921 seconds=7.220
+cat-0153-4: confirmed score=0.9266 seconds=6.845
+cat-0243-0: uncertain score=0.5643 seconds=6.884
+cat-0068-0: confirmed score=0.6363 seconds=7.077
+cat-0318-3: confirmed score=0.5971 seconds=6.470
+cat-0350-4: confirmed score=0.7208 seconds=6.740
+cat-0510-0: unknown score=0.3190 seconds=6.760
+cat-0394-3: confirmed score=0.9582 seconds=6.384
+cat-0040-2: confirmed score=0.8919 seconds=6.824
+no-cat-rocket: unknown score=0.1496 seconds=6.575
+cat-0181-2: confirmed score=0.6227 seconds=7.336
+cat-0243-2: confirmed score=0.5944 seconds=7.420
+cat-0153-2: confirmed score=0.9445 seconds=7.377
+cat-0040-3: confirmed score=0.8978 seconds=7.916
+cat-0359-2: confirmed score=0.8863 seconds=7.430
+cat-0218-3: confirmed score=0.9599 seconds=7.514
+cat-0050-2: confirmed score=0.9529 seconds=7.661
+cat-0318-4: unknown score=0.4518 seconds=7.331
+{"status": "completed", "summary": {"total": 62, "groups": {"known": {"n": 36, "statuses": {"confirmed": 34, "uncertain": 1, "unknown": 1}, "top1": 33, "top3": 36, "top1_rate": 0.9166666666666666, "top3_rate": 1.0, "confirmed_correct": 33, "confirmed_wrong": 1, "false_rejection_rate": 0.027777777777777776, "not_correctly_confirmed_rate": 0.08333333333333333}, "unknown_cat": {"n": 18, "statuses": {"unknown": 6, "uncertain": 3, "confirmed": 9}, "false_accepts": 9, "false_accept_rate": 0.5, "candidate_exposure_rate": 0.16666666666666666}, "no_cat": {"n": 8, "statuses": {"unknown": 8}, "false_accepts": 0, "false_accept_rate": 0.0, "candidate_exposure_rate": 0.0}}, "confirmed": 43, "confirmed_correct": 33, "confirmed_precision": 0.7674418604651163, "unavailable": 0}, "errors": []}
