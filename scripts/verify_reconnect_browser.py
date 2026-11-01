@@ -82,6 +82,22 @@ async def scenario(output, report):
                     await context.tracing.start(screenshots=True, snapshots=True, sources=True)
                     await context.add_init_script('''
 window.__streams = {created: 0, opened: 0, errors: 0, closed: 0};
+window.__postReads = {pending: 0, completedAfterOpen: 0};
+const nativeFetch = window.fetch.bind(window);
+window.fetch = (...args) => {
+  const [input, init] = args;
+  const url = new URL(typeof input === 'string' ? input : input.url, window.location.href);
+  const method = (init?.method || input?.method || 'GET').toUpperCase();
+  const tracked = url.pathname === '/api/posts' && method === 'GET';
+  const openedAtStart = window.__streams.opened;
+  if (tracked) window.__postReads.pending++;
+  const result = nativeFetch(...args);
+  if (tracked) result.then(response => response.clone().arrayBuffer()).then(() => {
+    if (openedAtStart > 0) window.__postReads.completedAfterOpen++;
+    window.__postReads.pending--;
+  }, () => { window.__postReads.pending--; });
+  return result;
+};
 const NativeEventSource = window.EventSource;
 window.EventSource = class extends NativeEventSource {
   constructor(...args) {
@@ -143,6 +159,11 @@ localStorage.setItem('cat-capsule-seen', new Date().toISOString().slice(0, 10));
                         await page.evaluate('(user) => { localStorage.setItem("token", user.token); localStorage.setItem("user", JSON.stringify(user.user)); }', user)
                         await page.goto(base + '/community')
                         await page.wait_for_function('window.__streams.opened > 0')
+                        # First SSE open triggers a real posts refetch. Let that
+                        # baseline read finish before creating the missed event;
+                        # otherwise it can legitimately include the new post.
+                        await page.wait_for_function('window.__postReads.completedAfterOpen > 0 && window.__postReads.pending === 0')
+                        report['initial_post_reads'] = await page.evaluate('window.__postReads')
                         await expect(page.get_by_text('还没有帖子', exact=True)).to_be_visible()
                         opens = await outage()
                         first_post = await request('post', '/api/posts', headers=author, form={'content': '断线期间的新帖子'})
