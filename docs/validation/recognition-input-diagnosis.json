@@ -1,0 +1,642 @@
+{
+  "scope": "Post-evaluation input diagnosis; no independent quality claim",
+  "manifest_sha256": "aef4e5bca9bffc9cafd5723ad305055b55ae1eb197aefd0e907809967ce9212c",
+  "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+  "pipeline": {
+    "preprocessing": "rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1",
+    "crop": "yolov8m-cat15-conf0.3-margin0.1-or-original-v1",
+    "detector_sha256": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+  },
+  "samples": [
+    {
+      "sample_id": "study-cat-0102-0",
+      "sha256": "4835ec7145041d6fa6256b25686a17e7f1b633ed1f8b548b19a1a7c9afa44d9f",
+      "split": "query",
+      "identity": "catindividuals-v1:0102",
+      "original_size": [
+        4000,
+        3000
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        3107,
+        2931
+      ],
+      "center_crop_retained_area": 0.7232472324723247,
+      "sheet": "000.jpg",
+      "sheet_sha256": "d2ea4132c2c5c1997c564337b1993fbeae763a55cd31ba522ac7fdb4d9794361"
+    },
+    {
+      "sample_id": "study-cat-0102-1",
+      "sha256": "51df086562947f90b36741797918de5c6cee8c80aba81098d81d13af4644b0f7",
+      "split": "query",
+      "identity": "catindividuals-v1:0102",
+      "original_size": [
+        4000,
+        3000
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2498,
+        2984
+      ],
+      "center_crop_retained_area": 0.6451430408228865,
+      "sheet": "001.jpg",
+      "sheet_sha256": "a9ce362857dbba9ca510d8b0d811340a564c75ff66717138c50bce26738a4b34"
+    },
+    {
+      "sample_id": "study-cat-0102-2",
+      "sha256": "7692d8dce7e6bfde454624d8a4abf7327b3e184e27d9019fd1a0774a273d9e6e",
+      "split": "query",
+      "identity": "catindividuals-v1:0102",
+      "original_size": [
+        4000,
+        3000
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2687,
+        2891
+      ],
+      "center_crop_retained_area": 0.7127272727272728,
+      "sheet": "002.jpg",
+      "sheet_sha256": "d60c10d041265cbb708d3da80aac5ca327e1611a40b79cc6ed9a42087c956090"
+    },
+    {
+      "sample_id": "study-cat-0247-0",
+      "sha256": "728ba156c438bd3bc2578200e0fe8fdb650e5b57cbd0400f808c0f5b0ff666e9",
+      "split": "reference",
+      "identity": "catindividuals-v1:0247",
+      "original_size": [
+        4608,
+        3456
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        4069,
+        2661
+      ],
+      "center_crop_retained_area": 0.5012787723785166,
+      "sheet": "003.jpg",
+      "sheet_sha256": "43ace9421595e2d8e9228123d5799652bb6f9ceeefbb968cf555ef61313065c7"
+    },
+    {
+      "sample_id": "study-cat-0247-1",
+      "sha256": "60b3dc37220dc7e8b1ad0b382b413113efa731be9e7556ff72bac474eb17d00d",
+      "split": "reference",
+      "identity": "catindividuals-v1:0247",
+      "original_size": [
+        4608,
+        3456
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        3124,
+        2069
+      ],
+      "center_crop_retained_area": 0.5077720207253886,
+      "sheet": "004.jpg",
+      "sheet_sha256": "78cb1807005f80e6fba851ce317fd9149c3539760689e6a7229ec5b2344d7b2c"
+    },
+    {
+      "sample_id": "study-cat-0247-2",
+      "sha256": "ba7f7e93c3551f4df102c1a515df1d053f66cacbf08cd4767d89c40d709b9cff",
+      "split": "query",
+      "identity": "catindividuals-v1:0247",
+      "original_size": [
+        4608,
+        3456
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        4242,
+        2583
+      ],
+      "center_crop_retained_area": 0.4666666666666667,
+      "sheet": "005.jpg",
+      "sheet_sha256": "64f89fb63c6f87d4ddb64afe19708f7e93831c1694ee7dadd9ba79ada4aa0884"
+    },
+    {
+      "sample_id": "study-cat-0247-3",
+      "sha256": "8a5ebde5d0075cbc06da00073f407d9ce20ccdf4eb3ffdc9de52704aa2f530d8",
+      "split": "query",
+      "identity": "catindividuals-v1:0247",
+      "original_size": [
+        4608,
+        3456
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2172,
+        2742
+      ],
+      "center_crop_retained_area": 0.6068111455108359,
+      "sheet": "006.jpg",
+      "sheet_sha256": "39c33533f06096affb1cf9bff3a7a011cc4a8624ea2c1ce6518b3c2d0bc16654"
+    },
+    {
+      "sample_id": "study-cat-0247-4",
+      "sha256": "7363c98080aacca917e7ff8fa33557bcd056377e9d4018412bf829ac519f2017",
+      "split": "query",
+      "identity": "catindividuals-v1:0247",
+      "original_size": [
+        4608,
+        3456
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        4608,
+        2048
+      ],
+      "center_crop_retained_area": 0.3402777777777778,
+      "sheet": "007.jpg",
+      "sheet_sha256": "6e30730c13a11c5419dcefd16fc7b6d5fc7ff8b39e399b64606f63bcdf90b78e"
+    },
+    {
+      "sample_id": "study-cat-0302-0",
+      "sha256": "bc91e280a8e1b4ccb4158fb72fd21eba81760d5aec400de9d58ab7175d477ca5",
+      "split": "reference",
+      "identity": "catindividuals-v1:0302",
+      "original_size": [
+        2048,
+        2048
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2048,
+        1521
+      ],
+      "center_crop_retained_area": 0.5697674418604651,
+      "sheet": "008.jpg",
+      "sheet_sha256": "f7cafea4c9916ed06c3efa5a9ba594f7dec247b0005153bff185804e4824611c"
+    },
+    {
+      "sample_id": "study-cat-0302-1",
+      "sha256": "c3c9315acd36a5581a23bffb22c90b350193710abcea6f01f4eb90a44e017531",
+      "split": "reference",
+      "identity": "catindividuals-v1:0302",
+      "original_size": [
+        2048,
+        2048
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1953,
+        1824
+      ],
+      "center_crop_retained_area": 0.7153284671532847,
+      "sheet": "009.jpg",
+      "sheet_sha256": "d33cd51a8d04e9436b62471a5d61b128894e47e4af500126bc78e6715505a64c"
+    },
+    {
+      "sample_id": "study-cat-0302-2",
+      "sha256": "f44d6fe793385fc9288b6ddcd61f21ccef58abd5bd776b8ec0713270eff07ba3",
+      "split": "query",
+      "identity": "catindividuals-v1:0302",
+      "original_size": [
+        2048,
+        2048
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1400,
+        839
+      ],
+      "center_crop_retained_area": 0.45901639344262296,
+      "sheet": "010.jpg",
+      "sheet_sha256": "3ed88bd89b0966fef13c5c4ac17c44a7bd535e64ce3ad7c7a2cba1bd47363ec4"
+    },
+    {
+      "sample_id": "study-cat-0302-3",
+      "sha256": "ca02310cb7a0a9f0c4b7ec305ce86cbfdbdca4051b0c6342aa82c1654e424cb1",
+      "split": "query",
+      "identity": "catindividuals-v1:0302",
+      "original_size": [
+        2048,
+        2048
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1984,
+        1904
+      ],
+      "center_crop_retained_area": 0.7368421052631579,
+      "sheet": "011.jpg",
+      "sheet_sha256": "73777ca0b6900931e4f91f9aba7f5c82ac60a954ff0ee21c861ac1b2e2b8623c"
+    },
+    {
+      "sample_id": "study-cat-0302-4",
+      "sha256": "d24f233311d4377aae79001447fdb56009cbf05cd149fb74337051dcb8fdd019",
+      "split": "query",
+      "identity": "catindividuals-v1:0302",
+      "original_size": [
+        1536,
+        2048
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1004,
+        1926
+      ],
+      "center_crop_retained_area": 0.39918533604887985,
+      "sheet": "012.jpg",
+      "sheet_sha256": "3d332e897ecca3ac6421345d0f9e4cd4909bd0b783f51322e8639fb1946a43f8"
+    },
+    {
+      "sample_id": "study-cat-0395-0",
+      "sha256": "7c91f047db72b2856438446dd2239563b31d14a5be4bb55a67197a5830efef13",
+      "split": "reference",
+      "identity": "catindividuals-v1:0395",
+      "original_size": [
+        1108,
+        1478
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        740,
+        889
+      ],
+      "center_crop_retained_area": 0.6384364820846905,
+      "sheet": "013.jpg",
+      "sheet_sha256": "8ea4c8d7dd044ddcd516db91194ef2268acfeb716ff3610afe4ec3368ad5971c"
+    },
+    {
+      "sample_id": "study-cat-0395-1",
+      "sha256": "a0d739fcf9f154a736e017ed09d0c79edf03eb91d555f0e586da96103d788fa6",
+      "split": "reference",
+      "identity": "catindividuals-v1:0395",
+      "original_size": [
+        1108,
+        1478
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        681,
+        887
+      ],
+      "center_crop_retained_area": 0.5885885885885885,
+      "sheet": "014.jpg",
+      "sheet_sha256": "d17293abfb990291bcdfa31d2fd28520192aff51a1f847dfb5e4d746ec19c7bc"
+    },
+    {
+      "sample_id": "study-cat-0395-2",
+      "sha256": "57b30883a1ef9a42ced041a0eaa664cddb9101fbaab589855ed23d78831b6365",
+      "split": "query",
+      "identity": "catindividuals-v1:0395",
+      "original_size": [
+        1108,
+        1478
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        971,
+        1041
+      ],
+      "center_crop_retained_area": 0.7153284671532847,
+      "sheet": "015.jpg",
+      "sheet_sha256": "2bad09926c345df807b359dfbe9f9ca8a85c689f60d542954a04527c80b8e665"
+    },
+    {
+      "sample_id": "study-cat-0395-3",
+      "sha256": "5fa8bd6019f92332da360400f7ae7ce1bd9df95066934e4b350e2e7ddf047dc5",
+      "split": "query",
+      "identity": "catindividuals-v1:0395",
+      "original_size": [
+        1108,
+        1478
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        782,
+        778
+      ],
+      "center_crop_retained_area": 0.7656366826886397,
+      "sheet": "016.jpg",
+      "sheet_sha256": "9fce775201035a4acf2b58cee9ceffea7f83f5629b577d14338b24b6a8f92819"
+    },
+    {
+      "sample_id": "study-cat-0395-4",
+      "sha256": "ce2372bc33e53cd35b0f3182538d796c4ab606bcb94d66c935729b8d7bed0f84",
+      "split": "query",
+      "identity": "catindividuals-v1:0395",
+      "original_size": [
+        1108,
+        1478
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        926,
+        892
+      ],
+      "center_crop_retained_area": 0.7396226415094339,
+      "sheet": "017.jpg",
+      "sheet_sha256": "81f780b3198e27068226c5d23cb6679822b657ce9cebd48fdcafebe5ec2165df"
+    },
+    {
+      "sample_id": "study-cat-0404-0",
+      "sha256": "6a8af4fb49a5e8ff65ee1e09eadc1e45c80f01cc3d7dd993910defb8a331be8d",
+      "split": "reference",
+      "identity": "catindividuals-v1:0404",
+      "original_size": [
+        3024,
+        4032
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1393,
+        2186
+      ],
+      "center_crop_retained_area": 0.48877805486284287,
+      "sheet": "018.jpg",
+      "sheet_sha256": "42e83b6497c2af5beefa42502282c22a0390fcbd2c9a61d3506785ce24a18abc"
+    },
+    {
+      "sample_id": "study-cat-0404-1",
+      "sha256": "f8d706e0846cb9770349554dd03f0b1bae419e8910acf641b0b9da9c16fa35e5",
+      "split": "reference",
+      "identity": "catindividuals-v1:0404",
+      "original_size": [
+        3024,
+        4032
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1467,
+        3484
+      ],
+      "center_crop_retained_area": 0.3228995057660626,
+      "sheet": "019.jpg",
+      "sheet_sha256": "15cc49a487767f0bcea711c598bb882aba3c2b77f3fc504ca57803cb713f478d"
+    },
+    {
+      "sample_id": "study-cat-0404-2",
+      "sha256": "658b0ad321a16382cab01275be8749234dc9050a6e3a850dd7031f5a30964690",
+      "split": "query",
+      "identity": "catindividuals-v1:0404",
+      "original_size": [
+        3024,
+        4032
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2136,
+        4032
+      ],
+      "center_crop_retained_area": 0.4057971014492754,
+      "sheet": "020.jpg",
+      "sheet_sha256": "3fc2d2bdc6095e1072dc1791ba53031048f94a057d5f47850a9ec0f8ba4c4778"
+    },
+    {
+      "sample_id": "study-cat-0404-3",
+      "sha256": "bc753f0d565eea921b4aeb2de4b62a44f6964edd7c75d1a3d60d1e9d39bc51d2",
+      "split": "query",
+      "identity": "catindividuals-v1:0404",
+      "original_size": [
+        3024,
+        4032
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1692,
+        2149
+      ],
+      "center_crop_retained_area": 0.6030769230769231,
+      "sheet": "021.jpg",
+      "sheet_sha256": "43100d1fecfa662995ca93c3b83f475ee334c31c98b5b2882582c891aecf44f1"
+    },
+    {
+      "sample_id": "study-cat-0404-4",
+      "sha256": "cc25b9a666bd5f1694e6bfb4e6136bb7c89eb98c731873422273b48875a2901f",
+      "split": "query",
+      "identity": "catindividuals-v1:0404",
+      "original_size": [
+        3024,
+        4032
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2401,
+        3694
+      ],
+      "center_crop_retained_area": 0.49872773536895676,
+      "sheet": "022.jpg",
+      "sheet_sha256": "d944c7d193837a91b3b60e2160745e8ac03f01e4b129950c618f15e27993fe1d"
+    },
+    {
+      "sample_id": "study-cat-0418-0",
+      "sha256": "38bf4b0d8d805669f58c0b157274d041da05e046e13eff1801650a582a8a1225",
+      "split": "reference",
+      "identity": "catindividuals-v1:0418",
+      "original_size": [
+        4160,
+        2340
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        3638,
+        2340
+      ],
+      "center_crop_retained_area": 0.49246231155778897,
+      "sheet": "023.jpg",
+      "sheet_sha256": "7a6a54b3c56a3eeeca70a2d5b81c2f6726e2b500d4bbd2cca7b0d9c558d65a64"
+    },
+    {
+      "sample_id": "study-cat-0418-1",
+      "sha256": "dc0541a503b0bad08c0457e8d05941af2ca2505e3afcc914bcd72f7fadc172c8",
+      "split": "reference",
+      "identity": "catindividuals-v1:0418",
+      "original_size": [
+        2340,
+        4160
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1296,
+        2917
+      ],
+      "center_crop_retained_area": 0.3402777777777778,
+      "sheet": "024.jpg",
+      "sheet_sha256": "9302d53c9900e00be81e898b2262baef746d5020cc3ad881ab31f243cc1e4108"
+    },
+    {
+      "sample_id": "study-cat-0418-2",
+      "sha256": "7d9b789c8060bbf075e3b83cdae0c6b3f87a423f938891b4244205e63b08db36",
+      "split": "query",
+      "identity": "catindividuals-v1:0418",
+      "original_size": [
+        4160,
+        3120
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2470,
+        2284
+      ],
+      "center_crop_retained_area": 0.7101449275362319,
+      "sheet": "025.jpg",
+      "sheet_sha256": "a14bea0945582719fc7d06d278ebc182fbb44c378e813924a3b2c440f1c183dc"
+    },
+    {
+      "sample_id": "study-cat-0418-3",
+      "sha256": "acca2bec8422eba12b176d961cc558ad2422943136f8001fe4c6cf468ecbe0d3",
+      "split": "query",
+      "identity": "catindividuals-v1:0418",
+      "original_size": [
+        4160,
+        2340
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        3898,
+        2340
+      ],
+      "center_crop_retained_area": 0.460093896713615,
+      "sheet": "026.jpg",
+      "sheet_sha256": "9057f6af2a2339f4c6ee46321c50b6064cbeb3e8802880e2a5cccb8ffc3b494e"
+    },
+    {
+      "sample_id": "study-cat-0418-4",
+      "sha256": "9fe890aa6c833892aa9c3d7bd565983f35757f2ee5399841ad21b2ce8ae11caa",
+      "split": "query",
+      "identity": "catindividuals-v1:0418",
+      "original_size": [
+        4160,
+        2340
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        3775,
+        2340
+      ],
+      "center_crop_retained_area": 0.47572815533980584,
+      "sheet": "027.jpg",
+      "sheet_sha256": "e869ecc1e3f49e0cdebcf4897f90085229315526e2c98eed95147e098ded5260"
+    },
+    {
+      "sample_id": "study-cat-0502-0",
+      "sha256": "c9d53347a4a2d87d8f158957a066a023f14026d0f2de10325ba5f854660a56dc",
+      "split": "reference",
+      "identity": "catindividuals-v1:0502",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        1931,
+        2307
+      ],
+      "center_crop_retained_area": 0.6451430408228865,
+      "sheet": "028.jpg",
+      "sheet_sha256": "66c6ca3d0f1a69cfffece1e585a73a4f68bc9c283261a9cbd649b30c9701c747"
+    },
+    {
+      "sample_id": "study-cat-0502-1",
+      "sha256": "a311851c3e15e23c00adb8f679de86f00da3f16891927ede4a75f7cd60876579",
+      "split": "reference",
+      "identity": "catindividuals-v1:0502",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2611,
+        2326
+      ],
+      "center_crop_retained_area": 0.6829268292682927,
+      "sheet": "029.jpg",
+      "sheet_sha256": "c36b77e01620234fe89789a3c979cd4d67d3079370525718308b2fde8ca779ae"
+    },
+    {
+      "sample_id": "study-cat-0502-2",
+      "sha256": "e46568aff9ee6bfdd4c1535a08f2bb17daecd87496d6ab04a2e207ce3816c41c",
+      "split": "query",
+      "identity": "catindividuals-v1:0502",
+      "original_size": [
+        3968,
+        2976
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2377,
+        2976
+      ],
+      "center_crop_retained_area": 0.6125,
+      "sheet": "030.jpg",
+      "sheet_sha256": "3b981fc7bdc468cd9dde231c0f4291450a9e9d11cf5cd0994071120e46a29bbe"
+    },
+    {
+      "sample_id": "study-cat-0502-3",
+      "sha256": "2e9d95e9aa841966a17bd11d2511c6895068a25cb7011ea796008a3e37922f0a",
+      "split": "query",
+      "identity": "catindividuals-v1:0502",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2153,
+        3747
+      ],
+      "center_crop_retained_area": 0.4404494382022472,
+      "sheet": "031.jpg",
+      "sheet_sha256": "bc75e6c563c9207c431153b54035b3a115050fe417ccc4fee483941ffc288f98"
+    },
+    {
+      "sample_id": "study-cat-0502-4",
+      "sha256": "f319adc1136abf205350dd5ecb54b5f217172815befd4480b306d0ef065ac78b",
+      "split": "query",
+      "identity": "catindividuals-v1:0502",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2448,
+        2494
+      ],
+      "center_crop_retained_area": 0.7538461538461538,
+      "sheet": "032.jpg",
+      "sheet_sha256": "9dd7bae9cbbb426a6ce55e60df847c783f89208fa532446e96a6d7a28d5881e6"
+    },
+    {
+      "sample_id": "study-cat-0515-0",
+      "sha256": "de125cba3cf6973c533006f1b427e4c791c5123a4c36efb489ab0e31faed93b7",
+      "split": "reference",
+      "identity": "catindividuals-v1:0515",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2962,
+        3124
+      ],
+      "center_crop_retained_area": 0.725925925925926,
+      "sheet": "033.jpg",
+      "sheet_sha256": "5c5d451ca9d8014668955b4d78cd3c5850a6960329d68be20390920522eb4e82"
+    },
+    {
+      "sample_id": "study-cat-0515-1",
+      "sha256": "123d545bcf087dbc899b1dbbc2877e12d34a420f51b8c695db64ba470b85935f",
+      "split": "reference",
+      "identity": "catindividuals-v1:0515",
+      "original_size": [
+        2976,
+        3968
+      ],
+      "exif_orientation": null,
+      "detector_crop_size": [
+        2681,
+        2920
+      ],
+      "center_crop_retained_area": 0.7050359712230215,
+      "sheet": "034.jpg",
+      "sheet_sha256": "29c121f588ac95f69ec5f490a8810fb1143b493b3605e5f5bc9b7624e6028565"
+    }
+  ]
+}
