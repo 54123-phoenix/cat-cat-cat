@@ -393,7 +393,7 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 |---|---|---|---|
 | VER-001 真实识别质量 | P1 / 待验证 | 已有 YOLO→DINOv3→投影→FAISS 实现及 91 只猫、1,421 条 256 维参考向量；本次没有运行真实模型和独立样本。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
 | VER-002 微信真机全流程 | P1 / 待验证 | 只完成构建与隔离 JS 模拟；尚未配置正式平台条件并执行真机测试。 | 修复 ISS-007/008/009/010/032 后，在明确 AppID、域名、基础库和设备版本下，关闭 demoMode 验证登录、列表、拍照、识别、保存、发帖、错误重试，并保存记录。 |
-| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复通过；Linux CI 的 API/nginx 镜像、四 worker、真实任务、重启及新卷恢复七组通过。Windows Desktop 仍因 socket/目录可见性故障不可用。 | [C](validation/OPTIMIZATION_C.md) 与 [Docker 证据](validation/DOCKER_ACCEPTANCE_20261101.md)。继续验证完整 inference 镜像、模型与已发布向量 store 的整体恢复、目标宿主机挂载及容量。 |
+| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复通过；Linux CI 和更新后的本机 Desktop 4.97.0 均通过 API/nginx 镜像、四 worker、真实任务、重启及新卷恢复七组。本机引擎现已恢复。 | [C](validation/OPTIMIZATION_C.md) 与 [Docker 证据](validation/DOCKER_ACCEPTANCE_20261101.md)。继续验证完整 inference 镜像、模型与已发布向量 store 的整体恢复、实际业务挂载及容量。 |
 | VER-004 Redis 与多 worker | P1 / 后端及容器集成通过，浏览器重连待验收 | Redis 7.4.2 + 四 API 十项通过；Linux Gunicorn 四 worker 加 Redis/nginx 的真实 HTTP 写入与 SSE 推送通过。远端复验暴露的 SQLite 启动锁竞争另记 ISS-038。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md) 与 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。继续验收浏览器重连后的当前状态同步；Pub/Sub 不提供离线重放，Web onopen 当前不会自动刷新所有页面数据。 |
 | VER-005 地图和外部 LLM | P2 / 待验证 | 本地缺地图 Key；猫情报数据库/规则回退已在浏览器跑通，但真实地图与外部 LLM 工具循环未验收。 | 使用有效配置验证地图加载、坐标转换和定位；验证真实 LLM 工具调用、超时、错误响应及回退。分别保存结果，不能用回退成功替代 LLM 成功。 |
 | VER-006 性能与路线产品边界 | P2 / 待验证、待决策 | 源码存在图库全量读取后排序分页、排行榜逐用户统计、通知逐收件人提交；未压测，不能声称已测得容量不足。路线按热度组织，打卡校验站名，不证明实际到达。 | 先明确目标数据量、并发、延迟和是否需要可信到访/路线优化；对图库、排行榜、通知压测并记录查询数/延迟/内存，按结果优化。轻量路线玩法可保留，但文案不得暗示已验证到访或路网最优。 |

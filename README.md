@@ -28,8 +28,8 @@
 | Redis 多进程 | Redis 7.4.2 + 4 个独立 API 进程，10 项通过 | [C 验收](docs/validation/OPTIMIZATION_C.md)；本机跨进程广播、缓存、撤销、断线清理与恢复 |
 | SQLite 与附件恢复 | 4 组通过 | 旧库升级、重启持久性、备份/预演/恢复、HTTP 与图片哈希/解码核对 |
 | 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
-| Docker API 阶段 | Linux CI 七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
-| 真实模型 / 外部服务 | 待验收 | 完整 inference 镜像、识别质量、微信、地图、外部 LLM 和资源许可仍需各自证据；本机 Docker Desktop 仍受阻 |
+| Docker API 阶段 | Linux CI 与本机 Desktop 均七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
+| 真实模型 / 外部服务 | 待验收 | 完整 inference 镜像、识别质量、微信、地图、外部 LLM 和资源许可仍需各自证据 |
 
 修复测试环境问题及并发启动 WAL 锁竞争后，[远端 CI / ec8ad5a](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288904972) 的六个任务全部通过：后端 243 项（远端 69 条警告）、Web、小程序、浏览器核心 6 组及参考库 8 组、真实 Redis 10 项、Docker API 阶段 7 组。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
@@ -157,7 +157,7 @@ docker compose up -d --build
 
 本地开发默认数据库是 `cat-backend/cat_community.db`，与 Compose 路径不同。数据库、附件、模型和参考库不打进镜像；模型和参考照片需要另行准备。默认构建 inference 阶段，`docker build --target api cat-backend` 可构建不含 Torch 的 API 阶段。
 
-Linux CI 已用临时命名卷通过 `api` 阶段镜像构建、四 worker、nginx/Redis、容器重启和新卷恢复。本机 Docker Desktop 仍因 socket/目录可见性错误无法启动。上述默认构建使用完整 `inference` 阶段，**该阶段与真实模型尚未验收**。详见 [容器范围与结果](docs/validation/DOCKER_ACCEPTANCE_20261101.md) 和 [DEPLOY.md](DEPLOY.md)。
+Linux CI 与本机 Docker Desktop 4.97.0 均已用临时命名卷通过 `api` 阶段镜像构建、四 worker、nginx/Redis、容器重启和新卷恢复。本机曾遇到的启动阻塞在用户重新登录、更新后解除；原始根因未能独立确认。上述默认构建使用完整 `inference` 阶段，**该阶段与真实模型尚未验收**。详见 [容器范围与结果](docs/validation/DOCKER_ACCEPTANCE_20261101.md) 和 [DEPLOY.md](DEPLOY.md)。
 
 ## 开发检查与复验
 
@@ -248,7 +248,7 @@ Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据
 
 ## 后续工作与限制
 
-1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复；修复本机 Docker Desktop，验证目标宿主机挂载。API 阶段容器演练已通过，客户端断线重连后的自动状态同步仍待验收。
+1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复，验证实际部署使用的业务挂载。API 阶段在 CI 与本机命名卷上的容器演练已通过，客户端断线重连后的自动状态同步仍待验收。
 2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
 3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
 4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。

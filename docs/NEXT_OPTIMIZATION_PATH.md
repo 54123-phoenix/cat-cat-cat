@@ -2,7 +2,7 @@
 
 设计日期：2026-10-30，进度更新：2026-10-31。依据：[已知问题台账](KNOWN_ISSUES.md)、[最近修复证据](validation/REPAIR_PROGRESS.md)和当前源码。用户已批准按顺序执行。执行状态见 [A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)，以下阶段出口仍作为验收标准。
 
-2026-11-01 补充：测试密码隔离与浏览器等待修复后，远端五个原有 CI 任务全部通过；新增的 Linux Docker API 阶段七组也已通过。再次并发启动暴露的 WAL 锁竞争记为 ISS-038，已修复并通过本地真实持锁回归和 Redis 四进程验证，后续远端结果见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。本机 Desktop 仍受阻。下一包优先验收浏览器断线重连自动同步，再按准备条件推进完整 inference 镜像、模型/store 恢复与真实识别质量；[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
+2026-11-01 补充：测试密码隔离、浏览器等待及 WAL 启动锁竞争（ISS-038）修复后，远端六个 CI 任务全部通过，见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。Linux CI 与用户重新登录、更新后的本机 Desktop 4.97.0 均通过七组 API 阶段容器验收；临时项目及卷已清理，实际业务卷保留。下一包优先验收浏览器断线重连自动同步，再按准备条件推进完整 inference 镜像、模型/store 恢复、实际业务挂载与真实识别质量。[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
 
 ## 目标与现状
 

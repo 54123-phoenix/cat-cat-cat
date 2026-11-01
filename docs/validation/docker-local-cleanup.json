@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-01",
+  "docker_desktop": "4.97.0 (244584)",
+  "engine": "29.9.2 linux/amd64",
+  "cache_cleanup_reported_reclaimed": "20.16 GB",
+  "removed_unused_images": [
+    "cat-backend:latest",
+    "cat-frontend:latest",
+    "cat-new-backend:latest",
+    "cat-new-frontend:latest"
+  ],
+  "image_storage_before": "58.85 GB",
+  "image_storage_after": "30.17 GB",
+  "preserved": {
+    "container_ids_unchanged": true,
+    "running_container_ids_unchanged": true,
+    "volume_names_unchanged": true,
+    "containers": 7,
+    "running_containers": 4,
+    "volumes": 20
+  },
+  "test_projects_removed": true,
+  "test_images_removed": true,
+  "further_cleanup": {
+    "status": "not_executed",
+    "action": "remaining global build cache and old Windows socket files",
+    "reason": "automatic approval rejected the batch command: blocked by policy; no more specific reason supplied"
+  },
+  "acceptance": "7 checks passed with temporary named volumes; no inference image or model quality claim"
+}

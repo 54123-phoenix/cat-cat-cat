@@ -2,7 +2,15 @@
 
 日期：2026-11-01。前置 CI 的两条失败已修复，见 [CI 复验](CI_REPAIR_20261101.md)。
 
-## Windows Desktop 阻塞
+## Windows Desktop 恢复后的本机复验
+
+2026-11-01，用户重新登录并更新后，Docker Desktop **4.97.0 (244584)**、Engine **29.9.2 linux/amd64** 已可连接。本机执行同一验收脚本，**七组全部通过**；Gunicorn 四 worker、任务消费、nginx/Redis SSE、重启持久性及新命名卷恢复均实测通过。恢复前后迁移版本、database_id、generation、记录计数、图片 SHA256 和任务日志一致。见 [本机结果](docker-api-local-final.json)。不能据两项操作后的恢复，独立断定原故障由登录状态或某个版本缺陷导致。
+
+按用户要求先清理旧内容：Docker 构建缓存清理报告回收 **20.16 GB**；删除四个没有容器引用的旧猫项目镜像（cat-backend、cat-frontend、cat-new-backend、cat-new-frontend）。镜像总占用从 58.85 GB 降至 30.17 GB；这些统计不可直接相加视为宿主机物理空间回收。原有 7 个容器（4 个运行）及 20 个卷的身份集合保持不变。验收创建的两个项目及其容器、卷、网络已移除，另删除了本轮两个测试镜像。见 [清理与保留摘要](docker-local-cleanup.json)。
+
+剩余全局构建缓存及 Windows 旧 socket 文件的进一步批量清理被自动审批拒绝，工具仅返回 `blocked by policy`，没有更具体原因；该批次未执行。旧目录保留，正在使用的运行目录没有修改。本次容器构建会产生新的可复用缓存；原始命令和清理前后清单保存在忽略目录 `artifacts/docker-local-retry/`。
+
+## Windows Desktop 阻塞历史（更新前）
 
 本机 Docker Desktop 4.92.0 仍无法启动。对照 [上游问题 15064](https://github.com/docker/for-win/issues/15064)，确认进程停止、运行目录为普通目录且只含残留 socket 后，将 `%LOCALAPPDATA%/Docker/run` 完整保留为 `run.cat-acceptance-preserved-20261101-161317`，创建空替代目录。经 CLI 和直接启动两种方式均失败，最新错误为：
 
