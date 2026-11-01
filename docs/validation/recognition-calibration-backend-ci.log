@@ -1,0 +1,28 @@
+Excerpt from check-backend, run 41301858484, commit 48eb952b2d58375e09aac87b86e6284da0cf33e2.
+https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41301858484
+
+2026-11-01T11:27:47.2561862Z =============================== warnings summary ===============================
+2026-11-01T11:27:47.2563188Z ../../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pydantic/_internal/_config.py:271: 16 warnings
+2026-11-01T11:27:47.2566781Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pydantic/_internal/_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+2026-11-01T11:27:47.2569394Z     warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+2026-11-01T11:27:47.2569719Z 
+2026-11-01T11:27:47.2570139Z ../../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/passlib/utils/__init__.py:854
+2026-11-01T11:27:47.2571384Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+2026-11-01T11:27:47.2572337Z     from crypt import crypt as _crypt
+2026-11-01T11:27:47.2572563Z 
+2026-11-01T11:27:47.2572683Z tests/test_api.py: 1 warning
+2026-11-01T11:27:47.2572986Z tests/test_app_fixture.py: 2 warnings
+2026-11-01T11:27:47.2573318Z tests/test_cat_intel_agent.py: 1 warning
+2026-11-01T11:27:47.2573659Z tests/test_extended.py: 1 warning
+2026-11-01T11:27:47.2573999Z tests/test_reference_lifecycle.py: 13 warnings
+2026-11-01T11:27:47.2574380Z tests/test_repair_contracts.py: 8 warnings
+2026-11-01T11:27:47.2574731Z tests/test_request_logging.py: 2 warnings
+2026-11-01T11:27:47.2575070Z tests/test_security.py: 1 warning
+2026-11-01T11:27:47.2575386Z tests/test_upload_serving.py: 1 warning
+2026-11-01T11:27:47.2575736Z tests/test_vote_rewards.py: 12 warnings
+2026-11-01T11:27:47.2576067Z tests/test_wechat_auth.py: 10 warnings
+2026-11-01T11:27:47.2577147Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/httpx/_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+2026-11-01T11:27:47.2578229Z     warnings.warn(message, DeprecationWarning)
+2026-11-01T11:27:47.2578764Z 
+2026-11-01T11:27:47.2578992Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2026-11-01T11:27:47.2579429Z 273 passed, 69 warnings in 81.72s (0:01:21)

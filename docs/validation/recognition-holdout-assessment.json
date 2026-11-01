@@ -1,0 +1,172 @@
+{
+  "status": "targets_not_met",
+  "gates": {
+    "known_correct_confirmation": false,
+    "known_wrong_confirmation": true,
+    "unknown_false_accept": true,
+    "no_cat_false_accept": true,
+    "available": true
+  },
+  "policy": {
+    "confirmed": 0.65,
+    "uncertain": 0.49,
+    "minimum_margin": 0.15
+  },
+  "summary": {
+    "total": 116,
+    "groups": {
+      "known": {
+        "n": 36,
+        "statuses": {
+          "confirmed": 28,
+          "uncertain": 8
+        },
+        "top1": 33,
+        "top3": 35,
+        "top1_rate": 0.9166666666666666,
+        "top3_rate": 0.9722222222222222,
+        "confirmed_correct": 28,
+        "confirmed_wrong": 0,
+        "false_rejection_rate": 0.0,
+        "not_correctly_confirmed_rate": 0.2222222222222222
+      },
+      "unknown_cat": {
+        "n": 60,
+        "statuses": {
+          "uncertain": 32,
+          "unknown": 26,
+          "confirmed": 2
+        },
+        "false_accepts": 2,
+        "false_accept_rate": 0.03333333333333333,
+        "candidate_exposure_rate": 0.5333333333333333
+      },
+      "no_cat": {
+        "n": 20,
+        "statuses": {
+          "unknown": 20
+        },
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "candidate_exposure_rate": 0.0
+      }
+    },
+    "confirmed": 30,
+    "confirmed_correct": 28,
+    "confirmed_precision": 0.9333333333333333,
+    "unavailable": 0
+  },
+  "legacy_summary_same_ranks": {
+    "total": 116,
+    "groups": {
+      "known": {
+        "n": 36,
+        "statuses": {
+          "confirmed": 34,
+          "uncertain": 2
+        },
+        "top1": 33,
+        "top3": 35,
+        "top1_rate": 0.9166666666666666,
+        "top3_rate": 0.9722222222222222,
+        "confirmed_correct": 32,
+        "confirmed_wrong": 2,
+        "false_rejection_rate": 0.0,
+        "not_correctly_confirmed_rate": 0.1111111111111111
+      },
+      "unknown_cat": {
+        "n": 60,
+        "statuses": {
+          "uncertain": 15,
+          "confirmed": 19,
+          "unknown": 26
+        },
+        "false_accepts": 19,
+        "false_accept_rate": 0.31666666666666665,
+        "candidate_exposure_rate": 0.25
+      },
+      "no_cat": {
+        "n": 20,
+        "statuses": {
+          "unknown": 20
+        },
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "candidate_exposure_rate": 0.0
+      }
+    },
+    "confirmed": 53,
+    "confirmed_correct": 32,
+    "confirmed_precision": 0.6037735849056604,
+    "unavailable": 0
+  },
+  "selection_sha256": "867330a86576e3926a48b34c5b49843bb015c39af6f929c985e19d0e4889f36f",
+  "holdout_result_sha256": "9324bd984b52e0098b3fe75083899227ad57f634352e727733f1e16441ebd73c",
+  "affected_identities": [
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0418",
+      "samples": [
+        "study-cat-0418-2"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0404",
+      "samples": [
+        "study-cat-0404-2",
+        "study-cat-0404-4"
+      ]
+    },
+    {
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0102",
+      "samples": [
+        "study-cat-0102-0",
+        "study-cat-0102-1"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0302",
+      "samples": [
+        "study-cat-0302-4"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0247",
+      "samples": [
+        "study-cat-0247-4"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0502",
+      "samples": [
+        "study-cat-0502-4",
+        "study-cat-0502-2",
+        "study-cat-0502-3"
+      ]
+    }
+  ],
+  "false_accept_wilson_95_image_intervals": {
+    "unknown_cat": [
+      0.009189319256197877,
+      0.113637742743086
+    ],
+    "no_cat": [
+      0.0,
+      0.16112515805281938
+    ]
+  },
+  "interval_limit": "Descriptive image-level intervals assume independent trials; repeated cats/sessions violate that assumption. No population guarantee.",
+  "release_quality_passed": false,
+  "limitations": [
+    "Model training overlap unknown; provider did not publish its 131-cat training manifest",
+    "Cat identities are source labels, not owner-verified identities",
+    "AFHQ dog photos lack individual identity/session metadata; image-disjoint partitions may still contain correlated subjects",
+    "Dog negatives do not cover toys, screens, multiple cats or production upload distributions",
+    "Changing gallery size, model or image domain requires fresh calibration and validation"
+  ]
+}

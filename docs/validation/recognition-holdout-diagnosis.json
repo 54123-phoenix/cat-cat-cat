@@ -1,0 +1,108 @@
+{
+  "source_result_sha256": "9324bd984b52e0098b3fe75083899227ad57f634352e727733f1e16441ebd73c",
+  "scope": "Post-evaluation diagnosis only; no policy or dataset changes",
+  "counts": {
+    "unknown_false_confirmation": 2,
+    "below_confirmation_threshold": 2,
+    "wrong_top1": 3,
+    "insufficient_margin": 3
+  },
+  "failures": [
+    {
+      "sample_id": "study-cat-0102-0",
+      "identity": "catindividuals-v1:0102",
+      "reason": "unknown_false_confirmation",
+      "top1": "catindividuals-v1:0395",
+      "top1_score": 0.6941490173339844,
+      "margin": 0.19413518905639648
+    },
+    {
+      "sample_id": "study-cat-0302-4",
+      "identity": "catindividuals-v1:0302",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0302",
+      "top1_score": 0.6173959970474243,
+      "margin": 0.2506905198097229,
+      "expected_rank": 1,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0502-4",
+      "identity": "catindividuals-v1:0502",
+      "reason": "wrong_top1",
+      "top1": "catindividuals-v1:0247",
+      "top1_score": 0.5367045998573303,
+      "margin": 0.004756629467010498,
+      "expected_rank": 2,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0404-2",
+      "identity": "catindividuals-v1:0404",
+      "reason": "insufficient_margin",
+      "top1": "catindividuals-v1:0404",
+      "top1_score": 0.7448912262916565,
+      "margin": 0.11437016725540161,
+      "expected_rank": 1,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0102-1",
+      "identity": "catindividuals-v1:0102",
+      "reason": "unknown_false_confirmation",
+      "top1": "catindividuals-v1:0395",
+      "top1_score": 0.7120406627655029,
+      "margin": 0.19613778591156006
+    },
+    {
+      "sample_id": "study-cat-0418-2",
+      "identity": "catindividuals-v1:0418",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0418",
+      "top1_score": 0.5618579387664795,
+      "margin": 0.019675612449645996,
+      "expected_rank": 1,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0247-4",
+      "identity": "catindividuals-v1:0247",
+      "reason": "insufficient_margin",
+      "top1": "catindividuals-v1:0247",
+      "top1_score": 0.6549432277679443,
+      "margin": 0.07949382066726685,
+      "expected_rank": 1,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0502-2",
+      "identity": "catindividuals-v1:0502",
+      "reason": "wrong_top1",
+      "top1": "catindividuals-v1:0515",
+      "top1_score": 0.5839625597000122,
+      "margin": 0.03351891040802002,
+      "expected_rank": 3,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0502-3",
+      "identity": "catindividuals-v1:0502",
+      "reason": "wrong_top1",
+      "top1": "catindividuals-v1:0515",
+      "top1_score": 0.6412127017974854,
+      "margin": 0.19465047121047974,
+      "expected_rank": null,
+      "status": "uncertain"
+    },
+    {
+      "sample_id": "study-cat-0404-4",
+      "identity": "catindividuals-v1:0404",
+      "reason": "insufficient_margin",
+      "top1": "catindividuals-v1:0404",
+      "top1_score": 0.7922019958496094,
+      "margin": 0.14986228942871094,
+      "expected_rank": 1,
+      "status": "uncertain"
+    }
+  ]
+}
