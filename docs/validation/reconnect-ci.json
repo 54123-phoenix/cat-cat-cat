@@ -1,0 +1,64 @@
+{
+  "headSha": "7109286d97324ee568582077cb0143abae43bce0",
+  "status": "completed",
+  "conclusion": "success",
+  "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365",
+  "createdAt": "2026-11-01T09:12:27Z",
+  "updatedAt": "2026-11-01T09:19:15Z",
+  "jobs": [
+    {
+      "name": "check-backend",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255152,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255152",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:14:14Z"
+    },
+    {
+      "name": "docker-runtime",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255311,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255311",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:14:05Z"
+    },
+    {
+      "name": "build-web",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255312,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255312",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:13:27Z"
+    },
+    {
+      "name": "redis-runtime",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255320,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255320",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:13:22Z"
+    },
+    {
+      "name": "build-miniprogram",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255353,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255353",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:13:19Z"
+    },
+    {
+      "name": "browser-smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 124805255362,
+      "url": "https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365/job/124805255362",
+      "startedAt": "2026-11-01T09:12:29Z",
+      "completedAt": "2026-11-01T09:19:14Z"
+    }
+  ]
+}

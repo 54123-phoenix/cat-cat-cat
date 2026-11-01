@@ -1,6 +1,6 @@
 # ISS-039：浏览器断线重连与当前数据同步
 
-日期：2026-11-01。修复基线 `c448f8fd9331a78df60d24231f04d48bcaff4e46`。
+日期：2026-11-01。修复基线 `c448f8fd9331a78df60d24231f04d48bcaff4e46`；修复提交 [`7109286d97324ee568582077cb0143abae43bce0`](https://github.com/54123-phoenix/cat-cat-cat/commit/7109286d97324ee568582077cb0143abae43bce0)。
 
 ## 已复现的问题
 
@@ -43,7 +43,9 @@ Redis 故障由 TCP 代理切断产生，恢复后核对 Redis `run_id` 不变�
 
 Web 全量 **78 passed / 14 files**，见[测试日志](reconnect-web.log)；[类型检查](reconnect-typecheck.log)、[lint](reconnect-lint.log)与[构建](reconnect-build.log)通过，主包 504.48 kB。新增 12 个回归覆盖连接生命周期、迟到通知响应、评论草稿、点赞/投票 props 同步，以及详情暂时失败、删除和路由切换。投票回归先失败再修复通过；浏览器十组不含真实投票操作，未将组件测试写成浏览器覆盖。
 
-本轮后端生产代码没有变化，本机不重复执行后端全量；远端六项 CI 结果将在实际结束后补记。
+本轮后端生产代码没有变化，本机不重复执行后端全量。[修复提交的远端运行 41292098365](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365) **六项全部成功**，见[任务结果](reconnect-ci.json)：后端 243 passed / 69 warnings、Web 78 passed、小程序构建与测试、Redis 四进程十项、Docker API 阶段七组、浏览器核心六组及参考库八组均通过。
+
+新增浏览器重连脚本在 Linux CI 的 **Chromium 156.0.8078.4 + Redis 7.4.12 十组全部通过，页面运行错误为 0**，见[远端结果](reconnect-browser-ci.json)。长断线含恢复与显示的总耗时为 76.34 秒。远端执行的是完整修复提交，包含投票状态同步及为退避/首个心跳预留余量的 60 秒重连等待上限。证据补记只修改文档，后续文档提交不改变这里验收的生产代码。
 
 复跑需要可用 Linux Docker 引擎、Node 依赖、`cat-backend/requirements-browser.txt` 和 Playwright Chromium。在仓库根目录执行：
 

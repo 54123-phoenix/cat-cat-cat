@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "checks": {
+    "missed_post_refetched_after_redis_reconnect": "passed",
+    "revalidation_preserves_unsent_compose_draft": "passed",
+    "post_detail_refreshes_comments_without_losing_reply": "passed",
+    "notifications_refetch_missed_like": "passed",
+    "catalog_refetch_preserves_search_filter": "passed",
+    "home_refreshes_with_one_shared_subscription": "passed",
+    "browser_offline_online_reconnects_and_refetches": "passed",
+    "recovers_after_old_retry_budget_is_exhausted": "passed",
+    "logout_cancels_pending_reconnect_and_subscription": "passed",
+    "revoked_session_stops_reconnecting_and_returns_to_login": "passed"
+  },
+  "page_errors": [],
+  "started_at": "2026-11-01T09:14:19.458380+00:00",
+  "redis_version": "7.4.12",
+  "browser": "156.0.8078.4",
+  "long_outage_seconds": 76.34,
+  "streams": {
+    "created": 11,
+    "opened": 3,
+    "errors": 7,
+    "closed": 11
+  }
+}
