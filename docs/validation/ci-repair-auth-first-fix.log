@@ -1,0 +1,28 @@
+............................................F                            [100%]
+================================== FAILURES ===================================
+_ test_fixture_login_ignores_ambient_password_and_restores_settings[different-ci-admin-password] _
+tests\test_app_fixture.py:22: in test_fixture_login_ignores_ambient_password_and_restores_settings
+    assert client.post("/api/admin/login", json={"password": ambient_password or "wrong-password"}).status_code == 401
+E   AssertionError: assert 429 == 401
+E    +  where 429 = <Response [429 Too Many Requests]>.status_code
+E    +    where <Response [429 Too Many Requests]> = post('/api/admin/login', json={'password': 'different-ci-admin-password'})
+E    +      where post = <starlette.testclient.TestClient object at 0x000002A831523890>.post
+------------------------------ Captured log call ------------------------------
+WARNING  slowapi:extension.py:515 ratelimit 5 per 1 minute (testclient) exceeded at endpoint: /api/admin/login
+============================== warnings summary ===============================
+..\..\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_api.py::TestAuth::test_register_success
+tests/test_extended.py::TestNotifications::test_list_requires_auth
+tests/test_security.py::test_upload_non_image_rejected
+tests/test_app_fixture.py::test_fixture_login_ignores_ambient_password_and_restores_settings[]
+tests/test_app_fixture.py::test_fixture_login_ignores_ambient_password_and_restores_settings[different-ci-admin-password]
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_app_fixture.py::test_fixture_login_ignores_ambient_password_and_restores_settings[different-ci-admin-password]
+1 failed, 44 passed, 21 warnings in 8.47s

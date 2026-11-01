@@ -1,0 +1,77 @@
+...F.E...E...............EE...EEE........EE                              [100%]
+=================================== ERRORS ====================================
+________________ ERROR at setup of TestAuth.test_me_with_token ________________
+tests\test_api.py:40: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+_______________ ERROR at setup of TestCats.test_get_cat_exists ________________
+tests\test_api.py:40: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+____________ ERROR at setup of TestFeedingPoints.test_list_points _____________
+tests\test_extended.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+____________ ERROR at setup of TestFeedingPoints.test_create_point ____________
+tests\test_extended.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+___________ ERROR at setup of TestPostsExtended.test_create_comment ___________
+tests\test_extended.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+_____________ ERROR at setup of TestPostsExtended.test_like_post ______________
+tests\test_extended.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+____________ ERROR at setup of TestPostsExtended.test_report_post _____________
+tests\test_extended.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+_________ ERROR at setup of test_schema_validation_cat_name_too_long __________
+tests\test_security.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+______ ERROR at setup of test_schema_validation_discovery_review_action _______
+tests\test_security.py:41: in admin_token
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+================================== FAILURES ===================================
+_________________________ TestAuth.test_login_success _________________________
+tests\test_api.py:107: in test_login_success
+    assert resp.status_code == 200
+E   assert 401 == 200
+E    +  where 401 = <Response [401 Unauthorized]>.status_code
+============================== warnings summary ===============================
+..\..\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_api.py::TestAuth::test_register_success
+tests/test_extended.py::TestNotifications::test_list_requires_auth
+tests/test_security.py::test_upload_non_image_rejected
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\httpx\_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_api.py::TestAuth::test_login_success - assert 401 == 200
+ERROR tests/test_api.py::TestAuth::test_me_with_token - assert 401 == 200
+ERROR tests/test_api.py::TestCats::test_get_cat_exists - assert 401 == 200
+ERROR tests/test_extended.py::TestFeedingPoints::test_list_points - assert 40...
+ERROR tests/test_extended.py::TestFeedingPoints::test_create_point - assert 4...
+ERROR tests/test_extended.py::TestPostsExtended::test_create_comment - assert...
+ERROR tests/test_extended.py::TestPostsExtended::test_like_post - assert 401 ...
+ERROR tests/test_extended.py::TestPostsExtended::test_report_post - assert 40...
+ERROR tests/test_security.py::test_schema_validation_cat_name_too_long - asse...
+ERROR tests/test_security.py::test_schema_validation_discovery_review_action
+1 failed, 33 passed, 19 warnings, 9 errors in 7.41s

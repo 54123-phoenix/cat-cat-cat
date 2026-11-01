@@ -15,13 +15,13 @@
 
 ## 项目状态
 
-**更新于 2026-10-31：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
+**更新于 2026-11-01：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
 
 当前台账共 37 项：**25 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
 | 验证范围 | 最近结果 | 证据与限制 |
 |---|---|---|
-| 后端完整回归 | 238 passed，66 warnings | [C 验收](docs/validation/OPTIMIZATION_C.md)；包含迁移、权限、参考库和故障回归，保留既有弃用警告 |
+| 后端完整回归 | 240 passed，68 warnings | [CI 修复复验](docs/validation/CI_REPAIR_20261101.md)；采用 CI 的不同管理员密码环境，新增测试隔离回归，保留弃用警告 |
 | Web 回归 | 66 passed；类型检查、lint、构建通过 | [B4 验收](docs/validation/OPTIMIZATION_B4.md)；C 阶段未修改前端 |
 | 真实浏览器 | B4 管理端 8 组、核心流程 6 组通过 | Chromium；测试数据库，参考库推理使用合成向量 |
 | 参考库生命周期 | B1—B4 本地通过 | 持久身份、构建任务、独立 worker、原子发布、兼容回滚、管理状态和失败重试；不代表识别质量达标 |
@@ -30,7 +30,7 @@
 | 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
 | Docker / 真实模型 / 外部服务 | 待验收 | Docker Desktop 启动受阻；真实模型质量、微信、地图、外部 LLM 和资源许可仍需各自证据 |
 
-以上是本地验收记录。GitHub Actions 配置已包含两端检查、后端测试、浏览器和真实 Redis 任务；实际远端结果以 [Actions](https://github.com/54123-phoenix/cat-cat-cat/actions) 为准。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
+两处测试环境问题修复后，[远端 CI / 971c937](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288022660) 的五个任务全部通过：后端 240 项（远端 69 条警告）、Web、小程序、浏览器核心 6 组及参考库 8 组、真实 Redis 10 项。Docker 容器另设独立验收任务，结果见后续记录；历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
 ## 已实现的功能
 
