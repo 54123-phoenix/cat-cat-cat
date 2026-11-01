@@ -56,6 +56,28 @@
 
 这是一轮开发对照，未经过完整的参考库构建/发布/API 识别链路，不能代替应用验收。只有出现更优候选后，才实施可追踪的生产管线版本，在新的校准身份上冻结策略，并使用新的留出身份验收。旧向量不能与新预处理混用。
 
+## 新身份上的校准与验收协议
+
+开发对照选出候选后，另按固定种子 `2026110104` 建立[新协议](recognition-coverage-validation-protocol.json)。新图库为 24 个身份、96 张参考图，校准/留出各有 12 个已知身份的 36 张查询、20 个未知身份的 60 张查询及 20 张狗图。共 328 张唯一图片，两组查询身份无交叉，见[边界检查](recognition-coverage-boundaries.json)。[历史暴露清单](recognition-coverage-prior-exposure.json)和额外排除名单涵盖前期已用、已下载和已审查的身份；旧实验分数没有参与新参数选择。
+
+新数据在推理前经历数轮标签审查，全部使用同一个种子、样本数和预先定义的资格条件。0052 在固定去重后不足 7 张，另有 18 个身份因多猫/疑似多猫或身份混杂被整组排除；没有根据识别结果删图或改标签。0437 混有虎斑和黑白猫；0323 疑似混入不同橘猫。模糊、遮挡、异常姿态、旋转画面和同背景照片在身份分配无歧义时保留。[视觉审查记录](recognition-coverage-visual-review.json)保存各次分配、排除理由和实际查看的联系表哈希；`fresh-v1` 至 `fresh-v5` 是推理前的数据整理版本，不是五次质量测试。
+
+第二轮补位重放曾将已接受的 0305 在同一“校准/已知猫”组内移位，照片与角色未改变。准备工具因此增加 `--previous-plan`，后续替补严格保留已接受槽位；已用实际前后分配验证非排除位置未变化。
+
+最终[校准清单](recognition-coverage-calibration-manifest.json)和[留出清单](recognition-coverage-holdout-manifest.json)在 `eefed5e` 提交并推送后才开始新校准推理。新校准仍只搜索原定 32 组确认策略；无可行策略就停止，不打开留出。若有可行策略，另提交冻结选择后才运行一次留出。生产默认值暂不替换。
+
+首次本机完整校准在 Windows bind mount 上反复读取权重较慢，于参考构建 42/96 张、尚无查询结果时中止。随后把同一冻结输入复制到项目专用容器卷，模型/数据只读挂载、禁网及 2 CPU / 8 GiB 限制不变，再从新目录构建；见[运行转换记录](recognition-coverage-runtime-transition.json)。这不是质量失败后的换数据重试，未修改通过线、模型或任何样本。此处运行时间也不用于宣称预处理改善了线上延迟。
+
+新校准完整执行 116 张查询，96 张参考图真实构建并发布，输入错误与 unavailable 均为 0。见[推理结果](recognition-coverage-calibration-result.json)、[构建记录](recognition-coverage-calibration-build.json)和[日志](recognition-coverage-calibration-inference.log)。按冻结顺序选出 `confirmed=0.70 / uncertain=0.49 / minimum_margin=0`，已知正确确认 36/36、已知错误确认 0/36、未知误确认 3/60、狗图误确认 0/20。原 0.57 / 0.49 / 分差 0 在相同新校准排名上将 18/60 未知猫误确认，输入变换本身没有解决确认规则问题。
+
+[新冻结策略](recognition-coverage-selected-policy.json)包含完整 32 组结果、模型/管线、图库、两组清单、校准结果及策略代码哈希。该选择单独提交后才允许执行新留出；开发对照里选出的 0.57 / 0.49 / 分差 0.15 没有直接沿用到新身份。
+
+## 工程检查
+
+本机加入版本化预处理后的后端全量 **287 passed / 68 warnings / 189.14 秒**，见[日志](recognition-coverage-backend-local.log)。生产代码 `24c5190` 的[远端 CI](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41304594404)七项全部通过，后端 **287 passed / 69 warnings / 80.76 秒**；Web、小程序、真实浏览器、Redis、API Docker 和完整推理门禁也通过。弃用告警仍保留。
+
+检查覆盖新旧几何的像素保持、完整主体边缘保留、非法配置拒绝、预处理切换后旧快照失效、重建后可用和切回后失配拒绝。六组真实 Torch 张量检查见[几何证据](recognition-coverage-geometry.json)。这部分是工程结论，识别质量另按冻结数据判断。
+
 ## 可复跑入口
 
 - `scripts/prepare_reference_coverage.py`：按固定顺序增加参考候选，产生待视觉审查清单。
@@ -63,3 +85,5 @@
 - `cat-backend/scripts/compare_reference_coverage.py`：读取校准清单、额外参考清单、冻结协议及原基线结果，输出四组完整排名和 128 组策略结果。
 
 准备和比较均要求新的输出目录，不覆盖已冻结证据；照片与本机中间产物保留在忽略的 `artifacts/coverage/`。原校准/留出结论见[上轮记录](RECOGNITION_CALIBRATION_20261101.md)。
+
+[手动校准工作流](../../.github/workflows/recognition-calibration.yml)新增 `study=coverage`，原实验使用 `study=original`。两者仍分为 `phase=calibration` 和 `phase=holdout`，后者要求已有单独提交的成功校准选择。新模式通过 `RECOGNIZE_PREPROCESS=letterbox224` 注入 API 与参考构建 worker；实际业务启用前需校验数据适用性并重建参考库，不能复用原向量。

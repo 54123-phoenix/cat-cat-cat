@@ -1,0 +1,1911 @@
+{
+  "status": "selected",
+  "study_id": "public-cat-coverage-validation-20261101",
+  "protocol_sha256": "49cde0f9610859f3dfb88c8809497f7788cee828795a97cce56aa33bb13bf817",
+  "calibration_manifest_sha256": "3965ecc5e24faffa691fce39bd37767d58d24c5c6a6f192b9781157c28190a19",
+  "holdout_manifest_sha256": "53b0244a0c6348071ede976db6f3f41ee2d8f736625da3131149c22476547b4b",
+  "calibration_result_sha256": "620477922f9953a53212991e62edb9f163a640b9a22426a1cf624fdb0e0524a4",
+  "gallery_sha256": "56a77ba5b84c9f4782594f5645f19a6af9ecda89d82eb2832306ad531496f0ea",
+  "policy_code_sha256_lf": "49da589277bf3015caa44edcd192cec33b14324f16ac1e82ebfc83a3fc5b40fd",
+  "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+  "pipeline": {
+    "preprocessing": "rgb-bicubic-long224-round-pad124-116-104-imagenet-cls-linear256-l2-v1",
+    "crop": "yolov8m-cat15-conf0.3-margin0.1-or-original-v1",
+    "detector_sha256": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+  },
+  "selected": {
+    "policy": {
+      "confirmed": 0.7,
+      "uncertain": 0.49,
+      "minimum_margin": 0.0
+    },
+    "summary": {
+      "total": 116,
+      "groups": {
+        "known": {
+          "n": 36,
+          "statuses": {
+            "confirmed": 36
+          },
+          "top1": 36,
+          "top3": 36,
+          "top1_rate": 1.0,
+          "top3_rate": 1.0,
+          "confirmed_correct": 36,
+          "confirmed_wrong": 0,
+          "false_rejection_rate": 0.0,
+          "not_correctly_confirmed_rate": 0.0
+        },
+        "unknown_cat": {
+          "n": 60,
+          "statuses": {
+            "uncertain": 40,
+            "unknown": 17,
+            "confirmed": 3
+          },
+          "false_accepts": 3,
+          "false_accept_rate": 0.05,
+          "candidate_exposure_rate": 0.6666666666666666
+        },
+        "no_cat": {
+          "n": 20,
+          "statuses": {
+            "unknown": 20
+          },
+          "false_accepts": 0,
+          "false_accept_rate": 0.0,
+          "candidate_exposure_rate": 0.0
+        }
+      },
+      "confirmed": 39,
+      "confirmed_correct": 36,
+      "confirmed_precision": 0.9230769230769231,
+      "unavailable": 0
+    },
+    "gates": {
+      "known_correct_confirmation": true,
+      "known_wrong_confirmation": true,
+      "unknown_false_accept": true,
+      "no_cat_false_accept": true,
+      "available": true
+    }
+  },
+  "candidates": [
+    {
+      "policy": {
+        "confirmed": 0.57,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "confirmed": 18,
+              "uncertain": 25,
+              "unknown": 17
+            },
+            "false_accepts": 18,
+            "false_accept_rate": 0.3,
+            "candidate_exposure_rate": 0.4166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 54,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.6666666666666666,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.57,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 30,
+              "unknown": 17,
+              "confirmed": 13
+            },
+            "false_accepts": 13,
+            "false_accept_rate": 0.21666666666666667,
+            "candidate_exposure_rate": 0.5
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 49,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.7346938775510204,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.57,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 35,
+              "uncertain": 1
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 35,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.027777777777777776
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 33,
+              "unknown": 17,
+              "confirmed": 10
+            },
+            "false_accepts": 10,
+            "false_accept_rate": 0.16666666666666666,
+            "candidate_exposure_rate": 0.55
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 45,
+        "confirmed_correct": 35,
+        "confirmed_precision": 0.7777777777777778,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.57,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 34,
+              "uncertain": 2
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 34,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.05555555555555555
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 39,
+              "unknown": 17,
+              "confirmed": 4
+            },
+            "false_accepts": 4,
+            "false_accept_rate": 0.06666666666666667,
+            "candidate_exposure_rate": 0.65
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 38,
+        "confirmed_correct": 34,
+        "confirmed_precision": 0.8947368421052632,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.65,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 37,
+              "unknown": 17,
+              "confirmed": 6
+            },
+            "false_accepts": 6,
+            "false_accept_rate": 0.1,
+            "candidate_exposure_rate": 0.6166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 42,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.8571428571428571,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.65,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 37,
+              "unknown": 17,
+              "confirmed": 6
+            },
+            "false_accepts": 6,
+            "false_accept_rate": 0.1,
+            "candidate_exposure_rate": 0.6166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 42,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.8571428571428571,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.65,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 35,
+              "uncertain": 1
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 35,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.027777777777777776
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 38,
+              "unknown": 17,
+              "confirmed": 5
+            },
+            "false_accepts": 5,
+            "false_accept_rate": 0.08333333333333333,
+            "candidate_exposure_rate": 0.6333333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 40,
+        "confirmed_correct": 35,
+        "confirmed_precision": 0.875,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": false,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.65,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 34,
+              "uncertain": 2
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 34,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.05555555555555555
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 36,
+        "confirmed_correct": 34,
+        "confirmed_precision": 0.9444444444444444,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.7,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 40,
+              "unknown": 17,
+              "confirmed": 3
+            },
+            "false_accepts": 3,
+            "false_accept_rate": 0.05,
+            "candidate_exposure_rate": 0.6666666666666666
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 39,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.9230769230769231,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.7,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 36
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 36,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.0
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 40,
+              "unknown": 17,
+              "confirmed": 3
+            },
+            "false_accepts": 3,
+            "false_accept_rate": 0.05,
+            "candidate_exposure_rate": 0.6666666666666666
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 39,
+        "confirmed_correct": 36,
+        "confirmed_precision": 0.9230769230769231,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.7,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 35,
+              "uncertain": 1
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 35,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.027777777777777776
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 37,
+        "confirmed_correct": 35,
+        "confirmed_precision": 0.9459459459459459,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.7,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 34,
+              "uncertain": 2
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 34,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.05555555555555555
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 34,
+        "confirmed_correct": 34,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.75,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 33,
+              "uncertain": 3
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 33,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.08333333333333333
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 35,
+        "confirmed_correct": 33,
+        "confirmed_precision": 0.9428571428571428,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.75,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 33,
+              "uncertain": 3
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 33,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.08333333333333333
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 35,
+        "confirmed_correct": 33,
+        "confirmed_precision": 0.9428571428571428,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.75,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 33,
+              "uncertain": 3
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 33,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.08333333333333333
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 35,
+        "confirmed_correct": 33,
+        "confirmed_precision": 0.9428571428571428,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.75,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 33,
+              "uncertain": 3
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 33,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.08333333333333333
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 33,
+        "confirmed_correct": 33,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": true,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.8,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 27,
+              "uncertain": 9
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 27,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.25
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 29,
+        "confirmed_correct": 27,
+        "confirmed_precision": 0.9310344827586207,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.8,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 27,
+              "uncertain": 9
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 27,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.25
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 29,
+        "confirmed_correct": 27,
+        "confirmed_precision": 0.9310344827586207,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.8,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 27,
+              "uncertain": 9
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 27,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.25
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 41,
+              "unknown": 17,
+              "confirmed": 2
+            },
+            "false_accepts": 2,
+            "false_accept_rate": 0.03333333333333333,
+            "candidate_exposure_rate": 0.6833333333333333
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 29,
+        "confirmed_correct": 27,
+        "confirmed_precision": 0.9310344827586207,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.8,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 27,
+              "uncertain": 9
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 27,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.25
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 27,
+        "confirmed_correct": 27,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.85,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 23,
+              "uncertain": 13
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 23,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.3611111111111111
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 23,
+        "confirmed_correct": 23,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.85,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 23,
+              "uncertain": 13
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 23,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.3611111111111111
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 23,
+        "confirmed_correct": 23,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.85,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 23,
+              "uncertain": 13
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 23,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.3611111111111111
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 23,
+        "confirmed_correct": 23,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.85,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 23,
+              "uncertain": 13
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 23,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.3611111111111111
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 23,
+        "confirmed_correct": 23,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.9,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 17,
+              "uncertain": 19
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 17,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.5277777777777778
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 17,
+        "confirmed_correct": 17,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.9,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 17,
+              "uncertain": 19
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 17,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.5277777777777778
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 17,
+        "confirmed_correct": 17,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.9,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 17,
+              "uncertain": 19
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 17,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.5277777777777778
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 17,
+        "confirmed_correct": 17,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.9,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "confirmed": 17,
+              "uncertain": 19
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 17,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.5277777777777778
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 17,
+        "confirmed_correct": 17,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.95,
+        "uncertain": 0.49,
+        "minimum_margin": 0.0
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "uncertain": 30,
+              "confirmed": 6
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 6,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.8333333333333334
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 6,
+        "confirmed_correct": 6,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.95,
+        "uncertain": 0.49,
+        "minimum_margin": 0.05
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "uncertain": 30,
+              "confirmed": 6
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 6,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.8333333333333334
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 6,
+        "confirmed_correct": 6,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.95,
+        "uncertain": 0.49,
+        "minimum_margin": 0.1
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "uncertain": 30,
+              "confirmed": 6
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 6,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.8333333333333334
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 6,
+        "confirmed_correct": 6,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    },
+    {
+      "policy": {
+        "confirmed": 0.95,
+        "uncertain": 0.49,
+        "minimum_margin": 0.15
+      },
+      "summary": {
+        "total": 116,
+        "groups": {
+          "known": {
+            "n": 36,
+            "statuses": {
+              "uncertain": 30,
+              "confirmed": 6
+            },
+            "top1": 36,
+            "top3": 36,
+            "top1_rate": 1.0,
+            "top3_rate": 1.0,
+            "confirmed_correct": 6,
+            "confirmed_wrong": 0,
+            "false_rejection_rate": 0.0,
+            "not_correctly_confirmed_rate": 0.8333333333333334
+          },
+          "unknown_cat": {
+            "n": 60,
+            "statuses": {
+              "uncertain": 43,
+              "unknown": 17
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.7166666666666667
+          },
+          "no_cat": {
+            "n": 20,
+            "statuses": {
+              "unknown": 20
+            },
+            "false_accepts": 0,
+            "false_accept_rate": 0.0,
+            "candidate_exposure_rate": 0.0
+          }
+        },
+        "confirmed": 6,
+        "confirmed_correct": 6,
+        "confirmed_precision": 1.0,
+        "unavailable": 0
+      },
+      "gates": {
+        "known_correct_confirmation": false,
+        "known_wrong_confirmation": true,
+        "unknown_false_accept": true,
+        "no_cat_false_accept": true,
+        "available": true
+      }
+    }
+  ],
+  "holdout_used_for_selection": false
+}

@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-11-01T12:17:45.774769+00:00",
+  "status": "aborted_during_reference_build_before_queries",
+  "reason": "Slow repeated checkpoint I/O through Windows bind mounts; copied identical frozen data/model assets to isolated named volumes and restarted",
+  "partial_job": {
+    "code": null,
+    "completed_photos": 42,
+    "created_at": "2026-11-01T12:13:54.018079+00:00",
+    "crop": true,
+    "detail": null,
+    "input_generation": 120,
+    "input_revision": "8bceb798df145fbe3779b011a1893b10c4bf2fbbee4490dc46aa386deca37017",
+    "job_id": "f8ea87a9235a4f60a93d623fa93a2501",
+    "kind": "rebuild",
+    "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+    "publication_id": null,
+    "publish": true,
+    "recovered": false,
+    "requested_by": null,
+    "requested_generation": 120,
+    "snapshot_id": null,
+    "status": "running",
+    "target_snapshot_id": null,
+    "total_photos": 96,
+    "updated_at": "2026-11-01T12:16:52.095310+00:00"
+  },
+  "query_results_created": false,
+  "input_changes": false,
+  "model_or_policy_changes": false,
+  "replacement_resources": [
+    "cat-coverage-20261101-models",
+    "cat-coverage-20261101-data",
+    "cat-coverage-20261101-work"
+  ],
+  "cleanup_scope": "Only the explicitly named cat-coverage containers/volumes; no global Docker prune"
+}
