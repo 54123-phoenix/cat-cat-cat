@@ -1,0 +1,421 @@
+{
+  "report": {
+    "collected_at": "2026-11-01T14:46:30.998126+00:00",
+    "page_count": 37,
+    "catalog_pagination_finished": true,
+    "consistent_snapshot_verified": false,
+    "all_album_photos_collected": false,
+    "dynamic_photos_collected": false,
+    "independent_identity_verification": false,
+    "excluded_records": 0,
+    "duplicate_names": {
+      "小狸": 3,
+      "奶盖": 2
+    },
+    "capture_sha256": {
+      "response-20261101T143517320-14.json": "10696dac0bc8532ab5f86910d6c59c0725003f8779a6414e99e3b11d85472ca6",
+      "response-20261101T143518616-26.json": "d2db3346ab78215c8a968c40d1242d9faa83892bafc01867800d2fbb501ac6cd",
+      "response-20261101T143636849-51.json": "37e9e39b47a87d888cd027489023ec9c1306b760d682deda35fe27348a3c20f1",
+      "response-20261101T143717789-67.json": "90778f9d939a6c15435871383613623a17de3834077f0dbe899f3461b28eb01d",
+      "response-20261101T143731500-70.json": "b7f0aa9f3589b3074d620ae55e78573f4ee8b881421dff1cea775687d4877b3c",
+      "response-20261101T143743493-73.json": "617d41c1d07701f20cbab08a0d51782586bf1bccc2c37d9d01bccc9b1a703069",
+      "response-20261101T143754667-76.json": "10553fcfc44d3b98c010f4f17040cb14f7cf78f4ad761430434cf8bb35a77975",
+      "response-20261101T143805613-79.json": "55de26d9394f93c8a4228ee4adc655e50ceea0dbf434683965de397f8609d340",
+      "response-20261101T143817572-84.json": "57907a4f5bd1af6a2aa53c58b88225cf6f70248db7e0e65f883bb313b37c13bd",
+      "response-20261101T143826900-88.json": "262c5ac4dad4020d376c8d82993ef083ed48904b8ddd39cb17aaa612e6055712",
+      "response-20261101T143836302-91.json": "e23bcec213dd3912acd9a40c894d984dab66cf6f3ba66816d081d20a2ca426eb",
+      "response-20261101T143846896-102.json": "c5b61cf985d17159c606f7519a40d00cb7bc9ea75afbe64c7057b3c764216b79",
+      "response-20261101T143907124-112.json": "c3b87cbb9c706db0ae5880bccbca8586a10e995077fac4c11855379a4a139661",
+      "response-20261101T143916690-116.json": "bac7d0b4a63d48e8281d47931aacb7b8fd24bb87b5b3dc17cd92803308376fa1",
+      "response-20261101T143945271-120.json": "cdf406659cd5f078187fc388e77689335c22fb031a5da16dad1df35c0dc48dea",
+      "response-20261101T143955698-123.json": "c26f2717fdf89a07c253e22d42d67c4d869bafb6ea08cb38438798d025bb4a59",
+      "response-20261101T144006461-127.json": "d77bfa99150f3fdcec318d26cc986ef0fb158c703c8d1ed07c43c7d816d3e9b6",
+      "response-20261101T144054395-147.json": "394320412552b548d553061ed7000386fa0c59f056c81a707a00c0d3eb11e82a",
+      "response-20261101T144117444-152.json": "8a18e81e1c0c138646f3ae0173250352f074d4c6b898e7f63db1e1027c5baf20",
+      "response-20261101T144129784-155.json": "fd05b7d8f9b17cc9835cf7e0b96aec96a83a806dccd75ccfdeb6637e8173d8c6",
+      "response-20261101T144142329-158.json": "297b14e77da9b8c1ab83954a6995ee9c412c40926cf9d5baf5b6fcbd60103a7d",
+      "response-20261101T144156952-162.json": "a8bc7421ca57ff0fc082362c7aee6a63ddc6beac72ff83fc392684facdd9590e",
+      "response-20261101T144207371-165.json": "e00a3169be160c2d1071d879f341833ee1c5409810ae3564de4ef4ee773b8b57",
+      "response-20261101T144219692-169.json": "39816aeadb7c261b0c162afba21e88d1bf2d29bfad1204167dcc06713a5b34ee",
+      "response-20261101T144248095-174.json": "160fb3729d53a7963fa0191171efec38f75fe69b8aae7ab61982e893bf738764",
+      "response-20261101T144259777-177.json": "ecc44943b2ce99a250abaeacdbd561bb87145481118c7a9d022b4fe04442bb0a",
+      "response-20261101T144333599-184.json": "588fcb0d3c99a9c3f8156ff0f72309a3d8bfeb21a828162682f5575a0c2e5a06",
+      "response-20261101T144350391-189.json": "48beb74dfcde2fb44345f2cf4c1c42ea12333b593351820414537669af15deba",
+      "response-20261101T144402226-192.json": "a96f690a467a1290f90dea1fd8b6ec68096bcbe5a9739d51a3f690a6f8d0aa90",
+      "response-20261101T144416126-196.json": "ad2b0e6a426c21c1b34fe8da102640e8bd0d26300a310be9e8e02d2c3cd2cd23",
+      "response-20261101T144428154-202.json": "edeebf35d4cee60571acb71dea784d6995e60b8873c0a80200dbc2515b5e6e60",
+      "response-20261101T144449488-206.json": "ae77634ab37059f5d760fb3027e218eea8ba48396d3584440821dcbb42fa31eb",
+      "response-20261101T144500711-209.json": "4dd5b4a711d992f93dcaa88a6f501e96504828f52e8c0b995c021de838c106a5",
+      "response-20261101T144511554-212.json": "32873f478f6f2703ac5374f6701942a02bc7c15cacae6e470c243ffa3ebd533b",
+      "response-20261101T144523933-215.json": "106a281f4212e0d04e4c90d7bb698eb5b4d4a338b128f4b427065e76eb158e6a",
+      "response-20261101T144535343-218.json": "bb052e5fcb407f87518d115439fa246ccf9cc9682fce3b625004ad29559e71ac",
+      "response-20261101T144547613-222.json": "3afb6a2dab5c02e87186c80861133dd9cfa49cf9436edb8c5793077557091e59",
+      "response-20261101T144558835-225.json": "915399354393c197f6627902278c482465cc7d72d9231e4b796ad673c9b54451",
+      "response-20261101T144611734-229.json": "eb5f1caf388e6d0720a201aa41ae7d53bf592a5ff331668aba81379cf4315dc3"
+    },
+    "downloaded_urls": 94,
+    "unique_image_hashes": 94,
+    "downloaded_bytes": 49474548,
+    "images_verified": true,
+    "all_catalog_images_downloaded": false,
+    "download_stopped_by_user_resource_constraint": true,
+    "download_selection": "First completed URL-sorted downloads; not random or evaluation-ready",
+    "known_visual_species_conflicts": [
+      {
+        "petId": "12284",
+        "source_category": "cat",
+        "observed_image_species": "dog",
+        "verification": "source UI visual observation; requires review"
+      },
+      {
+        "petId": "12283",
+        "source_category": "cat",
+        "observed_image_species": "dog",
+        "verification": "source UI visual observation; requires review"
+      },
+      {
+        "petId": "12282",
+        "source_category": "cat",
+        "observed_image_species": "dog",
+        "verification": "source UI visual observation; requires review"
+      },
+      {
+        "petId": "12281",
+        "source_category": "cat",
+        "observed_image_species": "dog",
+        "verification": "source UI visual observation; requires review"
+      }
+    ],
+    "source_labeled_cat_count": 727,
+    "source_species_labels_independently_verified": false,
+    "sample_visual_review": {
+      "images_reviewed": 94,
+      "cats_visible": 94,
+      "scope": "Thumbnail review, not individual identity or full-resolution quality verification",
+      "collage_pet_ids": [
+        "10097",
+        "10098"
+      ]
+    }
+  },
+  "legacy_comparison": {
+    "legacy_name_count": 91,
+    "exact_name_matches": 90,
+    "unmatched_legacy_names": [
+      "小棍"
+    ],
+    "candidate_name_to_pet_ids": {
+      "JOJO": [
+        "28057"
+      ],
+      "happy": [
+        "14035"
+      ],
+      "lucky": [
+        "12228"
+      ],
+      "三叶": [
+        "17484"
+      ],
+      "三花": [
+        "12286"
+      ],
+      "乐乐": [
+        "16694"
+      ],
+      "乐虎": [
+        "20182"
+      ],
+      "包子": [
+        "42197"
+      ],
+      "卡卡（小灰）": [
+        "9328"
+      ],
+      "双皮奶": [
+        "10091"
+      ],
+      "可可": [
+        "472"
+      ],
+      "咖喱": [
+        "19962"
+      ],
+      "啊呜": [
+        "20010"
+      ],
+      "喇叭（静静）": [
+        "18367"
+      ],
+      "喜喜": [
+        "21170"
+      ],
+      "大门未知子": [
+        "10357"
+      ],
+      "奥莉": [
+        "38160"
+      ],
+      "宝娟": [
+        "10138"
+      ],
+      "富贵": [
+        "39009"
+      ],
+      "小小灰": [
+        "15119"
+      ],
+      "小挖": [
+        "10086"
+      ],
+      "小李": [
+        "42159"
+      ],
+      "小浣熊": [
+        "12361"
+      ],
+      "小牛": [
+        "9248"
+      ],
+      "小葵": [
+        "32417"
+      ],
+      "尔康": [
+        "41496"
+      ],
+      "忆白": [
+        "10055"
+      ],
+      "探探": [
+        "10053"
+      ],
+      "朱古力": [
+        "470"
+      ],
+      "杏仁奶": [
+        "47222"
+      ],
+      "柯尔施": [
+        "10078"
+      ],
+      "栗子": [
+        "19969"
+      ],
+      "栾栾": [
+        "46614"
+      ],
+      "桂花": [
+        "10056"
+      ],
+      "橙子": [
+        "11300"
+      ],
+      "法棍": [
+        "13264"
+      ],
+      "海尔": [
+        "11043"
+      ],
+      "海蓝宝": [
+        "44639"
+      ],
+      "港港": [
+        "12827"
+      ],
+      "溜溜梅": [
+        "40403"
+      ],
+      "滇滇": [
+        "16049"
+      ],
+      "火火": [
+        "15680"
+      ],
+      "灰崽": [
+        "16706"
+      ],
+      "牛轧糖": [
+        "10107"
+      ],
+      "狗哥": [
+        "10859"
+      ],
+      "玫瑰": [
+        "10047"
+      ],
+      "琉璃": [
+        "17767"
+      ],
+      "琥珀": [
+        "19845"
+      ],
+      "百香果": [
+        "46117"
+      ],
+      "皮球": [
+        "10353"
+      ],
+      "盼盼": [
+        "14561"
+      ],
+      "票票": [
+        "32291"
+      ],
+      "秋秋": [
+        "14303"
+      ],
+      "秋衣": [
+        "15118"
+      ],
+      "笨笨": [
+        "16073"
+      ],
+      "米线": [
+        "16323"
+      ],
+      "糯米糍": [
+        "30634"
+      ],
+      "绒绒（鼻孔）": [
+        "18368"
+      ],
+      "维尼": [
+        "10101"
+      ],
+      "脏脏包": [
+        "10094"
+      ],
+      "芋圆（小特）": [
+        "45792"
+      ],
+      "芒果": [
+        "10057"
+      ],
+      "芙芙": [
+        "10342"
+      ],
+      "芝士": [
+        "10099"
+      ],
+      "芦柑": [
+        "19942"
+      ],
+      "莎莎": [
+        "12330"
+      ],
+      "莫及": [
+        "16710"
+      ],
+      "蒜苗": [
+        "12345"
+      ],
+      "蓝黑": [
+        "10108"
+      ],
+      "虫虫": [
+        "40399"
+      ],
+      "蛋奶星星": [
+        "26123"
+      ],
+      "蛋黄": [
+        "10115"
+      ],
+      "警长": [
+        "10369"
+      ],
+      "费希特": [
+        "10089"
+      ],
+      "车车": [
+        "10068"
+      ],
+      "软软": [
+        "19966"
+      ],
+      "辣子鸡": [
+        "12229"
+      ],
+      "那那": [
+        "29359"
+      ],
+      "酷哥": [
+        "10397"
+      ],
+      "钱钱": [
+        "40437"
+      ],
+      "闹闹": [
+        "12230"
+      ],
+      "雀巢（金鱼）": [
+        "12484"
+      ],
+      "靴靴": [
+        "14352"
+      ],
+      "馆长（校史馆）": [
+        "10103"
+      ],
+      "黄金糕": [
+        "24765"
+      ],
+      "黑土": [
+        "10368"
+      ],
+      "黑巧（把把）": [
+        "10058"
+      ],
+      "三文鱼": [
+        "10297"
+      ],
+      "咪咪（核物理楼）": [
+        "11668"
+      ],
+      "脆脆（原名香香）": [
+        "10161"
+      ]
+    },
+    "identity_mapping_verified": false,
+    "image_sample_count": 94,
+    "exact_byte_matches_to_legacy": [],
+    "meaning": "Same name is a candidate only; unmatched names do not prove deletion. Current sample byte comparisons cannot establish whole-gallery completeness."
+  },
+  "checks": {
+    "python_targeted_tests": 10,
+    "dotnet_compile": true,
+    "dotnet_synthetic_checks": 3
+  },
+  "system_restored": {
+    "proxy": "127.0.0.1:7897",
+    "original_rules_sha256": "f7dfd8de7bfb889dda8d29150f0c28c074f4125da6dee4192101eaec658f9dcc"
+  },
+  "remote": {
+    "status": "uploaded_and_roundtrip_verified",
+    "release_url": "https://github.com/54123-phoenix/cat-cat-cat/releases/tag/meowzart-catalog-20261101",
+    "download_url": "https://github.com/54123-phoenix/cat-cat-cat/releases/download/meowzart-catalog-20261101/meowzart-catalog-727-images-94-20261101.zip",
+    "archive": {
+      "filename": "meowzart-catalog-727-images-94-20261101.zip",
+      "bytes": 50652366,
+      "sha256": "5155713df4bc3a76a268ee5e03678a01ccb5cde2df6b28a0dc76cb4f9df9167d"
+    },
+    "verified_image_count": 94,
+    "verified_catalog_count": 727,
+    "verification": "Streamed remote download into the existing package path, compared whole-archive SHA256, ZIP CRC and every image SHA256; no second local image copy."
+  },
+  "local_images_cleaned": false,
+  "local_cleanup": {
+    "status": "blocked_by_automatic_approval_policy",
+    "tool_reason": "blocked by policy; no detailed reason returned",
+    "no_deletion_executed": true,
+    "remaining_archive_directory_bytes": 101138925,
+    "directory": "artifacts/meowzart/archive-20261101",
+    "manual_cleanup_candidates": [
+      "images/ (94 images plus small metadata)",
+      "meowzart-catalog-727-images-94-20261101.zip",
+      "contact-1.jpg",
+      "contact-2.jpg"
+    ],
+    "remote_roundtrip_verified": true
+  }
+}

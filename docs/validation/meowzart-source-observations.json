@@ -2098,5 +2098,12 @@
     "sample_count": 1,
     "downloaded_back_and_verified": true,
     "complete_recrawl": false
+  },
+  "subsequent_recapture": {
+    "evidence": "meowzart-recapture-20261101.json",
+    "catalog_records": 727,
+    "catalog_pages": 37,
+    "image_downloads": 94,
+    "full_album_recrawl": false
   }
 }
