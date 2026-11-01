@@ -83,6 +83,15 @@ def test_compatible_bundle_and_renamed_cat_keep_identity(bundle):
     assert ref.reference_status(False)['status'] == 'compatible'
 
 
+def test_positive_margin_keeps_lone_gallery_identity_uncertain(bundle, monkeypatch):
+    *_, photo, _ = bundle
+    monkeypatch.setattr(ai.settings, 'RECOGNIZE_MIN_MARGIN', .1)
+    details = ai.recognize_with_details(photo.read_bytes(), crop=False)
+    assert details.response.status == 'uncertain' and details.response.cat_id is None
+    assert len(details.ranking) == 1 and details.ranking[0].cat_id == 1
+    assert details.response.candidates == list(details.ranking)
+
+
 def test_other_database_with_identical_numeric_id_and_name_is_rejected(bundle, monkeypatch):
     _, output, uploads, _, identity, _, photo, _ = bundle
     other_engine = create_engine('sqlite://', poolclass=StaticPool)

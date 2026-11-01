@@ -1,0 +1,39 @@
+{
+  "status": "completed_before_inference",
+  "reviewed_at": "2026-11-01T11:13:53.666930+00:00",
+  "reviewer": "Codex visual inspection in this work session; not owner identity verification",
+  "scope": "All 280 final images reviewed via initial sheets plus replacement sheets; no model scores were inspected",
+  "excluded_identities": {
+    "0137": "Multiple cats in selected images without a target identity bounding box",
+    "0178": "Two cats in every selected image without a target identity bounding box",
+    "0327": "Multiple cats in a selected image without an unambiguous target annotation",
+    "0177": "Other cats visible behind the foreground cat without target identity annotation",
+    "0325": "Multiple cats in selected images without target identity annotation",
+    "0225": "Two cats in selected gallery/query images; suspected same pair as directory 0235",
+    "0174": "Two cats in every selected image without target identity annotation",
+    "0235": "Two cats in selected images; suspected same pair as directory 0225",
+    "0133": "Suspected overlap with 0087 in a distinctive orange enclosure; independent identities cannot be verified visually",
+    "0087": "Suspected overlap with 0133 in a distinctive orange enclosure; independent identities cannot be verified visually",
+    "0155": "Suspected overlap with 0146: matching long-haired tortoiseshell nose stripe and pale chin",
+    "0146": "Suspected overlap with 0155: matching long-haired tortoiseshell nose stripe and pale chin",
+    "0046": "Replacement review: two cats in a selected image without target identity annotation",
+    "0249": "Replacement review: another cat visible below the foreground cat without target identity annotation",
+    "0396": "Replacement review: suspected second cat behind the foreground cat; target identity cannot be verified"
+  },
+  "contact_sheets_local_only": {
+    "artifacts\\calibration\\data-v1\\review-ambiguous.jpg": "24b8ed0583205d66c7e0ceb66b01a915021fdc37d503a9c6183741bd95cbd578",
+    "artifacts\\calibration\\data-v1\\review-cats-00.jpg": "abfd0d191eac6a02cdcee9469d926747e6fdd34322c066473128f0e6f2b656d5",
+    "artifacts\\calibration\\data-v1\\review-cats-01.jpg": "5bcadb26bd77914e06a946388d3a03b0c6c3c910d589acd2c94c98fac4000c78",
+    "artifacts\\calibration\\data-v1\\review-cats-02.jpg": "bd5c6bc02e0b713e6ac02acf955b7fcdb72d4a3bb7e1c2e066677b00f8d3b028",
+    "artifacts\\calibration\\data-v1\\review-cats-03.jpg": "fb7b3fb1770c03ffd10ad9b6c388c5e60435d3f26b5985e7b8129942f3d51cf3",
+    "artifacts\\calibration\\data-v1\\review-cats-04.jpg": "022fc1542381b84217b3e273c5cdcf67eddbb3aa4b23603b6a857bb5b42df078",
+    "artifacts\\calibration\\data-v1\\review-cats-05.jpg": "2f790310d65d5c77399c984c50f9d111d067e2b21ee39d7778d11d14309c338a",
+    "artifacts\\calibration\\data-v1\\review-cats-06.jpg": "e6f010ec5c1ae15e2e7135bfc03a86f1ea0f268d68a6fb6f4d500573b0b12f0c",
+    "artifacts\\calibration\\data-v1\\review-cats-07.jpg": "8d7cdb22a62cd9326a0088643d81306b79ae152d30d388147ed34c8dcf1efd20",
+    "artifacts\\calibration\\data-v1\\review-dogs.jpg": "68c5008a0ea83683ef89b029fccb0e56391e756503f04b3b6fe89dbdc1c5206d",
+    "artifacts\\calibration\\data-v2\\review-replacements-0.jpg": "c19507b15353816b63a59ec051b373804c6174deadaf709a9248121f6aea224b",
+    "artifacts\\calibration\\data-v2\\review-replacements-1.jpg": "e07100f8d0feb92b0b3d079839999184f33c11f9d93e988d524ecbe27328c200",
+    "artifacts\\calibration\\data-v3\\review-last-replacements.jpg": "d979ac8fdd05d46c81485c5d9247e2b6bd729b81709092e5fa3da635cf28bc25"
+  },
+  "limitations": "Source labels retained. Similar poses/backgrounds and same-session capture remain; visual review cannot establish all identities or training independence."
+}

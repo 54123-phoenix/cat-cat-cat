@@ -1,0 +1,17 @@
+{
+  "0137": "Multiple cats in selected images without a target identity bounding box",
+  "0178": "Two cats in every selected image without a target identity bounding box",
+  "0327": "Multiple cats in a selected image without an unambiguous target annotation",
+  "0177": "Other cats visible behind the foreground cat without target identity annotation",
+  "0325": "Multiple cats in selected images without target identity annotation",
+  "0225": "Two cats in selected gallery/query images; suspected same pair as directory 0235",
+  "0174": "Two cats in every selected image without target identity annotation",
+  "0235": "Two cats in selected images; suspected same pair as directory 0225",
+  "0133": "Suspected overlap with 0087 in a distinctive orange enclosure; independent identities cannot be verified visually",
+  "0087": "Suspected overlap with 0133 in a distinctive orange enclosure; independent identities cannot be verified visually",
+  "0155": "Suspected overlap with 0146: matching long-haired tortoiseshell nose stripe and pale chin",
+  "0146": "Suspected overlap with 0155: matching long-haired tortoiseshell nose stripe and pale chin",
+  "0046": "Replacement review: two cats in a selected image without target identity annotation",
+  "0249": "Replacement review: another cat visible below the foreground cat without target identity annotation",
+  "0396": "Replacement review: suspected second cat behind the foreground cat; target identity cannot be verified"
+}

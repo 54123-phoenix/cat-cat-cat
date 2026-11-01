@@ -27,6 +27,7 @@ sys.path.insert(0, str(BACKEND_DIR))
 from app.config import settings  # noqa: E402
 from app.services.ai import recognize_with_details  # noqa: E402
 from app.services.reference_snapshot import load_active_snapshot, canonical, ReferenceUnavailable  # noqa: E402
+from scripts.recognition_metrics import summarize, fraction  # noqa: E402
 
 
 class Sample(BaseModel):
@@ -128,38 +129,6 @@ def validate_samples(dataset, root, snapshot):
     return queries, errors, near_duplicates
 
 
-def fraction(numerator, denominator):
-    return numerator / denominator if denominator else None
-
-
-def summarize(predictions):
-    groups = {}
-    for kind in ('known', 'unknown_cat', 'no_cat'):
-        rows = [p for p in predictions if p['kind'] == kind]
-        statuses = Counter(p['result']['status'] for p in rows)
-        group = {'n': len(rows), 'statuses': dict(statuses)}
-        if kind == 'known':
-            top1 = sum(p['ranking'][:1] == [p['expected_reference_id']] for p in rows)
-            top3 = sum(p['expected_reference_id'] in p['ranking'][:3] for p in rows)
-            correct = sum(p['confirmed_correct'] for p in rows)
-            group.update(top1=top1, top3=top3, top1_rate=fraction(top1, len(rows)),
-                         top3_rate=fraction(top3, len(rows)), confirmed_correct=correct,
-                         confirmed_wrong=statuses['confirmed'] - correct,
-                         false_rejection_rate=fraction(statuses['unknown'], len(rows)),
-                         not_correctly_confirmed_rate=fraction(len(rows) - correct, len(rows)))
-        else:
-            group.update(false_accepts=statuses['confirmed'],
-                         false_accept_rate=fraction(statuses['confirmed'], len(rows)),
-                         candidate_exposure_rate=fraction(statuses['uncertain'], len(rows)))
-        groups[kind] = group
-    confirmed = sum(p['result']['status'] == 'confirmed' for p in predictions)
-    correct = sum(p['confirmed_correct'] for p in predictions)
-    return {'total': len(predictions), 'groups': groups,
-            'confirmed': confirmed, 'confirmed_correct': correct,
-            'confirmed_precision': fraction(correct, confirmed),
-            'unavailable': sum(p['result']['status'] == 'unavailable' for p in predictions)}
-
-
 def evaluate(manifest_path):
     report = {'status': 'incomplete', 'started_at': datetime.now(timezone.utc).isoformat(),
               'errors': [], 'predictions': [], 'summary': None}
@@ -176,7 +145,8 @@ def evaluate(manifest_path):
         if errors:
             return report, 2
         report['thresholds'] = {'confirmed': settings.RECOGNIZE_THRESHOLD_CONFIRMED,
-                                'uncertain': settings.RECOGNIZE_THRESHOLD_UNCERTAIN, 'tuned_on_this_run': False}
+                                'uncertain': settings.RECOGNIZE_THRESHOLD_UNCERTAIN,
+                                'minimum_margin': settings.RECOGNIZE_MIN_MARGIN, 'tuned_on_this_run': False}
         packages = {}
         for name in ('torch', 'torchvision', 'timm', 'ultralytics', 'faiss-cpu', 'Pillow', 'numpy'):
             try:
@@ -187,7 +157,8 @@ def evaluate(manifest_path):
                                  'cpu_count': os.cpu_count(), 'packages': packages,
                                  'threads': {k: os.environ.get(k) for k in ('OMP_NUM_THREADS', 'MKL_NUM_THREADS', 'OPENBLAS_NUM_THREADS')}}
         sources = ['scripts/eval_recognition.py', 'app/services/ai.py', 'app/services/detector.py',
-                   'app/services/model_loader.py', 'app/services/reference_snapshot.py']
+                   'app/services/model_loader.py', 'app/services/reference_snapshot.py',
+                   'scripts/recognition_metrics.py', 'app/services/recognition_policy.py']
         report['code_sha256'] = {p: hashlib.sha256((BACKEND_DIR / p).read_bytes()).hexdigest() for p in sources}
         bindings = {c.cat_id: c.reference_id for c in snapshot.catalog.cats}
         for sample in queries:

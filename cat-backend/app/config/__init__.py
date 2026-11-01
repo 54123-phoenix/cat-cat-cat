@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import model_validator
+from app.services.recognition_policy import RecognitionPolicy
 
 
 class Settings(BaseSettings):
@@ -33,6 +34,7 @@ class Settings(BaseSettings):
     # These are not calibrated probabilities or independently validated cutoffs.
     RECOGNIZE_THRESHOLD_CONFIRMED: float = 0.57
     RECOGNIZE_THRESHOLD_UNCERTAIN: float = 0.49
+    RECOGNIZE_MIN_MARGIN: float = 0.0
 
     WECHAT_APPID: str = ""
     WECHAT_SECRET: str = ""
@@ -40,8 +42,8 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_thresholds(self):
-        if self.RECOGNIZE_THRESHOLD_UNCERTAIN >= self.RECOGNIZE_THRESHOLD_CONFIRMED:
-            raise ValueError("RECOGNIZE_THRESHOLD_UNCERTAIN must be less than RECOGNIZE_THRESHOLD_CONFIRMED")
+        RecognitionPolicy(self.RECOGNIZE_THRESHOLD_CONFIRMED, self.RECOGNIZE_THRESHOLD_UNCERTAIN,
+                          self.RECOGNIZE_MIN_MARGIN)
         return self
 
     @property

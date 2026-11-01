@@ -1,0 +1,96 @@
+name: Frozen Recognition Calibration
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: Calibration selects a policy; holdout requires a separately committed frozen selection
+        type: choice
+        required: true
+        options: [calibration, holdout]
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      STUDY_PHASE: ${{ inputs.phase }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: python -m pip install httpx==0.27.0 'Pillow>=10'
+      - name: Validate frozen partition boundaries
+        run: >-
+          python cat-backend/scripts/calibrate_recognition.py validate
+          --protocol docs/validation/recognition-calibration-protocol.json
+          --calibration-manifest docs/validation/recognition-calibration-manifest.json
+          --holdout-manifest docs/validation/recognition-holdout-manifest.json
+          --previous-manifest docs/validation/recognition-pilot-manifest.json
+          --output artifacts/study-boundaries.json
+      - name: Load policy before opening the selected partition
+        run: |
+          python - <<'PY'
+          import json, os
+          values = dict(confirmed=.57, uncertain=.49, minimum_margin=0)
+          if os.environ['STUDY_PHASE'] == 'holdout':
+              selection = json.load(open('docs/validation/recognition-selected-policy.json'))
+              assert selection['status'] == 'selected' and not selection['holdout_used_for_selection']
+              values = selection['selected']['policy']
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              for name, value in values.items():
+                  env.write(f'STUDY_{name.upper()}={float(value)}\n')
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/inference-models
+          key: inference-weights-32f04b89-5d4a90cd
+      - run: python scripts/inference_assets.py --output-dir artifacts/inference-models
+      - name: Download only this partition and the shared gallery
+        run: python scripts/prepare_recognition_pilot.py --frozen-manifest "docs/validation/recognition-${STUDY_PHASE}-manifest.json" --output-dir artifacts/study-data
+      - run: docker build --target inference --build-arg PIP_INDEX=https://pypi.org/simple -t cat-recognition-study cat-backend
+      - name: Run real isolated inference with frozen parameters
+        run: |
+          mkdir -p artifacts/study-work
+          docker run --rm --network none --cpus 2 --memory 8g \
+            -e OMP_NUM_THREADS=2 -e MKL_NUM_THREADS=2 -e OPENBLAS_NUM_THREADS=2 \
+            -e YOLO_CONFIG_DIR=/tmp/ultralytics \
+            -e RECOGNIZE_THRESHOLD_CONFIRMED="$STUDY_CONFIRMED" \
+            -e RECOGNIZE_THRESHOLD_UNCERTAIN="$STUDY_UNCERTAIN" \
+            -e RECOGNIZE_MIN_MARGIN="$STUDY_MINIMUM_MARGIN" \
+            --mount type=bind,source="$PWD/artifacts/inference-models",target=/app/models,readonly \
+            --mount type=bind,source="$PWD/artifacts/study-data",target=/dataset,readonly \
+            --mount type=bind,source="$PWD/artifacts/study-work",target=/work \
+            cat-recognition-study python scripts/run_recognition_pilot.py \
+            --dataset /dataset/dataset.json --output /work/run | tee artifacts/study-inference.log
+      - name: Select using calibration only
+        if: inputs.phase == 'calibration'
+        run: >-
+          python cat-backend/scripts/calibrate_recognition.py select
+          --protocol docs/validation/recognition-calibration-protocol.json
+          --calibration-manifest docs/validation/recognition-calibration-manifest.json
+          --holdout-manifest docs/validation/recognition-holdout-manifest.json
+          --result artifacts/study-work/run/result.json
+          --output artifacts/study-selection.json
+      - name: Assess the frozen policy on holdout
+        if: inputs.phase == 'holdout'
+        run: >-
+          python cat-backend/scripts/calibrate_recognition.py assess
+          --protocol docs/validation/recognition-calibration-protocol.json
+          --manifest docs/validation/recognition-holdout-manifest.json
+          --selection docs/validation/recognition-selected-policy.json
+          --result artifacts/study-work/run/result.json
+          --output artifacts/study-assessment.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recognition-${{ inputs.phase }}-results
+          path: |
+            artifacts/study-boundaries.json
+            artifacts/study-work/run/result.json
+            artifacts/study-work/run/evaluation-manifest.json
+            artifacts/study-work/run/build-job.json
+            artifacts/study-inference.log
+            artifacts/study-selection.json
+            artifacts/study-assessment.json
+          if-no-files-found: warn

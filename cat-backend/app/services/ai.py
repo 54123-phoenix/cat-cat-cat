@@ -12,6 +12,7 @@ from app.services.model_loader import extract_embedding, TORCH_AVAILABLE
 from app.services.detector import detect_and_crop
 from app.services.reference_snapshot import load_active_snapshot, validate_vector, ReferenceUnavailable
 from app.services.reference_snapshot import canonical
+from app.services.recognition_policy import RecognitionPolicy
 from app.config import settings
 
 try:
@@ -91,9 +92,12 @@ def recognize_with_details(image_bytes: bytes, filename: str = '', *, crop: bool
         ranking = tuple(RecognizeCandidate(cat_id=cid, cat_name=names[cid], confidence=score)
                         for cid, score in scores)
         cat_id, confidence = scores[0]
-        if confidence >= settings.RECOGNIZE_THRESHOLD_CONFIRMED:
+        policy = RecognitionPolicy(settings.RECOGNIZE_THRESHOLD_CONFIRMED, settings.RECOGNIZE_THRESHOLD_UNCERTAIN,
+                                   settings.RECOGNIZE_MIN_MARGIN)
+        status = policy.classify([score for _, score in scores])
+        if status == 'confirmed':
             response = RecognizeResponse(status='confirmed', cat_id=cat_id, cat_name=names[cat_id], confidence=confidence)
-        elif confidence >= settings.RECOGNIZE_THRESHOLD_UNCERTAIN:
+        elif status == 'uncertain':
             response = RecognizeResponse(status='uncertain', confidence=confidence, candidates=list(ranking[:3]))
         else:
             response = RecognizeResponse(status='unknown', confidence=confidence)

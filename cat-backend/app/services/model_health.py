@@ -4,6 +4,7 @@ from typing import Any
 
 from app.config import settings
 from app.services.model_loader import MODEL_PATH, TORCH_AVAILABLE, load_model
+from app.services.recognition_policy import RecognitionPolicy
 
 from app.services.reference_snapshot import (
     reference_directory, load_snapshot, load_active_snapshot, runtime_identity, ReferenceUnavailable,
@@ -39,20 +40,27 @@ def _file_check(name: str, path: Path) -> dict[str, Any]:
 def _threshold_check() -> tuple[dict[str, Any], dict[str, Any]]:
     confirmed = settings.RECOGNIZE_THRESHOLD_CONFIRMED
     uncertain = settings.RECOGNIZE_THRESHOLD_UNCERTAIN
-    valid = 0 <= uncertain < confirmed <= 1
+    margin = settings.RECOGNIZE_MIN_MARGIN
+    try:
+        RecognitionPolicy(confirmed, uncertain, margin)
+        valid = True
+    except ValueError:
+        valid = False
     return (
         {
             "confirmed": confirmed,
             "uncertain": uncertain,
+            "minimum_margin": margin,
             "valid": valid,
         },
         {
             "name": "recognition_thresholds",
             "status": "pass" if valid else "fail",
-            "detail": "uncertain must be lower than confirmed, both within 0..1",
+            "detail": "finite ordered thresholds within -1..1 and minimum margin within 0..2",
             "metadata": {
                 "confirmed": confirmed,
                 "uncertain": uncertain,
+                "minimum_margin": margin,
             },
         },
     )
