@@ -25,7 +25,13 @@ Shell 与 Desktop 对该路径的可见性/属性异常，尚未确定宿主机�
 - 验证容器重启后记录、图片和任务日志持久；停掉两个写入服务后复制数据库/附件/store，恢复到第二个全新项目与卷，核对完整性、外键、身份、计数和图片哈希。
 - 最后仅清理本轮两个独立项目及其卷；原始备份和命令日志留在 CI artifact。
 
-本地已通过 `--prepare-only` 配置解析与 Python 编译检查；首次准备脚本错误假定关闭的 postgres profile 仍在解析结果中，已改为允许缺省。实际镜像和容器结果待此脚本的远端运行，不把配置解析记作容器通过。
+本地已通过 `--prepare-only` 配置解析与 Python 编译检查；首次准备脚本错误假定关闭的 postgres profile 仍在解析结果中，已改为允许缺省。
+
+## 真实容器结果
+
+提交 `1636f5b` 的 [运行 41288336214](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288336214) 中，`docker-runtime` **7 组全部通过**。Linux/amd64、Docker Engine 28.0.4，Gunicorn worker PID 为 8、9、10、11。源卷与新恢复卷均为迁移 `j20261031`，用户/猫/照片/帖子各 1 条；database_id、generation=2、图片 SHA256 及 reference-worker 失败日志一致。见 [首次完整结果](docker-api-first.json)。
+
+同一次运行的 Redis 独立任务在 API 启动阶段暴露 SQLite WAL 锁竞争，因此整个工作流失败，不能把 Docker job 成功写成整套 CI 成功。后续生产连接修复及全量复验见 [SQLite 启动记录](SQLITE_STARTUP_20261101.md)。
 
 复跑：`python scripts/verify_docker_runtime.py --output-dir artifacts/docker-rerun`。需要 Linux Docker 引擎与 Compose，宿主机 Python 依赖 `httpx==0.27.0` 和 Pillow。`--prepare-only` 不连接引擎。
 

@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_wal_initialization_waits_for_real_reader_then_enforces_foreign_keys ___
+tests\test_sqlite_connection.py:47: in test_wal_initialization_waits_for_real_reader_then_enforces_foreign_keys
+    pending.result(timeout=.1)
+C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+C:\Users\Phoenix\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_sqlite_connection.py:35: in connect
+    _set_sqlite_pragma(connection, None)
+previous-database.py:18: in _set_sqlite_pragma
+    ???
+E   sqlite3.OperationalError: database is locked
+=========================== short test summary info ===========================
+FAILED tests/test_sqlite_connection.py::test_wal_initialization_waits_for_real_reader_then_enforces_foreign_keys
+1 failed in 0.27s

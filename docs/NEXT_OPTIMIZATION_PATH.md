@@ -2,6 +2,8 @@
 
 设计日期：2026-10-30，进度更新：2026-10-31。依据：[已知问题台账](KNOWN_ISSUES.md)、[最近修复证据](validation/REPAIR_PROGRESS.md)和当前源码。用户已批准按顺序执行。执行状态见 [A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)，以下阶段出口仍作为验收标准。
 
+2026-11-01 补充：测试密码隔离与浏览器等待修复后，远端五个原有 CI 任务全部通过；新增的 Linux Docker API 阶段七组也已通过。再次并发启动暴露的 WAL 锁竞争记为 ISS-038，已修复并通过本地真实持锁回归和 Redis 四进程验证，后续远端结果见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。本机 Desktop 仍受阻。下一包优先验收浏览器断线重连自动同步，再按准备条件推进完整 inference 镜像、模型/store 恢复与真实识别质量；[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
+
 ## 目标与现状
 
 下一阶段建议以“可重复部署、核心流程可信的受控校园内测”为交付目标。规划时的基线为 19 项通过本地验收，10 项待专项验收，3 项部分完成，参考库生命周期尚未修复。测试基线为后端 163 项、Web 48 项、小程序请求合同 5 项通过；真实模型、微信、Docker/Redis、地图及外部 LLM 尚未完成验收。

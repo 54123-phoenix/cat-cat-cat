@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checks": {
+    "four_process_bootstrap": "passed",
+    "redis_cache_shared_and_invalidated": "passed",
+    "async_route_broadcast_to_two_processes": "passed",
+    "sync_route_broadcast_to_two_processes": "passed",
+    "disconnect_releases_subscriptions": "passed",
+    "rejected_location_never_returns_after_redis_outage": "passed",
+    "revocation_closes_existing_stream_and_denies_reconnect": "passed",
+    "offline_sse_returns_503": "passed",
+    "missed_event_state_recovered_by_authoritative_query": "passed",
+    "sse_disconnect_and_reconnect_after_network_outage": "passed"
+  },
+  "started_at": "2026-11-01T08:22:52.708137+00:00",
+  "environment": "WSL Redis + Windows API",
+  "redis_version": "7.4.2",
+  "api_pids": [
+    "16000",
+    "22880",
+    "3904",
+    "52220"
+  ],
+  "bootstrap_counts": {
+    "admin": 1,
+    "fudan": 1
+  },
+  "username_indexes": [
+    {
+      "seq": 0,
+      "name": "ix_users_username",
+      "unique": 1,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 1,
+      "name": "ix_users_openid",
+      "unique": 1,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 2,
+      "name": "ix_users_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    },
+    {
+      "seq": 3,
+      "name": "ix_users_campus_id",
+      "unique": 0,
+      "origin": "c",
+      "partial": 0
+    }
+  ]
+}

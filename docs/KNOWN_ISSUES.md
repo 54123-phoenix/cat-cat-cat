@@ -1,10 +1,10 @@
 # 已知问题与待验证事项台账
 
-记录日期：2026-10-30，进度更新：2026-10-31。审查基线：[main / f350468e1d39de81e76416e315a4739516dd123c](https://github.com/54123-phoenix/cat-cat-cat/tree/f350468e1d39de81e76416e315a4739516dd123c)。
+记录日期：2026-10-30，进度更新：2026-11-01。审查基线：[main / f350468e1d39de81e76416e315a4739516dd123c](https://github.com/54123-phoenix/cat-cat-cat/tree/f350468e1d39de81e76416e315a4739516dd123c)。
 
 **当前结论：项目已有真实业务实现，但关键流程、权限边界、数据正确性和交付流程仍有缺陷，尚未达到稳定发布候选版的质量。** 本台账记录本次源码审查和本地验证结果，不把历史文档中的“已完成”当作验收结论，也不追溯推断缺陷最早出现的时间。
 
-初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），合计 37 项。当前 **25 项通过本地验收，9 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)及 [C](validation/OPTIMIZATION_C.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
+初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），合计 38 项。当前 **26 项通过本地验收，9 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)及 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
 
 ## 阅读与关闭规则
 
@@ -378,6 +378,13 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 - 修复：热力图直接读取数据库当前审核状态，移除该端点缓存与审核后的失效调用；其它普通排行榜缓存仍遵循 TTL。
 - 验收：Redis 保留旧内容的真实故障测试和缓存失效丢失的 HTTP 回归均通过，撤回点位在中断期间及恢复后都不再返回。数据库额外读负载仍需容量评估。见 [C 证据](validation/OPTIMIZATION_C.md)。
 
+### ISS-038 多进程启动时切换 SQLite WAL 模式发生锁竞争
+
+**P1 · 已修复 · 本地持锁回归及真实四进程验收通过（2026-11-01）。** 远端四个 API 同时启动，一个进程在连接 hook 的 `PRAGMA journal_mode=WAL` 报 database is locked，应用启动失败；与 Redis 服务是否健康无关。
+
+- 修复：已有 WAL/内存模式不重复切换；只对初始化期间的 SQLITE_BUSY/LOCKED 最多等待 5 秒，其它错误立即传播。成功后保留业务 busy_timeout 与外键约束，不重放业务写入。
+- 验收：同一真实持锁回归在旧实现失败，修复后通过；持续占锁按截止时间退出，只读错误不被吞掉；本机真实 Redis 加四 API 十项通过。远端复验与证据见 [SQLite 启动记录](validation/SQLITE_STARTUP_20261101.md)。不声明已经验证持续高并发写入容量。
+
 ## 待验证或待决策事项
 
 这些事项不能因测试未运行而直接判断失败，也不能因存在代码就判断完成。
@@ -386,8 +393,8 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 |---|---|---|---|
 | VER-001 真实识别质量 | P1 / 待验证 | 已有 YOLO→DINOv3→投影→FAISS 实现及 91 只猫、1,421 条 256 维参考向量；本次没有运行真实模型和独立样本。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
 | VER-002 微信真机全流程 | P1 / 待验证 | 只完成构建与隔离 JS 模拟；尚未配置正式平台条件并执行真机测试。 | 修复 ISS-007/008/009/010/032 后，在明确 AppID、域名、基础库和设备版本下，关闭 demoMode 验证登录、列表、拍照、识别、保存、发帖、错误重试，并保存记录。 |
-| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 已通过本机旧库升级、API 重启、SQLite/附件备份和恢复；Desktop 4.92.0 在 sailor-ingest.sock 绑定时重复失败，容器引擎不可用。配置解析通过不等于容器运行通过。 | 保留 [C 本机证据](validation/OPTIMIZATION_C.md)，修复宿主机启动条件后用隔离挂载验证空环境、Gunicorn/worker、镜像、重启持久性和完整恢复；模型/store 整体恢复仍需单独核对。 |
-| VER-004 Redis 与多 worker | P1 / 本机后端通过，部署集成待验收 | Redis 7.4.2 + 四个独立 API 进程十项通过，含同步/异步广播、共享失效、撤销、清理、离线 503 与恢复；断线写入通过数据库重新查询可恢复。 | [C 证据](validation/OPTIMIZATION_C.md)。继续验收 Linux Gunicorn/部署网络、浏览器重连后当前状态同步；Pub/Sub 不提供离线重放，Web onopen 当前也不会自动刷新所有页面数据。 |
+| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复通过；Linux CI 的 API/nginx 镜像、四 worker、真实任务、重启及新卷恢复七组通过。Windows Desktop 仍因 socket/目录可见性故障不可用。 | [C](validation/OPTIMIZATION_C.md) 与 [Docker 证据](validation/DOCKER_ACCEPTANCE_20261101.md)。继续验证完整 inference 镜像、模型与已发布向量 store 的整体恢复、目标宿主机挂载及容量。 |
+| VER-004 Redis 与多 worker | P1 / 后端及容器集成通过，浏览器重连待验收 | Redis 7.4.2 + 四 API 十项通过；Linux Gunicorn 四 worker 加 Redis/nginx 的真实 HTTP 写入与 SSE 推送通过。远端复验暴露的 SQLite 启动锁竞争另记 ISS-038。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md) 与 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。继续验收浏览器重连后的当前状态同步；Pub/Sub 不提供离线重放，Web onopen 当前不会自动刷新所有页面数据。 |
 | VER-005 地图和外部 LLM | P2 / 待验证 | 本地缺地图 Key；猫情报数据库/规则回退已在浏览器跑通，但真实地图与外部 LLM 工具循环未验收。 | 使用有效配置验证地图加载、坐标转换和定位；验证真实 LLM 工具调用、超时、错误响应及回退。分别保存结果，不能用回退成功替代 LLM 成功。 |
 | VER-006 性能与路线产品边界 | P2 / 待验证、待决策 | 源码存在图库全量读取后排序分页、排行榜逐用户统计、通知逐收件人提交；未压测，不能声称已测得容量不足。路线按热度组织，打卡校验站名，不证明实际到达。 | 先明确目标数据量、并发、延迟和是否需要可信到访/路线优化；对图库、排行榜、通知压测并记录查询数/延迟/内存，按结果优化。轻量路线玩法可保留，但文案不得暗示已验证到访或路网最优。 |
 | VER-007 代码、数据与模型许可 | P2 / 待决策 | 仓库未发现 LICENSE；不能替作者选择许可，也不能据此认定已发生侵权。 | 由权利人明确代码许可，核对图片、猫档案数据、模型权重和其他素材的来源、授权与使用范围，补充可核验说明。 |

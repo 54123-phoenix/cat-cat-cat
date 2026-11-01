@@ -17,18 +17,19 @@
 
 **更新于 2026-11-01：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
 
-当前台账共 37 项：**25 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
+当前台账共 38 项：**26 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
 | 验证范围 | 最近结果 | 证据与限制 |
 |---|---|---|
-| 后端完整回归 | 240 passed，68 warnings | [CI 修复复验](docs/validation/CI_REPAIR_20261101.md)；采用 CI 的不同管理员密码环境，新增测试隔离回归，保留弃用警告 |
+| 后端完整回归 | 243 passed，68 warnings | [SQLite 启动复验](docs/validation/SQLITE_STARTUP_20261101.md)；CI 密码环境，包含测试隔离与真实持锁回归，保留弃用警告 |
 | Web 回归 | 66 passed；类型检查、lint、构建通过 | [B4 验收](docs/validation/OPTIMIZATION_B4.md)；C 阶段未修改前端 |
 | 真实浏览器 | B4 管理端 8 组、核心流程 6 组通过 | Chromium；测试数据库，参考库推理使用合成向量 |
 | 参考库生命周期 | B1—B4 本地通过 | 持久身份、构建任务、独立 worker、原子发布、兼容回滚、管理状态和失败重试；不代表识别质量达标 |
 | Redis 多进程 | Redis 7.4.2 + 4 个独立 API 进程，10 项通过 | [C 验收](docs/validation/OPTIMIZATION_C.md)；本机跨进程广播、缓存、撤销、断线清理与恢复 |
 | SQLite 与附件恢复 | 4 组通过 | 旧库升级、重启持久性、备份/预演/恢复、HTTP 与图片哈希/解码核对 |
 | 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
-| Docker / 真实模型 / 外部服务 | 待验收 | Docker Desktop 启动受阻；真实模型质量、微信、地图、外部 LLM 和资源许可仍需各自证据 |
+| Docker API 阶段 | Linux CI 七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
+| 真实模型 / 外部服务 | 待验收 | 完整 inference 镜像、识别质量、微信、地图、外部 LLM 和资源许可仍需各自证据；本机 Docker Desktop 仍受阻 |
 
 两处测试环境问题修复后，[远端 CI / 971c937](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288022660) 的五个任务全部通过：后端 240 项（远端 69 条警告）、Web、小程序、浏览器核心 6 组及参考库 8 组、真实 Redis 10 项。Docker 容器另设独立验收任务，结果见后续记录；历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
@@ -135,7 +136,7 @@ python scripts/reference_jobs.py status
 
 API 和 worker 必须使用相同数据库、照片、模型与 store 配置。旧 `cat_embeddings.json` / FAISS 文件不能自动作为可信身份参考库使用；清单为 v2，旧候选需重建。失败构建不替换当前版本，回滚需通过当前数据库兼容性检查。完整操作见 [参考库说明](docs/REFERENCE_LIBRARY.md)。
 
-### Docker Compose（容器验收未完成）
+### Docker Compose（API 阶段已验收）
 
 需要可用的 Docker 引擎。在仓库根目录配置环境后启动：
 
@@ -156,7 +157,7 @@ docker compose up -d --build
 
 本地开发默认数据库是 `cat-backend/cat_community.db`，与 Compose 路径不同。数据库、附件、模型和参考库不打进镜像；模型和参考照片需要另行准备。默认构建 inference 阶段，`docker build --target api cat-backend` 可构建不含 Torch 的 API 阶段。
 
-本次 Docker Desktop 因本地 socket 绑定错误未能启动，仅验证了 Compose 配置解析，**未验证镜像构建、容器重启或卷恢复**。部署步骤与范围见 [DEPLOY.md](DEPLOY.md) 和 [C 验收](docs/validation/OPTIMIZATION_C.md)。
+Linux CI 已用临时命名卷通过 `api` 阶段镜像构建、四 worker、nginx/Redis、容器重启和新卷恢复。本机 Docker Desktop 仍因 socket/目录可见性错误无法启动。上述默认构建使用完整 `inference` 阶段，**该阶段与真实模型尚未验收**。详见 [容器范围与结果](docs/validation/DOCKER_ACCEPTANCE_20261101.md) 和 [DEPLOY.md](DEPLOY.md)。
 
 ## 开发检查与复验
 
@@ -247,7 +248,7 @@ Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据
 
 ## 后续工作与限制
 
-1. 修复 Docker 宿主机启动条件，在隔离挂载中验收镜像、Gunicorn、worker、持久化和完整恢复。
+1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复；修复本机 Docker Desktop，验证目标宿主机挂载。API 阶段容器演练已通过，客户端断线重连后的自动状态同步仍待验收。
 2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
 3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
 4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。
