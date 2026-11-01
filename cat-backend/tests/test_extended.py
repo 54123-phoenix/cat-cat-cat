@@ -1,7 +1,6 @@
 import os
 
 os.environ.setdefault("JWT_SECRET", "test-jwt-secret-key-for-pytest")
-os.environ.setdefault("ADMIN_PASSWORD", "testadmin123")
 os.environ.setdefault("DEMO_PASSWORD", "testdemo123")
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("INIT_DEMO_USER", "0")
@@ -11,8 +10,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.models import User
-
 _test_engine = create_engine(
     "sqlite://",
     connect_args={"check_same_thread": False},
@@ -20,7 +17,7 @@ _test_engine = create_engine(
 )
 _TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_test_engine)
 
-from app_fixture import isolated_client
+from app_fixture import TEST_ADMIN_PASSWORD, isolated_client
 
 
 @pytest.fixture(scope="module")
@@ -31,13 +28,7 @@ def client():
 
 @pytest.fixture(scope="module")
 def admin_token(client):
-    pwd_ctx = __import__("passlib.context", fromlist=["CryptContext"]).CryptContext(schemes=["bcrypt"], deprecated="auto")
-    db = _TestSessionLocal()
-    if not db.query(User).filter(User.username == "admin").first():
-        db.add(User(username="admin", password_hash=pwd_ctx.hash("testadmin123"), nickname="管理员", role="admin"))
-        db.commit()
-    db.close()
-    resp = client.post("/api/admin/login", json={"password": "testadmin123"})
+    resp = client.post("/api/admin/login", json={"password": TEST_ADMIN_PASSWORD})
     assert resp.status_code == 200
     return resp.json()["token"]
 

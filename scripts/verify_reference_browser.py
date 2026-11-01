@@ -9,6 +9,7 @@ import socket
 import subprocess
 import sys
 import tempfile
+import time
 import traceback
 
 from PIL import Image
@@ -103,6 +104,9 @@ with SessionLocal() as db:
                     context.tracing.start(screenshots=True, snapshots=True, sources=True)
                     page = context.new_page()
                     page.set_default_timeout(20000)
+                    # Locator defaults do not configure expect(). The UI polls every
+                    # 5 seconds, so allow multiple polls plus request/render latency.
+                    expect.set_options(timeout=15000)
                     page.on('pageerror', lambda error: report['page_errors'].append(str(error)))
                     checks = report['checks']
                     try:
@@ -129,6 +133,19 @@ with SessionLocal() as db:
                         checks['queued_is_not_published'] = 'passed'
                         (fixture / 'block').touch()
                         building = launch([sys.executable, 'tests/reference_process_app.py', 'worker'])
+                        deadline = time.monotonic() + 20
+                        while True:
+                            job = status()['latest_job']
+                            if building.poll() is not None:
+                                raise AssertionError(f'Worker exited before progress: exit={building.returncode}, job={job}')
+                            if job['status'] == 'running':
+                                report['running_job'] = job
+                                break
+                            if time.monotonic() >= deadline:
+                                raise AssertionError(f'Worker startup timed out: job={job}; see servers.log')
+                            page.wait_for_timeout(100)
+                        # API polling above does not update React Query. This assertion
+                        # still requires the page to refresh itself without a click.
                         expect(page.get_by_text('正在处理', exact=True)).to_be_visible()
                         expect(page.get_by_role('progressbar')).to_have_attribute('value', '0')
                         page.screenshot(path=str(output / 'progress-mobile.png'), full_page=True)

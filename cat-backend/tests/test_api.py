@@ -1,7 +1,6 @@
 import os
 
 os.environ.setdefault("JWT_SECRET", "test-jwt-secret-key-for-pytest")
-os.environ.setdefault("ADMIN_PASSWORD", "testadmin123")
 os.environ.setdefault("DEMO_PASSWORD", "testdemo123")
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("INIT_DEMO_USER", "0")
@@ -22,7 +21,7 @@ _test_engine = create_engine(
 )
 _TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_test_engine)
 
-from app_fixture import isolated_client
+from app_fixture import TEST_ADMIN_PASSWORD, isolated_client
 
 
 @pytest.fixture(scope="module")
@@ -35,7 +34,7 @@ def client():
 def admin_token(client):
     resp = client.post("/api/auth/login", json={
         "username": "admin",
-        "password": "testadmin123",
+        "password": TEST_ADMIN_PASSWORD,
     })
     assert resp.status_code == 200
     return resp.json()["token"]
@@ -102,7 +101,7 @@ class TestAuth:
     def test_login_success(self, client):
         resp = client.post("/api/auth/login", json={
             "username": "admin",
-            "password": "testadmin123",
+            "password": TEST_ADMIN_PASSWORD,
         })
         assert resp.status_code == 200
         data = resp.json()

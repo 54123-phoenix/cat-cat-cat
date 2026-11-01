@@ -9,6 +9,8 @@ from fastapi.testclient import TestClient
 from app.database import Base, get_db
 from app.schema_readiness import MIGRATIONS
 
+TEST_ADMIN_PASSWORD = "isolated-api-admin-password"
+
 
 @contextmanager
 def isolated_client(engine, session_factory):
@@ -27,6 +29,8 @@ def isolated_client(engine, session_factory):
     overrides = main.app.dependency_overrides.copy()
     try:
         with pytest.MonkeyPatch.context() as patch:
+            # Fixture credentials must not depend on the caller's CI/deployment env.
+            patch.setattr(main.settings, "ADMIN_PASSWORD", TEST_ADMIN_PASSWORD)
             patch.setattr(database, "engine", engine)
             patch.setattr(database, "SessionLocal", session_factory)
             patch.setattr(main, "engine", engine)
