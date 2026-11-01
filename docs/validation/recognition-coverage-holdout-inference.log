@@ -1,0 +1,130 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 4cf3161f45b4, baseline_capture_current_schema
+INFO  [alembic.runtime.migration] Running upgrade 4cf3161f45b4 -> f55904ce2b93, boolean_fix_and_schema_improvements
+INFO  [alembic.runtime.migration] Running upgrade f55904ce2b93 -> a1b2c3d4e5f6, add_lat_lon_indexes_on_sightings
+INFO  [alembic.runtime.migration] Running upgrade a1b2c3d4e5f6 -> d0313e2b50e6, add_missing_columns
+INFO  [alembic.runtime.migration] Running upgrade d0313e2b50e6 -> e20261030, Adopt missing tables and normalize known legacy data without guessing timestamps.
+INFO  [alembic.runtime.migration] Running upgrade e20261030 -> f20261030, Persist unique vote reward receipts without guessing historical XP.
+INFO  [alembic.runtime.migration] Running upgrade f20261030 -> g20261030, Attribute new discoveries and recognition audits; legacy owners stay NULL.
+INFO  [alembic.runtime.migration] Running upgrade g20261030 -> h20261030, Persistent database and cat identities; numeric API IDs remain unchanged.
+INFO  [alembic.runtime.migration] Running upgrade h20261030 -> i20261031, Track reference catalog mutations in the same SQLite transaction.
+INFO  [alembic.runtime.migration] Running upgrade i20261031 -> j20261031, Restore unique indexes omitted by the legacy snapshot adoption helper.
+{"job_id":"276002e7a0d241d7b60fe53892be2f45","kind":"rebuild","status":"succeeded","created_at":"2026-11-01T12:25:30.900363+00:00","updated_at":"2026-11-01T12:27:29.238822+00:00","requested_by":null,"requested_generation":120,"crop":true,"publish":true,"target_snapshot_id":null,"input_revision":"ff6ea9b38ada96bc4cb5e7b286d6ed82625c3a19e8a6657fa2e0d6162e845b0a","input_generation":120,"model_sha256":"32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e","snapshot_id":"cc8b0ae441e34cb5b4a4dd20a32899fc","publication_id":"6f1860d1f4ac441d99eacea49f45321b","completed_photos":96,"total_photos":96,"code":"published","detail":null,"recovered":false}
+study-cat-0104-1: uncertain score=0.5009 seconds=3.537
+study-cat-0024-1: uncertain score=0.5399 seconds=1.531
+study-cat-0128-1: unknown score=0.4792 seconds=1.498
+study-cat-0027-2: uncertain score=0.6236 seconds=1.502
+study-cat-0391-5: confirmed score=0.7595 seconds=1.292
+study-cat-0128-2: unknown score=0.4824 seconds=1.498
+study-cat-0304-0: uncertain score=0.6438 seconds=1.455
+study-dog-37: unknown score=0.2376 seconds=1.527
+study-cat-0127-0: uncertain score=0.6329 seconds=1.500
+study-cat-0081-2: uncertain score=0.5766 seconds=1.402
+study-cat-0163-2: uncertain score=0.6502 seconds=1.406
+study-cat-0328-6: confirmed score=0.7407 seconds=1.503
+study-cat-0128-0: unknown score=0.4726 seconds=1.495
+study-cat-0391-4: confirmed score=0.8890 seconds=1.403
+study-cat-0104-0: unknown score=0.4835 seconds=1.705
+study-cat-0286-6: confirmed score=0.8631 seconds=1.854
+study-cat-0081-1: uncertain score=0.5970 seconds=1.644
+study-cat-0379-4: uncertain score=0.5432 seconds=1.589
+study-cat-0406-5: uncertain score=0.6772 seconds=1.623
+study-dog-26: unknown score=0.3050 seconds=1.470
+study-dog-21: unknown score=0.1817 seconds=1.573
+study-cat-0127-2: confirmed score=0.7295 seconds=1.659
+study-cat-0207-5: confirmed score=0.8786 seconds=1.503
+study-dog-28: unknown score=0.1440 seconds=1.486
+study-cat-0205-2: uncertain score=0.5549 seconds=1.483
+study-cat-0499-6: confirmed score=0.7834 seconds=1.418
+study-cat-0231-5: confirmed score=0.9580 seconds=1.593
+study-cat-0205-0: uncertain score=0.5356 seconds=1.503
+study-cat-0024-2: uncertain score=0.6035 seconds=1.443
+study-cat-0207-4: confirmed score=0.7330 seconds=1.445
+study-cat-0231-4: confirmed score=0.9330 seconds=1.619
+study-cat-0361-0: uncertain score=0.6671 seconds=1.481
+study-cat-0499-5: confirmed score=0.8288 seconds=1.534
+study-cat-0286-5: confirmed score=0.8487 seconds=1.562
+study-cat-0173-4: confirmed score=0.9280 seconds=1.521
+study-cat-0319-0: uncertain score=0.5570 seconds=1.377
+study-cat-0132-0: uncertain score=0.6721 seconds=1.397
+study-cat-0251-0: uncertain score=0.5872 seconds=1.620
+study-cat-0391-6: confirmed score=0.8271 seconds=1.396
+study-cat-0328-4: confirmed score=0.7459 seconds=1.509
+study-cat-0340-1: uncertain score=0.5847 seconds=1.387
+study-dog-35: unknown score=0.2718 seconds=1.513
+study-cat-0065-6: confirmed score=0.9769 seconds=1.530
+study-cat-0435-1: unknown score=0.4707 seconds=1.460
+study-cat-0368-0: uncertain score=0.5172 seconds=1.690
+study-dog-25: unknown score=0.2031 seconds=1.509
+study-dog-36: unknown score=0.3795 seconds=1.482
+study-cat-0368-1: uncertain score=0.5292 seconds=1.485
+study-cat-0361-2: uncertain score=0.6361 seconds=1.384
+study-cat-0233-0: unknown score=0.3894 seconds=1.533
+study-cat-0205-1: uncertain score=0.5341 seconds=1.529
+study-cat-0244-2: uncertain score=0.6050 seconds=1.477
+study-cat-0361-1: uncertain score=0.5678 seconds=1.350
+study-dog-22: unknown score=0.3667 seconds=1.544
+study-cat-0251-2: uncertain score=0.6129 seconds=1.651
+study-cat-0027-1: uncertain score=0.5906 seconds=1.451
+study-cat-0127-1: uncertain score=0.6694 seconds=1.512
+study-dog-39: unknown score=0.2572 seconds=1.479
+study-cat-0435-0: unknown score=0.4456 seconds=1.422
+study-cat-0173-6: confirmed score=0.9476 seconds=1.596
+study-dog-34: unknown score=0.2247 seconds=1.434
+study-cat-0406-6: confirmed score=0.7096 seconds=1.635
+study-cat-0204-4: confirmed score=0.9639 seconds=1.371
+study-cat-0336-2: uncertain score=0.6598 seconds=1.243
+study-cat-0163-1: uncertain score=0.6022 seconds=1.519
+study-dog-31: unknown score=0.1634 seconds=1.606
+study-cat-0328-5: confirmed score=0.7586 seconds=1.376
+study-cat-0340-0: uncertain score=0.5660 seconds=1.436
+study-cat-0336-1: uncertain score=0.6249 seconds=1.361
+study-cat-0081-0: uncertain score=0.5846 seconds=1.501
+study-cat-0104-2: unknown score=0.4893 seconds=1.488
+study-cat-0132-2: uncertain score=0.5926 seconds=1.597
+study-cat-0099-0: unknown score=0.4379 seconds=1.425
+study-dog-23: unknown score=0.1579 seconds=1.396
+study-cat-0406-4: uncertain score=0.6572 seconds=1.616
+study-cat-0336-0: uncertain score=0.5250 seconds=1.379
+study-dog-32: unknown score=0.3408 seconds=1.617
+study-cat-0304-1: uncertain score=0.6998 seconds=1.700
+study-cat-0099-1: unknown score=0.4464 seconds=1.683
+study-cat-0173-5: confirmed score=0.9291 seconds=1.609
+study-dog-38: unknown score=0.2551 seconds=1.608
+study-cat-0204-5: confirmed score=0.9597 seconds=1.567
+study-dog-27: unknown score=0.3162 seconds=1.433
+study-cat-0233-2: unknown score=0.4145 seconds=1.695
+study-cat-0132-1: uncertain score=0.6450 seconds=1.587
+study-cat-0379-6: uncertain score=0.6385 seconds=1.901
+study-dog-29: unknown score=0.3400 seconds=1.642
+study-dog-24: unknown score=0.2278 seconds=1.556
+study-cat-0065-4: confirmed score=0.8588 seconds=1.560
+study-cat-0231-6: confirmed score=0.9753 seconds=1.646
+study-cat-0368-2: uncertain score=0.5595 seconds=1.647
+study-cat-0429-5: confirmed score=0.7351 seconds=1.448
+study-cat-0024-0: uncertain score=0.5740 seconds=1.535
+study-cat-0244-0: uncertain score=0.5535 seconds=1.610
+study-cat-0027-0: uncertain score=0.6124 seconds=1.662
+study-cat-0204-6: confirmed score=0.9712 seconds=1.633
+study-cat-0435-2: uncertain score=0.5882 seconds=1.485
+study-cat-0429-6: confirmed score=0.7343 seconds=1.170
+study-cat-0244-1: uncertain score=0.5771 seconds=1.597
+study-cat-0429-4: confirmed score=0.7307 seconds=1.296
+study-cat-0340-2: uncertain score=0.5202 seconds=1.413
+study-cat-0233-1: unknown score=0.3904 seconds=1.651
+study-cat-0099-2: unknown score=0.3811 seconds=1.645
+study-cat-0163-0: uncertain score=0.6476 seconds=1.476
+study-cat-0319-2: uncertain score=0.5438 seconds=1.312
+study-cat-0207-6: confirmed score=0.8396 seconds=1.397
+study-cat-0286-4: confirmed score=0.7278 seconds=1.494
+study-cat-0065-5: confirmed score=0.9384 seconds=1.336
+study-cat-0319-1: uncertain score=0.5442 seconds=1.366
+study-dog-20: unknown score=0.4719 seconds=1.457
+study-cat-0251-1: uncertain score=0.6711 seconds=1.428
+study-dog-33: unknown score=0.3070 seconds=1.403
+study-cat-0499-4: confirmed score=0.8318 seconds=1.426
+study-dog-30: unknown score=0.2491 seconds=1.486
+study-cat-0304-2: uncertain score=0.6577 seconds=1.314
+study-cat-0379-5: unknown score=0.4689 seconds=1.356
+{"status": "completed", "summary": {"total": 116, "groups": {"known": {"n": 36, "statuses": {"confirmed": 31, "uncertain": 4, "unknown": 1}, "top1": 36, "top3": 36, "top1_rate": 1.0, "top3_rate": 1.0, "confirmed_correct": 31, "confirmed_wrong": 0, "false_rejection_rate": 0.027777777777777776, "not_correctly_confirmed_rate": 0.1388888888888889}, "unknown_cat": {"n": 60, "statuses": {"uncertain": 46, "unknown": 13, "confirmed": 1}, "false_accepts": 1, "false_accept_rate": 0.016666666666666666, "candidate_exposure_rate": 0.7666666666666667}, "no_cat": {"n": 20, "statuses": {"unknown": 20}, "false_accepts": 0, "false_accept_rate": 0.0, "candidate_exposure_rate": 0.0}}, "confirmed": 32, "confirmed_correct": 31, "confirmed_precision": 0.96875, "unavailable": 0}, "errors": []}

@@ -1,0 +1,152 @@
+{
+  "status": "empirical_targets_met",
+  "gates": {
+    "known_correct_confirmation": true,
+    "known_wrong_confirmation": true,
+    "unknown_false_accept": true,
+    "no_cat_false_accept": true,
+    "available": true
+  },
+  "policy": {
+    "confirmed": 0.7,
+    "uncertain": 0.49,
+    "minimum_margin": 0.0
+  },
+  "summary": {
+    "total": 116,
+    "groups": {
+      "known": {
+        "n": 36,
+        "statuses": {
+          "confirmed": 31,
+          "uncertain": 4,
+          "unknown": 1
+        },
+        "top1": 36,
+        "top3": 36,
+        "top1_rate": 1.0,
+        "top3_rate": 1.0,
+        "confirmed_correct": 31,
+        "confirmed_wrong": 0,
+        "false_rejection_rate": 0.027777777777777776,
+        "not_correctly_confirmed_rate": 0.1388888888888889
+      },
+      "unknown_cat": {
+        "n": 60,
+        "statuses": {
+          "uncertain": 46,
+          "unknown": 13,
+          "confirmed": 1
+        },
+        "false_accepts": 1,
+        "false_accept_rate": 0.016666666666666666,
+        "candidate_exposure_rate": 0.7666666666666667
+      },
+      "no_cat": {
+        "n": 20,
+        "statuses": {
+          "unknown": 20
+        },
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "candidate_exposure_rate": 0.0
+      }
+    },
+    "confirmed": 32,
+    "confirmed_correct": 31,
+    "confirmed_precision": 0.96875,
+    "unavailable": 0
+  },
+  "legacy_summary_same_ranks": {
+    "total": 116,
+    "groups": {
+      "known": {
+        "n": 36,
+        "statuses": {
+          "confirmed": 34,
+          "uncertain": 1,
+          "unknown": 1
+        },
+        "top1": 36,
+        "top3": 36,
+        "top1_rate": 1.0,
+        "top3_rate": 1.0,
+        "confirmed_correct": 34,
+        "confirmed_wrong": 0,
+        "false_rejection_rate": 0.027777777777777776,
+        "not_correctly_confirmed_rate": 0.05555555555555555
+      },
+      "unknown_cat": {
+        "n": 60,
+        "statuses": {
+          "uncertain": 16,
+          "unknown": 13,
+          "confirmed": 31
+        },
+        "false_accepts": 31,
+        "false_accept_rate": 0.5166666666666667,
+        "candidate_exposure_rate": 0.26666666666666666
+      },
+      "no_cat": {
+        "n": 20,
+        "statuses": {
+          "unknown": 20
+        },
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "candidate_exposure_rate": 0.0
+      }
+    },
+    "confirmed": 65,
+    "confirmed_correct": 34,
+    "confirmed_precision": 0.5230769230769231,
+    "unavailable": 0
+  },
+  "selection_sha256": "548a7a3ec470d3c19540cb7e1a6b2bbb5a60143a86cf767dfdea390dea04bc4a",
+  "holdout_result_sha256": "4a7194485dfb4d2431d9ef177eb63c2d606a9496903fbb76192831d9a651ac6a",
+  "affected_identities": [
+    {
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0127",
+      "samples": [
+        "study-cat-0127-2"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0379",
+      "samples": [
+        "study-cat-0379-4",
+        "study-cat-0379-6",
+        "study-cat-0379-5"
+      ]
+    },
+    {
+      "kind": "known",
+      "identity": "catindividuals-v1:0406",
+      "samples": [
+        "study-cat-0406-5",
+        "study-cat-0406-4"
+      ]
+    }
+  ],
+  "false_accept_wilson_95_image_intervals": {
+    "unknown_cat": [
+      0.0029481597947862495,
+      0.08855129727590061
+    ],
+    "no_cat": [
+      0.0,
+      0.16112515805281938
+    ]
+  },
+  "interval_limit": "Descriptive image-level intervals assume independent trials; repeated cats/sessions violate that assumption. No population guarantee.",
+  "release_quality_passed": false,
+  "limitations": [
+    "Model training overlap unknown; provider did not publish its 131-cat training manifest",
+    "Cat identities are source labels, not owner-verified identities",
+    "AFHQ dog photos lack individual identity/session metadata; image-disjoint partitions may still contain correlated subjects",
+    "Dog negatives do not cover toys, screens, multiple cats or production upload distributions",
+    "Changing gallery size, model or image domain requires fresh calibration and validation"
+  ]
+}

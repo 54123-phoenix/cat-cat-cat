@@ -1,0 +1,179 @@
+{
+  "manifest_freeze_commit": "eefed5e04914db69f41bc38b4e23bf3b726b6c6f",
+  "selection_freeze_commit": "e354592df00d26e6a830221762db55d1078e8a4d",
+  "production_pipeline_commit": "24c51907065592636f92eca7f0056834ab655446",
+  "app_git_tree": "68500978b3f1bf6303ed9079171365a01b2dc8e6",
+  "sources": {
+    "app/services/image_preprocessing.py": {
+      "sha256": "f4cacd9d436c66c45a5c1eefcd0d54964a5d2527a72a69a8beb50ab2fa8ae87e",
+      "sha256_lf": "f4cacd9d436c66c45a5c1eefcd0d54964a5d2527a72a69a8beb50ab2fa8ae87e"
+    },
+    "app/services/model_loader.py": {
+      "sha256": "c98e0d1b60a72e395d897a0733d16f21710265e1ee4a5e6751d92a30c33a3509",
+      "sha256_lf": "24690e6d4cceebab114ae3cbb250bee7a1c011df61450c2713ef5bf104268ed1"
+    },
+    "app/services/reference_snapshot.py": {
+      "sha256": "7ea9f3a910cfc5215cc2dea58e3ce48e37b9b49d048b50760e7d333d4e1601d5",
+      "sha256_lf": "7ea9f3a910cfc5215cc2dea58e3ce48e37b9b49d048b50760e7d333d4e1601d5"
+    },
+    "app/services/detector.py": {
+      "sha256": "2703d7d893c66136504e1f24b5601f249ad01ed22cf2a0c8e099a10f6ae13953",
+      "sha256_lf": "0b047ed959090a1707c160a2f1496e47380d8b44b8d887ab9980372a2c538395"
+    },
+    "app/services/ai.py": {
+      "sha256": "a30a6534be2daf48fb6b8085a3d8583a92d031a99f79403f36b944c656a6d184",
+      "sha256_lf": "2bb4d0beb963aeee33952e05e336483f2399249f90c01ccd17a61922c9018818"
+    },
+    "app/services/faiss_index.py": {
+      "sha256": "278fd8bc635cb2e2f848976eaf5c1e66bf1668a4aba88b2b336546432ed5fb74",
+      "sha256_lf": "f0147ceccad7e2a635affd3ac674d078057f04a78cd92ccea4d6012d0c843520"
+    },
+    "app/services/recognition_policy.py": {
+      "sha256": "49da589277bf3015caa44edcd192cec33b14324f16ac1e82ebfc83a3fc5b40fd",
+      "sha256_lf": "49da589277bf3015caa44edcd192cec33b14324f16ac1e82ebfc83a3fc5b40fd"
+    },
+    "app/config/__init__.py": {
+      "sha256": "af88596c379940b7e108a43453ba8ad9a5fc8146d0f218f9efe60c57275e8492",
+      "sha256_lf": "e75a7eb233ba58c1cc7828bf1d150ae367fb958e72421392c189f368dbbebe3e"
+    },
+    "scripts/eval_recognition.py": {
+      "sha256": "6b501c35e297748c641056a363218049cabf7df0d27a041fe88296c422deb5b6",
+      "sha256_lf": "6b501c35e297748c641056a363218049cabf7df0d27a041fe88296c422deb5b6"
+    },
+    "scripts/run_recognition_pilot.py": {
+      "sha256": "f75b39e60bea1bea9565563012320df64611cb141e06776c2a00bde48007ec74",
+      "sha256_lf": "f75b39e60bea1bea9565563012320df64611cb141e06776c2a00bde48007ec74"
+    },
+    "scripts/calibrate_recognition.py": {
+      "sha256": "663bbd7c3db288c5dbd14a3e58f14ec3c977a8d426313ba7629360a39754184f",
+      "sha256_lf": "663bbd7c3db288c5dbd14a3e58f14ec3c977a8d426313ba7629360a39754184f"
+    }
+  },
+  "containers": {
+    "cat-coverage-calibration-volume": {
+      "image": "sha256:f8ac63fef379b49751c0255e2882eb9b476d5c2e4b254b7cdb5bef367d8bdd34",
+      "created": "2026-11-01T12:17:35.360535364Z",
+      "limits": {
+        "NanoCpus": 2000000000,
+        "Memory": 8589934592,
+        "NetworkMode": "none"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-data/_data",
+          "Destination": "/dataset",
+          "RW": false
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-work/_data",
+          "Destination": "/work",
+          "RW": true
+        },
+        {
+          "Type": "bind",
+          "Source": "D:\\Desktop\\fdmm\\cat-cat-cat\\cat-backend\\app",
+          "Destination": "/app/app",
+          "RW": false
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-models/_data",
+          "Destination": "/app/models",
+          "RW": false
+        },
+        {
+          "Type": "bind",
+          "Source": "D:\\Desktop\\fdmm\\cat-cat-cat\\cat-backend\\scripts",
+          "Destination": "/app/scripts",
+          "RW": false
+        }
+      ],
+      "environment": [
+        "OMP_NUM_THREADS=2",
+        "MKL_NUM_THREADS=2",
+        "OPENBLAS_NUM_THREADS=2",
+        "RECOGNIZE_PREPROCESS=letterbox224"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-01T12:23:52.085095052Z"
+    },
+    "cat-coverage-holdout-volume": {
+      "image": "sha256:f8ac63fef379b49751c0255e2882eb9b476d5c2e4b254b7cdb5bef367d8bdd34",
+      "created": "2026-11-01T12:25:26.444509794Z",
+      "limits": {
+        "NanoCpus": 2000000000,
+        "Memory": 8589934592,
+        "NetworkMode": "none"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-data/_data",
+          "Destination": "/dataset",
+          "RW": false
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-work/_data",
+          "Destination": "/work",
+          "RW": true
+        },
+        {
+          "Type": "bind",
+          "Source": "D:\\Desktop\\fdmm\\cat-cat-cat\\cat-backend\\app",
+          "Destination": "/app/app",
+          "RW": false
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/cat-coverage-20261101-models/_data",
+          "Destination": "/app/models",
+          "RW": false
+        },
+        {
+          "Type": "bind",
+          "Source": "D:\\Desktop\\fdmm\\cat-cat-cat\\cat-backend\\scripts",
+          "Destination": "/app/scripts",
+          "RW": false
+        }
+      ],
+      "environment": [
+        "RECOGNIZE_PREPROCESS=letterbox224",
+        "RECOGNIZE_THRESHOLD_CONFIRMED=0.7",
+        "RECOGNIZE_THRESHOLD_UNCERTAIN=0.49",
+        "RECOGNIZE_MIN_MARGIN=0",
+        "OMP_NUM_THREADS=2",
+        "MKL_NUM_THREADS=2",
+        "OPENBLAS_NUM_THREADS=2"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-01T12:30:51.415049818Z"
+    }
+  },
+  "note": "Source snapshot supplements evaluator hashes with the new geometry helper and config. Runtime source files were unchanged between calibration and holdout; photographs are not part of this evidence file.",
+  "sources_unchanged_after_both_runs": true,
+  "assessment_exit_code": 0,
+  "assessment_status": "empirical_targets_met",
+  "evidence_files_sha256": {
+    "recognition-coverage-calibration-result.json": "5e76e2784e93173206ee7d380ede3bb6131178ab41eb5ced1b2db11e2c3a0e39",
+    "recognition-coverage-holdout-result.json": "4a4f7dafe2f05e0897d0111c77ed7daa4d348c72a2ec3bbe1afbe6e05b400aef",
+    "recognition-coverage-selected-policy.json": "ea7dc4e9f1a4f4fa825ea1f67ce22320434bc8d9403a355dc8a416d5fb19c7ca",
+    "recognition-coverage-holdout-assessment.json": "72c56331593464014893f0644a28bcb4864a2e64ebb4db62ad93be869e664723"
+  },
+  "cleanup": {
+    "completed_at": "2026-11-01T12:34:49.543968+00:00",
+    "containers": [
+      "cat-coverage-calibration-volume",
+      "cat-coverage-holdout-volume"
+    ],
+    "volumes": [
+      "cat-coverage-20261101-models",
+      "cat-coverage-20261101-data",
+      "cat-coverage-20261101-work"
+    ],
+    "unrelated_resources_modified": false,
+    "local_evidence_retained": true
+  }
+}

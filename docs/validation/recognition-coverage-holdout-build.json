@@ -1,0 +1,22 @@
+{
+  "job_id": "276002e7a0d241d7b60fe53892be2f45",
+  "kind": "rebuild",
+  "status": "succeeded",
+  "created_at": "2026-11-01T12:25:30.900363+00:00",
+  "updated_at": "2026-11-01T12:27:29.238822+00:00",
+  "requested_by": null,
+  "requested_generation": 120,
+  "crop": true,
+  "publish": true,
+  "target_snapshot_id": null,
+  "input_revision": "ff6ea9b38ada96bc4cb5e7b286d6ed82625c3a19e8a6657fa2e0d6162e845b0a",
+  "input_generation": 120,
+  "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+  "snapshot_id": "cc8b0ae441e34cb5b4a4dd20a32899fc",
+  "publication_id": "6f1860d1f4ac441d99eacea49f45321b",
+  "completed_photos": 96,
+  "total_photos": 96,
+  "code": "published",
+  "detail": null,
+  "recovered": false
+}

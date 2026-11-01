@@ -1,0 +1,75 @@
+{
+  "scope": "Post-acceptance diagnosis only; no retuning on this holdout",
+  "holdout_result_sha256": "4a4f7dafe2f05e0897d0111c77ed7daa4d348c72a2ec3bbe1afbe6e05b400aef",
+  "failures": [
+    {
+      "sample_id": "study-cat-0379-4",
+      "kind": "known",
+      "identity": "catindividuals-v1:0379",
+      "status": "uncertain",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0379",
+      "score": 0.5432475805282593,
+      "margin": 0.04605036973953247
+    },
+    {
+      "sample_id": "study-cat-0406-5",
+      "kind": "known",
+      "identity": "catindividuals-v1:0406",
+      "status": "uncertain",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0406",
+      "score": 0.6771610975265503,
+      "margin": 0.05691736936569214
+    },
+    {
+      "sample_id": "study-cat-0127-2",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0127",
+      "status": "confirmed",
+      "reason": "unknown_false_confirmation",
+      "top1": "catindividuals-v1:0450",
+      "score": 0.7294673919677734,
+      "margin": 0.09432554244995117
+    },
+    {
+      "sample_id": "study-cat-0406-4",
+      "kind": "known",
+      "identity": "catindividuals-v1:0406",
+      "status": "uncertain",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0406",
+      "score": 0.6572184562683105,
+      "margin": 0.0018033981323242188
+    },
+    {
+      "sample_id": "study-cat-0379-6",
+      "kind": "known",
+      "identity": "catindividuals-v1:0379",
+      "status": "uncertain",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0379",
+      "score": 0.6385282278060913,
+      "margin": 0.14408820867538452
+    },
+    {
+      "sample_id": "study-cat-0379-5",
+      "kind": "known",
+      "identity": "catindividuals-v1:0379",
+      "status": "unknown",
+      "reason": "below_confirmation_threshold",
+      "top1": "catindividuals-v1:0379",
+      "score": 0.46886688470840454,
+      "margin": 0.13101494312286377
+    }
+  ],
+  "known_correct_confirmation_wilson_95_image_interval": [
+    0.713404696106438,
+    0.9391818499086717
+  ],
+  "identity_counts": {
+    "known": 2,
+    "unknown_cat": 1
+  },
+  "limits": "Image intervals assume independent trials; repeated photos violate this assumption. This holdout is now consumed for acceptance and can only be used as diagnostic/regression data."
+}
