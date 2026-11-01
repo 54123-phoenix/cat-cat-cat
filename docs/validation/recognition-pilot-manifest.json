@@ -1,0 +1,1329 @@
+{
+  "format_version": 1,
+  "dataset_id": "public-cat-pilot-20261101",
+  "crop": true,
+  "samples": [
+    {
+      "sample_id": "cat-0050-4",
+      "file": "images/cats/0050/0050_000.JPG",
+      "sha256": "202ffbdd78f768dd981d706f7a82d1be75718e105efeb75de1c646a624c96fc5",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+    },
+    {
+      "sample_id": "cat-0350-3",
+      "file": "images/cats/0350/0350_003.jpg",
+      "sha256": "ba716a891b0d4da437be16ff3475e99d35d688ef08641838af167a4de7fc8c23",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+    },
+    {
+      "sample_id": "cat-0510-2",
+      "file": "images/cats/0510/0510_024.jpg",
+      "sha256": "3677f5b004a1acb40e0e321d39c4c5aa04e71436b4b5ef74ba7645485eb4b903",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0301-1",
+      "file": "images/cats/0301/0301_002.jpg",
+      "sha256": "0a6044de1177a03f829b7d761c72b95c35370242703a95bcef70c03fe3850a36",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0372-4",
+      "file": "images/cats/0372/0372_011.jpg",
+      "sha256": "74cc75bd4a88e920962b71c480e11bf87d770e59fd30168b73f2fdc289a4a144",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+    },
+    {
+      "sample_id": "cat-0124-4",
+      "file": "images/cats/0124/0124_011.JPG",
+      "sha256": "5685a0a75722af98b368f29db66cedc4b1da880e6cbe41f2be072e33087ff517",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "reference_id": "1245c61123665fdf928a50e5307653f9"
+    },
+    {
+      "sample_id": "no-cat-brick",
+      "file": "images/no-cat/brick.png",
+      "sha256": "7966caf324f6ba843118d98f7a07746d22f6a343430add0233eca5f6eaaa8fcf",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0372-2",
+      "file": "images/cats/0372/0372_009.jpg",
+      "sha256": "c3df7c169534b75cb2308e44b69840a505cac1c6c26506cf2ffdabb2ef734a51",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+    },
+    {
+      "sample_id": "cat-0359-4",
+      "file": "images/cats/0359/0359_008.jpg",
+      "sha256": "285916f2bdd9d1d19dc85890c0d23cd64b1c5d14774933336ed08e339bca3b88",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "reference_id": "32671314e8585d59b5f16ae1409c943d"
+    },
+    {
+      "sample_id": "cat-0050-3",
+      "file": "images/cats/0050/0050_014.JPG",
+      "sha256": "b5f090df9731a86a5d964500e7b266b9e389744162692ceee11d06ba68cc545b",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+    },
+    {
+      "sample_id": "no-cat-astronaut",
+      "file": "images/no-cat/astronaut.png",
+      "sha256": "88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0394-2",
+      "file": "images/cats/0394/0394_005.jpg",
+      "sha256": "8015450b21a96e2ad478e00a129379a1215799dd357a164953b257f1a5d689b5",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "reference_id": "6b508131eeae517984b88bda598f2489"
+    },
+    {
+      "sample_id": "cat-0068-1",
+      "file": "images/cats/0068/0068_012.JPG",
+      "sha256": "24b178f7a5865a34d9a010589003a9f945a36cedd4eb461b27d81d9a62ee155c",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "reference_id": null
+    },
+    {
+      "sample_id": "no-cat-grass",
+      "file": "images/no-cat/grass.png",
+      "sha256": "b6b6022426b38936c43a4ac09635cd78af074e90f42ffa8227ac8b7452d39f89",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0068-2",
+      "file": "images/cats/0068/0068_022.JPG",
+      "sha256": "d3822bb1020a9297319cfd18c0a5676a6be6d76f77909f6da623197c74fba2af",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0215-4",
+      "file": "images/cats/0215/0215_002.JPG",
+      "sha256": "1addba8cb9e9f8c753796236b0ece25760acee0d4d6aa3ea3a78138e328bea16",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "reference_id": "e4213cc43dab50a987e05617f4920a32"
+    },
+    {
+      "sample_id": "cat-0215-3",
+      "file": "images/cats/0215/0215_014.JPG",
+      "sha256": "5730cdc1ed5db57ae56ea4c787e3d84683d39f75db6658a483708eb6e4040d2e",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "reference_id": "e4213cc43dab50a987e05617f4920a32"
+    },
+    {
+      "sample_id": "cat-0218-0",
+      "file": "images/cats/0218/0218_002.JPG",
+      "sha256": "e5d388c7103baaca91ac8546147b8522e03cf44979fa6bb2fbbe8fae396fb3aa",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+    },
+    {
+      "sample_id": "cat-0218-2",
+      "file": "images/cats/0218/0218_011.JPG",
+      "sha256": "d09607bfd499145b231d5645a5e10f5f0c830697a8c1b6659ec4e65db9243d23",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+    },
+    {
+      "sample_id": "cat-0078-0",
+      "file": "images/cats/0078/0078_027.JPG",
+      "sha256": "1bfc853a622b2c3be4500fe2561c8edf81fd68f1723166283ca311de7e06265a",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0301-0",
+      "file": "images/cats/0301/0301_007.jpg",
+      "sha256": "025335fd7f76e602a5f5da8ef72e98ca78b2bc47b29eae69f41c86dbbe2c73a2",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0359-1",
+      "file": "images/cats/0359/0359_010.jpg",
+      "sha256": "36199fc5a0a0cbadad9cf0bbe04c240536856e1e2fecf2c0086de9a6a543319f",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "reference_id": "32671314e8585d59b5f16ae1409c943d"
+    },
+    {
+      "sample_id": "cat-0372-0",
+      "file": "images/cats/0372/0372_005.jpg",
+      "sha256": "23bda5b7a606078945547fe672617b4517992ce67bc8acbbca955ef4bdc04291",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+    },
+    {
+      "sample_id": "cat-0243-1",
+      "file": "images/cats/0243/0243_007.jpg",
+      "sha256": "3522f72fb76e56e58e6ef35061b85f8c6ddc37fcc0956bc56d36c7d4896ca32b",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0353-4",
+      "file": "images/cats/0353/0353_009.jpg",
+      "sha256": "99400ee4426631f509dbd822806be9b401ac6869b9bdfd5417ddf9acc91f1a43",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+    },
+    {
+      "sample_id": "cat-0394-4",
+      "file": "images/cats/0394/0394_007.jpg",
+      "sha256": "8d7f8b6c60fdf9d998229a57190ee1f8dd6bd7b06c20a1e13ccc4c1936238e10",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "reference_id": "6b508131eeae517984b88bda598f2489"
+    },
+    {
+      "sample_id": "cat-0318-2",
+      "file": "images/cats/0318/0318_017.jpg",
+      "sha256": "71af6075ab4491b8ac3fc3eea940f312aaa4623df8d8685b7a8b176369abe426",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+    },
+    {
+      "sample_id": "cat-0353-2",
+      "file": "images/cats/0353/0353_006.jpg",
+      "sha256": "3018b72787997d98b67516a8c5c3924eee956cf37edcd00cb8dbea7303a4a144",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+    },
+    {
+      "sample_id": "no-cat-hubble_deep_field",
+      "file": "images/no-cat/hubble_deep_field.jpg",
+      "sha256": "3a19c5dd8a927a9334bb1229a6d63711b1c0c767fb27e2286e7c84a3e2c2f5f4",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0215-2",
+      "file": "images/cats/0215/0215_004.JPG",
+      "sha256": "38faeeb8e97b917e4dfc98f9ae6390f2318706604a475a062a1b2e9d4d590f9d",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "reference_id": "e4213cc43dab50a987e05617f4920a32"
+    },
+    {
+      "sample_id": "cat-0301-2",
+      "file": "images/cats/0301/0301_005.jpg",
+      "sha256": "4f8a9461b33ac0c0f88c71e537d41a338ae94d1367b654fab9e550b1af6da3af",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0301",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0124-1",
+      "file": "images/cats/0124/0124_003.JPG",
+      "sha256": "076f321f83252ed734205eb005873068f2d177258ab7f83a680841e2b2499720",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "reference_id": "1245c61123665fdf928a50e5307653f9"
+    },
+    {
+      "sample_id": "cat-0372-1",
+      "file": "images/cats/0372/0372_004.jpg",
+      "sha256": "64f385e277fbf1267ddd088a31111cdd6a997ffa2e9cabfd06e891da26a63263",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+    },
+    {
+      "sample_id": "cat-0181-1",
+      "file": "images/cats/0181/0181_001.JPG",
+      "sha256": "3d2413f9bb3add7c1c2902c65f882f100bced319d2c62c74b28fb04a1de59cc7",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0350-2",
+      "file": "images/cats/0350/0350_006.jpg",
+      "sha256": "55ae5eaa2e92bdd47fd457f441ecd9339ec8f41eb6841e4a2723807dcfb5e7e5",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+    },
+    {
+      "sample_id": "cat-0353-1",
+      "file": "images/cats/0353/0353_002.jpg",
+      "sha256": "ed7a73dc712178f8d4e37f922755d5833c6b70425c4efc546bde2441fd4a544d",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+    },
+    {
+      "sample_id": "no-cat-camera",
+      "file": "images/no-cat/camera.png",
+      "sha256": "b0793d2adda0fa6ae899c03989482bff9a42d3d5690fc7e3648f2795d730c23a",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0353-3",
+      "file": "images/cats/0353/0353_003.jpg",
+      "sha256": "a6d1eeea71fe52a1e6c4c370ad4a896f7e0f43fc0b86cd10a4e59fa4edda2d49",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+    },
+    {
+      "sample_id": "cat-0078-1",
+      "file": "images/cats/0078/0078_022.JPG",
+      "sha256": "f9428f6468df2917e5058d9116e801fb186649b7f74565af77db9afc5673f623",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0372-3",
+      "file": "images/cats/0372/0372_008.jpg",
+      "sha256": "b9ecdd7d80694b7b9fa3cb09ee7a4eeab9b5360d2d9006302315dc3dd0945c38",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0372",
+      "reference_id": "59438d9ac8395a0ab51c379fd35f0e7f"
+    },
+    {
+      "sample_id": "cat-0078-2",
+      "file": "images/cats/0078/0078_012.JPG",
+      "sha256": "cbe9b49343f9867886add212bc15a61f4bcaf126520a86767a65906e275182f1",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0078",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0218-4",
+      "file": "images/cats/0218/0218_004.JPG",
+      "sha256": "692bfbef466c7f7426d5e4e9f2d6d1e480093ddbdf64f3aeefb23b734d5fe7cd",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+    },
+    {
+      "sample_id": "cat-0350-1",
+      "file": "images/cats/0350/0350_004.jpg",
+      "sha256": "8dfa561a2496787c2a33a7f2893850210c2478a80763c147e6c6890aab635441",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+    },
+    {
+      "sample_id": "cat-0124-3",
+      "file": "images/cats/0124/0124_004.JPG",
+      "sha256": "ecc4a0ab58826de58a16c18c15e87a84fe5b8b6e45a5b3e66b5029dec99879db",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "reference_id": "1245c61123665fdf928a50e5307653f9"
+    },
+    {
+      "sample_id": "cat-0153-3",
+      "file": "images/cats/0153/0153_004.JPG",
+      "sha256": "e0b4eccdbab4e0f9a0f7a266e67e92f06083b356e398d5ef9e7db9c1709da4c9",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "reference_id": "44721e4157d05752964545e8a3b86269"
+    },
+    {
+      "sample_id": "cat-0218-1",
+      "file": "images/cats/0218/0218_009.JPG",
+      "sha256": "50341c9ac9d6e66cbfaa842c3bc4462a68ca1bbf0099bb8d5cd6eaac81f98d53",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+    },
+    {
+      "sample_id": "cat-0124-2",
+      "file": "images/cats/0124/0124_009.JPG",
+      "sha256": "82b2a32d2fac699ebd083203482b679b4ba55e8a0444ca31bb0baff5fb61c319",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "reference_id": "1245c61123665fdf928a50e5307653f9"
+    },
+    {
+      "sample_id": "cat-0318-0",
+      "file": "images/cats/0318/0318_013.jpg",
+      "sha256": "35d3e0a5a7a19e31f8fdda418a3a661cbcfaac56bd66817679094dc93d4a4920",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+    },
+    {
+      "sample_id": "cat-0394-1",
+      "file": "images/cats/0394/0394_006.jpg",
+      "sha256": "389b89e4e0c1d1843b5def5c82d08e101bf747055649930d56145e007e30a883",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "reference_id": "6b508131eeae517984b88bda598f2489"
+    },
+    {
+      "sample_id": "cat-0215-0",
+      "file": "images/cats/0215/0215_013.JPG",
+      "sha256": "ea60675ad18e3c02b6b6df36bd2a50e10e919961eb5c42a3ae6a488eda2c990b",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "reference_id": "e4213cc43dab50a987e05617f4920a32"
+    },
+    {
+      "sample_id": "cat-0040-4",
+      "file": "images/cats/0040/0040_002.JPG",
+      "sha256": "6695697d8ff6012d97ab13ee4e6c8d75ed5d48c172a229948a382439183e31c4",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+    },
+    {
+      "sample_id": "cat-0181-0",
+      "file": "images/cats/0181/0181_016.JPG",
+      "sha256": "de9005b565fa914d14def54e2b5b878d0fac23256719897ac0f78fe5ac6fec9d",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0040-0",
+      "file": "images/cats/0040/0040_011.JPG",
+      "sha256": "c76b0f8f4ea79df3f2e8019ede3bbfc3992200ed164d4e8c0532399d03dab56f",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+    },
+    {
+      "sample_id": "cat-0215-1",
+      "file": "images/cats/0215/0215_012.JPG",
+      "sha256": "3abc91f9b956a8ce69d26cfe5330ba0d19cb9756d79f1ae929185165a304ef1f",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0215",
+      "reference_id": "e4213cc43dab50a987e05617f4920a32"
+    },
+    {
+      "sample_id": "cat-0359-0",
+      "file": "images/cats/0359/0359_002.jpg",
+      "sha256": "da19826408e16659d1e4e9ea4b79b9b0941929457dca92b0274fd874a6bb1870",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "reference_id": "32671314e8585d59b5f16ae1409c943d"
+    },
+    {
+      "sample_id": "no-cat-coffee",
+      "file": "images/no-cat/coffee.png",
+      "sha256": "cc02f8ca188b167c775a7101b5d767d1e71792cf762c33d6fa15a4599b5a8de7",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0153-0",
+      "file": "images/cats/0153/0153_025.JPG",
+      "sha256": "dc72a4f8c3b78b032c049c6bba1a63b2288b4059019b640f66cfbdb769958323",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "reference_id": "44721e4157d05752964545e8a3b86269"
+    },
+    {
+      "sample_id": "cat-0153-1",
+      "file": "images/cats/0153/0153_007.JPG",
+      "sha256": "0fa9c319bcd73f7396d670e815e9f04fbd18884a48c9b4851248e1d484902e35",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "reference_id": "44721e4157d05752964545e8a3b86269"
+    },
+    {
+      "sample_id": "no-cat-gravel",
+      "file": "images/no-cat/gravel.png",
+      "sha256": "c48615b451bf1e606fbd72c0aa9f8cc0f068ab7111ef7d93bb9b0f2586440c12",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0359-3",
+      "file": "images/cats/0359/0359_005.jpg",
+      "sha256": "bb96fb3ac03b6ddc891160354ce225afd6f4cfb973ede6b2343eaabdb5f717ac",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "reference_id": "32671314e8585d59b5f16ae1409c943d"
+    },
+    {
+      "sample_id": "cat-0510-1",
+      "file": "images/cats/0510/0510_045.jpg",
+      "sha256": "273c046ae760adfb142e5b9a026c259d82b644f268a6627eae33f21f40393f52",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0153-4",
+      "file": "images/cats/0153/0153_006.JPG",
+      "sha256": "5eb75bbe49758c8dd4bc71a4659f775346512c1277f6596f317e530cdc30da51",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "reference_id": "44721e4157d05752964545e8a3b86269"
+    },
+    {
+      "sample_id": "cat-0243-0",
+      "file": "images/cats/0243/0243_013.jpg",
+      "sha256": "b6a39930d07bd8765647d0543d1b87e187eb3480894e9ad7926388f834060fc9",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0068-0",
+      "file": "images/cats/0068/0068_010.JPG",
+      "sha256": "2a317acff5acec16b8a7a549027bc9e9a1586da939ceba38fad272396fe59987",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0068",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0318-3",
+      "file": "images/cats/0318/0318_010.jpg",
+      "sha256": "19d68a799a4101b0722c28f5462cbe4df80b02617772c6532c26b3b83641eb82",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+    },
+    {
+      "sample_id": "cat-0350-4",
+      "file": "images/cats/0350/0350_008.jpg",
+      "sha256": "1f5e9ab9b139a1cdb89391395aad9d7498becd57f73ee741751ca9d313a56e28",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+    },
+    {
+      "sample_id": "cat-0510-0",
+      "file": "images/cats/0510/0510_007.jpg",
+      "sha256": "75591ddd97f821929e13ac4303dd0fcc43b6a2f691c0bf3d883e14a456a6f980",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0510",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0394-3",
+      "file": "images/cats/0394/0394_004.jpg",
+      "sha256": "e3c08b317bb326a6f29b91b0d198ed418123ae8090f8d1d037e0dbb6093d173e",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "reference_id": "6b508131eeae517984b88bda598f2489"
+    },
+    {
+      "sample_id": "cat-0350-0",
+      "file": "images/cats/0350/0350_007.jpg",
+      "sha256": "b641b6d13fa796600df220575bb51faac31568db55b9abe30dec1bbb67355477",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0350",
+      "reference_id": "e1928e2267cf59a58927474dcc0bbe45"
+    },
+    {
+      "sample_id": "cat-0394-0",
+      "file": "images/cats/0394/0394_018.jpg",
+      "sha256": "60279dd2291213f00fa55111b233b438d040844bf51e71c8f235f1933ddb2f9a",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0394",
+      "reference_id": "6b508131eeae517984b88bda598f2489"
+    },
+    {
+      "sample_id": "cat-0040-2",
+      "file": "images/cats/0040/0040_007.JPG",
+      "sha256": "224c33df571456d777733328c02f4c577d1594d542c5d230361bc8b2d0d100a1",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+    },
+    {
+      "sample_id": "no-cat-rocket",
+      "file": "images/no-cat/rocket.jpg",
+      "sha256": "c2dd0de7c538df8d111e479619b129464d0269d0ae5fd18ca91d33a7fdfea95c",
+      "split": "query",
+      "kind": "no_cat",
+      "identity": null,
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0181-2",
+      "file": "images/cats/0181/0181_003.JPG",
+      "sha256": "37c2dd4ae672c382b9a82956db6869602ae72be9d3840e92a021c45f67239c98",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0181",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0243-2",
+      "file": "images/cats/0243/0243_005.jpg",
+      "sha256": "d7e831d03315eb98fe343df06ce0b51364e0ec780c8aa571bf39614a947e4418",
+      "split": "query",
+      "kind": "unknown_cat",
+      "identity": "catindividuals-v1:0243",
+      "reference_id": null
+    },
+    {
+      "sample_id": "cat-0153-2",
+      "file": "images/cats/0153/0153_011.JPG",
+      "sha256": "85453557c8a853befd2ae8618e7a859ab599a9b19dfeaf259f1aba7ea5fa2f87",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0153",
+      "reference_id": "44721e4157d05752964545e8a3b86269"
+    },
+    {
+      "sample_id": "cat-0040-3",
+      "file": "images/cats/0040/0040_001.JPG",
+      "sha256": "9e4a5a988121ea54180dddcc321e32184e95ce7c7cecfa440cb7836e83beb601",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+    },
+    {
+      "sample_id": "cat-0040-1",
+      "file": "images/cats/0040/0040_004.JPG",
+      "sha256": "7036cf0cc98ae40b1cbed283dc30ed764d218e384bb408f92f2f2ba4f5559ebe",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0040",
+      "reference_id": "97aaea2cbe225b84a7b1b37fb32e7a9e"
+    },
+    {
+      "sample_id": "cat-0359-2",
+      "file": "images/cats/0359/0359_006.jpg",
+      "sha256": "cc2307c21be7208d21350a24b967a13e67f04e2d39ef3e94ebe96696f6b61956",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0359",
+      "reference_id": "32671314e8585d59b5f16ae1409c943d"
+    },
+    {
+      "sample_id": "cat-0353-0",
+      "file": "images/cats/0353/0353_004.jpg",
+      "sha256": "30a0497972929dfc7e69e0d0f7caa5948878c6a7b82f7c5c3f04bd6d00c2b5ec",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0353",
+      "reference_id": "ffb47b5de04a54408901730b56f81ff5"
+    },
+    {
+      "sample_id": "cat-0218-3",
+      "file": "images/cats/0218/0218_008.JPG",
+      "sha256": "dea8f7cdb5c39ccf68783a776fd7e827a184a28b59a9882f1690ed6490cdfe6b",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0218",
+      "reference_id": "4b86ea7baff4571b98b07ae41f5b7b98"
+    },
+    {
+      "sample_id": "cat-0050-1",
+      "file": "images/cats/0050/0050_008.JPG",
+      "sha256": "be9dc05eaa2b1e7677d58514b4fb5d01a4f5f1de61ae5b16d9903e1a50b6d2c0",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+    },
+    {
+      "sample_id": "cat-0050-0",
+      "file": "images/cats/0050/0050_018.JPG",
+      "sha256": "4df18b68451d3652d0eaa35beb38a62144e9047b9acdadd126dd102507935eff",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+    },
+    {
+      "sample_id": "cat-0050-2",
+      "file": "images/cats/0050/0050_020.JPG",
+      "sha256": "616a4db3a7b18b52dc8727f879c1e17df6b7b04f00b2088a9292d603623d53a2",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0050",
+      "reference_id": "c49e25824afb5d0a88aa7c4c27950e19"
+    },
+    {
+      "sample_id": "cat-0124-0",
+      "file": "images/cats/0124/0124_007.JPG",
+      "sha256": "979150f20c3acee297b4f6ce46085c057679c61e24949a5f2079d6e79f8b0c4e",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0124",
+      "reference_id": "1245c61123665fdf928a50e5307653f9"
+    },
+    {
+      "sample_id": "cat-0318-4",
+      "file": "images/cats/0318/0318_015.jpg",
+      "sha256": "f9de2f178df866709c80adfac05191e8b30f95c1bf43a0f2e2d2ebf3e743652d",
+      "split": "query",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+    },
+    {
+      "sample_id": "cat-0318-1",
+      "file": "images/cats/0318/0318_005.jpg",
+      "sha256": "074b45541b22c2707f0f897e4efd7eb934b8b06da283c4063ae30bb3b27bc059",
+      "split": "reference",
+      "kind": "known",
+      "identity": "catindividuals-v1:0318",
+      "reference_id": "3f63f7f04d0e5fc1a788f945added7e8"
+    }
+  ],
+  "provenance": {
+    "purpose": "Small public pilot; not campus acceptance or a training-independent benchmark",
+    "cat_source": "https://www.kaggle.com/datasets/timost1234/cat-individuals",
+    "cat_author": "Tzu-Yuan Lin; hosted by timost1234",
+    "cat_version": 1,
+    "cat_license": "CC BY 4.0",
+    "negative_source_revision": "e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae",
+    "negative_license_reference": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/_fetchers.py",
+    "negative_labels": "Eight named scikit-image images visually reviewed as no-cat before inference",
+    "seed": 20261101,
+    "sampling": "12 known IDs x (2 reference + 3 query); 6 unseen-in-reference IDs x 3 query; 8 no-cat controls",
+    "selection": "Seeded eligible IDs and per-ID shuffled files; reject pixel duplicates or dhash <= 4 before inference",
+    "excluded": [
+      {
+        "source_path": "cat_individuals_dataset/0050/0050_010.JPG",
+        "reason": "duplicate pixels or dhash distance <= 4"
+      },
+      {
+        "source_path": "cat_individuals_dataset/0050/0050_012.JPG",
+        "reason": "duplicate pixels or dhash distance <= 4"
+      }
+    ],
+    "visual_identity_exclusions_before_inference": {
+      "0023": "Suspected cross-ID overlap with 0026 in the pre-inference contact sheet",
+      "0026": "Suspected mixed identities; first selected references resemble 0023, queries differ",
+      "0031": "Multiple cats without a target identity bounding box",
+      "0063": "Multiple cats without a target identity bounding box",
+      "0509": "Multiple cats without a target identity bounding box"
+    },
+    "training_overlap": "unknown: model provider did not publish its 131-cat training manifest",
+    "session_independence": "unknown: source lacks capture-session grouping; different files do not prove different sessions",
+    "assets": {
+      "cat-0394-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_018.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_018.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 133175
+      },
+      "cat-0394-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 135587
+      },
+      "cat-0394-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 135231
+      },
+      "cat-0394-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 139087
+      },
+      "cat-0394-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0394%2F0394_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0394/0394_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 155281
+      },
+      "cat-0050-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_018.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_018.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 470407
+      },
+      "cat-0050-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_008.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_008.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 665131
+      },
+      "cat-0050-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_020.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_020.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 551897
+      },
+      "cat-0050-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_014.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_014.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 676946
+      },
+      "cat-0050-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0050%2F0050_000.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0050/0050_000.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 453084
+      },
+      "cat-0318-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_013.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_013.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 41395
+      },
+      "cat-0318-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 46923
+      },
+      "cat-0318-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_017.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_017.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 62933
+      },
+      "cat-0318-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_010.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_010.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 76433
+      },
+      "cat-0318-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0318%2F0318_015.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0318/0318_015.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 75082
+      },
+      "cat-0040-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 823260
+      },
+      "cat-0040-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 843137
+      },
+      "cat-0040-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 835759
+      },
+      "cat-0040-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_001.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_001.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 843377
+      },
+      "cat-0040-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0040%2F0040_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0040/0040_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 817060
+      },
+      "cat-0215-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_013.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_013.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 631491
+      },
+      "cat-0215-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 595007
+      },
+      "cat-0215-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 591582
+      },
+      "cat-0215-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_014.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_014.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 639247
+      },
+      "cat-0215-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0215%2F0215_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0215/0215_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 667398
+      },
+      "cat-0218-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_002.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_002.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 704815
+      },
+      "cat-0218-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_009.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_009.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 712678
+      },
+      "cat-0218-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 638083
+      },
+      "cat-0218-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_008.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_008.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 717174
+      },
+      "cat-0218-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0218%2F0218_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0218/0218_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 706367
+      },
+      "cat-0372-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 123764
+      },
+      "cat-0372-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 77765
+      },
+      "cat-0372-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_009.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_009.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 87454
+      },
+      "cat-0372-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 71041
+      },
+      "cat-0372-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0372%2F0372_011.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0372/0372_011.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 177030
+      },
+      "cat-0353-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 49122
+      },
+      "cat-0353-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 72774
+      },
+      "cat-0353-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 65229
+      },
+      "cat-0353-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_003.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_003.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 58047
+      },
+      "cat-0353-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0353%2F0353_009.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0353/0353_009.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 50465
+      },
+      "cat-0359-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 151800
+      },
+      "cat-0359-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_010.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_010.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 213300
+      },
+      "cat-0359-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 110839
+      },
+      "cat-0359-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 142346
+      },
+      "cat-0359-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0359%2F0359_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0359/0359_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 149637
+      },
+      "cat-0350-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 393299
+      },
+      "cat-0350-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_004.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_004.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 266334
+      },
+      "cat-0350-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_006.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_006.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 325233
+      },
+      "cat-0350-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_003.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_003.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 355928
+      },
+      "cat-0350-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0350%2F0350_008.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0350/0350_008.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 311713
+      },
+      "cat-0124-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 622128
+      },
+      "cat-0124-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_003.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_003.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 732643
+      },
+      "cat-0124-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_009.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_009.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 625415
+      },
+      "cat-0124-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 659177
+      },
+      "cat-0124-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0124%2F0124_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0124/0124_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 708498
+      },
+      "cat-0153-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_025.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_025.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 462624
+      },
+      "cat-0153-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_007.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_007.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 511118
+      },
+      "cat-0153-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_011.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_011.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 454369
+      },
+      "cat-0153-3": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_004.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_004.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 428329
+      },
+      "cat-0153-4": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0153%2F0153_006.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0153/0153_006.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 518283
+      },
+      "cat-0181-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_016.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_016.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1097713
+      },
+      "cat-0181-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_001.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_001.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1086946
+      },
+      "cat-0181-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0181%2F0181_003.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0181/0181_003.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 1024595
+      },
+      "cat-0068-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_010.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_010.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 749587
+      },
+      "cat-0068-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 655916
+      },
+      "cat-0068-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0068%2F0068_022.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0068/0068_022.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 667262
+      },
+      "cat-0078-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_027.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_027.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 720131
+      },
+      "cat-0078-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_022.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_022.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 628020
+      },
+      "cat-0078-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0078%2F0078_012.JPG?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0078/0078_012.JPG",
+        "license": "CC BY 4.0",
+        "bytes": 647967
+      },
+      "cat-0243-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_013.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_013.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1234413
+      },
+      "cat-0243-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1236887
+      },
+      "cat-0243-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0243%2F0243_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0243/0243_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 1320832
+      },
+      "cat-0510-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 907102
+      },
+      "cat-0510-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_045.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_045.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 998491
+      },
+      "cat-0510-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0510%2F0510_024.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0510/0510_024.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 807455
+      },
+      "cat-0301-0": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_007.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_007.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 147487
+      },
+      "cat-0301-1": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_002.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_002.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 124543
+      },
+      "cat-0301-2": {
+        "url": "https://www.kaggle.com/api/v1/datasets/download/timost1234/cat-individuals/cat_individuals_dataset%2F0301%2F0301_005.jpg?datasetVersionNumber=1",
+        "source_path": "cat_individuals_dataset/0301/0301_005.jpg",
+        "license": "CC BY 4.0",
+        "bytes": 129939
+      },
+      "no-cat-astronaut": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/astronaut.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 791555
+      },
+      "no-cat-camera": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/camera.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 139512
+      },
+      "no-cat-coffee": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 466706
+      },
+      "no-cat-brick": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/brick.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 106634
+      },
+      "no-cat-grass": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/grass.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 217893
+      },
+      "no-cat-gravel": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/gravel.png",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 194247
+      },
+      "no-cat-hubble_deep_field": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/hubble_deep_field.jpg",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 527940
+      },
+      "no-cat-rocket": {
+        "url": "https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/rocket.jpg",
+        "license": "CC0 or public domain; see scikit-image data function documentation",
+        "bytes": 112525
+      }
+    },
+    "visual_review": {
+      "date": "2026-11-01",
+      "review": "All 86 retained samples inspected in contact sheets before inference; eight controls contain no visible cats. Cat identities follow source labels, not owner-verified identities.",
+      "excluded_identity_count": 5,
+      "remaining_limit": "Many same-background/near-pose pairs; session and training independence remain unverified."
+    }
+  }
+}

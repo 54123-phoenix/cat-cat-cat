@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     AGENT_TIMEOUT_SECONDS: int = 25
     AGENT_MAX_TOOL_CALLS: int = 3
 
-    # Tuned for the DINOv3 finetuned extractor (cosine on L2-normalized
-    # embeddings). Matches Campus-Cat-ReID's validated thresholds.
+    # Inherited defaults for cosine on L2-normalized embeddings.
+    # These are not calibrated probabilities or independently validated cutoffs.
     RECOGNIZE_THRESHOLD_CONFIRMED: float = 0.57
     RECOGNIZE_THRESHOLD_UNCERTAIN: float = 0.49
 

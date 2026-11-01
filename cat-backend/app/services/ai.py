@@ -1,6 +1,7 @@
 """Recognition only from content- and identity-validated reference snapshots."""
 import io
 import logging
+from dataclasses import dataclass
 from threading import RLock
 
 import numpy as np
@@ -51,9 +52,23 @@ def search_snapshot(snapshot, query):
     return sorted(best.items(), key=lambda row: (-row[1], row[0]))[:5]
 
 
+@dataclass(frozen=True)
+class RecognitionDetails:
+    response: RecognizeResponse
+    ranking: tuple[RecognizeCandidate, ...] = ()
+    snapshot_id: str | None = None
+    publication_id: str | None = None
+    failure_code: str | None = None
+
+
 def recognize_cat_image(image_bytes: bytes, filename: str = '', *, crop: bool = True) -> RecognizeResponse:
+    return recognize_with_details(image_bytes, filename, crop=crop).response
+
+
+def recognize_with_details(image_bytes: bytes, filename: str = '', *, crop: bool = True) -> RecognitionDetails:
+    """Internal diagnostics share the API path; raw ranks never alter its contract."""
     if not TORCH_AVAILABLE:
-        return RecognizeResponse(status='unavailable', confidence=0.0)
+        return RecognitionDetails(RecognizeResponse(status='unavailable'), failure_code='runtime_unavailable')
     try:
         snapshot = load_active_snapshot(crop)
         with Image.open(io.BytesIO(image_bytes)) as original:
@@ -73,17 +88,19 @@ def recognize_cat_image(image_bytes: bytes, filename: str = '', *, crop: bool = 
         if not scores:
             raise ReferenceUnavailable('empty_reference', 'No reference vectors are searchable')
         scores = [(cat_id, max(-1.0, min(1.0, score))) for cat_id, score in scores]
+        ranking = tuple(RecognizeCandidate(cat_id=cid, cat_name=names[cid], confidence=score)
+                        for cid, score in scores)
         cat_id, confidence = scores[0]
         if confidence >= settings.RECOGNIZE_THRESHOLD_CONFIRMED:
-            return RecognizeResponse(status='confirmed', cat_id=cat_id, cat_name=names[cat_id], confidence=confidence)
-        if confidence >= settings.RECOGNIZE_THRESHOLD_UNCERTAIN:
-            return RecognizeResponse(status='uncertain', confidence=confidence, candidates=[
-                RecognizeCandidate(cat_id=cid, cat_name=names[cid], confidence=score) for cid, score in scores[:3]
-            ])
-        return RecognizeResponse(status='unknown', confidence=confidence)
+            response = RecognizeResponse(status='confirmed', cat_id=cat_id, cat_name=names[cat_id], confidence=confidence)
+        elif confidence >= settings.RECOGNIZE_THRESHOLD_UNCERTAIN:
+            response = RecognizeResponse(status='uncertain', confidence=confidence, candidates=list(ranking[:3]))
+        else:
+            response = RecognizeResponse(status='unknown', confidence=confidence)
+        return RecognitionDetails(response, ranking, current.manifest.snapshot_id, current.publication_id)
     except ReferenceUnavailable as exc:
         logger.warning('Reference unavailable [%s]: %s', exc.code, exc)
-        return RecognizeResponse(status='unavailable', confidence=0.0)
+        return RecognitionDetails(RecognizeResponse(status='unavailable'), failure_code=exc.code)
     except Exception:
         logger.exception('Recognition failed')
-        return RecognizeResponse(status='unavailable', confidence=0.0)
+        return RecognitionDetails(RecognizeResponse(status='unavailable'), failure_code='recognition_failed')

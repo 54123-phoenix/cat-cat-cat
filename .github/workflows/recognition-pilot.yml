@@ -1,0 +1,42 @@
+name: Public Recognition Pilot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  public-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: python -m pip install httpx==0.27.0 'Pillow>=10'
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/inference-models
+          key: inference-weights-32f04b89-5d4a90cd
+      - run: python scripts/inference_assets.py --output-dir artifacts/inference-models
+      - run: python scripts/prepare_recognition_pilot.py --frozen-manifest docs/validation/recognition-pilot-manifest.json --output-dir artifacts/recognition-data
+      - run: docker build --target inference --build-arg PIP_INDEX=https://pypi.org/simple -t cat-public-pilot cat-backend
+      - name: Build isolated reference store and evaluate frozen queries
+        run: |
+          mkdir -p artifacts/recognition-work
+          docker run --rm --network none --cpus 2 --memory 8g \
+            -e OMP_NUM_THREADS=2 -e MKL_NUM_THREADS=2 -e OPENBLAS_NUM_THREADS=2 \
+            -e YOLO_CONFIG_DIR=/tmp/ultralytics \
+            --mount type=bind,source="$PWD/artifacts/inference-models",target=/app/models,readonly \
+            --mount type=bind,source="$PWD/artifacts/recognition-data",target=/dataset,readonly \
+            --mount type=bind,source="$PWD/artifacts/recognition-work",target=/work \
+            cat-public-pilot python scripts/run_recognition_pilot.py \
+            --dataset /dataset/dataset.json --output /work/run | tee artifacts/recognition-pilot.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-recognition-pilot-results
+          path: |
+            artifacts/recognition-work/run/result.json
+            artifacts/recognition-work/run/evaluation-manifest.json
+            artifacts/recognition-work/run/build-job.json
+            artifacts/recognition-pilot.log
+          if-no-files-found: warn

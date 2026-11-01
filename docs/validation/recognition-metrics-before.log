@@ -1,0 +1,33 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_uncertain_first_candidate_counts_as_rank_one ______________
+
+tmp_path = WindowsPath('C:/Users/Phoenix/AppData/Local/Temp/pytest-of-Phoenix/pytest-1067/test_uncertain_first_candidate0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014A3144D4D0>
+
+    def test_uncertain_first_candidate_counts_as_rank_one(tmp_path, monkeypatch):
+        (tmp_path/'cat').mkdir()
+        (tmp_path/'cat'/'one.png').write_bytes(b'test-image')
+        output = tmp_path/'result.json'
+        result = RecognizeResponse(status='uncertain', confidence=.55, candidates=[
+            RecognizeCandidate(cat_id=1, cat_name='cat', confidence=.55)])
+        monkeypatch.setattr(eval_recognition, 'recognize_cat_image', lambda *a, **kw: result)
+        monkeypatch.setattr('sys.argv', ['eval', '--crops-dir', str(tmp_path), '--output', str(output)])
+        assert eval_recognition.main() == 0
+>       assert json.loads(output.read_text(encoding='utf-8'))['summary']['top1'] == 1
+E       assert 0 == 1
+
+tests\test_eval_recognition.py:17: AssertionError
+---------------------------- Captured stdout call -----------------------------
+XX cat          -> uncertain None (0.550) top3=['cat']
+
+=== N=1 | Top1=0 (0.0%) | Top3=1 (100.0%) | confirmed=0 precision=0/0 (0.0%)
+============================== warnings summary ===============================
+..\..\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: 16 warnings
+  D:\Desktop\fdmm\cat-cat-cat-review\optimization-a1\venv311\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_eval_recognition.py::test_uncertain_first_candidate_counts_as_rank_one
+1 failed, 16 warnings in 1.08s
