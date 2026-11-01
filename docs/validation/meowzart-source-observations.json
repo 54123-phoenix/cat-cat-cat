@@ -1,0 +1,2052 @@
+{
+  "source": "https://api.meowzart.com/api/v1/campus/public/societies",
+  "source_appid": "wxa25510fbff03d79d",
+  "source_version": 955,
+  "society_id": 1,
+  "society_name": "复旦大学IHeart爱和猫协",
+  "campus_id": 615,
+  "campus_name": "复旦大学",
+  "retrieved_on": "2026-11-01",
+  "catalog_authentication_required": true,
+  "complete_recrawl": false,
+  "source_date_semantics": "Dynamic record time and capture time must remain separate",
+  "storage_plan": "GitHub stores scripts, manifests and verification; large authorized source assets go to remote release/object storage, with bounded temporary staging removed after remote integrity verification.",
+  "status": "awaiting_export_path",
+  "user_confirmed_export_exists": true,
+  "source_link": "#小程序://小小喵扎特/Sg46qfX97qg7yFG",
+  "ui_text_character_limit_observed": 20000,
+  "ui_catalog_complete": false,
+  "full_images_downloaded": 0,
+  "source_identity_labels_independently_verified": false,
+  "partial_catalog": [
+    {
+      "source_name": "可可",
+      "visible_labels": []
+    },
+    {
+      "source_name": "玫瑰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "三花",
+      "visible_labels": []
+    },
+    {
+      "source_name": "海蓝宝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "富贵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大不溜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "旺旺",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "尼采（26）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "加勒比",
+      "visible_labels": []
+    },
+    {
+      "source_name": "酷哥",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "酥梨",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "架子鼓",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "饺子",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "奶牛芝麻围棋酱",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "火火",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "港港",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "happy",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "米线",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "芝士",
+      "visible_labels": []
+    },
+    {
+      "source_name": "百香果",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "票票",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "小浣熊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "糖葫芦",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小雨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "尔康",
+      "visible_labels": []
+    },
+    {
+      "source_name": "三叶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "钱钱",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "维尼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "年年",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "保保（25）",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "库伊拉（库库）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小李",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "小小灰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蒜苗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "哆啦",
+      "visible_labels": []
+    },
+    {
+      "source_name": "娃娃菜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "白云（26）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "金坷垃",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑土（26）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "铁饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小小白",
+      "visible_labels": []
+    },
+    {
+      "source_name": "铁锤",
+      "visible_labels": []
+    },
+    {
+      "source_name": "一二一",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小豆腐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "穗穗",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "脉动",
+      "visible_labels": []
+    },
+    {
+      "source_name": "餐餐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "兑兑",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "鳕鱼堡",
+      "visible_labels": []
+    },
+    {
+      "source_name": "五星",
+      "visible_labels": []
+    },
+    {
+      "source_name": "饼饼",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "招财",
+      "visible_labels": []
+    },
+    {
+      "source_name": "心心",
+      "visible_labels": []
+    },
+    {
+      "source_name": "财财",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Richard",
+      "visible_labels": []
+    },
+    {
+      "source_name": "斗金",
+      "visible_labels": []
+    },
+    {
+      "source_name": "金宝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "铁镲",
+      "visible_labels": []
+    },
+    {
+      "source_name": "铜锣",
+      "visible_labels": []
+    },
+    {
+      "source_name": "腰鼓",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小不溜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "微微",
+      "visible_labels": []
+    },
+    {
+      "source_name": "腊肠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "麻辣烫",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小南",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆梨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "晶晶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "嘻嘻",
+      "visible_labels": []
+    },
+    {
+      "source_name": "团团.",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大盘鸡",
+      "visible_labels": []
+    },
+    {
+      "source_name": "马里奥",
+      "visible_labels": []
+    },
+    {
+      "source_name": "布丁",
+      "visible_labels": []
+    },
+    {
+      "source_name": "狸十九",
+      "visible_labels": []
+    },
+    {
+      "source_name": "花十九",
+      "visible_labels": []
+    },
+    {
+      "source_name": "渔粉",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "梧桐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑嘿",
+      "visible_labels": []
+    },
+    {
+      "source_name": "十三",
+      "visible_labels": []
+    },
+    {
+      "source_name": "姜饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小云",
+      "visible_labels": []
+    },
+    {
+      "source_name": "金桂",
+      "visible_labels": []
+    },
+    {
+      "source_name": "给给",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黄大郎",
+      "visible_labels": []
+    },
+    {
+      "source_name": "野野",
+      "visible_labels": []
+    },
+    {
+      "source_name": "诚诚",
+      "visible_labels": []
+    },
+    {
+      "source_name": "米线妈",
+      "visible_labels": []
+    },
+    {
+      "source_name": "卢米",
+      "visible_labels": []
+    },
+    {
+      "source_name": "西红柿",
+      "visible_labels": []
+    },
+    {
+      "source_name": "幺幺",
+      "visible_labels": []
+    },
+    {
+      "source_name": "八卦",
+      "visible_labels": []
+    },
+    {
+      "source_name": "海鲜酱",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小中",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小伏",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小末",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小毛豆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "探探",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "凤梨酥",
+      "visible_labels": []
+    },
+    {
+      "source_name": "翘翘（贝贝）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "狗哥",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "开心",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "芙芙",
+      "visible_labels": []
+    },
+    {
+      "source_name": "土豆",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "海棠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "星期四",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "士力架",
+      "visible_labels": []
+    },
+    {
+      "source_name": "哒哒",
+      "visible_labels": []
+    },
+    {
+      "source_name": "呢呢",
+      "visible_labels": []
+    },
+    {
+      "source_name": "嘬嘬",
+      "visible_labels": []
+    },
+    {
+      "source_name": "军师",
+      "visible_labels": []
+    },
+    {
+      "source_name": "桂花",
+      "visible_labels": []
+    },
+    {
+      "source_name": "皮皮",
+      "visible_labels": []
+    },
+    {
+      "source_name": "包子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "玉兰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "管院小橘",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "JOJO",
+      "visible_labels": []
+    },
+    {
+      "source_name": "海尔",
+      "visible_labels": []
+    },
+    {
+      "source_name": "白小脆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "忆白",
+      "visible_labels": []
+    },
+    {
+      "source_name": "法棍",
+      "visible_labels": []
+    },
+    {
+      "source_name": "宝娟",
+      "visible_labels": []
+    },
+    {
+      "source_name": "杏仁奶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "咖喱",
+      "visible_labels": []
+    },
+    {
+      "source_name": "弗弗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "芋圆（小特）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "米粉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "糯米糍",
+      "visible_labels": []
+    },
+    {
+      "source_name": "假可",
+      "visible_labels": []
+    },
+    {
+      "source_name": "警长",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "雪碧",
+      "visible_labels": []
+    },
+    {
+      "source_name": "仔哥",
+      "visible_labels": []
+    },
+    {
+      "source_name": "脆脆鲨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黄金糕",
+      "visible_labels": []
+    },
+    {
+      "source_name": "闹闹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "盼盼",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "香栗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蛋奶星星",
+      "visible_labels": []
+    },
+    {
+      "source_name": "芯芯",
+      "visible_labels": []
+    },
+    {
+      "source_name": "红红",
+      "visible_labels": []
+    },
+    {
+      "source_name": "led",
+      "visible_labels": []
+    },
+    {
+      "source_name": "灯泡",
+      "visible_labels": []
+    },
+    {
+      "source_name": "苏苏",
+      "visible_labels": []
+    },
+    {
+      "source_name": "尔泰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "花蛋（安妮）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "虎牙脆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "胖白",
+      "visible_labels": []
+    },
+    {
+      "source_name": "耶耶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "梅花糕",
+      "visible_labels": []
+    },
+    {
+      "source_name": "皮球",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "莎莎",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "那那",
+      "visible_labels": []
+    },
+    {
+      "source_name": "栾栾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蛋黄",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小抹布",
+      "visible_labels": []
+    },
+    {
+      "source_name": "虫虫",
+      "visible_labels": []
+    },
+    {
+      "source_name": "香米（困困）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大白",
+      "visible_labels": []
+    },
+    {
+      "source_name": "明明",
+      "visible_labels": []
+    },
+    {
+      "source_name": "斗斗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "洋葱",
+      "visible_labels": []
+    },
+    {
+      "source_name": "核桃奶",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "燕麦奶",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "建军",
+      "visible_labels": []
+    },
+    {
+      "source_name": "卫国",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小婵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小船",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小播",
+      "visible_labels": []
+    },
+    {
+      "source_name": "菜菜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "长号",
+      "visible_labels": []
+    },
+    {
+      "source_name": "新生",
+      "visible_labels": []
+    },
+    {
+      "source_name": "猪排",
+      "visible_labels": []
+    },
+    {
+      "source_name": "喇叭（静静）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "浆果",
+      "visible_labels": []
+    },
+    {
+      "source_name": "破忒头",
+      "visible_labels": []
+    },
+    {
+      "source_name": "册册",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小丸子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大头菜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "琥珀",
+      "visible_labels": []
+    },
+    {
+      "source_name": "拉拉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "塔米",
+      "visible_labels": []
+    },
+    {
+      "source_name": "格力",
+      "visible_labels": []
+    },
+    {
+      "source_name": "费希特",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "Pocky百福",
+      "visible_labels": []
+    },
+    {
+      "source_name": "脆脆（原名香香）脆脆（原名香…",
+      "visible_labels": []
+    },
+    {
+      "source_name": "莫及",
+      "visible_labels": []
+    },
+    {
+      "source_name": "灰崽",
+      "visible_labels": []
+    },
+    {
+      "source_name": "牛轧糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "酸辣粉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "荣荣",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Lime",
+      "visible_labels": []
+    },
+    {
+      "source_name": "馆长（校史馆）",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "溜溜梅",
+      "visible_labels": []
+    },
+    {
+      "source_name": "奥莉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "龙宝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "萨萨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "何塞阿尔卡蒂奥",
+      "visible_labels": []
+    },
+    {
+      "source_name": "妮娜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "老吴",
+      "visible_labels": []
+    },
+    {
+      "source_name": "穷奇",
+      "visible_labels": []
+    },
+    {
+      "source_name": "安娜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "埃德蒙唐泰斯",
+      "visible_labels": []
+    },
+    {
+      "source_name": "一般",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆荚cat",
+      "visible_labels": []
+    },
+    {
+      "source_name": "三三",
+      "visible_labels": []
+    },
+    {
+      "source_name": "馒头",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆包",
+      "visible_labels": []
+    },
+    {
+      "source_name": "看看",
+      "visible_labels": []
+    },
+    {
+      "source_name": "染染",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蛋卷",
+      "visible_labels": []
+    },
+    {
+      "source_name": "臭臭",
+      "visible_labels": []
+    },
+    {
+      "source_name": "文文",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小雪",
+      "visible_labels": []
+    },
+    {
+      "source_name": "瑞士卷",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小不点（贾桂花）小不点（贾桂…",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆米",
+      "visible_labels": []
+    },
+    {
+      "source_name": "萝萝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "岁岁",
+      "visible_labels": []
+    },
+    {
+      "source_name": "短尾巴",
+      "visible_labels": []
+    },
+    {
+      "source_name": "尖叫",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小黑 生物楼版",
+      "visible_labels": []
+    },
+    {
+      "source_name": "昊昊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "三月三",
+      "visible_labels": []
+    },
+    {
+      "source_name": "初一",
+      "visible_labels": []
+    },
+    {
+      "source_name": "角角",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Jerry 杰瑞",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Tom 汤姆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "兮兮",
+      "visible_labels": []
+    },
+    {
+      "source_name": "对对眼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蛋挞",
+      "visible_labels": []
+    },
+    {
+      "source_name": "橘子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "别舔了",
+      "visible_labels": []
+    },
+    {
+      "source_name": "橙子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "卡卡（小灰）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "越共（胡志明）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "喜喜",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "小卷",
+      "visible_labels": []
+    },
+    {
+      "source_name": "鱼豆腐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "元宝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "藕霸",
+      "visible_labels": []
+    },
+    {
+      "source_name": "糯米粥",
+      "visible_labels": []
+    },
+    {
+      "source_name": "叉烧",
+      "visible_labels": []
+    },
+    {
+      "source_name": "桔子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小港",
+      "visible_labels": []
+    },
+    {
+      "source_name": "坤坤",
+      "visible_labels": []
+    },
+    {
+      "source_name": "彳亍",
+      "visible_labels": []
+    },
+    {
+      "source_name": "史官",
+      "visible_labels": []
+    },
+    {
+      "source_name": "恰恰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "抓抓",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小啡",
+      "visible_labels": []
+    },
+    {
+      "source_name": "一花",
+      "visible_labels": []
+    },
+    {
+      "source_name": "滇滇",
+      "visible_labels": []
+    },
+    {
+      "source_name": "辣子鸡",
+      "visible_labels": []
+    },
+    {
+      "source_name": "脏脏包",
+      "visible_labels": []
+    },
+    {
+      "source_name": "西西",
+      "visible_labels": []
+    },
+    {
+      "source_name": "鸡肉（结结）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小葵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "马小狸",
+      "visible_labels": []
+    },
+    {
+      "source_name": "红尾鼠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "九九",
+      "visible_labels": []
+    },
+    {
+      "source_name": "白袜（袜袜）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "沐沐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "跳跳",
+      "visible_labels": []
+    },
+    {
+      "source_name": "泡狐龙",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黄蛋白",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "萌大",
+      "visible_labels": []
+    },
+    {
+      "source_name": "游阿姨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "灰灰",
+      "visible_labels": []
+    },
+    {
+      "source_name": "阳阳",
+      "visible_labels": []
+    },
+    {
+      "source_name": "斑节虾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑虎虾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "八月",
+      "visible_labels": []
+    },
+    {
+      "source_name": "酱香饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "丫头",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小咖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "冰糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "乳扇",
+      "visible_labels": []
+    },
+    {
+      "source_name": "巴基",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑熊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蚊蚊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "秋衣",
+      "visible_labels": []
+    },
+    {
+      "source_name": "秋秋",
+      "visible_labels": []
+    },
+    {
+      "source_name": "圈圈",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蓝莓",
+      "visible_labels": []
+    },
+    {
+      "source_name": "酸梅汤",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Andrew",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小青梅",
+      "visible_labels": []
+    },
+    {
+      "source_name": "葱花",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "车车",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "芦柑",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "芝麻糊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "椪柑",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小龙虾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "六一",
+      "visible_labels": []
+    },
+    {
+      "source_name": "雪梨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "山竹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "奶糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "桃桃",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小豆丁",
+      "visible_labels": []
+    },
+    {
+      "source_name": "绒绒（鼻孔）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "软软",
+      "visible_labels": []
+    },
+    {
+      "source_name": "闪闪",
+      "visible_labels": []
+    },
+    {
+      "source_name": "呱呱",
+      "visible_labels": []
+    },
+    {
+      "source_name": "夏朵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "汤汤",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小鱼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑巧（把把）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "宝玉（圆脸）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "靴靴",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆花（2024）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "琉璃",
+      "visible_labels": []
+    },
+    {
+      "source_name": "恒隆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "菠萝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "乐虎",
+      "visible_labels": []
+    },
+    {
+      "source_name": "一桶（丘丘）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大门未知子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小法棍",
+      "visible_labels": []
+    },
+    {
+      "source_name": "大生",
+      "visible_labels": []
+    },
+    {
+      "source_name": "立人",
+      "visible_labels": []
+    },
+    {
+      "source_name": "一刻",
+      "visible_labels": []
+    },
+    {
+      "source_name": "非遗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "韭花",
+      "visible_labels": []
+    },
+    {
+      "source_name": "乐乐",
+      "visible_labels": []
+    },
+    {
+      "source_name": "玖斯克",
+      "visible_labels": []
+    },
+    {
+      "source_name": "拾斯克",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小小车",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小美",
+      "visible_labels": []
+    },
+    {
+      "source_name": "贞德/寿司",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小乌梅",
+      "visible_labels": []
+    },
+    {
+      "source_name": "梨膏糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "培根",
+      "visible_labels": []
+    },
+    {
+      "source_name": "南区小狸（弟弟）南区小狸（弟…",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小四教",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蓝黑",
+      "visible_labels": []
+    },
+    {
+      "source_name": "条条",
+      "visible_labels": []
+    },
+    {
+      "source_name": "圆圆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "栗子",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "大饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "柯尔施",
+      "visible_labels": []
+    },
+    {
+      "source_name": "啊呜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "支支（只只）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "朱古力",
+      "visible_labels": []
+    },
+    {
+      "source_name": "lucky",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "彩彩",
+      "visible_labels": []
+    },
+    {
+      "source_name": "笨笨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "石头",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小斑",
+      "visible_labels": []
+    },
+    {
+      "source_name": "期末",
+      "visible_labels": []
+    },
+    {
+      "source_name": "胖橘",
+      "visible_labels": []
+    },
+    {
+      "source_name": "福宝",
+      "visible_labels": []
+    },
+    {
+      "source_name": "纹纹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小小",
+      "visible_labels": []
+    },
+    {
+      "source_name": "璃月",
+      "visible_labels": []
+    },
+    {
+      "source_name": "珍珠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "新新",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蓑蓑",
+      "visible_labels": []
+    },
+    {
+      "source_name": "四囍",
+      "visible_labels": []
+    },
+    {
+      "source_name": "真真",
+      "visible_labels": []
+    },
+    {
+      "source_name": "围巾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "桶子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "盘子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "冒冒",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "九十九",
+      "visible_labels": []
+    },
+    {
+      "source_name": "是是",
+      "visible_labels": []
+    },
+    {
+      "source_name": "苗苗",
+      "visible_labels": []
+    },
+    {
+      "source_name": "叭叭",
+      "visible_labels": []
+    },
+    {
+      "source_name": "淼淼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "狮狮",
+      "visible_labels": []
+    },
+    {
+      "source_name": "花生糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "麻酱",
+      "visible_labels": []
+    },
+    {
+      "source_name": "芝麻",
+      "visible_labels": [
+        "待领养"
+      ]
+    },
+    {
+      "source_name": "蒜蓉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "特仑苏",
+      "visible_labels": []
+    },
+    {
+      "source_name": "面包",
+      "visible_labels": []
+    },
+    {
+      "source_name": "椰子糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小牛",
+      "visible_labels": []
+    },
+    {
+      "source_name": "点点（南区）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "老黄",
+      "visible_labels": []
+    },
+    {
+      "source_name": "缠缠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "棉棉",
+      "visible_labels": []
+    },
+    {
+      "source_name": "芒果",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小软",
+      "visible_labels": []
+    },
+    {
+      "source_name": "巴斯克",
+      "visible_labels": []
+    },
+    {
+      "source_name": "无忌",
+      "visible_labels": []
+    },
+    {
+      "source_name": "🐒（现兜兜）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "牙巴",
+      "visible_labels": []
+    },
+    {
+      "source_name": "流星雨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "朵朵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "蛋羹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "环环",
+      "visible_labels": []
+    },
+    {
+      "source_name": "松花饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "咖啡糖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "双皮奶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小挖",
+      "visible_labels": []
+    },
+    {
+      "source_name": "雀巢（金鱼）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "水水",
+      "visible_labels": []
+    },
+    {
+      "source_name": "西柚",
+      "visible_labels": []
+    },
+    {
+      "source_name": "脐橙",
+      "visible_labels": []
+    },
+    {
+      "source_name": "布袋",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黄子.",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小黑",
+      "visible_labels": []
+    },
+    {
+      "source_name": "申公豹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "给人摸（摸摸）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "胖狸",
+      "visible_labels": []
+    },
+    {
+      "source_name": "糊糊",
+      "visible_labels": []
+    },
+    {
+      "source_name": "绣球",
+      "visible_labels": []
+    },
+    {
+      "source_name": "鼓鼓",
+      "visible_labels": []
+    },
+    {
+      "source_name": "秋千",
+      "visible_labels": []
+    },
+    {
+      "source_name": "肉松饼",
+      "visible_labels": []
+    },
+    {
+      "source_name": "白靴",
+      "visible_labels": []
+    },
+    {
+      "source_name": "花生球",
+      "visible_labels": []
+    },
+    {
+      "source_name": "立冬",
+      "visible_labels": []
+    },
+    {
+      "source_name": "麻薯",
+      "visible_labels": []
+    },
+    {
+      "source_name": "芋圆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "社长喂",
+      "visible_labels": []
+    },
+    {
+      "source_name": "秋叶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "秋花",
+      "visible_labels": []
+    },
+    {
+      "source_name": "木木",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小怪",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小狮子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "呜呜",
+      "visible_labels": []
+    },
+    {
+      "source_name": "摔摔",
+      "visible_labels": []
+    },
+    {
+      "source_name": "川川",
+      "visible_labels": []
+    },
+    {
+      "source_name": "咪咪（核物理楼）咪咪（核物理…",
+      "visible_labels": []
+    },
+    {
+      "source_name": "松花蛋",
+      "visible_labels": []
+    },
+    {
+      "source_name": "啾啾",
+      "visible_labels": []
+    },
+    {
+      "source_name": "淇淇",
+      "visible_labels": []
+    },
+    {
+      "source_name": "火龙果",
+      "visible_labels": []
+    },
+    {
+      "source_name": "吵吵",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豆豆",
+      "visible_labels": []
+    },
+    {
+      "source_name": "棠棠",
+      "visible_labels": []
+    },
+    {
+      "source_name": "燕子",
+      "visible_labels": []
+    },
+    {
+      "source_name": "黑土",
+      "visible_labels": []
+    },
+    {
+      "source_name": "豹豹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小山猫",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Luke",
+      "visible_labels": []
+    },
+    {
+      "source_name": "九十",
+      "visible_labels": []
+    },
+    {
+      "source_name": "望望",
+      "visible_labels": []
+    },
+    {
+      "source_name": "张跳虎（跳跳）",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Luna",
+      "visible_labels": []
+    },
+    {
+      "source_name": "Money",
+      "visible_labels": []
+    },
+    {
+      "source_name": "小虎",
+      "visible_labels": []
+    },
+    {
+      "source_name": "枇杷",
+      "visible_labels": []
+    },
+    {
+      "source_name": "花生",
+      "visible_labels": []
+    },
+    {
+      "source_name": "朹朹",
+      "visible_labels": []
+    },
+    {
+      "source_name": "墨墨",
+      "visible_labels": []
+    },
+    {
+      "source_name": "奶油",
+      "visible_labels": []
+    },
+    {
+      "source_name": "后颈秃",
+      "visible_labels": []
+    },
+    {
+      "source_name": "椰奶",
+      "visible_labels": []
+    },
+    {
+      "source_name": "椰椰",
+      "visible_labels": []
+    }
+  ],
+  "name_comparison": {
+    "meaning": "Exact display-name overlap only; not a verified identity mapping. The UI extraction is truncated, so missing names do not imply absent source profiles.",
+    "legacy_names": 91,
+    "partial_ui_rows": 448,
+    "distinct_display_names": 448,
+    "overlapping_names": [
+      "JOJO",
+      "happy",
+      "lucky",
+      "三叶",
+      "三花",
+      "乐乐",
+      "乐虎",
+      "包子",
+      "卡卡（小灰）",
+      "双皮奶",
+      "可可",
+      "咖喱",
+      "啊呜",
+      "喇叭（静静）",
+      "喜喜",
+      "大门未知子",
+      "奥莉",
+      "宝娟",
+      "富贵",
+      "小小灰",
+      "小挖",
+      "小李",
+      "小浣熊",
+      "小牛",
+      "小葵",
+      "尔康",
+      "忆白",
+      "探探",
+      "朱古力",
+      "杏仁奶",
+      "柯尔施",
+      "栗子",
+      "栾栾",
+      "桂花",
+      "橙子",
+      "法棍",
+      "海尔",
+      "海蓝宝",
+      "港港",
+      "溜溜梅",
+      "滇滇",
+      "火火",
+      "灰崽",
+      "牛轧糖",
+      "狗哥",
+      "玫瑰",
+      "琉璃",
+      "琥珀",
+      "百香果",
+      "皮球",
+      "盼盼",
+      "票票",
+      "秋秋",
+      "秋衣",
+      "笨笨",
+      "米线",
+      "糯米糍",
+      "绒绒（鼻孔）",
+      "维尼",
+      "脏脏包",
+      "芋圆（小特）",
+      "芒果",
+      "芙芙",
+      "芝士",
+      "芦柑",
+      "莎莎",
+      "莫及",
+      "蒜苗",
+      "蓝黑",
+      "虫虫",
+      "蛋奶星星",
+      "蛋黄",
+      "警长",
+      "费希特",
+      "车车",
+      "软软",
+      "辣子鸡",
+      "那那",
+      "酷哥",
+      "钱钱",
+      "闹闹",
+      "雀巢（金鱼）",
+      "靴靴",
+      "馆长（校史馆）",
+      "黄金糕",
+      "黑土",
+      "黑巧（把把）"
+    ],
+    "legacy_names_not_in_partial_capture": [
+      "三文鱼",
+      "咪咪（核物理楼）",
+      "小棍",
+      "脆脆（原名香香）"
+    ],
+    "duplicate_display_names": {},
+    "visibly_clipped_names": [
+      "脆脆（原名香香）脆脆（原名香…",
+      "小不点（贾桂花）小不点（贾桂…",
+      "南区小狸（弟弟）南区小狸（弟…",
+      "咪咪（核物理楼）咪咪（核物理…"
+    ]
+  },
+  "profile_observations": [
+    {
+      "name": "可可",
+      "header": "￼\n\n￼\n221\nNO.205\n已领养\n￼\n￼\n￼\n可可\n￼\n已绝育\n性格：高冷御姐,生人勿近\n关注\n\n88\n新晋小花，高冷可可\n￼\n￼\n￼\n￼\n￼\n￼\n￼\n￼\n￼\n1/9\n￼\n复旦大学IHeart爱和猫协复旦大学IHeart爱和…\n\n复旦大学\n\n",
+      "visible_dates": [
+        "2026-09-23",
+        "2026-06-03",
+        "2026-06-01",
+        "2026-05-20",
+        "2025-11-30",
+        "2025-11-22",
+        "2025-11-21",
+        "2025-11-06",
+        "2025-11-03",
+        "2025-10-31",
+        "2025-10-26",
+        "2025-10-18",
+        "2025-10-14"
+      ],
+      "source": "WeChat mini-program wxa25510fbff03d79d version 955; visible UI only"
+    }
+  ],
+  "public_directory_probe": {
+    "status": 200,
+    "society_id": 1
+  },
+  "scoped_catalog_probe": {
+    "status": 401,
+    "errno": 40304
+  },
+  "limitations": [
+    "Names are not stable identity IDs; visible clipped names are preserved, not silently corrected.",
+    "The UI catalogue is only a partial text capture; scrolling also displayed dogs. Species must be checked from authoritative export fields before constructing a cat-only dataset.",
+    "No photo URLs, source pet IDs, complete dynamic history, or authenticated export were obtained.",
+    "Publishing the comparison does not mean the complete photo dataset was uploaded."
+  ],
+  "local_evidence_sha256": {
+    "artifacts/meowzart/source-audit/ui-catalog-observations.json": "02308e6efeddc26c2c1c08b171e37c0a6991f72a608ed463ea0b532989262a80",
+    "artifacts/meowzart/source-audit/ui-catalog-partial.json": "804421da559beebe6cdf8009d82d38b11b0358d3693602976e251079e4e56b72",
+    "artifacts/meowzart/source-audit/ui-profiles.json": "afa5ade500172694d3fb9cee9157d0d073143e28c0e286b490aab0a68f3af3ba",
+    "artifacts/meowzart/source-audit/fudan-society-public.json": "d09dc938ad4887e15b02b9cf70ee15ed6adf6c1b7943d4e0dcac6590d73cd92c",
+    "artifacts/meowzart/source-audit/scoped-list-probe.json": "6e1ca27c33c9a2e68bc4e49b915ddd429633a1032462553cd969dbd22f8cde96"
+  }
+}
