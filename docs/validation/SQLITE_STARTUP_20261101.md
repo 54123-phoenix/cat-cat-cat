@@ -14,8 +14,8 @@
 - **修复后定向验证：** 三项通过。释放真实读锁后连接成功且外键实际拒绝非法记录；持续持锁在配置的截止时间内失败；只读数据库错误立即传播。见 [日志](sqlite-startup-focused.log)。
 - **真实 Redis 与四 API：** Windows + WSL Redis 7.4.2 十项通过，只有一个 admin 和一个校园；见 [结果](sqlite-startup-redis.json)。
 - **后端全量：243 passed、68 warnings、199.29 秒**，保留 CI 的不同管理员密码配置和全部弃用警告。见 [日志](sqlite-startup-backend.log)。
-- 修复后的远端复验完成后补充结果。
+- **远端复验：** 修复提交 `ec8ad5a3badc8725351cb12055405ffae21a89f7` 的 [运行 41288904972](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288904972) 六个任务全部成功。后端 **243 passed、69 warnings、69.47 秒**；Redis 7.0.15 加四 API 十项通过；Docker API 阶段七组、Web、小程序及两套浏览器门禁通过。见 [工作流结果](ci-docker-final.json)、[Redis 结果](sqlite-startup-redis-ci.json) 和 [Docker 结果](docker-api-final.json)。
 
-Docker API 阶段此前已实际通过七组；由于本次改动涉及连接初始化，后续远端还会再次运行容器验收，见 [Docker 记录](DOCKER_ACCEPTANCE_20261101.md)。测试只使用临时数据库，未修改业务库，也未新增迁移。
+Docker API 阶段在连接初始化修复前后均实际通过七组，见 [Docker 记录](DOCKER_ACCEPTANCE_20261101.md)。测试只使用临时数据库，未修改业务库，也未新增迁移。
 
 长期写入压力、超过等待预算的锁争用和生产宿主机 I/O 条件仍属于容量与部署验证；本次不能证明 SQLite 适合任意并发规模。

@@ -31,7 +31,7 @@
 | Docker API 阶段 | Linux CI 七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
 | 真实模型 / 外部服务 | 待验收 | 完整 inference 镜像、识别质量、微信、地图、外部 LLM 和资源许可仍需各自证据；本机 Docker Desktop 仍受阻 |
 
-两处测试环境问题修复后，[远端 CI / 971c937](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288022660) 的五个任务全部通过：后端 240 项（远端 69 条警告）、Web、小程序、浏览器核心 6 组及参考库 8 组、真实 Redis 10 项。Docker 容器另设独立验收任务，结果见后续记录；历史 P0—P6 的 completed 标记不等于当前发布验收通过。
+修复测试环境问题及并发启动 WAL 锁竞争后，[远端 CI / ec8ad5a](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288904972) 的六个任务全部通过：后端 243 项（远端 69 条警告）、Web、小程序、浏览器核心 6 组及参考库 8 组、真实 Redis 10 项、Docker API 阶段 7 组。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
 ## 已实现的功能
 
@@ -264,6 +264,8 @@ Redis Pub/Sub 不保存离线事件；断线期间的业务写入须通过数据
 | [连续修复](docs/validation/REPAIR_PROGRESS.md) / [优化 A](docs/validation/OPTIMIZATION_A.md) | 核心修复、资源与交付门禁 |
 | [B1](docs/validation/OPTIMIZATION_B1.md) / [B2—B3](docs/validation/OPTIMIZATION_B23.md) / [B4](docs/validation/OPTIMIZATION_B4.md) | 参考库身份、任务、发布回滚和管理可见性 |
 | [C 验收](docs/validation/OPTIMIZATION_C.md) | Redis 多进程、SQLite/附件恢复、Docker 阻塞 |
+| [CI 修复](docs/validation/CI_REPAIR_20261101.md) / [SQLite 启动](docs/validation/SQLITE_STARTUP_20261101.md) | 测试环境问题、WAL 锁竞争、远端六项门禁结果 |
+| [Docker 验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md) | API/nginx 镜像、四 worker、事件、重启与新卷恢复及剩余边界 |
 | [参考库操作](docs/REFERENCE_LIBRARY.md) / [备份恢复](docs/BACKUP_RECOVERY.md) | 配置、迁移、构建、恢复边界 |
 | [部署](DEPLOY.md) / [发布清单](docs/RELEASE_CHECKLIST.md) | 待完成的发布步骤 |
 | [权限矩阵](docs/PERMISSIONS.md) / [观测手册](docs/OBSERVABILITY_RUNBOOK.md) | 角色边界与排障 |

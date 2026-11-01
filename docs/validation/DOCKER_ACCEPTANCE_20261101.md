@@ -33,6 +33,8 @@ Shell 与 Desktop 对该路径的可见性/属性异常，尚未确定宿主机�
 
 同一次运行的 Redis 独立任务在 API 启动阶段暴露 SQLite WAL 锁竞争，因此整个工作流失败，不能把 Docker job 成功写成整套 CI 成功。后续生产连接修复及全量复验见 [SQLite 启动记录](SQLITE_STARTUP_20261101.md)。
 
+WAL 修复提交 `ec8ad5a` 的 [运行 41288904972](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41288904972) 中，Docker 七组再次全部通过，且同次工作流六个任务全部成功。见 [最终容器结果](docker-api-final.json) 与 [任务汇总](ci-docker-final.json)。该结果只关闭本文件列出的 API 阶段容器范围。
+
 复跑：`python scripts/verify_docker_runtime.py --output-dir artifacts/docker-rerun`。需要 Linux Docker 引擎与 Compose，宿主机 Python 依赖 `httpx==0.27.0` 和 Pillow。`--prepare-only` 不连接引擎。
 
 此脚本不会验证完整 inference 镜像、模型推理质量、有已发布向量版本的 store 恢复、生产宿主机挂载或容量。Windows 业务运维 PowerShell 备份/恢复脚本的实测继续参见 [C](OPTIMIZATION_C.md)；这里的容器快照演练不替代生产停写与备份方案。
