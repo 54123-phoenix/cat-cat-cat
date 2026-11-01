@@ -20,4 +20,13 @@ CMD ["sh", "-c", "python -m alembic upgrade head && exec gunicorn app.main:app -
 # The API stage supports database/Redis acceptance without model runtimes.
 # The default image retains the full inference dependencies.
 FROM api AS inference
-RUN pip install --no-cache-dir --retries 5 --timeout 600 -r requirements-torch.txt
+# The application loads its models on CPU. Avoid unused CUDA runtime downloads.
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir --retries 5 --timeout 120 \
+    --index-url "$TORCH_INDEX_URL" torch==2.6.0 torchvision==0.21.0
+RUN pip install --no-cache-dir --retries 5 --timeout 120 \
+    -c requirements.txt -r requirements-torch.txt \
+    && pip check
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -c "import cv2, torch, torchvision, timm; from ultralytics import YOLO"

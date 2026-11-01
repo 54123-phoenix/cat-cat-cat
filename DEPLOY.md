@@ -1,6 +1,6 @@
 # 上线步骤清单
 
-当前尚未通过发布验收。迁移 head 已更新为 `j20261031`，清单为 v2；旧参考向量及 B1 v1 候选必须重建，步骤见 [参考库操作说明](docs/REFERENCE_LIBRARY.md)。j20261031 修复身份唯一索引，存在重复记录时拒绝升级，不自动合并。下面是部署步骤，不是部署成功记录；本机 Redis 和 SQLite/附件恢复证据见 [C 验收](docs/validation/OPTIMIZATION_C.md)，Docker、微信真机及模型资产仍需实际验证。
+当前尚未通过发布验收。迁移 head 已更新为 `j20261031`，清单为 v2；旧参考向量及 B1 v1 候选必须重建，步骤见 [参考库操作说明](docs/REFERENCE_LIBRARY.md)。j20261031 修复身份唯一索引，存在重复记录时拒绝升级，不自动合并。下面是部署步骤，不是部署成功记录；本机 Redis 和 SQLite/附件恢复证据见 [C 验收](docs/validation/OPTIMIZATION_C.md)，API Docker 与完整 CPU 推理的隔离恢复已完成相应验收，见 [推理证据](docs/validation/INFERENCE_20261101.md)；生产挂载、独立识别质量及微信真机仍待验证。
 
 ## 第一阶段：账号准备（1-3 天）
 
@@ -30,7 +30,7 @@
 
 ### 选项 A：云服务器部署（推荐，队友都能访问）
 
-1. 买一台云服务器（阿里云/腾讯云，最低 2核2G，约 ¥60/月）
+1. 按目标并发选择云服务器；本轮完整 CPU 推理在约 16 GB Docker 内存下验收，尚未证明 2 GB 配置可承载四个模型 worker。
 2. SSH 登录，安装 Docker：
    ```bash
    curl -fsSL https://get.docker.com | sh
@@ -43,10 +43,7 @@
    ```
 4. 获取模型权重（外部下载及许可需另行确认；业务数据不会由此自动恢复）：
    ```bash
-   cd cat-backend
-   pip install -r requirements-torch.txt huggingface-hub
-   python scripts/download_model.py
-   cd ..
+   python scripts/inference_assets.py --output-dir cat-backend/models
    ```
 4. 编辑 `.env`，填入你的值：
    ```ini
@@ -66,11 +63,11 @@
 6. Compose 启动时先执行 `alembic upgrade head`，再启动服务。SQLite 的容器路径 `/app/data/cat_community.db` 对应宿主机 `cat-backend/data/cat_community.db`。升级旧库前先按 [备份恢复说明](docs/BACKUP_RECOVERY.md) 制作一致快照。
 7. 确认后端可访问：`curl http://你的域名:8000/`
 
-Compose 另启动 `reference-worker`，与 backend 共享数据库、照片、模型及 `/app/reference-store`；它等待迁移完成，只处理队列，不执行迁移。首次无发布版本时识别返回 unavailable。维护档案和参考照片后，执行 `docker compose exec backend python scripts/reference_jobs.py enqueue`，再通过 `status` 或管理 API 核对任务结果。默认构建成功后发布，失败不替换当前指针；版本与当前数据库不兼容时旧结果也停止服务。仅启动容器不代表参考库就绪。本轮通过了 Compose 配置解析与共享环境/挂载检查，实际容器运行仍待专项验收。
+Compose 另启动 `reference-worker`，与 backend 共享数据库、照片、模型及 `/app/reference-store`；它等待迁移完成，只处理队列，不执行迁移。首次无发布版本时识别返回 unavailable。维护档案和参考照片后，执行 `docker compose exec backend python scripts/reference_jobs.py enqueue`，再通过 `status` 或管理 API 核对任务结果。默认构建成功后发布，失败不替换当前指针；版本与当前数据库不兼容时旧结果也停止服务。仅启动容器不代表参考库就绪。完整 CPU 镜像已在隔离卷上跑通真实重建、HTTP 自匹配和模型/store 整体恢复；生产宿主挂载及业务恢复仍需另行验证。
 
 数据库结构只由显式 Alembic 迁移管理。直接运行后端镜像的默认命令也会先迁移再启动 Gunicorn；自行覆盖容器命令或本地运行 Uvicorn 时，须在后端目录先执行 `python -m alembic upgrade head`。迁移会读取 `cat-backend/.env`，环境变量优先。应用导入不再调用 `create_all`，启动时核对迁移 head、必需表、列和唯一索引；未迁移或结构残缺时停止启动，不在 worker 中偷偷修复。此检查不代替完整的约束、索引和数据一致性验收。
 
-C 补充：启动检查现已核对 ORM 声明的唯一索引。Compose 等待 Redis 健康检查后启动后端；PostgreSQL 处于 `postgres` profile，不随 SQLite 默认部署启动。镜像默认构建 inference 阶段，可用 `docker build --target api cat-backend` 单独准备不含 Torch 的 API 镜像；其运行成功也不能替代真实模型验证。数据库、uploads、模型、embeddings、reference-store 和环境文件从构建上下文排除，需通过正确挂载/环境配置提供。当前 Docker Desktop 启动受阻，尚未验证这两种镜像构建和容器运行。
+C 补充：启动检查现已核对 ORM 声明的唯一索引。Compose 等待 Redis 健康检查后启动后端；PostgreSQL 处于 `postgres` profile，不随 SQLite 默认部署启动。镜像默认构建 inference 阶段，可用 `docker build --target api cat-backend` 单独准备不含 Torch 的 API 镜像；其运行成功也不能替代真实模型验证。数据库、uploads、模型、embeddings、reference-store 和环境文件从构建上下文排除，需通过正确挂载/环境配置提供。Docker Desktop 已恢复；API 阶段与完整 CPU inference 镜像均已通过对应隔离容器验收。完整镜像安装 CPU Torch 和所需 OpenCV 系统库，以后端依赖约束推理包安装，并在构建时检查依赖与导入。
 
 ### 本地与 CI 浏览器门禁
 

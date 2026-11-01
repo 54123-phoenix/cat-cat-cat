@@ -1,6 +1,6 @@
 # 备份与恢复
 
-当前使用 SQLite + uploads。数据库结构由 Alembic 管理；一致数据库快照通过 Python `sqlite3.Connection.backup` 生成，不能直接复制正在写入的 `.db` 主文件。已通过 WAL 快照测试、PowerShell 包装脚本，以及真实 API 创建的隔离数据库与 JPEG 附件恢复，含进程重启、恢复前副本和恢复后 HTTP/图片解码核对。Docker 卷、业务数据和完整识别资产恢复仍待 VER-003，见 [C 验收](validation/OPTIMIZATION_C.md)。
+当前使用 SQLite + uploads，识别另依赖 models 与 reference-store。数据库结构由 Alembic 管理；一致数据库快照通过 Python `sqlite3.Connection.backup` 生成，不能直接复制正在写入的 `.db` 主文件。已通过 WAL 快照、PowerShell 包装脚本、真实 API 附件恢复及完整推理资产的隔离新卷恢复；实际业务挂载与生产备份流程仍待 VER-003，见 [C 验收](validation/OPTIMIZATION_C.md)及[完整推理](validation/INFERENCE_20261101.md)。
 
 ## 数据路径
 
@@ -50,3 +50,9 @@ python -m alembic upgrade head
 在后端测试环境中运行 `python -m pytest tests/test_sqlite_backup.py tests/test_migrations.py -q`。PowerShell 脚本测试复制脚本到临时项目，不恢复真实工作区数据库。无 PowerShell 的平台会跳过包装脚本测试，SQLite 测试仍执行。
 
 从仓库根目录运行 `python scripts/verify_sqlite_recovery.py`，可复跑实际 HTTP、旧库升级、重启、附件损坏后恢复及哈希/解码核对。该脚本需要 PowerShell 与后端依赖，只创建临时项目，结果默认输出到 `artifacts/optimization-c-sqlite`。全程不接收真实业务库作为输入。
+
+## 完整推理资产的隔离恢复验收（2026-11-01）
+
+完整 CPU inference 镜像已在停止 API/构建 worker 后，将数据库、uploads、models、reference-store 一起复制并恢复到全新命名卷；身份、发布指针、各资产哈希和真实识别结果一致。另验证了资产损坏时拒绝识别，见 [推理验收](validation/INFERENCE_20261101.md)。
+
+复跑：先执行 `python scripts/inference_assets.py --output-dir artifacts/inference-models`，再执行 `python scripts/verify_docker_runtime.py --models-dir artifacts/inference-models`。脚本只创建测试项目，不能传入生产数据作为恢复目标。上述结果不改变 PowerShell 运维脚本只自动备份数据库与默认 uploads 的边界；实际业务模型和 store 仍须在统一停写窗口另行备份与校验。

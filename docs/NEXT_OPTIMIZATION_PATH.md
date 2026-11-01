@@ -2,7 +2,7 @@
 
 设计日期：2026-10-30，进度更新：2026-11-01。依据：[已知问题台账](KNOWN_ISSUES.md)、[最近修复证据](validation/REPAIR_PROGRESS.md)和当前源码。用户已批准按顺序执行。执行状态见 [A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)，以下阶段出口仍作为验收标准。
 
-2026-11-01 补充：测试密码隔离、浏览器等待及 WAL 启动锁竞争（ISS-038）修复后，远端六个 CI 任务全部通过，见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。Linux CI 与用户重新登录、更新后的本机 Desktop 4.97.0 均通过七组 API 阶段容器验收；临时项目及卷已清理，实际业务卷保留。浏览器重连包现已通过本机十组验收，新增并修复 ISS-039；Web 全量 78 项通过，详见 [重连记录](validation/RECONNECT_20261101.md)。下一包验收完整 inference 镜像与模型/store 恢复，随后按准备条件推进实际业务挂载与独立样本识别质量。[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
+2026-11-01 补充：测试密码隔离、浏览器等待及 WAL 启动锁竞争（ISS-038）修复后，远端六个 CI 任务全部通过，见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。Linux CI 与用户重新登录、更新后的本机 Desktop 4.97.0 均通过七组 API 阶段容器验收；临时项目及卷已清理，实际业务卷保留。浏览器重连包现已通过本机十组验收，新增并修复 ISS-039；Web 全量 78 项通过，详见 [重连记录](validation/RECONNECT_20261101.md)。完整 CPU inference 与模型/store 新卷恢复十二组、真实 Torch 四类坏权重检查已通过本地验收，关闭 ISS-014 并新增修复 ISS-040，见 [推理记录](validation/INFERENCE_20261101.md)。下一包先准备独立已知猫/未知猫/无猫评测集并复验评测脚本，随后按准备条件推进实际业务挂载、完整备份工具与容量。[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
 
 ## 目标与现状
 

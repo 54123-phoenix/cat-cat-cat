@@ -1,0 +1,10 @@
+{"torch": "2.6.0+cpu", "torchvision": "0.21.0+cpu", "timm": "1.0.22", "ultralytics": "8.3.221", "opencv": "4.11.0", "faiss": "1.15.1", "httpx": "0.27.0", "numpy": "2.4.6", "cuda_runtime": null, "model_loaded": true, "missing_corrupt_incomplete_and_wrong_dimensions_rejected": true}
+Required checkpoint missing or unreadable at /tmp/checkpoint-probe-469c8v6o/weights.pt
+Failed to load required finetuned weights: Weights only load failed. In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+Please file an issue with the following so that we can make `weights_only=True` compatible with your use case: WeightsUnpickler error: Unsupported operand 105
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+Failed to load required finetuned weights: Error(s) in loading state_dict for DINOv3WithProjection:
+	Missing key(s) in state_dict: "emb_head.proj.weight". 
+Failed to load required finetuned weights: Error(s) in loading state_dict for DINOv3WithProjection:
+	size mismatch for emb_head.proj.weight: copying a param with shape torch.Size([255, 768]) from checkpoint, the shape in current model is torch.Size([256, 768]).

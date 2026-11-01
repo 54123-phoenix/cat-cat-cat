@@ -4,7 +4,7 @@
 
 **当前结论：项目已有真实业务实现，但关键流程、权限边界、数据正确性和交付流程仍有缺陷，尚未达到稳定发布候选版的质量。** 本台账记录本次源码审查和本地验证结果，不把历史文档中的“已完成”当作验收结论，也不追溯推断缺陷最早出现的时间。
 
-初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），合计 39 项。当前 **27 项通过本地验收，9 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[浏览器重连](validation/RECONNECT_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
+初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），完整推理复验新增 ISS-040（P1），合计 40 项。当前 **29 项通过本地验收，8 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)、[浏览器重连](validation/RECONNECT_20261101.md)及[完整推理](validation/INFERENCE_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
 
 ## 阅读与关闭规则
 
@@ -171,12 +171,14 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 
 ### ISS-014 AI 缺失或不匹配权重时仍可能返回模型
 
-**P1 · 代码已有修复 · 待专项验收（2026-10-30）。** [model_loader.py](../cat-backend/app/services/model_loader.py) 第 146 行 `pretrained=False`，第 182 行缺权重仅警告，随后仍返回模型。
+**P1 · 已修复 · 真实运行时本地验收通过（2026-11-01）。** 原始 [model_loader.py](../cat-backend/app/services/model_loader.py) 第 146 行 `pretrained=False`，第 182 行缺权重仅警告，随后仍返回模型。
 
 - 现象与影响：存在随机权重或不完整加载模型继续参与检索的实现路径；其分数不能被当作可信识别。核心依赖环境返回 unavailable 已验证，但不足以证明“装了 PyTorch、缺权重”也能正确停止。
 - 验收：权重缺失、损坏、关键参数或维度不匹配时停止提供识别结果并返回 unavailable；只有通过模型/参考库兼容校验才进入就绪态；分别测试无运行时、缺权重、坏权重、完整权重。
 
 - 本轮结果：见 [ISS-014 修复、证据与剩余边界](validation/REPAIR_PROGRESS.md#每项修复及关闭范围)。
+
+- 专项补验：完整 CPU 镜像中真实 Torch 严格加载固定权重成功；缺文件、坏字节、缺参数和投影维度错误均拒绝。真实模型发布参考库后，损坏权重/向量/参考图均返回 unavailable，修复资产后恢复识别。按加载正确性关闭，独立识别质量仍由 VER-001 跟踪。见[推理与恢复验收](validation/INFERENCE_20261101.md)。
 
 ### ISS-015 识别评测脚本与当前函数接口不兼容
 
@@ -393,15 +395,22 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 - 修复：统一连接与刷新通知、持续退避重试、离线恢复与会话终止清理；刷新查询和局部 state，保留输入，忽略迟到结果，并同步点赞/投票/展开评论。
 - 验收：本机与 Linux CI 的真实 Chromium + Redis 各十组通过，覆盖帖子/评论/通知/图鉴/首页、草稿与筛选保留、60 秒断线、浏览器离线、登出与撤销。Web 全量 78 项通过，修复提交 `7109286` 的远端六项任务全部成功。按列明页面和连接生命周期关闭；不代表逐条离线事件重放、地图/微信实机或生产容量已经验证。见[证据与边界](validation/RECONNECT_20261101.md)。
 
+### ISS-040 完整推理镜像缺系统库且安装过程破坏后端依赖约束
+
+**P1 · 已修复 · 本地完整容器验收通过（2026-11-01）。** 原始 inference 镜像构建返回成功，但 OpenCV 导入缺 libxcb；宽范围推理依赖把 AnyIO 升到 4.15.1，与 FastAPI 0.104.1 要求冲突，pip check 失败。固定 OpenCV 后另复现缺 libGL。
+
+- 修复：固定关键推理依赖，使用 CPU Torch；以后端 requirements 约束安装，补系统库，并在镜像构建时检查依赖和导入。
+- 验收：真实权重加载、YOLO→DINOv3→FAISS 发布及 HTTP 自匹配、重启、数据库/模型/store 新卷恢复、资产损坏后拒绝与恢复，共十二组通过。镜像约 9.27 → 2.60 GiB。范围不包含 GPU、独立样本精度或生产容量。见[完整证据](validation/INFERENCE_20261101.md)。
+
 ## 待验证或待决策事项
 
 这些事项不能因测试未运行而直接判断失败，也不能因存在代码就判断完成。
 
 | 编号 | 优先级 / 状态 | 已知事实与边界 | 完成条件 |
 |---|---|---|---|
-| VER-001 真实识别质量 | P1 / 待验证 | 已有 YOLO→DINOv3→投影→FAISS 实现及 91 只猫、1,421 条 256 维参考向量；本次没有运行真实模型和独立样本。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
+| VER-001 真实识别质量 | P1 / 待验证 | 固定权重的真实 YOLO→DINOv3→投影→FAISS 已跑通两张参考照片自匹配及新卷恢复；尚无独立样本质量评测。余弦相似度不是经过校准的正确概率，IndexFlatIP 也不是已验证的大规模近似检索。 | 修复 ISS-014/015 后，固定模型/数据/参考库版本，用不混入参考图片的独立已知猫、未知猫、无猫样本，报告 Top-1/Top-3、误接受/误拒绝、阈值依据、样本量及目标硬件延迟；调整“置信度”展示使含义准确。 |
 | VER-002 微信真机全流程 | P1 / 待验证 | 只完成构建与隔离 JS 模拟；尚未配置正式平台条件并执行真机测试。 | 修复 ISS-007/008/009/010/032 后，在明确 AppID、域名、基础库和设备版本下，关闭 demoMode 验证登录、列表、拍照、识别、保存、发帖、错误重试，并保存记录。 |
-| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复通过；Linux CI 和更新后的本机 Desktop 4.97.0 均通过 API/nginx 镜像、四 worker、真实任务、重启及新卷恢复七组。本机引擎现已恢复。 | [C](validation/OPTIMIZATION_C.md) 与 [Docker 证据](validation/DOCKER_ACCEPTANCE_20261101.md)。继续验证完整 inference 镜像、模型与已发布向量 store 的整体恢复、实际业务挂载及容量。 |
+| VER-003 Docker 部署与恢复 | P1 / 部分验收 | 本机旧库/附件恢复、API 阶段本机与 CI 七组通过；完整 CPU inference 本机十二组通过，包含真实模型/store 新卷恢复和故障拒绝。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)及[完整推理](validation/INFERENCE_20261101.md)。实际业务挂载、通用生产备份工具、容量与目标硬件仍待验证。 |
 | VER-004 Redis 与多 worker | P1 / 后端、容器及核心页面重连集成通过 | Redis + 四 API 十项、Gunicorn 四 worker 经 Redis/nginx 的真实 SSE 推送通过；浏览器十组故障恢复通过。SQLite 启动竞争与浏览器缺陷分别记录 ISS-038/039。 | [C](validation/OPTIMIZATION_C.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[浏览器重连](validation/RECONNECT_20261101.md)。Pub/Sub 不提供离线重放，通过接口补回当前状态；生产网络代理、容量和未列明客户端仍须按环境验证。 |
 | VER-005 地图和外部 LLM | P2 / 待验证 | 本地缺地图 Key；猫情报数据库/规则回退已在浏览器跑通，但真实地图与外部 LLM 工具循环未验收。 | 使用有效配置验证地图加载、坐标转换和定位；验证真实 LLM 工具调用、超时、错误响应及回退。分别保存结果，不能用回退成功替代 LLM 成功。 |
 | VER-006 性能与路线产品边界 | P2 / 待验证、待决策 | 源码存在图库全量读取后排序分页、排行榜逐用户统计、通知逐收件人提交；未压测，不能声称已测得容量不足。路线按热度组织，打卡校验站名，不证明实际到达。 | 先明确目标数据量、并发、延迟和是否需要可信到访/路线优化；对图库、排行榜、通知压测并记录查询数/延迟/内存，按结果优化。轻量路线玩法可保留，但文案不得暗示已验证到访或路网最优。 |
@@ -436,5 +445,7 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 
 | 2026-11-01 | ISS-038 / Docker 本机与 CI | 修复 WAL 启动竞争，更新后的本机 Docker 七组通过；26 项本地通过、9 项待专项、3 项部分完成 | [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)及[Docker](validation/DOCKER_ACCEPTANCE_20261101.md) |
 | 2026-11-01 | ISS-039 / 浏览器重连 | 统一订阅、长断线恢复和状态同步；39 项中 27 项本地通过、9 项待专项、3 项部分完成 | [重连验收](validation/RECONNECT_20261101.md)：Web 78 项、真实浏览器十组通过 |
+
+| 2026-11-01 | ISS-014/040 / 完整推理 | 真实权重与失配拒绝、依赖及系统库修复、完整新卷恢复；40 项中 29 项本地通过、8 项待专项、3 项部分完成 | [推理验收](validation/INFERENCE_20261101.md)：十二组容器及真实 Torch 四类坏权重检查通过 |
 
 后续每次关闭或降级条目，应在本表追加原因及证据，并同步条目状态和顶部数量；保留稳定编号，不删除已修复问题的历史记录。

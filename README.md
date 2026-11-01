@@ -17,7 +17,7 @@
 
 **更新于 2026-11-01：核心缺陷修复、参考库生命周期、本机 Redis 多进程和 SQLite/附件恢复已完成相应验收，尚未达到正式发布条件。**
 
-当前台账共 39 项：**27 项本地验收通过、9 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
+当前台账共 40 项：**29 项本地验收通过、8 项待专项验收、3 项部分完成**，另有 7 个环境/质量/许可专项。详细现象、修复范围和剩余条件见 [已知问题台账](docs/KNOWN_ISSUES.md)；测试数量不用于计算项目完成率。
 
 | 验证范围 | 最近结果 | 证据与限制 |
 |---|---|---|
@@ -30,7 +30,8 @@
 | SQLite 与附件恢复 | 4 组通过 | 旧库升级、重启持久性、备份/预演/恢复、HTTP 与图片哈希/解码核对 |
 | 微信小程序 | 构建、类型检查、5 项请求合同通过 | [优化 A](docs/validation/OPTIMIZATION_A.md)；未完成正式登录与真机验收 |
 | Docker API 阶段 | Linux CI 与本机 Desktop 均七组通过 | [容器验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md)；镜像、四 worker、SSE、重启和新卷恢复，模型目录为空 |
-| 真实模型 / 外部服务 | 待验收 | 完整 inference 镜像、识别质量、微信、地图、外部 LLM 和资源许可仍需各自证据 |
+| 完整 CPU 推理与恢复 | 本机十二组通过 | [完整推理](docs/validation/INFERENCE_20261101.md)；真实权重、两张参考照片自匹配、模型/store 新卷恢复及资产损坏拒绝 |
+| 识别质量 / 外部服务 | 待验收 | 独立样本、阈值、微信、地图、外部 LLM 和资源许可仍需各自证据 |
 
 浏览器重连修复提交的 [远端 CI / 7109286](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41292098365) 六个任务全部通过：后端 243 项（69 条警告）、Web 78 项、小程序、浏览器核心 6 组/参考库 8 组/重连 10 组、真实 Redis 10 项、Docker API 阶段 7 组。历史 P0—P6 的 completed 标记不等于当前发布验收通过。
 
@@ -137,7 +138,7 @@ python scripts/reference_jobs.py status
 
 API 和 worker 必须使用相同数据库、照片、模型与 store 配置。旧 `cat_embeddings.json` / FAISS 文件不能自动作为可信身份参考库使用；清单为 v2，旧候选需重建。失败构建不替换当前版本，回滚需通过当前数据库兼容性检查。完整操作见 [参考库说明](docs/REFERENCE_LIBRARY.md)。
 
-### Docker Compose（API 阶段已验收）
+### Docker Compose（API 与完整 CPU 推理已完成隔离验收）
 
 需要可用的 Docker 引擎。在仓库根目录配置环境后启动：
 
@@ -156,9 +157,9 @@ docker compose up -d --build
 | 模型 | `cat-backend/models/` | `/app/models/` |
 | 托管参考库 | `cat-backend/reference-store/` | `/app/reference-store/` |
 
-本地开发默认数据库是 `cat-backend/cat_community.db`，与 Compose 路径不同。数据库、附件、模型和参考库不打进镜像；模型和参考照片需要另行准备。默认构建 inference 阶段，`docker build --target api cat-backend` 可构建不含 Torch 的 API 阶段。
+本地开发默认数据库是 `cat-backend/cat_community.db`，与 Compose 路径不同。数据库、附件、模型和参考库不打进镜像；模型和参考照片需要另行准备。默认构建包含系统图形库、固定关键推理依赖的 CPU inference 阶段，`docker build --target api cat-backend` 可构建不含 Torch 的 API 阶段。
 
-Linux CI 与本机 Docker Desktop 4.97.0 均已用临时命名卷通过 `api` 阶段镜像构建、四 worker、nginx/Redis、容器重启和新卷恢复。本机曾遇到的启动阻塞在用户重新登录、更新后解除；原始根因未能独立确认。上述默认构建使用完整 `inference` 阶段，**该阶段与真实模型尚未验收**。详见 [容器范围与结果](docs/validation/DOCKER_ACCEPTANCE_20261101.md) 和 [DEPLOY.md](DEPLOY.md)。
+Linux CI 与本机 Docker Desktop 4.97.0 均已用临时命名卷通过 `api` 阶段镜像构建、四 worker、nginx/Redis、容器重启和新卷恢复。本机曾遇到的启动阻塞在用户重新登录、更新后解除；原始根因未能独立确认。完整 CPU `inference` 阶段也已通过本机十二组真实模型与整体恢复验收，见 [推理记录](docs/validation/INFERENCE_20261101.md)；这不等于独立样本识别质量已达标。详见 [容器范围与结果](docs/validation/DOCKER_ACCEPTANCE_20261101.md) 和 [DEPLOY.md](DEPLOY.md)。
 
 ## 开发检查与复验
 
@@ -200,6 +201,9 @@ npm run build:weapp
 ```bash
 # 原生 Redis；脚本创建自己的实例和测试数据
 python scripts/verify_redis_runtime.py --redis-server redis-server
+# 完整 CPU 推理与模型/store 新卷恢复；固定公开权重约 396 MB
+python scripts/inference_assets.py --output-dir artifacts/inference-models
+python scripts/verify_docker_runtime.py --models-dir artifacts/inference-models
 # 浏览器断线恢复；需要 Linux Docker 引擎，自动创建临时 Redis
 python scripts/verify_reconnect_browser.py
 # 需要 PowerShell；只操作临时项目和隔离数据库/附件
@@ -251,7 +255,7 @@ Redis Pub/Sub 不保存离线事件；Web 通过统一 SSE 连接在首次打开
 
 ## 后续工作与限制
 
-1. 完成完整 inference 镜像与有已发布向量版本的参考库恢复，验证实际部署使用的业务挂载。API 阶段容器演练及列明范围内的浏览器重连验收已通过，生产网络和容量验收仍需完成。
+1. 完成实际部署业务挂载、通用模型/store 备份流程、生产网络和容量验收。完整 CPU 推理与隔离新卷恢复、API 阶段及核心浏览器重连已通过列明范围内的验收。
 2. 用授权权重、固定参考库和独立样本测量真实识别质量、误接受/误拒绝与延迟；当前相似度阈值未经过本轮独立测试集验收。
 3. 完成微信正式 AppID / HTTPS 合法域名 / 真机流程，以及真实地图坐标、定位和外部 LLM 验收。小程序图标已替换，仍需检查设备显示。
 4. 继续收紧接口类型、拆分业务模块、治理遗留告警；按目标数据量与并发测量容量，再决定数据库或检索方案升级。
@@ -270,6 +274,7 @@ Redis Pub/Sub 不保存离线事件；Web 通过统一 SSE 连接在首次打开
 | [CI 修复](docs/validation/CI_REPAIR_20261101.md) / [SQLite 启动](docs/validation/SQLITE_STARTUP_20261101.md) | 测试环境问题、WAL 锁竞争、远端六项门禁结果 |
 | [Docker 验收](docs/validation/DOCKER_ACCEPTANCE_20261101.md) | API/nginx 镜像、四 worker、事件、重启与新卷恢复及剩余边界 |
 | [浏览器重连](docs/validation/RECONNECT_20261101.md) | 丢失更新补回、长断线恢复、草稿保留和会话清理 |
+| [完整 CPU 推理](docs/validation/INFERENCE_20261101.md) | 固定真实权重、依赖修复、自匹配与模型/store 新卷恢复 |
 | [参考库操作](docs/REFERENCE_LIBRARY.md) / [备份恢复](docs/BACKUP_RECOVERY.md) | 配置、迁移、构建、恢复边界 |
 | [部署](DEPLOY.md) / [发布清单](docs/RELEASE_CHECKLIST.md) | 待完成的发布步骤 |
 | [权限矩阵](docs/PERMISSIONS.md) / [观测手册](docs/OBSERVABILITY_RUNBOOK.md) | 角色边界与排障 |
