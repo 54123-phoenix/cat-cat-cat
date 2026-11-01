@@ -11,7 +11,7 @@
   "complete_recrawl": false,
   "source_date_semantics": "Dynamic record time and capture time must remain separate",
   "storage_plan": "GitHub stores scripts, manifests and verification; large authorized source assets go to remote release/object storage, with bounded temporary staging removed after remote integrity verification.",
-  "status": "awaiting_export_path",
+  "status": "authentication_required_for_batch_collection",
   "user_confirmed_export_exists": true,
   "source_link": "#小程序://小小喵扎特/Sg46qfX97qg7yFG",
   "ui_text_character_limit_observed": 20000,
@@ -2048,5 +2048,55 @@
     "artifacts/meowzart/source-audit/ui-profiles.json": "afa5ade500172694d3fb9cee9157d0d073143e28c0e286b490aab0a68f3af3ba",
     "artifacts/meowzart/source-audit/fudan-society-public.json": "d09dc938ad4887e15b02b9cf70ee15ed6adf6c1b7943d4e0dcac6590d73cd92c",
     "artifacts/meowzart/source-audit/scoped-list-probe.json": "6e1ca27c33c9a2e68bc4e49b915ddd429633a1032462553cd969dbd22f8cde96"
+  },
+  "user_export_path_unavailable": true,
+  "user_reported_platform_collection_permission": true,
+  "requested_scope": "names_and_images",
+  "ui_displayed_cat_total": 727,
+  "ui_saved_image_count": 1,
+  "ui_image_samples": [
+    {
+      "source_name": "可可",
+      "source_pet_id": null,
+      "society_id": 1,
+      "source_appid": "wxa25510fbff03d79d",
+      "retrieved_on": "2026-11-01",
+      "acquisition": "mini_program_visible_profile_native_image_save",
+      "image_kind": "watermarked_display_image",
+      "file": "keke-profile-watermarked.png",
+      "bytes": 630158,
+      "sha256": "47c212c321a957504f8798684235677a397f43a4309d4ff8c7a47f091bb23015",
+      "width": 670,
+      "height": 830,
+      "format": "PNG",
+      "exif_field_count": 0,
+      "captured_at": null,
+      "original_image_verified": false,
+      "identity_independently_verified": false
+    }
+  ],
+  "batch_attempt": {
+    "api": "https://api.meowzart.com",
+    "society_id": 1,
+    "started_at": "2026-11-01T14:05:50.133604+00:00",
+    "status": "authentication_required",
+    "catalog_pagination_finished": false,
+    "consistent_snapshot_verified": false,
+    "complete_recrawl": false,
+    "images_downloaded": 0,
+    "dynamic_photos_collected": false,
+    "cat_count": 0,
+    "excluded_non_cat_count": 0,
+    "detail_sha256": {},
+    "page_sha256": {},
+    "finished_at": "2026-11-01T14:05:50.198665+00:00"
+  },
+  "remote_ui_sample": {
+    "url": "https://github.com/54123-phoenix/cat-cat-cat/releases/tag/meowzart-ui-sample-20261101",
+    "archive_sha256": "be0927001ef3fcc132cbd1d4d7acd54b54f1ba40da76cec47f6bd8d08ddcfdb4",
+    "archive_bytes": 631100,
+    "sample_count": 1,
+    "downloaded_back_and_verified": true,
+    "complete_recrawl": false
   }
 }
