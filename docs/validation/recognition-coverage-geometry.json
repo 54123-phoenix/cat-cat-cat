@@ -1,0 +1,60 @@
+{
+  "torch": "2.6.0+cpu",
+  "checks": [
+    {
+      "size": [
+        291,
+        733
+      ],
+      "mode": "center224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1"
+    },
+    {
+      "size": [
+        291,
+        733
+      ],
+      "mode": "letterbox224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-long224-round-pad124-116-104-imagenet-cls-linear256-l2-v1"
+    },
+    {
+      "size": [
+        800,
+        237
+      ],
+      "mode": "center224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1"
+    },
+    {
+      "size": [
+        800,
+        237
+      ],
+      "mode": "letterbox224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-long224-round-pad124-116-104-imagenet-cls-linear256-l2-v1"
+    },
+    {
+      "size": [
+        224,
+        224
+      ],
+      "mode": "center224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1"
+    },
+    {
+      "size": [
+        224,
+        224
+      ],
+      "mode": "letterbox224",
+      "tensor_exactly_matches_frozen_formula": true,
+      "pipeline": "rgb-bicubic-long224-round-pad124-116-104-imagenet-cls-linear256-l2-v1"
+    }
+  ],
+  "business_database_used": false
+}

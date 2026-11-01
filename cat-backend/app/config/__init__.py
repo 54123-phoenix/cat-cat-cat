@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 from pydantic import model_validator
 from app.services.recognition_policy import RecognitionPolicy
+from typing import Literal
 
 
 class Settings(BaseSettings):
@@ -35,6 +36,8 @@ class Settings(BaseSettings):
     RECOGNIZE_THRESHOLD_CONFIRMED: float = 0.57
     RECOGNIZE_THRESHOLD_UNCERTAIN: float = 0.49
     RECOGNIZE_MIN_MARGIN: float = 0.0
+    # Experimental geometry requires rebuilding references; legacy remains default.
+    RECOGNIZE_PREPROCESS: Literal['center224', 'letterbox224'] = 'center224'
 
     WECHAT_APPID: str = ""
     WECHAT_SECRET: str = ""

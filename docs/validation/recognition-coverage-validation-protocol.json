@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "study_id": "public-cat-coverage-validation-20261101",
+  "seed": 2026110104,
+  "scope": "Public identity-disjoint query calibration/holdout experiment, not campus or training-independent acceptance",
+  "sampling": {
+    "known_identities_per_partition": 12,
+    "unknown_identities_per_partition": 20,
+    "references_per_known_identity": 4,
+    "queries_per_cat_identity": 3,
+    "dog_negatives_per_partition": 20,
+    "gallery": "One fixed 24-identity gallery with four references each, shared by calibration and holdout; query identities are disjoint",
+    "exclude": "All identities/images downloaded, inspected or used in prior pilot, calibration, retired selection attempts and reference ablation; all prior dog source paths",
+    "capture_sessions": "Unavailable in source; identity partitioning does not establish reference/query capture-session independence"
+  },
+  "targets": {
+    "unknown_cat_false_accept_rate_max": 0.05,
+    "known_correct_confirmation_rate_min": 0.8,
+    "known_wrong_confirmation_rate_max": 0.05,
+    "no_cat_false_accept_rate_max": 0.05,
+    "unavailable_max": 0
+  },
+  "candidate_policies": {
+    "confirmed_thresholds": [
+      0.57,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ],
+    "minimum_margins": [
+      0.0,
+      0.05,
+      0.1,
+      0.15
+    ],
+    "uncertain_threshold": 0.49,
+    "margin_definition": "Top identity score minus second distinct identity score; a positive margin requires a second identity",
+    "selection_order": "Among policies meeting all calibration targets: maximize known correct confirmations, minimize unknown/no-cat false accepts, minimize known wrong confirmations, prefer zero margin, then higher confirmed threshold, then higher margin",
+    "no_feasible_policy": "Report calibration targets unmet; do not open holdout or change defaults"
+  },
+  "holdout_rules": [
+    "Freeze manifests and this protocol in Git before running calibration inference",
+    "Select the policy using only calibration predictions; freeze selected policy and its calibration/protocol hashes in Git before holdout inference",
+    "Open the holdout once with the frozen policy; report failures without retuning on holdout",
+    "Compare legacy 0.57/0.49/zero-margin policy using the same raw holdout ranks; rankings are independent of confirmation thresholds",
+    "Targets are empirical sample rates, not statistical guarantees; report counts and identity-level error concentration",
+    "If holdout targets fail, retain the candidate as experimental and leave release-quality verification open",
+    "This is one new study following a diagnosed preprocessing/coverage change, not repeated reseeding until targets pass. A failed new calibration stops before opening holdout."
+  ],
+  "limitations": [
+    "Model training overlap unknown; provider did not publish its 131-cat training manifest",
+    "Cat identities are source labels, not owner-verified identities",
+    "AFHQ dog photos lack individual identity/session metadata; image-disjoint partitions may still contain correlated subjects",
+    "Dog negatives do not cover toys, screens, multiple cats or production upload distributions",
+    "Changing gallery size, model or image domain requires fresh calibration and validation"
+  ],
+  "model_assets": {
+    "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+    "pipeline": {
+      "preprocessing": "rgb-bicubic-long224-round-pad124-116-104-imagenet-cls-linear256-l2-v1",
+      "crop": "yolov8m-cat15-conf0.3-margin0.1-or-original-v1",
+      "detector_sha256": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+    }
+  },
+  "development_selection": {
+    "variant": "letterbox-4",
+    "ablation_commit": "ebb5985",
+    "ablation_result_sha256": "38725e5d1312ff056da29ba8696258ef6f1b9a4820993c48ebc2cec3c63ae422",
+    "fresh_policy_selection": "Use only the new calibration partition and the unchanged 32-policy grid; old calibration policy is not promoted directly"
+  }
+}

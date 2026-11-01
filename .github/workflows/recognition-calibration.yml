@@ -8,6 +8,12 @@ on:
         type: choice
         required: true
         options: [calibration, holdout]
+      study:
+        description: Frozen original or full-crop/four-reference study
+        type: choice
+        required: true
+        default: original
+        options: [original, coverage]
 
 jobs:
   study:
@@ -15,18 +21,34 @@ jobs:
     timeout-minutes: 30
     env:
       STUDY_PHASE: ${{ inputs.phase }}
+      STUDY_NAME: ${{ inputs.study }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
       - run: python -m pip install httpx==0.27.0 'Pillow>=10'
+      - name: Resolve the frozen study paths and image geometry
+        run: |
+          python - <<'PY'
+          import os
+          original = os.environ['STUDY_NAME'] == 'original'
+          values = {
+            'STUDY_PROTOCOL': 'recognition-calibration-protocol' if original else 'recognition-coverage-validation-protocol',
+            'STUDY_PREFIX': 'recognition' if original else 'recognition-coverage',
+            'STUDY_PREVIOUS': 'recognition-pilot-manifest' if original else 'recognition-coverage-prior-exposure',
+            'RECOGNIZE_PREPROCESS': 'center224' if original else 'letterbox224',
+          }
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              for key, value in values.items():
+                  env.write(f'{key}={value}\n')
+          PY
       - name: Validate frozen partition boundaries
         run: >-
           python cat-backend/scripts/calibrate_recognition.py validate
-          --protocol docs/validation/recognition-calibration-protocol.json
-          --calibration-manifest docs/validation/recognition-calibration-manifest.json
-          --holdout-manifest docs/validation/recognition-holdout-manifest.json
-          --previous-manifest docs/validation/recognition-pilot-manifest.json
+          --protocol "docs/validation/${STUDY_PROTOCOL}.json"
+          --calibration-manifest "docs/validation/${STUDY_PREFIX}-calibration-manifest.json"
+          --holdout-manifest "docs/validation/${STUDY_PREFIX}-holdout-manifest.json"
+          --previous-manifest "docs/validation/${STUDY_PREVIOUS}.json"
           --output artifacts/study-boundaries.json
       - name: Load policy before opening the selected partition
         run: |
@@ -34,7 +56,7 @@ jobs:
           import json, os
           values = dict(confirmed=.57, uncertain=.49, minimum_margin=0)
           if os.environ['STUDY_PHASE'] == 'holdout':
-              selection = json.load(open('docs/validation/recognition-selected-policy.json'))
+              selection = json.load(open('docs/validation/' + os.environ['STUDY_PREFIX'] + '-selected-policy.json'))
               assert selection['status'] == 'selected' and not selection['holdout_used_for_selection']
               values = selection['selected']['policy']
           with open(os.environ['GITHUB_ENV'], 'a') as env:
@@ -47,7 +69,7 @@ jobs:
           key: inference-weights-32f04b89-5d4a90cd
       - run: python scripts/inference_assets.py --output-dir artifacts/inference-models
       - name: Download only this partition and the shared gallery
-        run: python scripts/prepare_recognition_pilot.py --frozen-manifest "docs/validation/recognition-${STUDY_PHASE}-manifest.json" --output-dir artifacts/study-data
+        run: python scripts/prepare_recognition_pilot.py --frozen-manifest "docs/validation/${STUDY_PREFIX}-${STUDY_PHASE}-manifest.json" --output-dir artifacts/study-data
       - run: docker build --target inference --build-arg PIP_INDEX=https://pypi.org/simple -t cat-recognition-study cat-backend
       - name: Run real isolated inference with frozen parameters
         run: |
@@ -58,6 +80,7 @@ jobs:
             -e RECOGNIZE_THRESHOLD_CONFIRMED="$STUDY_CONFIRMED" \
             -e RECOGNIZE_THRESHOLD_UNCERTAIN="$STUDY_UNCERTAIN" \
             -e RECOGNIZE_MIN_MARGIN="$STUDY_MINIMUM_MARGIN" \
+            -e RECOGNIZE_PREPROCESS="$RECOGNIZE_PREPROCESS" \
             --mount type=bind,source="$PWD/artifacts/inference-models",target=/app/models,readonly \
             --mount type=bind,source="$PWD/artifacts/study-data",target=/dataset,readonly \
             --mount type=bind,source="$PWD/artifacts/study-work",target=/work \
@@ -67,24 +90,24 @@ jobs:
         if: inputs.phase == 'calibration'
         run: >-
           python cat-backend/scripts/calibrate_recognition.py select
-          --protocol docs/validation/recognition-calibration-protocol.json
-          --calibration-manifest docs/validation/recognition-calibration-manifest.json
-          --holdout-manifest docs/validation/recognition-holdout-manifest.json
+          --protocol "docs/validation/${STUDY_PROTOCOL}.json"
+          --calibration-manifest "docs/validation/${STUDY_PREFIX}-calibration-manifest.json"
+          --holdout-manifest "docs/validation/${STUDY_PREFIX}-holdout-manifest.json"
           --result artifacts/study-work/run/result.json
           --output artifacts/study-selection.json
       - name: Assess the frozen policy on holdout
         if: inputs.phase == 'holdout'
         run: >-
           python cat-backend/scripts/calibrate_recognition.py assess
-          --protocol docs/validation/recognition-calibration-protocol.json
-          --manifest docs/validation/recognition-holdout-manifest.json
-          --selection docs/validation/recognition-selected-policy.json
+          --protocol "docs/validation/${STUDY_PROTOCOL}.json"
+          --manifest "docs/validation/${STUDY_PREFIX}-holdout-manifest.json"
+          --selection "docs/validation/${STUDY_PREFIX}-selected-policy.json"
           --result artifacts/study-work/run/result.json
           --output artifacts/study-assessment.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: recognition-${{ inputs.phase }}-results
+          name: recognition-${{ inputs.study }}-${{ inputs.phase }}-results
           path: |
             artifacts/study-boundaries.json
             artifacts/study-work/run/result.json

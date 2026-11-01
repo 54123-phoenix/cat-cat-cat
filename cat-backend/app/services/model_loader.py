@@ -13,6 +13,7 @@ from typing import Optional
 
 import numpy as np
 from PIL import Image
+from app.services.image_preprocessing import model_input_image
 
 try:
     import torch
@@ -47,14 +48,8 @@ def preprocess_image(image: Image.Image):
     if not TORCH_AVAILABLE:
         return None
 
-    w, h = image.size
-    scale = 256 / min(w, h)
-    new_w, new_h = int(w * scale), int(h * scale)
-    image = image.resize((new_w, new_h), Image.BICUBIC)
-
-    left = (new_w - 224) // 2
-    top = (new_h - 224) // 2
-    image = image.crop((left, top, left + 224, top + 224))
+    from app.config import settings
+    image = model_input_image(image, settings.RECOGNIZE_PREPROCESS)
 
     arr = np.array(image).astype(np.float32) / 255.0
     arr = arr.transpose(2, 0, 1)

@@ -30,7 +30,9 @@ def prepare(args):
         raise ValueError('Existing manifests cannot be overwritten; use a new directory')
     protocol = read(args.protocol)
     seed, counts = protocol['seed'], protocol['sampling']
-    old = read(args.pilot_manifest)
+    previous_paths = [args.pilot_manifest] + args.previous_manifest
+    previous = [read(p) for p in previous_paths]
+    old = {'samples': list({s['sha256']: s for m in previous for s in m['samples']}.values())}
     excluded = {s['identity'].split(':')[-1]: 'Identity used in the previous pilot'
                 for s in old['samples'] if s['identity']}
     excluded.update(VISUAL_EXCLUSIONS)
@@ -42,7 +44,10 @@ def prepare(args):
         path = Path(item['name'])
         if len(path.parts) == 3 and path.suffix.lower() in ('.jpg', '.jpeg', '.png'):
             groups.setdefault(path.parts[1], []).append(item['name'])
-    eligible = sorted(k for k, files in groups.items() if len(files) >= 8 and k not in baseline_exclusions)
+    minimum_images = max(8, counts['queries_per_cat_identity'] + counts['references_per_known_identity'])
+    eligible = sorted(k for k, files in groups.items() if len(files) >= minimum_images and k not in baseline_exclusions)
+    if len(eligible) < 2 * (counts['known_identities_per_partition'] + counts['unknown_identities_per_partition']):
+        raise ValueError('Insufficient unseen identities for the frozen protocol')
     random.Random(seed).shuffle(eligible)
     k, u = counts['known_identities_per_partition'], counts['unknown_identities_per_partition']
     plan = []
@@ -96,8 +101,11 @@ def prepare(args):
         with ThreadPoolExecutor(max_workers=4) as pool:
             selections = list(pool.map(select, plan))
         pairs = [pair for selected, _ in selections for pair in selected]
+        old_dog_paths = {a['source_path'] for m in previous for a in m.get('provenance', {}).get('assets', {}).values()
+                         if 'source_path' in a and '/dog/' in a['source_path']}
         dogs = sorted(item['name'] for item in read(args.dog_catalogue)
-                      if '/dog/' in item['name'] and Path(item['name']).suffix.lower() == '.jpg')
+                      if '/dog/' in item['name'] and Path(item['name']).suffix.lower() == '.jpg'
+                      and item['name'] not in old_dog_paths)
         random.Random(seed + 1).shuffle(dogs)
         for index, remote in enumerate(dogs[:2 * counts['dog_negatives_per_partition']]):
             part = 'calibration' if index < counts['dog_negatives_per_partition'] else 'holdout'
@@ -125,6 +133,7 @@ def prepare(args):
         perceptual.append((sample['sample_id'], dhash))
     provenance = {'protocol_sha256': hashlib.sha256(args.protocol.read_bytes()).hexdigest(),
                   'protocol': protocol, 'previous_pilot_manifest_sha256': hashlib.sha256(args.pilot_manifest.read_bytes()).hexdigest(),
+                  'previous_manifest_sha256': [hashlib.sha256(p.read_bytes()).hexdigest() for p in previous_paths],
                   'cat_source': 'https://www.kaggle.com/datasets/timost1234/cat-individuals',
                   'cat_author': 'Tzu-Yuan Lin; hosted by timost1234', 'cat_version': 1, 'cat_license': 'CC BY 4.0',
                   'dog_source': 'https://www.kaggle.com/datasets/andrewmvd/animal-faces', 'dog_version': 1,
@@ -142,8 +151,9 @@ def prepare(args):
                    'provenance': {**provenance, 'partition': part, 'assets': {s['sample_id']: a for s, a in subset}}}
         (root / f'{part}.json').write_text(json.dumps(dataset, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     # Fixed-order contact sheets for label review, never containing scores.
+    columns = counts['references_per_known_identity'] + counts['queries_per_cat_identity']
     for start in range(0, len(plan), 8):
-        canvas = Image.new('RGB', (900, 8 * 180), 'white'); draw = ImageDraw.Draw(canvas)
+        canvas = Image.new('RGB', (180 * columns, 8 * 180), 'white'); draw = ImageDraw.Draw(canvas)
         for row, (part, kind, identity) in enumerate(plan[start:start + 8]):
             draw.text((4, row * 180), f'{part} / {kind} / {identity}', fill='black')
             images = [s for s, _ in pairs if s['identity'] == 'catindividuals-v1:' + identity]
@@ -169,6 +179,8 @@ if __name__ == '__main__':
     for name in ('protocol', 'pilot-manifest', 'cat-catalogue', 'dog-catalogue', 'output-dir'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--visual-exclusions', type=Path)
+    parser.add_argument('--previous-manifest', type=Path, action='append', default=[],
+                        help='Additional retired experiments; exclude their identities and image hashes')
     parser.add_argument('--cache-dir', type=Path, help='Reuse previously downloaded images before manifest freeze')
     parser.add_argument('--proxy')
     prepare(parser.parse_args())

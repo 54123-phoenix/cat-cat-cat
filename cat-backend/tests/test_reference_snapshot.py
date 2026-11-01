@@ -92,6 +92,24 @@ def test_positive_margin_keeps_lone_gallery_identity_uncertain(bundle, monkeypat
     assert details.response.candidates == list(details.ranking)
 
 
+def test_preprocessing_switch_rejects_old_vectors_until_rebuild(bundle, monkeypatch, tmp_path):
+    db, old_output, uploads, _, _, _, photo, vector = bundle
+    assert ref.reference_status(False)['status'] == 'compatible'
+    monkeypatch.setattr(ref.settings, 'RECOGNIZE_PREPROCESS', 'letterbox224')
+    model_hash, pipeline = ref.runtime_identity(False)
+    assert pipeline.preprocessing == ref.LETTERBOX_VERSION
+    with pytest.raises(ref.ReferenceUnavailable):
+        ref.load_snapshot(old_output, db, uploads, model_hash, pipeline)
+    assert ai.recognize_cat_image(photo.read_bytes(), crop=False).status == 'unavailable'
+    new_output = tmp_path / 'letterbox'
+    ref.build_candidate(new_output, db, uploads, crop=False, extractor=lambda image, **kw: vector)
+    assert ref.load_snapshot(new_output, db, uploads, model_hash, pipeline).manifest.pipeline == pipeline
+    monkeypatch.setattr(ref.settings, 'REFERENCE_DIR', str(new_output))
+    assert ai.recognize_cat_image(photo.read_bytes(), crop=False).status == 'confirmed'
+    monkeypatch.setattr(ref.settings, 'RECOGNIZE_PREPROCESS', 'center224')
+    assert ai.recognize_cat_image(photo.read_bytes(), crop=False).status == 'unavailable'
+
+
 def test_other_database_with_identical_numeric_id_and_name_is_rejected(bundle, monkeypatch):
     _, output, uploads, _, identity, _, photo, _ = bundle
     other_engine = create_engine('sqlite://', poolclass=StaticPool)

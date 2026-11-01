@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.calibrate_recognition import digest, gates, rescore, selection_key
 from scripts.recognition_metrics import summarize
 from app.services.recognition_policy import RecognitionPolicy
+from app.services.image_preprocessing import letterbox_image
 
 
 def validate_inputs(manifest, extras, protocol):
@@ -42,16 +43,6 @@ def validate_inputs(manifest, extras, protocol):
         values = [s[key] for s in base + added]
         if len(values) != len(set(values)):
             raise ValueError('Duplicate/leaking images or sample identifiers')
-
-
-def letterbox_image(image):
-    """Preserve the full RGB crop; neutral ImageNet-mean padding, no EXIF change."""
-    w, h = image.size
-    scale = 224 / max(w, h)
-    resized = image.resize((max(1, round(w * scale)), max(1, round(h * scale))), Image.Resampling.BICUBIC)
-    canvas = Image.new('RGB', (224, 224), (124, 116, 104))
-    canvas.paste(resized, ((224 - resized.width) // 2, (224 - resized.height) // 2))
-    return canvas
 
 
 def rank_queries(references, queries, vectors):
@@ -82,7 +73,8 @@ def evaluate_grid(rows, protocol):
 
 def run(args):
     os.environ.update(JWT_SECRET='isolated-ablation-only', ADMIN_PASSWORD='isolated-ablation-only',
-                      DATABASE_URL='sqlite://', INIT_DEMO_USER='0', REDIS_URL='', PYTHON_DOTENV_DISABLED='1')
+                      DATABASE_URL='sqlite://', INIT_DEMO_USER='0', REDIS_URL='', PYTHON_DOTENV_DISABLED='1',
+                      RECOGNIZE_PREPROCESS='center224')
     from app.services import detector, model_loader
     from app.services.reference_snapshot import runtime_identity, validate_vector
     from scripts.eval_recognition import sample_path

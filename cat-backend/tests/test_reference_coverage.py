@@ -6,6 +6,7 @@ from PIL import Image
 import pytest
 
 from scripts.compare_reference_coverage import digest, letterbox_image, rank_queries, validate_inputs
+from app.services.image_preprocessing import model_input_image
 
 
 def inputs():
@@ -76,3 +77,26 @@ def test_ranking_aggregates_distinct_identities_and_retains_wrong_top1():
     assert rows[0]['ranking'] == ['a', 'b']
     assert rows[0]['ranking_scores'] == pytest.approx([.9, .6])
     assert rows[0]['expected_reference_id'] == 'b' and q == original
+
+
+def test_versioned_geometry_preserves_legacy_pixels_and_keeps_top_marker_in_letterbox():
+    rng = np.random.default_rng(381)
+    image = Image.fromarray(rng.integers(0, 256, (733, 291, 3), dtype=np.uint8))
+    w, h = image.size
+    nw, nh = int(w * 256 / min(w, h)), int(h * 256 / min(w, h))
+    expected = image.resize((nw, nh), Image.Resampling.BICUBIC)
+    x, y = (nw - 224) // 2, (nh - 224) // 2
+    assert model_input_image(image, 'center224').tobytes() == expected.crop((x, y, x + 224, y + 224)).tobytes()
+    tall = Image.new('RGB', (224, 896), 'black')
+    tall.paste((255, 0, 0), (0, 0, 224, 112))
+    assert np.asarray(model_input_image(tall, 'center224')).max() == 0
+    assert model_input_image(tall, 'letterbox224').getpixel((112, 2)) == (255, 0, 0)
+    with pytest.raises(ValueError, match='Unsupported'):
+        model_input_image(tall, 'typo')
+
+
+def test_invalid_preprocessing_setting_is_rejected():
+    from app.config import Settings
+    from pydantic import ValidationError
+    with pytest.raises(ValidationError):
+        Settings(JWT_SECRET='test', ADMIN_PASSWORD='test', RECOGNIZE_PREPROCESS='typo')

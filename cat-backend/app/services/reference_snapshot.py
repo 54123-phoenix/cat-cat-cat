@@ -21,9 +21,11 @@ from sqlalchemy import select
 from app import models
 from app.config import settings
 from app.services.artifact_hash import sha256_file
+from app.services.image_preprocessing import PREPROCESS_VERSIONS
 
 DIMENSION = 256
-PREPROCESS_VERSION = 'rgb-bicubic-short256-center224-imagenet-cls-linear256-l2-v1'
+PREPROCESS_VERSION = PREPROCESS_VERSIONS['center224']
+LETTERBOX_VERSION = PREPROCESS_VERSIONS['letterbox224']
 CROP_VERSION = 'yolov8m-cat15-conf0.3-margin0.1-or-original-v1'
 BACKEND = Path(__file__).resolve().parents[2]
 HexId = Annotated[str, Field(pattern=r'^[0-9a-f]{32}$')]
@@ -53,7 +55,7 @@ class Source(Contract):
 
 
 class Pipeline(Contract):
-    preprocessing: Literal[PREPROCESS_VERSION] = PREPROCESS_VERSION
+    preprocessing: Literal[PREPROCESS_VERSION, LETTERBOX_VERSION] = PREPROCESS_VERSION
     crop: Literal[CROP_VERSION, 'none-v1']
     detector_sha256: Digest | None
 
@@ -145,7 +147,8 @@ def runtime_identity(crop: bool = True) -> tuple[str, Pipeline]:
             detector_digest = sha256_file(detector._MODEL_PATH)
         except OSError as exc:
             raise ReferenceUnavailable('detector_unavailable', 'Required local detector checkpoint is missing') from exc
-    return digest, Pipeline(crop=CROP_VERSION if crop else 'none-v1', detector_sha256=detector_digest)
+    return digest, Pipeline(preprocessing=PREPROCESS_VERSIONS[settings.RECOGNIZE_PREPROCESS],
+                            crop=CROP_VERSION if crop else 'none-v1', detector_sha256=detector_digest)
 
 
 def validate_vector(vector: list[float], dimension: int = DIMENSION) -> None:
