@@ -1,0 +1,1215 @@
+{
+  "completed_at": "2026-11-01T15:19:01.924982+00:00",
+  "scope": "Use existing 94 photos; stop further source collection; no retraining",
+  "new_database_initialized": true,
+  "existing_business_database_overwritten": false,
+  "schema_revision": "j20261031",
+  "database_id": "b5449d89908848a0b7be5388c125d9c2",
+  "runtime_paths": {
+    "database": "cat-backend/data/cat_community.db",
+    "uploads": "cat-backend/uploads/cats/meowzart",
+    "reference_store": "cat-backend/reference-store"
+  },
+  "source_release": "https://github.com/54123-phoenix/cat-cat-cat/releases/tag/meowzart-catalog-20261101",
+  "archive_sha256": {
+    "catalog.json": "e2bb358e476071927638fc30423c98b5bcc08d23595e2a0c3934c6cbfda50ef3",
+    "image-manifest.json": "3c97ac6e789a91c4032037d191ae815f8c0519f53e368431b3c48eff523eb848"
+  },
+  "review_sha256": "f628e067372da9fb1ebb7a02fae39a7dec403dddcb8199ce22a82e80fbc90760",
+  "offline_import": {
+    "photos": 94,
+    "reference_photos": 92,
+    "avatar_only_photos": 2,
+    "image_bytes": 49474548,
+    "cats_created": 94,
+    "images_created": 92,
+    "network_requests": 0,
+    "training_performed": false,
+    "identity_independently_verified": false,
+    "capture_sessions_verified": false,
+    "storage": {
+      "linked": 94,
+      "copied": 0,
+      "reused": 0
+    },
+    "generation_before": 0,
+    "generation_after": 186,
+    "run_id": "20261101T151009Z-dad7fc48"
+  },
+  "pre_import_backup": {
+    "relative_path": "cat-backend/data/imports/20261101T151009Z-dad7fc48/before.db",
+    "sha256": "c4ffa2308e2431328190fabc60f97e956d6843ab1510e9e62d072d4192f7be6d"
+  },
+  "repeat_import": {
+    "cats_created": 0,
+    "images_created": 0,
+    "storage": {
+      "linked": 0,
+      "copied": 0,
+      "reused": 94
+    },
+    "generation_before": 186,
+    "generation_after": 186,
+    "run_id": "20261101T151012Z-c71cebbe"
+  },
+  "database_check": {
+    "integrity": "ok",
+    "foreign_key_violations": 0,
+    "cats": 94,
+    "reference_photos": 92,
+    "generation": 186
+  },
+  "reference_build": {
+    "job": {
+      "job_id": "9ab81d849a7b4ee28679269a4e337ca8",
+      "kind": "rebuild",
+      "status": "succeeded",
+      "created_at": "2026-11-01T15:11:22.309355+00:00",
+      "updated_at": "2026-11-01T15:16:03.959389+00:00",
+      "requested_by": null,
+      "requested_generation": 186,
+      "crop": true,
+      "publish": true,
+      "target_snapshot_id": null,
+      "input_revision": "6102b86e4d33376be76552cdfc5fcaa69b57dce11356cfdcdbba428b34425b92",
+      "input_generation": 186,
+      "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+      "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+      "completed_photos": 92,
+      "total_photos": 92,
+      "code": "published",
+      "detail": null,
+      "recovered": false
+    },
+    "elapsed_seconds": 280.294,
+    "maximum_resident_mib": 1559.21,
+    "model_hashes_before": {
+      "finetuned_best.pt": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "yolov8m.pt": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+    },
+    "model_hashes_after": {
+      "finetuned_best.pt": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "yolov8m.pt": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5"
+    },
+    "weights_unchanged": true,
+    "reference_status": {
+      "status": "compatible",
+      "code": "validated",
+      "detail": null,
+      "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+      "catalog_revision": "6102b86e4d33376be76552cdfc5fcaa69b57dce11356cfdcdbba428b34425b92",
+      "catalog_generation": 186,
+      "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+      "reference_cat_count": 92,
+      "photo_count": 92,
+      "dimension": 256,
+      "store_configured": true,
+      "current_catalog": {
+        "database_id": "b5449d89908848a0b7be5388c125d9c2",
+        "generation": 186,
+        "cat_count": 94,
+        "photo_count": 92,
+        "cats_without_photos": 2
+      },
+      "published": {
+        "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+        "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+        "catalog_generation": 186,
+        "photo_count": 92,
+        "created_at": "2026-11-01T15:15:57.245799+00:00"
+      },
+      "pending_changes": false,
+      "catalog_error": null,
+      "publication_error": null,
+      "job_error": null,
+      "latest_job": {
+        "job_id": "9ab81d849a7b4ee28679269a4e337ca8",
+        "kind": "rebuild",
+        "status": "succeeded",
+        "created_at": "2026-11-01T15:11:22.309355+00:00",
+        "updated_at": "2026-11-01T15:16:03.959389+00:00",
+        "requested_by": null,
+        "requested_generation": 186,
+        "crop": true,
+        "publish": true,
+        "target_snapshot_id": null,
+        "input_revision": "6102b86e4d33376be76552cdfc5fcaa69b57dce11356cfdcdbba428b34425b92",
+        "input_generation": 186,
+        "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+        "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+        "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+        "completed_photos": 92,
+        "total_photos": 92,
+        "code": "published",
+        "detail": null,
+        "recovered": false
+      },
+      "jobs": [
+        {
+          "job_id": "9ab81d849a7b4ee28679269a4e337ca8",
+          "kind": "rebuild",
+          "status": "succeeded",
+          "created_at": "2026-11-01T15:11:22.309355+00:00",
+          "updated_at": "2026-11-01T15:16:03.959389+00:00",
+          "requested_by": null,
+          "requested_generation": 186,
+          "crop": true,
+          "publish": true,
+          "target_snapshot_id": null,
+          "input_revision": "6102b86e4d33376be76552cdfc5fcaa69b57dce11356cfdcdbba428b34425b92",
+          "input_generation": 186,
+          "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+          "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+          "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+          "completed_photos": 92,
+          "total_photos": 92,
+          "code": "published",
+          "detail": null,
+          "recovered": false
+        }
+      ],
+      "checked_at": "2026-11-01T15:16:07.307906+00:00"
+    },
+    "network": "none",
+    "cpu_limit": 2,
+    "memory_limit_gib": 4,
+    "training_performed": false
+  },
+  "http_verification": {
+    "base_url": "http://127.0.0.1:18041",
+    "checks": {
+      "cat_list": {
+        "passed": true,
+        "total": 94
+      },
+      "avatars_sha256_and_decode": {
+        "passed": true,
+        "count": 94,
+        "bytes": 49474548
+      },
+      "detail_and_photo_ownership": {
+        "passed": true,
+        "cat_count": 94,
+        "reference_photos": 92,
+        "avatar_only": 2
+      },
+      "gallery": {
+        "passed": true,
+        "total": 92
+      },
+      "reference_status": {
+        "passed": true,
+        "status": "compatible",
+        "snapshot_id": "16e456d912124df3bf5e869af8aba11c",
+        "publication_id": "5b28fbc4b1f142dc8b7d8495fe763f88",
+        "photo_count": 92,
+        "pending_changes": false
+      },
+      "self_match_engineering_smoke": {
+        "passed": true,
+        "count": 3,
+        "independent_images": false,
+        "interpretation": "Own reference photos test wiring only, not campus accuracy"
+      }
+    },
+    "self_matches": [
+      {
+        "source_pet_id": "470",
+        "expected_cat_id": 1,
+        "returned_cat_id": 1,
+        "status": "confirmed",
+        "confidence": 1.0
+      },
+      {
+        "source_pet_id": "10088",
+        "expected_cat_id": 47,
+        "returned_cat_id": 47,
+        "status": "confirmed",
+        "confidence": 1.0
+      },
+      {
+        "source_pet_id": "10147",
+        "expected_cat_id": 94,
+        "returned_cat_id": 94,
+        "status": "confirmed",
+        "confidence": 1.0
+      }
+    ],
+    "quality_evaluation": false,
+    "training_performed": false,
+    "elapsed_seconds": 41.047
+  },
+  "unit_tests": {
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.253
+  },
+  "quick_harness": {
+    "mode": "quick",
+    "score": 100.0,
+    "verdict": "pass",
+    "passed": 3,
+    "failed": 0
+  },
+  "default_policy": {
+    "preprocessing": "center224",
+    "confirmed": 0.57,
+    "uncertain": 0.49,
+    "min_margin": 0,
+    "changed": false
+  },
+  "storage": {
+    "new_image_payload_copies": 0,
+    "new_model_payload_copies": 0,
+    "original_archive_cleanup_retried": false,
+    "original_archive_retained_due_to_previous_auto_approval_rejection": true,
+    "temporary_inference_containers_stopped": true
+  },
+  "further_image_collection": false,
+  "campus_quality_accepted": false,
+  "source_to_app_bindings": [
+    {
+      "source_pet_id": "470",
+      "source_name": "朱古力",
+      "cat_id": 1,
+      "reference_id": "8f16900f4f285515913e95ec067bfe12",
+      "image_id": 1,
+      "image_path": "/uploads/cats/meowzart/470-23a9141062c0a1bb5025502b7e02a6590e68d9b1f1926de2d7d2bd78898548fc.jpg",
+      "sha256": "23a9141062c0a1bb5025502b7e02a6590e68d9b1f1926de2d7d2bd78898548fc",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "471",
+      "source_name": "叮当",
+      "cat_id": 2,
+      "reference_id": "4091bff75507527eb51406595f07c0b5",
+      "image_id": 2,
+      "image_path": "/uploads/cats/meowzart/471-6f658b121e6006a804dfa81320abc598e15a14c7ca4b182348ee2174eb856a05.jpg",
+      "sha256": "6f658b121e6006a804dfa81320abc598e15a14c7ca4b182348ee2174eb856a05",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "473",
+      "source_name": "溜溜",
+      "cat_id": 3,
+      "reference_id": "51f34e2067b95147a1ce01a9aedb44ae",
+      "image_id": 3,
+      "image_path": "/uploads/cats/meowzart/473-aa8028f53b6ffe6128c15a4725e467338e2b4115e80faffe85a71b158e956cff.jpg",
+      "sha256": "aa8028f53b6ffe6128c15a4725e467338e2b4115e80faffe85a71b158e956cff",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "8989",
+      "source_name": "西西",
+      "cat_id": 4,
+      "reference_id": "cc25997e730f503895ccc21ce9173693",
+      "image_id": 4,
+      "image_path": "/uploads/cats/meowzart/8989-01a5ac037d35406e373f63ee2fd7f6dcc69ac58ff5d70b82229b5803e2d0b768.jpg",
+      "sha256": "01a5ac037d35406e373f63ee2fd7f6dcc69ac58ff5d70b82229b5803e2d0b768",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "8990",
+      "source_name": "芋泥",
+      "cat_id": 5,
+      "reference_id": "f2cb9d2b3e4a522ba27a2728a5df155b",
+      "image_id": 5,
+      "image_path": "/uploads/cats/meowzart/8990-e8349445c8afdd79338980bb1d6ce74ee08f3c254e545119e4f0eb2658806f11.jpg",
+      "sha256": "e8349445c8afdd79338980bb1d6ce74ee08f3c254e545119e4f0eb2658806f11",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "8991",
+      "source_name": "咸鱼",
+      "cat_id": 6,
+      "reference_id": "2ab3286197585167916d44072b4214b9",
+      "image_id": 6,
+      "image_path": "/uploads/cats/meowzart/8991-4d6467c87ad9edaecf69bb027d2b9740de538d00003c389b5b57c5b01df4f3f7.jpg",
+      "sha256": "4d6467c87ad9edaecf69bb027d2b9740de538d00003c389b5b57c5b01df4f3f7",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9248",
+      "source_name": "小牛",
+      "cat_id": 7,
+      "reference_id": "1a007087481d5d30aa06defd9ebb9f05",
+      "image_id": 7,
+      "image_path": "/uploads/cats/meowzart/9248-c187217918be5069a18a722d3e4660b8be3d3dd415a67e62d02ac8a5ce0c868b.jpg",
+      "sha256": "c187217918be5069a18a722d3e4660b8be3d3dd415a67e62d02ac8a5ce0c868b",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9320",
+      "source_name": "段誉",
+      "cat_id": 8,
+      "reference_id": "6be741ef8ac656e4a9c972be38415836",
+      "image_id": 8,
+      "image_path": "/uploads/cats/meowzart/9320-ef1b78fa3218e4c771d01552ce0891ac941820b2e5d7d8cf9cfa65577610a800.jpg",
+      "sha256": "ef1b78fa3218e4c771d01552ce0891ac941820b2e5d7d8cf9cfa65577610a800",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9324",
+      "source_name": "彩虹",
+      "cat_id": 9,
+      "reference_id": "75b241772c4b522d8f12112891a49f27",
+      "image_id": 9,
+      "image_path": "/uploads/cats/meowzart/9324-e5eaa3793c96621a6183ff487762f4e2f6763f94b1641adbb5a2fde8e92a7e25.jpg",
+      "sha256": "e5eaa3793c96621a6183ff487762f4e2f6763f94b1641adbb5a2fde8e92a7e25",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9326",
+      "source_name": "糕糕",
+      "cat_id": 10,
+      "reference_id": "38685bbaeaa15db4b54336a11b6a03e1",
+      "image_id": 10,
+      "image_path": "/uploads/cats/meowzart/9326-bbdfdbd10a607df331cb43a5af68192c56c16b310f1b95703d315fc423fa2424.jpg",
+      "sha256": "bbdfdbd10a607df331cb43a5af68192c56c16b310f1b95703d315fc423fa2424",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9327",
+      "source_name": "灰灰",
+      "cat_id": 11,
+      "reference_id": "fb22060f3d2a5aa7830c0b92ea05b443",
+      "image_id": 11,
+      "image_path": "/uploads/cats/meowzart/9327-e6bed8bdef1c58317899b38bf50e20e30be569ec4c42b4090ac706baf73ffe17.jpg",
+      "sha256": "e6bed8bdef1c58317899b38bf50e20e30be569ec4c42b4090ac706baf73ffe17",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9328",
+      "source_name": "卡卡（小灰）",
+      "cat_id": 12,
+      "reference_id": "1d9c8ea63f975332be05cae046515ce6",
+      "image_id": 12,
+      "image_path": "/uploads/cats/meowzart/9328-0566843da400a937c6eb1443fa3d74adeca499af049675c6eaae6d18261a8090.jpg",
+      "sha256": "0566843da400a937c6eb1443fa3d74adeca499af049675c6eaae6d18261a8090",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9329",
+      "source_name": "橘二",
+      "cat_id": 13,
+      "reference_id": "a2aea5ae79265f3bb3f64c98ff7b1983",
+      "image_id": 13,
+      "image_path": "/uploads/cats/meowzart/9329-186a3401956f237ff3f53853d077989f55d0f4c92815fb2146a2bd5fb36942d7.jpg",
+      "sha256": "186a3401956f237ff3f53853d077989f55d0f4c92815fb2146a2bd5fb36942d7",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9330",
+      "source_name": "对眼",
+      "cat_id": 14,
+      "reference_id": "762e68d9278d5afc8ab1a317d98fd704",
+      "image_id": 14,
+      "image_path": "/uploads/cats/meowzart/9330-dc114d5cc280a0daaa7a7f28ea6d2143154c2d40f8e81f5fadda70709ee78a23.jpg",
+      "sha256": "dc114d5cc280a0daaa7a7f28ea6d2143154c2d40f8e81f5fadda70709ee78a23",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "9668",
+      "source_name": "花生",
+      "cat_id": 15,
+      "reference_id": "aefd8274558c5f2dab54d3f2dec2e1e0",
+      "image_id": 15,
+      "image_path": "/uploads/cats/meowzart/9668-4b336cbf4cb45d81634c34c6a176fde12ed5fb4c3bf336c3af3426182f00438d.jpg",
+      "sha256": "4b336cbf4cb45d81634c34c6a176fde12ed5fb4c3bf336c3af3426182f00438d",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10048",
+      "source_name": "圆圆",
+      "cat_id": 16,
+      "reference_id": "cb2b057b3d3259e2baca3e5385538de8",
+      "image_id": 16,
+      "image_path": "/uploads/cats/meowzart/10048-63de37d82c62f00f2d94f379c5a193da85b8b7a774b972f2c09ccb5dc7d3f9fc.jpg",
+      "sha256": "63de37d82c62f00f2d94f379c5a193da85b8b7a774b972f2c09ccb5dc7d3f9fc",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10049",
+      "source_name": "嫣嫣（炸炸）",
+      "cat_id": 17,
+      "reference_id": "b3815cb92d7859b3a6384cb3439ccb9b",
+      "image_id": 17,
+      "image_path": "/uploads/cats/meowzart/10049-c1cf28ef3498eb478268831af599eca64fb392708b74dfeb80e795580657279a.jpg",
+      "sha256": "c1cf28ef3498eb478268831af599eca64fb392708b74dfeb80e795580657279a",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10050",
+      "source_name": "珂珂",
+      "cat_id": 18,
+      "reference_id": "651eb4a545155857a15063b6251aeb1d",
+      "image_id": 18,
+      "image_path": "/uploads/cats/meowzart/10050-58d0510bf04f58794addf56326f46b73aee7cfd42bc32af27fc27bcfcd5257c8.jpg",
+      "sha256": "58d0510bf04f58794addf56326f46b73aee7cfd42bc32af27fc27bcfcd5257c8",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10051",
+      "source_name": "白云",
+      "cat_id": 19,
+      "reference_id": "dd17adbbc26f59eeb4e2a6f59d70aa15",
+      "image_id": 19,
+      "image_path": "/uploads/cats/meowzart/10051-38c7803543de8ce4a40e45935e109f63f0cfc0a70bef4403661b2dfebeae96ee.jpg",
+      "sha256": "38c7803543de8ce4a40e45935e109f63f0cfc0a70bef4403661b2dfebeae96ee",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10052",
+      "source_name": "帕帕",
+      "cat_id": 20,
+      "reference_id": "f3cc3b658df6575495c2ca8c9a1a0057",
+      "image_id": 20,
+      "image_path": "/uploads/cats/meowzart/10052-e259155af3d89d1429f9a09853db7657e26d9d29b3254e563b7fb0bd068ace01.jpg",
+      "sha256": "e259155af3d89d1429f9a09853db7657e26d9d29b3254e563b7fb0bd068ace01",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10053",
+      "source_name": "探探",
+      "cat_id": 21,
+      "reference_id": "171682704b08582e8b36e64c709e86e2",
+      "image_id": 21,
+      "image_path": "/uploads/cats/meowzart/10053-51d52c4273203ca17341bcc06bea9f42ed3e93043c2d019a5cfc9cefe3bb320a.jpg",
+      "sha256": "51d52c4273203ca17341bcc06bea9f42ed3e93043c2d019a5cfc9cefe3bb320a",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10055",
+      "source_name": "忆白",
+      "cat_id": 22,
+      "reference_id": "a26665ef7211533d8fdb184fb14f09a9",
+      "image_id": 22,
+      "image_path": "/uploads/cats/meowzart/10055-1dd6c893c28221699a4db192d2bcf5c72d53cda3f0b516b890117115ad63c5c0.jpg",
+      "sha256": "1dd6c893c28221699a4db192d2bcf5c72d53cda3f0b516b890117115ad63c5c0",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10056",
+      "source_name": "桂花",
+      "cat_id": 23,
+      "reference_id": "dd228b1eb3545101b94906c9b4605c91",
+      "image_id": 23,
+      "image_path": "/uploads/cats/meowzart/10056-adccd825349e34be37b41a9b3dd2f628765253322ac45cc1bd3f842bd3776204.jpg",
+      "sha256": "adccd825349e34be37b41a9b3dd2f628765253322ac45cc1bd3f842bd3776204",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10057",
+      "source_name": "芒果",
+      "cat_id": 24,
+      "reference_id": "0fab200da1b050e2a91ada4707fa9015",
+      "image_id": 24,
+      "image_path": "/uploads/cats/meowzart/10057-e0abcf692ebf34a2fdded8740ba9181b3d9fac6004df48ada8e6bf0a00428cbc.jpg",
+      "sha256": "e0abcf692ebf34a2fdded8740ba9181b3d9fac6004df48ada8e6bf0a00428cbc",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10058",
+      "source_name": "黑巧（把把）",
+      "cat_id": 25,
+      "reference_id": "64d2d9c052ba518db0869958ec622e1d",
+      "image_id": 25,
+      "image_path": "/uploads/cats/meowzart/10058-ad7ca745fc79970f6945d1d795332c4afba6bf26e640c7b8c548d14d73dc299f.jpg",
+      "sha256": "ad7ca745fc79970f6945d1d795332c4afba6bf26e640c7b8c548d14d73dc299f",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10062",
+      "source_name": "妞妞",
+      "cat_id": 26,
+      "reference_id": "7aa25131250159d8947581bc22698d52",
+      "image_id": 26,
+      "image_path": "/uploads/cats/meowzart/10062-4b49b78df8c69dfca3e59f089e568ec0837c5a9da67a67cb9655d706f9e0b502.jpg",
+      "sha256": "4b49b78df8c69dfca3e59f089e568ec0837c5a9da67a67cb9655d706f9e0b502",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10063",
+      "source_name": "蓝心",
+      "cat_id": 27,
+      "reference_id": "3594e3c990685757b630e1c0bf785a8f",
+      "image_id": 27,
+      "image_path": "/uploads/cats/meowzart/10063-360a8e7e1a6c6a2bc2ea7bd7541969fec4e7ef97c28bde5adba775b456f2d9fd.jpg",
+      "sha256": "360a8e7e1a6c6a2bc2ea7bd7541969fec4e7ef97c28bde5adba775b456f2d9fd",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10065",
+      "source_name": "花蛋（安妮）",
+      "cat_id": 28,
+      "reference_id": "d05cb8d6bd445ebb910f3078a4b8fab8",
+      "image_id": 28,
+      "image_path": "/uploads/cats/meowzart/10065-be173c39a13b26cf93554eada5d49616d0a0b47b14a72ec5d60015b9b3f0f88b.jpg",
+      "sha256": "be173c39a13b26cf93554eada5d49616d0a0b47b14a72ec5d60015b9b3f0f88b",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10068",
+      "source_name": "车车",
+      "cat_id": 29,
+      "reference_id": "a051fa9e853d544cb0d164e8b8deb207",
+      "image_id": 29,
+      "image_path": "/uploads/cats/meowzart/10068-a1f84be89e7e35b43aefcacc79dd4160f9079671d2e851792db0c3fff8dba8ea.jpg",
+      "sha256": "a1f84be89e7e35b43aefcacc79dd4160f9079671d2e851792db0c3fff8dba8ea",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10069",
+      "source_name": "黑桃",
+      "cat_id": 30,
+      "reference_id": "67d159caf45b5d65b4e9626a9d41ebcf",
+      "image_id": 30,
+      "image_path": "/uploads/cats/meowzart/10069-c6915add9984bfe4d65ca6df4e9b19b3df03415a9767d349b2a2109dde31e1ca.jpg",
+      "sha256": "c6915add9984bfe4d65ca6df4e9b19b3df03415a9767d349b2a2109dde31e1ca",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10070",
+      "source_name": "小卷",
+      "cat_id": 31,
+      "reference_id": "dbacabffef8b58d6b6a4f0254e35abf3",
+      "image_id": 31,
+      "image_path": "/uploads/cats/meowzart/10070-dedc8e821e75ed22b921cff69702af973ee631ac991837ff5cbc0cefdd3a6619.jpg",
+      "sha256": "dedc8e821e75ed22b921cff69702af973ee631ac991837ff5cbc0cefdd3a6619",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10071",
+      "source_name": "牛牛",
+      "cat_id": 32,
+      "reference_id": "5aff3d9644c9587dbe484abbbaacc0e4",
+      "image_id": 32,
+      "image_path": "/uploads/cats/meowzart/10071-db4f7ac68f45dbb99b9abf40a793336b943d34597b49461e1fcf879e27156107.jpg",
+      "sha256": "db4f7ac68f45dbb99b9abf40a793336b943d34597b49461e1fcf879e27156107",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10072",
+      "source_name": "蛙蛙",
+      "cat_id": 33,
+      "reference_id": "42e667c2174b51f7b6213ab753bcc75e",
+      "image_id": 33,
+      "image_path": "/uploads/cats/meowzart/10072-ea0bc978be83cb18142db3dea6412e7a653b9d7853914bd4b70e124642a1a5a8.jpg",
+      "sha256": "ea0bc978be83cb18142db3dea6412e7a653b9d7853914bd4b70e124642a1a5a8",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10073",
+      "source_name": "黑1/黑黄",
+      "cat_id": 34,
+      "reference_id": "1f1127094d425e20a1d2eaa0db4a6e95",
+      "image_id": 34,
+      "image_path": "/uploads/cats/meowzart/10073-6bb116c3d4efe642a72eed56ea370aec3a7998753775dc19df1bebf5535632a2.jpg",
+      "sha256": "6bb116c3d4efe642a72eed56ea370aec3a7998753775dc19df1bebf5535632a2",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10074",
+      "source_name": "黑2/黑绿",
+      "cat_id": 35,
+      "reference_id": "1e47e8a4c6bc516e8b842886d18bcd0d",
+      "image_id": 35,
+      "image_path": "/uploads/cats/meowzart/10074-783cbdc43021c986b1b15191d270c2f2452aa0f54c0e47f783b836f0c8fc76c9.jpg",
+      "sha256": "783cbdc43021c986b1b15191d270c2f2452aa0f54c0e47f783b836f0c8fc76c9",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10075",
+      "source_name": "黑3/黑粉",
+      "cat_id": 36,
+      "reference_id": "5e0911c0ca755c05b0685ab86c7c5c1d",
+      "image_id": 36,
+      "image_path": "/uploads/cats/meowzart/10075-542fa284bc14edc114ac2ef160d2d7d427a3905db695444acc92860f90003bd4.jpg",
+      "sha256": "542fa284bc14edc114ac2ef160d2d7d427a3905db695444acc92860f90003bd4",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10076",
+      "source_name": "老黄",
+      "cat_id": 37,
+      "reference_id": "c62c55cf2a495e419fbedf012f975fba",
+      "image_id": 37,
+      "image_path": "/uploads/cats/meowzart/10076-9990374d87887ecf3102f1e4c49134555ba59b2b14b15b1093e4a73e91eaaeb6.jpg",
+      "sha256": "9990374d87887ecf3102f1e4c49134555ba59b2b14b15b1093e4a73e91eaaeb6",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10078",
+      "source_name": "柯尔施",
+      "cat_id": 38,
+      "reference_id": "2319307cb0be52999895c7d897c261cb",
+      "image_id": 38,
+      "image_path": "/uploads/cats/meowzart/10078-432401d39981be9486062206f645eb7b8f4e2f1b0083f2c7f6a10c03b8d2d7bd.jpg",
+      "sha256": "432401d39981be9486062206f645eb7b8f4e2f1b0083f2c7f6a10c03b8d2d7bd",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10079",
+      "source_name": "尼采",
+      "cat_id": 39,
+      "reference_id": "adc364261dc45283b03561a22009a445",
+      "image_id": 39,
+      "image_path": "/uploads/cats/meowzart/10079-d969ad23deb39440a5591a60f1af8379c0a906da0b4eed8264b9a41b9a78460b.jpg",
+      "sha256": "d969ad23deb39440a5591a60f1af8379c0a906da0b4eed8264b9a41b9a78460b",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10080",
+      "source_name": "木瓜",
+      "cat_id": 40,
+      "reference_id": "abcb94df1d095eb4be6ef656cd76cd84",
+      "image_id": 40,
+      "image_path": "/uploads/cats/meowzart/10080-f08f38d499bbf6ddbf31132bf6a04a53e78ba3d6d4c40215187c93f97e9efda3.jpg",
+      "sha256": "f08f38d499bbf6ddbf31132bf6a04a53e78ba3d6d4c40215187c93f97e9efda3",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10082",
+      "source_name": "蛋蛋",
+      "cat_id": 41,
+      "reference_id": "3d28d461be08568c9351bee7d350c852",
+      "image_id": 41,
+      "image_path": "/uploads/cats/meowzart/10082-d3fbe3cf84a6f88745e83188e066deb3ea1b6afae5d5899b3606219084fb5566.jpg",
+      "sha256": "d3fbe3cf84a6f88745e83188e066deb3ea1b6afae5d5899b3606219084fb5566",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10083",
+      "source_name": "胡萝卜",
+      "cat_id": 42,
+      "reference_id": "7283205ed67e5733a7b719c4eb4f5000",
+      "image_id": 42,
+      "image_path": "/uploads/cats/meowzart/10083-6e8aa35fea9c6c1cb03cf8e31b7dfa89e599150fbfbe79e032e411ed1e64fea6.jpg",
+      "sha256": "6e8aa35fea9c6c1cb03cf8e31b7dfa89e599150fbfbe79e032e411ed1e64fea6",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10084",
+      "source_name": "乌梅妈",
+      "cat_id": 43,
+      "reference_id": "fef186743b4553ebb08c915ce52a5cf5",
+      "image_id": 43,
+      "image_path": "/uploads/cats/meowzart/10084-34c6174c75f735891f9b99c8abc592f41ca50635a9766b5e8f9472a523d3bf7f.jpg",
+      "sha256": "34c6174c75f735891f9b99c8abc592f41ca50635a9766b5e8f9472a523d3bf7f",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10085",
+      "source_name": "毛栗子",
+      "cat_id": 44,
+      "reference_id": "27d87bf5b25853fd82875c99e14ac302",
+      "image_id": 44,
+      "image_path": "/uploads/cats/meowzart/10085-c684f3d96c3c67ebcf196b228a8147b5128880ab4b0d102bfe94b2cea8c0a472.jpg",
+      "sha256": "c684f3d96c3c67ebcf196b228a8147b5128880ab4b0d102bfe94b2cea8c0a472",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10086",
+      "source_name": "小挖",
+      "cat_id": 45,
+      "reference_id": "bcb5e51a32d65673ae11bbb0edcab417",
+      "image_id": 45,
+      "image_path": "/uploads/cats/meowzart/10086-376c017ee578189411d01276e63930e4ffdaddccd74d0379af527c3c689cbeef.jpg",
+      "sha256": "376c017ee578189411d01276e63930e4ffdaddccd74d0379af527c3c689cbeef",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10087",
+      "source_name": "饺子",
+      "cat_id": 46,
+      "reference_id": "72bd2b94d8b156d2a80ff01782ef9846",
+      "image_id": 46,
+      "image_path": "/uploads/cats/meowzart/10087-86f4e78398323f3dc66a2b53664d9779d16e73ddee509b71502e7186d6adf1a5.jpg",
+      "sha256": "86f4e78398323f3dc66a2b53664d9779d16e73ddee509b71502e7186d6adf1a5",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10088",
+      "source_name": "蛋黄酥",
+      "cat_id": 47,
+      "reference_id": "effd7f77f0a95faea4af70565a15af73",
+      "image_id": 47,
+      "image_path": "/uploads/cats/meowzart/10088-466a2934f9c15f3bcbe7d347afba11a980e688dcb4ab22a3a4eba07a068fe350.jpg",
+      "sha256": "466a2934f9c15f3bcbe7d347afba11a980e688dcb4ab22a3a4eba07a068fe350",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10089",
+      "source_name": "费希特",
+      "cat_id": 48,
+      "reference_id": "019820e987045338ae3e83d948503897",
+      "image_id": 48,
+      "image_path": "/uploads/cats/meowzart/10089-f4aac5514d6d9846f841377189e6967a0f0beac43a3295d8d717edf4bdac5669.jpg",
+      "sha256": "f4aac5514d6d9846f841377189e6967a0f0beac43a3295d8d717edf4bdac5669",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10090",
+      "source_name": "抄手",
+      "cat_id": 49,
+      "reference_id": "bd10b122fbd05f4abc914ffa0c100a0d",
+      "image_id": 49,
+      "image_path": "/uploads/cats/meowzart/10090-88918f1267da84325ef7f6689aeaf3d515ed9c14e4a930e82a8ccd14510bfc71.jpg",
+      "sha256": "88918f1267da84325ef7f6689aeaf3d515ed9c14e4a930e82a8ccd14510bfc71",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10091",
+      "source_name": "双皮奶",
+      "cat_id": 50,
+      "reference_id": "7aece8c1101259588fa2fdfbac9ecbcb",
+      "image_id": 50,
+      "image_path": "/uploads/cats/meowzart/10091-598cf25182298ae07bd46b013ed3ed2a15aff3bba2a6d785580cd454e19bdf76.jpg",
+      "sha256": "598cf25182298ae07bd46b013ed3ed2a15aff3bba2a6d785580cd454e19bdf76",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10092",
+      "source_name": "丫头",
+      "cat_id": 51,
+      "reference_id": "b193206d1ad359d09ecbb31b8e9e2b92",
+      "image_id": 51,
+      "image_path": "/uploads/cats/meowzart/10092-25c59434019ed7fa1c2cbfb353933f9b1f00c4b3e58d90bef10b29d99a655fe9.jpg",
+      "sha256": "25c59434019ed7fa1c2cbfb353933f9b1f00c4b3e58d90bef10b29d99a655fe9",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10093",
+      "source_name": "花卷（材料院）",
+      "cat_id": 52,
+      "reference_id": "0899709250975e19babe86baea59893a",
+      "image_id": 52,
+      "image_path": "/uploads/cats/meowzart/10093-ab4de9bc6ee2293f914bfaf4ea89730cf371ba461a9fac338041809062582761.jpg",
+      "sha256": "ab4de9bc6ee2293f914bfaf4ea89730cf371ba461a9fac338041809062582761",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10094",
+      "source_name": "脏脏包",
+      "cat_id": 53,
+      "reference_id": "b30e8fdebeb55619be6db5c0f6a6d8e5",
+      "image_id": 53,
+      "image_path": "/uploads/cats/meowzart/10094-da0d14f44f9c06a8da75d22adaccb9f86f1f0ca5b2f9582eb73cd3bde220ea84.jpg",
+      "sha256": "da0d14f44f9c06a8da75d22adaccb9f86f1f0ca5b2f9582eb73cd3bde220ea84",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10096",
+      "source_name": "特仑苏",
+      "cat_id": 54,
+      "reference_id": "343e7bb11499523f85c35e13af44e1ff",
+      "image_id": 54,
+      "image_path": "/uploads/cats/meowzart/10096-0105a2061147da122616c9ed0fc330a49ea73a860bc98acab4ec8f57faaaf0df.jpg",
+      "sha256": "0105a2061147da122616c9ed0fc330a49ea73a860bc98acab4ec8f57faaaf0df",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10097",
+      "source_name": "豆腐",
+      "cat_id": 55,
+      "reference_id": "a86974e7e42356dfbe093d566374aeb7",
+      "image_id": null,
+      "image_path": "/uploads/cats/meowzart/10097-eae8bc60aeae7796779b5731db486bf4c963e232381d7b65b839a830eacb4b34.jpg",
+      "sha256": "eae8bc60aeae7796779b5731db486bf4c963e232381d7b65b839a830eacb4b34",
+      "use": "avatar_only"
+    },
+    {
+      "source_pet_id": "10098",
+      "source_name": "豆花",
+      "cat_id": 56,
+      "reference_id": "eb557c1d12c35a6f9d983f738f834f5a",
+      "image_id": null,
+      "image_path": "/uploads/cats/meowzart/10098-23cf5d018f06e55f022a402fabac86d52944d6b4b27b6beb2e4784124c99cb70.jpg",
+      "sha256": "23cf5d018f06e55f022a402fabac86d52944d6b4b27b6beb2e4784124c99cb70",
+      "use": "avatar_only"
+    },
+    {
+      "source_pet_id": "10099",
+      "source_name": "芝士",
+      "cat_id": 57,
+      "reference_id": "703c79bc8d4c564e93d93b48a98a22f7",
+      "image_id": 55,
+      "image_path": "/uploads/cats/meowzart/10099-980273294231780804905043132a208bfba05cf232e28a3a78e5c81198cb2c51.jpg",
+      "sha256": "980273294231780804905043132a208bfba05cf232e28a3a78e5c81198cb2c51",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10100",
+      "source_name": "长长",
+      "cat_id": 58,
+      "reference_id": "6898549b03e65ebd9b68d3fc3ff54f21",
+      "image_id": 56,
+      "image_path": "/uploads/cats/meowzart/10100-7e7f38f47f945ef957f6d172d638de08d688a3a9f35cfb583dced58b6ad5402f.jpg",
+      "sha256": "7e7f38f47f945ef957f6d172d638de08d688a3a9f35cfb583dced58b6ad5402f",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10101",
+      "source_name": "维尼",
+      "cat_id": 59,
+      "reference_id": "52e2d4fec72b5465acb5e3d836caffc0",
+      "image_id": 57,
+      "image_path": "/uploads/cats/meowzart/10101-cf4533bb18a1122fc4d409a514bc09bbe07be6358e78c4acaee34672f88c9531.jpg",
+      "sha256": "cf4533bb18a1122fc4d409a514bc09bbe07be6358e78c4acaee34672f88c9531",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10102",
+      "source_name": "小毛豆",
+      "cat_id": 60,
+      "reference_id": "5db51fd78635514d943bb23436845620",
+      "image_id": 58,
+      "image_path": "/uploads/cats/meowzart/10102-0d424e5dce9382be66ef758a3c313a393adfe3aead6e09d6eb46175211489545.jpg",
+      "sha256": "0d424e5dce9382be66ef758a3c313a393adfe3aead6e09d6eb46175211489545",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10103",
+      "source_name": "馆长（校史馆）",
+      "cat_id": 61,
+      "reference_id": "db6851378f2d5bf3a3c48b1544959cb0",
+      "image_id": 59,
+      "image_path": "/uploads/cats/meowzart/10103-564dce52f90a887e351e8088d67553cd49557e0bf3a6886048eddc77704ac1d2.jpg",
+      "sha256": "564dce52f90a887e351e8088d67553cd49557e0bf3a6886048eddc77704ac1d2",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10104",
+      "source_name": "乌云",
+      "cat_id": 62,
+      "reference_id": "097157883c875783996de839a903ba37",
+      "image_id": 60,
+      "image_path": "/uploads/cats/meowzart/10104-1ab22e031c0f0c3a9b78d2486bcddd0344ea50f96934f346da2394434a3a630b.jpg",
+      "sha256": "1ab22e031c0f0c3a9b78d2486bcddd0344ea50f96934f346da2394434a3a630b",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10105",
+      "source_name": "椰奶",
+      "cat_id": 63,
+      "reference_id": "9f341365030859bdac59893da6edf7c8",
+      "image_id": 61,
+      "image_path": "/uploads/cats/meowzart/10105-e8da425c1cf94830bac24b95bda2a151dcdc937346c7293984dba4c215d8acfd.jpg",
+      "sha256": "e8da425c1cf94830bac24b95bda2a151dcdc937346c7293984dba4c215d8acfd",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10106",
+      "source_name": "南超",
+      "cat_id": 64,
+      "reference_id": "9215f874d8515fe9a473d5e31ded3bba",
+      "image_id": 62,
+      "image_path": "/uploads/cats/meowzart/10106-b3839a0ab5f2aacac9a0b798aaf022eeac868eb21f6e30e046ff7e1147f6bb66.jpg",
+      "sha256": "b3839a0ab5f2aacac9a0b798aaf022eeac868eb21f6e30e046ff7e1147f6bb66",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10108",
+      "source_name": "蓝黑",
+      "cat_id": 65,
+      "reference_id": "b7b2c0b643d35ef59c240fa588ec603a",
+      "image_id": 63,
+      "image_path": "/uploads/cats/meowzart/10108-ab3e0fe4b7e2e40f0b563da32c4bd0e726e64a733dab13136e5542fb85156851.jpg",
+      "sha256": "ab3e0fe4b7e2e40f0b563da32c4bd0e726e64a733dab13136e5542fb85156851",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10109",
+      "source_name": "风铃",
+      "cat_id": 66,
+      "reference_id": "c4096759d3e951939ec6edb58ce0731d",
+      "image_id": 64,
+      "image_path": "/uploads/cats/meowzart/10109-c6a673a3bcecad2c5ab497ec7db0a33c7f945b494ec47e42e45ab75deb2e3e97.jpg",
+      "sha256": "c6a673a3bcecad2c5ab497ec7db0a33c7f945b494ec47e42e45ab75deb2e3e97",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10110",
+      "source_name": "大橘",
+      "cat_id": 67,
+      "reference_id": "90a403f20c06561f91a05bde8bab6553",
+      "image_id": 65,
+      "image_path": "/uploads/cats/meowzart/10110-9bbc0b75faf7514b64b80126e658b12c7671d53abc53222e5b9ad49675f4e614.jpg",
+      "sha256": "9bbc0b75faf7514b64b80126e658b12c7671d53abc53222e5b9ad49675f4e614",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10111",
+      "source_name": "花生米",
+      "cat_id": 68,
+      "reference_id": "9ae0ad464b395dddaafa334899809754",
+      "image_id": 66,
+      "image_path": "/uploads/cats/meowzart/10111-51850c8b3724cb7032443004d92de7022ee845c104ab5f0f72078e595ffd6d5e.jpg",
+      "sha256": "51850c8b3724cb7032443004d92de7022ee845c104ab5f0f72078e595ffd6d5e",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10112",
+      "source_name": "百联",
+      "cat_id": 69,
+      "reference_id": "ba923871a35858e3a2d0b181a42814bf",
+      "image_id": 67,
+      "image_path": "/uploads/cats/meowzart/10112-96d96988877b98bc0e8a644c5b75a763839f729cad74a3d51afbff2d94628493.jpg",
+      "sha256": "96d96988877b98bc0e8a644c5b75a763839f729cad74a3d51afbff2d94628493",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10113",
+      "source_name": "海盗",
+      "cat_id": 70,
+      "reference_id": "8af913e6e6535034911d718c11e8d7c0",
+      "image_id": 68,
+      "image_path": "/uploads/cats/meowzart/10113-3b4b7c4a01ed16836961fec3bb0b4c159e25a9442a9bde914a00719971a37e23.jpg",
+      "sha256": "3b4b7c4a01ed16836961fec3bb0b4c159e25a9442a9bde914a00719971a37e23",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10114",
+      "source_name": "丢丢",
+      "cat_id": 71,
+      "reference_id": "9dd6a578347a5cda8b00715bc5d5860b",
+      "image_id": 69,
+      "image_path": "/uploads/cats/meowzart/10114-a2cc52dec7b1d0b153d3aa36090a67056b9da61852b79ebf0f6e68a8c4419cfa.jpg",
+      "sha256": "a2cc52dec7b1d0b153d3aa36090a67056b9da61852b79ebf0f6e68a8c4419cfa",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10115",
+      "source_name": "蛋黄",
+      "cat_id": 72,
+      "reference_id": "e37598af116257d181328fbbf720614d",
+      "image_id": 70,
+      "image_path": "/uploads/cats/meowzart/10115-6acd8222fec0bc482c9180b9bb02cdfd011b66982c2ed6bf7c44e0b055e2ddd8.jpg",
+      "sha256": "6acd8222fec0bc482c9180b9bb02cdfd011b66982c2ed6bf7c44e0b055e2ddd8",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10116",
+      "source_name": "小橘（爱久）",
+      "cat_id": 73,
+      "reference_id": "becc7c03d8fd58cda5aa689eb32f3a46",
+      "image_id": 71,
+      "image_path": "/uploads/cats/meowzart/10116-b65522eb1d3efe4589c2495dc1586413dd989730c4de42e6a9e404f00cbf80f3.jpg",
+      "sha256": "b65522eb1d3efe4589c2495dc1586413dd989730c4de42e6a9e404f00cbf80f3",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10117",
+      "source_name": "漂亮",
+      "cat_id": 74,
+      "reference_id": "aca65f18d16f55a9aabf8f1056160d46",
+      "image_id": 72,
+      "image_path": "/uploads/cats/meowzart/10117-148b5514736c27e25917ca822e28afd087ae319ec4ef351ec50010e77b90aa94.jpg",
+      "sha256": "148b5514736c27e25917ca822e28afd087ae319ec4ef351ec50010e77b90aa94",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10118",
+      "source_name": "裹裹",
+      "cat_id": 75,
+      "reference_id": "66a379d9f3fd5e4f91b1fd0965185152",
+      "image_id": 73,
+      "image_path": "/uploads/cats/meowzart/10118-7ae125fbe429b00ab2b394e176c42f02f62998f047338e83811073c54692ec33.jpg",
+      "sha256": "7ae125fbe429b00ab2b394e176c42f02f62998f047338e83811073c54692ec33",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10119",
+      "source_name": "麦麦",
+      "cat_id": 76,
+      "reference_id": "1c46b9c0616854e9b5f1cb6897458106",
+      "image_id": 74,
+      "image_path": "/uploads/cats/meowzart/10119-6707f5c3ca3045761466740d17650e6334d302234ff6d3a5b2f115a6a04d0044.jpg",
+      "sha256": "6707f5c3ca3045761466740d17650e6334d302234ff6d3a5b2f115a6a04d0044",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10120",
+      "source_name": "口罩",
+      "cat_id": 77,
+      "reference_id": "ceeb6d1eaf2c5d05aa2921cdc7372a40",
+      "image_id": 75,
+      "image_path": "/uploads/cats/meowzart/10120-7c41a453372037097c01cbc0d44fb6ca1f7f7f348d3534e90a97710aa8dce557.jpg",
+      "sha256": "7c41a453372037097c01cbc0d44fb6ca1f7f7f348d3534e90a97710aa8dce557",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10121",
+      "source_name": "枇杷",
+      "cat_id": 78,
+      "reference_id": "279dc38b52a85dd8bc720803ee5cdd1c",
+      "image_id": 76,
+      "image_path": "/uploads/cats/meowzart/10121-90663f6d0832d6eac4d8b7c29090254590ef0a4582d3e59ff718a35578d2e249.jpg",
+      "sha256": "90663f6d0832d6eac4d8b7c29090254590ef0a4582d3e59ff718a35578d2e249",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10122",
+      "source_name": "月饼",
+      "cat_id": 79,
+      "reference_id": "7582f0ed72c65fd986a931775aee40bb",
+      "image_id": 77,
+      "image_path": "/uploads/cats/meowzart/10122-b0d1677b9f589cb6d4e21451d6bb4b3dce109047a457360055688e57e78dbbb2.jpg",
+      "sha256": "b0d1677b9f589cb6d4e21451d6bb4b3dce109047a457360055688e57e78dbbb2",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10123",
+      "source_name": "三角",
+      "cat_id": 80,
+      "reference_id": "6ecd22ebceb9552ab206b038facc8734",
+      "image_id": 78,
+      "image_path": "/uploads/cats/meowzart/10123-d3d97a8c35b771ffc43766b1f44550905dba906e7ef944f0b6935dcc0f9e1643.jpg",
+      "sha256": "d3d97a8c35b771ffc43766b1f44550905dba906e7ef944f0b6935dcc0f9e1643",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10124",
+      "source_name": "六六",
+      "cat_id": 81,
+      "reference_id": "6104ef010e34587c9366cb2e022625ae",
+      "image_id": 79,
+      "image_path": "/uploads/cats/meowzart/10124-a70b57dcf139a22aabec01015840a1e49ca4de471323e188be10fe0cd0142570.jpg",
+      "sha256": "a70b57dcf139a22aabec01015840a1e49ca4de471323e188be10fe0cd0142570",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10125",
+      "source_name": "居居",
+      "cat_id": 82,
+      "reference_id": "521b76daccc452839569f98ac785923d",
+      "image_id": 80,
+      "image_path": "/uploads/cats/meowzart/10125-b28326e18094071b081dc01a8f24defc7f98b4b500eb359d18076d683f67aed9.jpg",
+      "sha256": "b28326e18094071b081dc01a8f24defc7f98b4b500eb359d18076d683f67aed9",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10126",
+      "source_name": "石榴",
+      "cat_id": 83,
+      "reference_id": "348042e1dd61509da11a86271dcf7ba8",
+      "image_id": 81,
+      "image_path": "/uploads/cats/meowzart/10126-2c64a2e991041ab58f0b41f455809a248eaf8fc29dccbf4a13ea27262c02b42d.jpg",
+      "sha256": "2c64a2e991041ab58f0b41f455809a248eaf8fc29dccbf4a13ea27262c02b42d",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10127",
+      "source_name": "虎妞",
+      "cat_id": 84,
+      "reference_id": "51b3baad7bfb5cab93d60ac60a720efe",
+      "image_id": 82,
+      "image_path": "/uploads/cats/meowzart/10127-f7104fbe0c8f7a3a28eb84dcfba28305daa1a83b1cd8b5c04ac684b2f5993bf1.jpg",
+      "sha256": "f7104fbe0c8f7a3a28eb84dcfba28305daa1a83b1cd8b5c04ac684b2f5993bf1",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10128",
+      "source_name": "小黑黑（南区）",
+      "cat_id": 85,
+      "reference_id": "77441b80d7435b10a299035f6fe2bebe",
+      "image_id": 83,
+      "image_path": "/uploads/cats/meowzart/10128-bd570b22de0ab521915d08315950b9ca980a5fc87519cb4982be4aeda6e8630e.jpg",
+      "sha256": "bd570b22de0ab521915d08315950b9ca980a5fc87519cb4982be4aeda6e8630e",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10129",
+      "source_name": "黑格尔（派普）",
+      "cat_id": 86,
+      "reference_id": "061a1ed36f715ffdba783327354eef5f",
+      "image_id": 84,
+      "image_path": "/uploads/cats/meowzart/10129-b4629261d0cb8224a38af1ceca41006636152be04ceb89fbb0509707d300b6bf.jpg",
+      "sha256": "b4629261d0cb8224a38af1ceca41006636152be04ceb89fbb0509707d300b6bf",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10134",
+      "source_name": "茶茶",
+      "cat_id": 87,
+      "reference_id": "dc6687a9cdae5434a55abeba18483f10",
+      "image_id": 85,
+      "image_path": "/uploads/cats/meowzart/10134-a42ded46560bfd79aaee9e962471817d2d7ad794987d2d33e5db8b538491fb7b.jpg",
+      "sha256": "a42ded46560bfd79aaee9e962471817d2d7ad794987d2d33e5db8b538491fb7b",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10137",
+      "source_name": "蝻宝",
+      "cat_id": 88,
+      "reference_id": "c85a1576cfff552d9d010356c9f03022",
+      "image_id": 86,
+      "image_path": "/uploads/cats/meowzart/10137-56d1f44f091b2a23cca70cc06ac5996ef6172d05cc660bac39b709a143caa614.jpg",
+      "sha256": "56d1f44f091b2a23cca70cc06ac5996ef6172d05cc660bac39b709a143caa614",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10138",
+      "source_name": "宝娟",
+      "cat_id": 89,
+      "reference_id": "cb30cf2be60b56a0a14cc4bc708b6771",
+      "image_id": 87,
+      "image_path": "/uploads/cats/meowzart/10138-e536cf6af4874b3ade759058bf2da23da1a85c367351a3be1e78a5d3b739a125.jpg",
+      "sha256": "e536cf6af4874b3ade759058bf2da23da1a85c367351a3be1e78a5d3b739a125",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10139",
+      "source_name": "贝儿（安娜贝尔）",
+      "cat_id": 90,
+      "reference_id": "4d0164b556915be08ad397a4e982d9c2",
+      "image_id": 88,
+      "image_path": "/uploads/cats/meowzart/10139-5ea798a86a096ff1eae6ede1281ec479ab1db295087c0abd5e96ae0634543937.jpg",
+      "sha256": "5ea798a86a096ff1eae6ede1281ec479ab1db295087c0abd5e96ae0634543937",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10143",
+      "source_name": "煤球",
+      "cat_id": 91,
+      "reference_id": "52ad6665262456f4a94773d12034b791",
+      "image_id": 89,
+      "image_path": "/uploads/cats/meowzart/10143-ce79d0e5bd64035a4a974094246a8485bec30f054fb15b06cd481294f1010f83.jpg",
+      "sha256": "ce79d0e5bd64035a4a974094246a8485bec30f054fb15b06cd481294f1010f83",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10145",
+      "source_name": "冰棍",
+      "cat_id": 92,
+      "reference_id": "99ffe95848025343b108267454720a1a",
+      "image_id": 90,
+      "image_path": "/uploads/cats/meowzart/10145-0d90dcabc14c9cb522d4249d6e3e81ada38fc243394ed22073e561e0dc4f4084.jpg",
+      "sha256": "0d90dcabc14c9cb522d4249d6e3e81ada38fc243394ed22073e561e0dc4f4084",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10146",
+      "source_name": "甜筒",
+      "cat_id": 93,
+      "reference_id": "fb7d6bce516f5d128dedecfcec0fa22d",
+      "image_id": 91,
+      "image_path": "/uploads/cats/meowzart/10146-24b34ce99d7b1ee5833205890e9334e2b3488d1e0be1708c504aee8bb3ccf79f.jpg",
+      "sha256": "24b34ce99d7b1ee5833205890e9334e2b3488d1e0be1708c504aee8bb3ccf79f",
+      "use": "reference"
+    },
+    {
+      "source_pet_id": "10147",
+      "source_name": "烟花",
+      "cat_id": 94,
+      "reference_id": "54b15b7dd14550b9aee8e1d2367948a5",
+      "image_id": 92,
+      "image_path": "/uploads/cats/meowzart/10147-b9deb87f1276dc1a7dc9837bb1c65f66c27074b84f19998a847a756edcc53e8f.jpg",
+      "sha256": "b9deb87f1276dc1a7dc9837bb1c65f66c27074b84f19998a847a756edcc53e8f",
+      "use": "reference"
+    }
+  ]
+}

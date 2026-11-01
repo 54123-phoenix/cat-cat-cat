@@ -1,6 +1,15 @@
 # Upgrade TODO
 
-## Current acceptance status — 2026-10-31
+## Existing-photo update — 2026-11-01
+
+- [x] Offline import of the existing 94 avatars, bound by source pet ID; 92 reference photos and 2 display-only collages.
+- [x] Repeated import adds no rows; prior profile edits, file ownership and database rollback are protected by focused tests.
+- [x] Real-model build published 92/92 vectors; all 94 HTTP avatars/ownership checks, 3 self-match smoke checks and quick harness passed. Temporary inference containers stopped.
+- Further image collection is stopped; no model retraining. Campus quality acceptance remains open.
+
+Evidence: [photo update](../docs/validation/MEOWZART_IMPORT_20261101.md).
+
+## Historical acceptance snapshot — 2026-10-31
 
 The P0–P6 checkmarks below are historical implementation records, not current release approval. The source of truth is [KNOWN_ISSUES](../docs/KNOWN_ISSUES.md) and [NEXT_OPTIMIZATION_PATH](../docs/NEXT_OPTIMIZATION_PATH.md).
 

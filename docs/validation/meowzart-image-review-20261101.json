@@ -1,0 +1,671 @@
+{
+  "format_version": 1,
+  "provider": "meowzart:society:1",
+  "review_scope": "Inherited 94-image thumbnail visual review from the 2026-11-01 source capture; cat visible, not independent identity or session verification.",
+  "identity_independently_verified": false,
+  "capture_sessions_verified": false,
+  "archive_sha256": {
+    "catalog.json": "e2bb358e476071927638fc30423c98b5bcc08d23595e2a0c3934c6cbfda50ef3",
+    "image-manifest.json": "3c97ac6e789a91c4032037d191ae815f8c0519f53e368431b3c48eff523eb848"
+  },
+  "decisions": [
+    {
+      "source_pet_id": "470",
+      "source_name": "朱古力",
+      "sha256": "23a9141062c0a1bb5025502b7e02a6590e68d9b1f1926de2d7d2bd78898548fc",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "471",
+      "source_name": "叮当",
+      "sha256": "6f658b121e6006a804dfa81320abc598e15a14c7ca4b182348ee2174eb856a05",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "473",
+      "source_name": "溜溜",
+      "sha256": "aa8028f53b6ffe6128c15a4725e467338e2b4115e80faffe85a71b158e956cff",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "8989",
+      "source_name": "西西",
+      "sha256": "01a5ac037d35406e373f63ee2fd7f6dcc69ac58ff5d70b82229b5803e2d0b768",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "8990",
+      "source_name": "芋泥",
+      "sha256": "e8349445c8afdd79338980bb1d6ce74ee08f3c254e545119e4f0eb2658806f11",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "8991",
+      "source_name": "咸鱼",
+      "sha256": "4d6467c87ad9edaecf69bb027d2b9740de538d00003c389b5b57c5b01df4f3f7",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9248",
+      "source_name": "小牛",
+      "sha256": "c187217918be5069a18a722d3e4660b8be3d3dd415a67e62d02ac8a5ce0c868b",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9320",
+      "source_name": "段誉",
+      "sha256": "ef1b78fa3218e4c771d01552ce0891ac941820b2e5d7d8cf9cfa65577610a800",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9324",
+      "source_name": "彩虹",
+      "sha256": "e5eaa3793c96621a6183ff487762f4e2f6763f94b1641adbb5a2fde8e92a7e25",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9326",
+      "source_name": "糕糕",
+      "sha256": "bbdfdbd10a607df331cb43a5af68192c56c16b310f1b95703d315fc423fa2424",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9327",
+      "source_name": "灰灰",
+      "sha256": "e6bed8bdef1c58317899b38bf50e20e30be569ec4c42b4090ac706baf73ffe17",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9328",
+      "source_name": "卡卡（小灰）",
+      "sha256": "0566843da400a937c6eb1443fa3d74adeca499af049675c6eaae6d18261a8090",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9329",
+      "source_name": "橘二",
+      "sha256": "186a3401956f237ff3f53853d077989f55d0f4c92815fb2146a2bd5fb36942d7",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9330",
+      "source_name": "对眼",
+      "sha256": "dc114d5cc280a0daaa7a7f28ea6d2143154c2d40f8e81f5fadda70709ee78a23",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "9668",
+      "source_name": "花生",
+      "sha256": "4b336cbf4cb45d81634c34c6a176fde12ed5fb4c3bf336c3af3426182f00438d",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10048",
+      "source_name": "圆圆",
+      "sha256": "63de37d82c62f00f2d94f379c5a193da85b8b7a774b972f2c09ccb5dc7d3f9fc",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10049",
+      "source_name": "嫣嫣（炸炸）",
+      "sha256": "c1cf28ef3498eb478268831af599eca64fb392708b74dfeb80e795580657279a",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10050",
+      "source_name": "珂珂",
+      "sha256": "58d0510bf04f58794addf56326f46b73aee7cfd42bc32af27fc27bcfcd5257c8",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10051",
+      "source_name": "白云",
+      "sha256": "38c7803543de8ce4a40e45935e109f63f0cfc0a70bef4403661b2dfebeae96ee",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10052",
+      "source_name": "帕帕",
+      "sha256": "e259155af3d89d1429f9a09853db7657e26d9d29b3254e563b7fb0bd068ace01",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10053",
+      "source_name": "探探",
+      "sha256": "51d52c4273203ca17341bcc06bea9f42ed3e93043c2d019a5cfc9cefe3bb320a",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10055",
+      "source_name": "忆白",
+      "sha256": "1dd6c893c28221699a4db192d2bcf5c72d53cda3f0b516b890117115ad63c5c0",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10056",
+      "source_name": "桂花",
+      "sha256": "adccd825349e34be37b41a9b3dd2f628765253322ac45cc1bd3f842bd3776204",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10057",
+      "source_name": "芒果",
+      "sha256": "e0abcf692ebf34a2fdded8740ba9181b3d9fac6004df48ada8e6bf0a00428cbc",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10058",
+      "source_name": "黑巧（把把）",
+      "sha256": "ad7ca745fc79970f6945d1d795332c4afba6bf26e640c7b8c548d14d73dc299f",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10062",
+      "source_name": "妞妞",
+      "sha256": "4b49b78df8c69dfca3e59f089e568ec0837c5a9da67a67cb9655d706f9e0b502",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10063",
+      "source_name": "蓝心",
+      "sha256": "360a8e7e1a6c6a2bc2ea7bd7541969fec4e7ef97c28bde5adba775b456f2d9fd",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10065",
+      "source_name": "花蛋（安妮）",
+      "sha256": "be173c39a13b26cf93554eada5d49616d0a0b47b14a72ec5d60015b9b3f0f88b",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10068",
+      "source_name": "车车",
+      "sha256": "a1f84be89e7e35b43aefcacc79dd4160f9079671d2e851792db0c3fff8dba8ea",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10069",
+      "source_name": "黑桃",
+      "sha256": "c6915add9984bfe4d65ca6df4e9b19b3df03415a9767d349b2a2109dde31e1ca",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10070",
+      "source_name": "小卷",
+      "sha256": "dedc8e821e75ed22b921cff69702af973ee631ac991837ff5cbc0cefdd3a6619",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10071",
+      "source_name": "牛牛",
+      "sha256": "db4f7ac68f45dbb99b9abf40a793336b943d34597b49461e1fcf879e27156107",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10072",
+      "source_name": "蛙蛙",
+      "sha256": "ea0bc978be83cb18142db3dea6412e7a653b9d7853914bd4b70e124642a1a5a8",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10073",
+      "source_name": "黑1/黑黄",
+      "sha256": "6bb116c3d4efe642a72eed56ea370aec3a7998753775dc19df1bebf5535632a2",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10074",
+      "source_name": "黑2/黑绿",
+      "sha256": "783cbdc43021c986b1b15191d270c2f2452aa0f54c0e47f783b836f0c8fc76c9",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10075",
+      "source_name": "黑3/黑粉",
+      "sha256": "542fa284bc14edc114ac2ef160d2d7d427a3905db695444acc92860f90003bd4",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10076",
+      "source_name": "老黄",
+      "sha256": "9990374d87887ecf3102f1e4c49134555ba59b2b14b15b1093e4a73e91eaaeb6",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10078",
+      "source_name": "柯尔施",
+      "sha256": "432401d39981be9486062206f645eb7b8f4e2f1b0083f2c7f6a10c03b8d2d7bd",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10079",
+      "source_name": "尼采",
+      "sha256": "d969ad23deb39440a5591a60f1af8379c0a906da0b4eed8264b9a41b9a78460b",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10080",
+      "source_name": "木瓜",
+      "sha256": "f08f38d499bbf6ddbf31132bf6a04a53e78ba3d6d4c40215187c93f97e9efda3",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10082",
+      "source_name": "蛋蛋",
+      "sha256": "d3fbe3cf84a6f88745e83188e066deb3ea1b6afae5d5899b3606219084fb5566",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10083",
+      "source_name": "胡萝卜",
+      "sha256": "6e8aa35fea9c6c1cb03cf8e31b7dfa89e599150fbfbe79e032e411ed1e64fea6",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10084",
+      "source_name": "乌梅妈",
+      "sha256": "34c6174c75f735891f9b99c8abc592f41ca50635a9766b5e8f9472a523d3bf7f",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10085",
+      "source_name": "毛栗子",
+      "sha256": "c684f3d96c3c67ebcf196b228a8147b5128880ab4b0d102bfe94b2cea8c0a472",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10086",
+      "source_name": "小挖",
+      "sha256": "376c017ee578189411d01276e63930e4ffdaddccd74d0379af527c3c689cbeef",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10087",
+      "source_name": "饺子",
+      "sha256": "86f4e78398323f3dc66a2b53664d9779d16e73ddee509b71502e7186d6adf1a5",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10088",
+      "source_name": "蛋黄酥",
+      "sha256": "466a2934f9c15f3bcbe7d347afba11a980e688dcb4ab22a3a4eba07a068fe350",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10089",
+      "source_name": "费希特",
+      "sha256": "f4aac5514d6d9846f841377189e6967a0f0beac43a3295d8d717edf4bdac5669",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10090",
+      "source_name": "抄手",
+      "sha256": "88918f1267da84325ef7f6689aeaf3d515ed9c14e4a930e82a8ccd14510bfc71",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10091",
+      "source_name": "双皮奶",
+      "sha256": "598cf25182298ae07bd46b013ed3ed2a15aff3bba2a6d785580cd454e19bdf76",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10092",
+      "source_name": "丫头",
+      "sha256": "25c59434019ed7fa1c2cbfb353933f9b1f00c4b3e58d90bef10b29d99a655fe9",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10093",
+      "source_name": "花卷（材料院）",
+      "sha256": "ab4de9bc6ee2293f914bfaf4ea89730cf371ba461a9fac338041809062582761",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10094",
+      "source_name": "脏脏包",
+      "sha256": "da0d14f44f9c06a8da75d22adaccb9f86f1f0ca5b2f9582eb73cd3bde220ea84",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10096",
+      "source_name": "特仑苏",
+      "sha256": "0105a2061147da122616c9ed0fc330a49ea73a860bc98acab4ec8f57faaaf0df",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10097",
+      "source_name": "豆腐",
+      "sha256": "eae8bc60aeae7796779b5731db486bf4c963e232381d7b65b839a830eacb4b34",
+      "use": "avatar_only",
+      "reason": "Visible collage; retain as avatar only"
+    },
+    {
+      "source_pet_id": "10098",
+      "source_name": "豆花",
+      "sha256": "23cf5d018f06e55f022a402fabac86d52944d6b4b27b6beb2e4784124c99cb70",
+      "use": "avatar_only",
+      "reason": "Visible collage; retain as avatar only"
+    },
+    {
+      "source_pet_id": "10099",
+      "source_name": "芝士",
+      "sha256": "980273294231780804905043132a208bfba05cf232e28a3a78e5c81198cb2c51",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10100",
+      "source_name": "长长",
+      "sha256": "7e7f38f47f945ef957f6d172d638de08d688a3a9f35cfb583dced58b6ad5402f",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10101",
+      "source_name": "维尼",
+      "sha256": "cf4533bb18a1122fc4d409a514bc09bbe07be6358e78c4acaee34672f88c9531",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10102",
+      "source_name": "小毛豆",
+      "sha256": "0d424e5dce9382be66ef758a3c313a393adfe3aead6e09d6eb46175211489545",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10103",
+      "source_name": "馆长（校史馆）",
+      "sha256": "564dce52f90a887e351e8088d67553cd49557e0bf3a6886048eddc77704ac1d2",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10104",
+      "source_name": "乌云",
+      "sha256": "1ab22e031c0f0c3a9b78d2486bcddd0344ea50f96934f346da2394434a3a630b",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10105",
+      "source_name": "椰奶",
+      "sha256": "e8da425c1cf94830bac24b95bda2a151dcdc937346c7293984dba4c215d8acfd",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10106",
+      "source_name": "南超",
+      "sha256": "b3839a0ab5f2aacac9a0b798aaf022eeac868eb21f6e30e046ff7e1147f6bb66",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10108",
+      "source_name": "蓝黑",
+      "sha256": "ab3e0fe4b7e2e40f0b563da32c4bd0e726e64a733dab13136e5542fb85156851",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10109",
+      "source_name": "风铃",
+      "sha256": "c6a673a3bcecad2c5ab497ec7db0a33c7f945b494ec47e42e45ab75deb2e3e97",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10110",
+      "source_name": "大橘",
+      "sha256": "9bbc0b75faf7514b64b80126e658b12c7671d53abc53222e5b9ad49675f4e614",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10111",
+      "source_name": "花生米",
+      "sha256": "51850c8b3724cb7032443004d92de7022ee845c104ab5f0f72078e595ffd6d5e",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10112",
+      "source_name": "百联",
+      "sha256": "96d96988877b98bc0e8a644c5b75a763839f729cad74a3d51afbff2d94628493",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10113",
+      "source_name": "海盗",
+      "sha256": "3b4b7c4a01ed16836961fec3bb0b4c159e25a9442a9bde914a00719971a37e23",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10114",
+      "source_name": "丢丢",
+      "sha256": "a2cc52dec7b1d0b153d3aa36090a67056b9da61852b79ebf0f6e68a8c4419cfa",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10115",
+      "source_name": "蛋黄",
+      "sha256": "6acd8222fec0bc482c9180b9bb02cdfd011b66982c2ed6bf7c44e0b055e2ddd8",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10116",
+      "source_name": "小橘（爱久）",
+      "sha256": "b65522eb1d3efe4589c2495dc1586413dd989730c4de42e6a9e404f00cbf80f3",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10117",
+      "source_name": "漂亮",
+      "sha256": "148b5514736c27e25917ca822e28afd087ae319ec4ef351ec50010e77b90aa94",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10118",
+      "source_name": "裹裹",
+      "sha256": "7ae125fbe429b00ab2b394e176c42f02f62998f047338e83811073c54692ec33",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10119",
+      "source_name": "麦麦",
+      "sha256": "6707f5c3ca3045761466740d17650e6334d302234ff6d3a5b2f115a6a04d0044",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10120",
+      "source_name": "口罩",
+      "sha256": "7c41a453372037097c01cbc0d44fb6ca1f7f7f348d3534e90a97710aa8dce557",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10121",
+      "source_name": "枇杷",
+      "sha256": "90663f6d0832d6eac4d8b7c29090254590ef0a4582d3e59ff718a35578d2e249",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10122",
+      "source_name": "月饼",
+      "sha256": "b0d1677b9f589cb6d4e21451d6bb4b3dce109047a457360055688e57e78dbbb2",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10123",
+      "source_name": "三角",
+      "sha256": "d3d97a8c35b771ffc43766b1f44550905dba906e7ef944f0b6935dcc0f9e1643",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10124",
+      "source_name": "六六",
+      "sha256": "a70b57dcf139a22aabec01015840a1e49ca4de471323e188be10fe0cd0142570",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10125",
+      "source_name": "居居",
+      "sha256": "b28326e18094071b081dc01a8f24defc7f98b4b500eb359d18076d683f67aed9",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10126",
+      "source_name": "石榴",
+      "sha256": "2c64a2e991041ab58f0b41f455809a248eaf8fc29dccbf4a13ea27262c02b42d",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10127",
+      "source_name": "虎妞",
+      "sha256": "f7104fbe0c8f7a3a28eb84dcfba28305daa1a83b1cd8b5c04ac684b2f5993bf1",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10128",
+      "source_name": "小黑黑（南区）",
+      "sha256": "bd570b22de0ab521915d08315950b9ca980a5fc87519cb4982be4aeda6e8630e",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10129",
+      "source_name": "黑格尔（派普）",
+      "sha256": "b4629261d0cb8224a38af1ceca41006636152be04ceb89fbb0509707d300b6bf",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10134",
+      "source_name": "茶茶",
+      "sha256": "a42ded46560bfd79aaee9e962471817d2d7ad794987d2d33e5db8b538491fb7b",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10137",
+      "source_name": "蝻宝",
+      "sha256": "56d1f44f091b2a23cca70cc06ac5996ef6172d05cc660bac39b709a143caa614",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10138",
+      "source_name": "宝娟",
+      "sha256": "e536cf6af4874b3ade759058bf2da23da1a85c367351a3be1e78a5d3b739a125",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10139",
+      "source_name": "贝儿（安娜贝尔）",
+      "sha256": "5ea798a86a096ff1eae6ede1281ec479ab1db295087c0abd5e96ae0634543937",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10143",
+      "source_name": "煤球",
+      "sha256": "ce79d0e5bd64035a4a974094246a8485bec30f054fb15b06cd481294f1010f83",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10145",
+      "source_name": "冰棍",
+      "sha256": "0d90dcabc14c9cb522d4249d6e3e81ada38fc243394ed22073e561e0dc4f4084",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10146",
+      "source_name": "甜筒",
+      "sha256": "24b34ce99d7b1ee5833205890e9334e2b3488d1e0be1708c504aee8bb3ccf79f",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    },
+    {
+      "source_pet_id": "10147",
+      "source_name": "烟花",
+      "sha256": "b9deb87f1276dc1a7dc9837bb1c65f66c27074b84f19998a847a756edcc53e8f",
+      "use": "reference",
+      "reason": "Cat visible in reviewed thumbnail; source ID binding only"
+    }
+  ]
+}

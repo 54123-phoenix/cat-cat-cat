@@ -13,6 +13,18 @@ acceptance_status:
   docker: "blocked-host-engine"
   redis: "local-four-process-passed"
   sqlite_recovery: "local-database-and-upload-passed"
+existing_photo_update:
+  updated: "2026-11-01"
+  scope: "Offline update using the existing 94 Meowzart images; stop further collection"
+  status: "local-engineering-verified"
+  evidence: "docs/validation/MEOWZART_IMPORT_20261101.md"
+  source_identity: "meowzart society 1 petId; no name-based merging"
+  avatars: 94
+  reference_photos: 92
+  display_only_collages: 2
+  retraining: false
+  further_collection: false
+  campus_quality_accepted: false
 name: cat-community-upgrade
 theme: "passionate but steady"
 north_star: "识别可信、档案可靠、社区活跃、传播自然、猫协可用"
