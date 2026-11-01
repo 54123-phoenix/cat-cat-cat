@@ -1,0 +1,291 @@
+{
+  "status": "passed",
+  "checks": {
+    "inference_and_frontend_images_build": "passed",
+    "runtime_dependencies_and_real_checkpoint_load": "passed",
+    "empty_database_migration_four_workers_and_redis": "passed",
+    "nginx_auth_archive_upload_and_image_serving": "passed",
+    "http_write_redis_event_through_nginx_sse": "passed",
+    "real_yolo_dinov3_faiss_reference_build_and_http_self_match": "passed",
+    "restart_preserves_database_attachment_and_job_journal": "passed",
+    "stopped_snapshot_restores_into_fresh_volumes_with_same_identity": "passed",
+    "wrong_checkpoint_fails_closed": "passed",
+    "corrupt_vectors_fails_closed": "passed",
+    "corrupt_reference_photo_fails_closed": "passed",
+    "valid_assets_restore_recognition_after_each_fault": "passed"
+  },
+  "started_at": "2026-11-01T09:50:04.064414+00:00",
+  "scope": "CPU inference; two reference photos; self-match and complete isolated volume recovery, not held-out accuracy",
+  "assets": {
+    "finetuned_best.pt": {
+      "url": "https://huggingface.co/theavenger/cat-reid-dinov3/resolve/fefdd206f2a77ef7247ca583e5604441e5b3259f/finetuned_best.pt",
+      "sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "size": 343421597
+    },
+    "yolov8m.pt": {
+      "url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolov8m.pt",
+      "sha256": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5",
+      "size": 52136884
+    }
+  },
+  "projects": [
+    "cat-acceptance-5930ae2ae32d",
+    "cat-acceptance-5930ae2ae32d-restore"
+  ],
+  "engine": {
+    "Platform": {
+      "Name": "Docker Engine - Community"
+    },
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "28.0.4",
+        "Details": {
+          "ApiVersion": "1.48",
+          "Arch": "amd64",
+          "BuildTime": "Tue Mar 25 15:07:16 2025",
+          "Experimental": "false",
+          "GitCommit": "6430e49",
+          "GoVersion": "go1.23.7",
+          "KernelVersion": "7.0.0-1017-azure",
+          "MinAPIVersion": "1.24",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.4.2",
+        "Details": {
+          "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.2",
+        "Details": {
+          "GitCommit": "v1.5.2-0-g29dd3dc2"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "Version": "28.0.4",
+    "ApiVersion": "1.48",
+    "MinAPIVersion": "1.24",
+    "GitCommit": "6430e49",
+    "GoVersion": "go1.23.7",
+    "Os": "linux",
+    "Arch": "amd64",
+    "KernelVersion": "7.0.0-1017-azure",
+    "BuildTime": "2025-03-25T15:07:16.000000000+00:00"
+  },
+  "runtime": {
+    "torch": "2.6.0+cpu",
+    "torchvision": "0.21.0+cpu",
+    "timm": "1.0.22",
+    "ultralytics": "8.3.221",
+    "opencv": "4.11.0",
+    "faiss": "1.15.1",
+    "httpx": "0.27.0",
+    "numpy": "2.4.6",
+    "cuda_runtime": null,
+    "model_loaded": true,
+    "missing_corrupt_incomplete_and_wrong_dimensions_rejected": true
+  },
+  "gunicorn_worker_pids": [
+    8,
+    9,
+    10,
+    11
+  ],
+  "attachment_sha256": "6090eedd90ec4fec92bea419cb44f2da9d8f96b6d1a1927f48fecfc844ceabe1",
+  "reference_job": {
+    "job_id": "f1e8d4ef828745179db54e02e612ee76",
+    "kind": "rebuild",
+    "status": "succeeded",
+    "created_at": "2026-11-01T09:51:44.134514+00:00",
+    "updated_at": "2026-11-01T09:51:52.564222+00:00",
+    "requested_by": 1,
+    "requested_generation": 4,
+    "crop": true,
+    "publish": true,
+    "target_snapshot_id": null,
+    "input_revision": "3d403331cb3730aeb43a13918b1440665a0a198f90dda0391e90e95c545e1009",
+    "input_generation": 4,
+    "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+    "snapshot_id": "93fc080b510441ef94c289f2ecfd44bb",
+    "publication_id": "5863ab6ee8e04f51a8269ca3d295e773",
+    "completed_photos": 2,
+    "total_photos": 2,
+    "code": "published",
+    "detail": null,
+    "recovered": false
+  },
+  "reference_status": {
+    "status": "compatible",
+    "code": "validated",
+    "detail": null,
+    "snapshot_id": "93fc080b510441ef94c289f2ecfd44bb",
+    "catalog_revision": "3d403331cb3730aeb43a13918b1440665a0a198f90dda0391e90e95c545e1009",
+    "catalog_generation": 4,
+    "publication_id": "5863ab6ee8e04f51a8269ca3d295e773",
+    "reference_cat_count": 2,
+    "photo_count": 2,
+    "dimension": 256,
+    "store_configured": true,
+    "current_catalog": {
+      "database_id": "ed9db38e7c504a73b58063d118cc2da7",
+      "generation": 4,
+      "cat_count": 2,
+      "photo_count": 2,
+      "cats_without_photos": 0
+    },
+    "published": {
+      "snapshot_id": "93fc080b510441ef94c289f2ecfd44bb",
+      "publication_id": "5863ab6ee8e04f51a8269ca3d295e773",
+      "catalog_generation": 4,
+      "photo_count": 2,
+      "created_at": "2026-11-01T09:51:52.001978+00:00"
+    },
+    "pending_changes": false,
+    "catalog_error": null,
+    "publication_error": null,
+    "job_error": null,
+    "latest_job": {
+      "job_id": "f1e8d4ef828745179db54e02e612ee76",
+      "kind": "rebuild",
+      "status": "succeeded",
+      "created_at": "2026-11-01T09:51:44.134514+00:00",
+      "updated_at": "2026-11-01T09:51:52.564222+00:00",
+      "requested_by": 1,
+      "requested_generation": 4,
+      "crop": true,
+      "publish": true,
+      "target_snapshot_id": null,
+      "input_revision": "3d403331cb3730aeb43a13918b1440665a0a198f90dda0391e90e95c545e1009",
+      "input_generation": 4,
+      "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "snapshot_id": "93fc080b510441ef94c289f2ecfd44bb",
+      "publication_id": "5863ab6ee8e04f51a8269ca3d295e773",
+      "completed_photos": 2,
+      "total_photos": 2,
+      "code": "published",
+      "detail": null,
+      "recovered": false
+    },
+    "jobs": [
+      {
+        "job_id": "f1e8d4ef828745179db54e02e612ee76",
+        "kind": "rebuild",
+        "status": "succeeded",
+        "created_at": "2026-11-01T09:51:44.134514+00:00",
+        "updated_at": "2026-11-01T09:51:52.564222+00:00",
+        "requested_by": 1,
+        "requested_generation": 4,
+        "crop": true,
+        "publish": true,
+        "target_snapshot_id": null,
+        "input_revision": "3d403331cb3730aeb43a13918b1440665a0a198f90dda0391e90e95c545e1009",
+        "input_generation": 4,
+        "model_sha256": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+        "snapshot_id": "93fc080b510441ef94c289f2ecfd44bb",
+        "publication_id": "5863ab6ee8e04f51a8269ca3d295e773",
+        "completed_photos": 2,
+        "total_photos": 2,
+        "code": "published",
+        "detail": null,
+        "recovered": false
+      }
+    ],
+    "checked_at": "2026-11-01T09:51:53.115814+00:00"
+  },
+  "recognition_before": [
+    {
+      "cat_id": 1,
+      "confidence": 1.0,
+      "seconds": 2.111
+    },
+    {
+      "cat_id": 2,
+      "confidence": 1.0,
+      "seconds": 1.81
+    }
+  ],
+  "recognition_after_restart": [
+    {
+      "cat_id": 1,
+      "confidence": 1.0,
+      "seconds": 3.551
+    },
+    {
+      "cat_id": 2,
+      "confidence": 1.0,
+      "seconds": 3.461
+    }
+  ],
+  "source": {
+    "revision": "j20261031",
+    "identity": [
+      "ed9db38e7c504a73b58063d118cc2da7",
+      4
+    ],
+    "counts": {
+      "users": 1,
+      "cats": 2,
+      "cat_images": 2,
+      "posts": 1
+    },
+    "assets": {
+      "models/finetuned_best.pt": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "models/yolov8m.pt": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5",
+      "uploads/cats/0ff4c4fadbc34839bc895ad11b35dd9b.jpg": "25cb251feb9ff1fb40ce54cd1f35ca942d1ddb733d292d7976e72bbb33b4ddb1",
+      "uploads/cats/f05b978a08164555957081abd8f11d67.jpg": "6090eedd90ec4fec92bea419cb44f2da9d8f96b6d1a1927f48fecfc844ceabe1",
+      "reference-store/current.json": "b14ddff4b3290f76618e04b585c3de345aa163d73b1de48988c9d4a91e3cc729",
+      "reference-store/jobs/f1e8d4ef828745179db54e02e612ee76.json": "53993ca9c8c0dbea9c247eb2a2f0f2fc451f497ec00f5243210fc90ca18ec020",
+      "reference-store/store.json": "3808d2c5d7a6ae40b30b27b080d3f613fab56a29eeee122cc097a98806841e82",
+      "reference-store/versions/93fc080b510441ef94c289f2ecfd44bb/manifest.json": "8c2636da967e788ca87cd9cc57f8d89b6b21ae16ec246696802f02d3c1b47171",
+      "reference-store/versions/93fc080b510441ef94c289f2ecfd44bb/vectors.json": "f3f2f40cbd597e53b4975637395194e6c2ed981194bdcb02d2c42b1c9e0c14ae"
+    }
+  },
+  "recognition_after_restore": [
+    {
+      "cat_id": 1,
+      "confidence": 1.0,
+      "seconds": 3.418
+    },
+    {
+      "cat_id": 2,
+      "confidence": 1.0,
+      "seconds": 1.792
+    }
+  ],
+  "restored": {
+    "revision": "j20261031",
+    "identity": [
+      "ed9db38e7c504a73b58063d118cc2da7",
+      4
+    ],
+    "counts": {
+      "users": 1,
+      "cats": 2,
+      "cat_images": 2,
+      "posts": 1
+    },
+    "assets": {
+      "models/finetuned_best.pt": "32f04b89e7f292ddfa9b6f9d1f97bc2f465981d40b149e383e988e6a1b4beb6e",
+      "models/yolov8m.pt": "5d4a90cdc7a21786cc59cd19778e9eafff836df9e2da32524737c7ee6efe4fe5",
+      "uploads/cats/0ff4c4fadbc34839bc895ad11b35dd9b.jpg": "25cb251feb9ff1fb40ce54cd1f35ca942d1ddb733d292d7976e72bbb33b4ddb1",
+      "uploads/cats/f05b978a08164555957081abd8f11d67.jpg": "6090eedd90ec4fec92bea419cb44f2da9d8f96b6d1a1927f48fecfc844ceabe1",
+      "reference-store/current.json": "b14ddff4b3290f76618e04b585c3de345aa163d73b1de48988c9d4a91e3cc729",
+      "reference-store/jobs/f1e8d4ef828745179db54e02e612ee76.json": "53993ca9c8c0dbea9c247eb2a2f0f2fc451f497ec00f5243210fc90ca18ec020",
+      "reference-store/store.json": "3808d2c5d7a6ae40b30b27b080d3f613fab56a29eeee122cc097a98806841e82",
+      "reference-store/versions/93fc080b510441ef94c289f2ecfd44bb/manifest.json": "8c2636da967e788ca87cd9cc57f8d89b6b21ae16ec246696802f02d3c1b47171",
+      "reference-store/versions/93fc080b510441ef94c289f2ecfd44bb/vectors.json": "f3f2f40cbd597e53b4975637395194e6c2ed981194bdcb02d2c42b1c9e0c14ae"
+    }
+  }
+}

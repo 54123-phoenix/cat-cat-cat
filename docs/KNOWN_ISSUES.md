@@ -4,7 +4,7 @@
 
 **当前结论：项目已有真实业务实现，但关键流程、权限边界、数据正确性和交付流程仍有缺陷，尚未达到稳定发布候选版的质量。** 本台账记录本次源码审查和本地验证结果，不把历史文档中的“已完成”当作验收结论，也不追溯推断缺陷最早出现的时间。
 
-初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），完整推理复验新增 ISS-040（P1），合计 40 项。当前 **29 项通过本地验收，8 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)、[浏览器重连](validation/RECONNECT_20261101.md)及[完整推理](validation/INFERENCE_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
+初始登记 32 项问题（19 项 P1、13 项 P2），修复轮新增 ISS-033、优化轮新增 ISS-034/035（均 P2），C 复验新增 ISS-036/037（P1），远端多进程复验新增 ISS-038（P1），浏览器重连复验新增 ISS-039（P2），完整推理复验新增 ISS-040（P1），同轮 Redis 复验新增 ISS-041（P1），合计 41 项。当前 **30 项通过本地验收，8 项代码已有修复但专项验收未完成，3 项部分完成；另有 7 个 VER 专项分范围跟踪**。具体修复、测试、迁移与限制见 [连续修复记录](validation/REPAIR_PROGRESS.md)、[优化 A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)、[CI](validation/CI_REPAIR_20261101.md)、[Docker](validation/DOCKER_ACCEPTANCE_20261101.md)、[SQLite 启动](validation/SQLITE_STARTUP_20261101.md)、[浏览器重连](validation/RECONNECT_20261101.md)、[完整推理](validation/INFERENCE_20261101.md)及[SSE 协议修复](validation/SSE_KEEPALIVE_20261101.md)。条目数包含工程债务和交付缺口，不等于独立漏洞数量，也不用于计算完成率。
 
 ## 阅读与关闭规则
 
@@ -397,10 +397,18 @@ E02 脚本会创建测试记录，复跑必须使用新的临时数据库和测�
 
 ### ISS-040 完整推理镜像缺系统库且安装过程破坏后端依赖约束
 
-**P1 · 已修复 · 本地完整容器验收通过（2026-11-01）。** 原始 inference 镜像构建返回成功，但 OpenCV 导入缺 libxcb；宽范围推理依赖把 AnyIO 升到 4.15.1，与 FastAPI 0.104.1 要求冲突，pip check 失败。固定 OpenCV 后另复现缺 libGL。
+**P1 · 已修复 · 本地与远端完整容器验收通过（2026-11-01）。** 原始 inference 镜像构建返回成功，但 OpenCV 导入缺 libxcb；宽范围推理依赖把 AnyIO 升到 4.15.1，与 FastAPI 0.104.1 要求冲突，pip check 失败。固定 OpenCV 后另复现缺 libGL。
 
 - 修复：固定关键推理依赖，使用 CPU Torch；以后端 requirements 约束安装，补系统库，并在镜像构建时检查依赖和导入。
 - 验收：真实权重加载、YOLO→DINOv3→FAISS 发布及 HTTP 自匹配、重启、数据库/模型/store 新卷恢复、资产损坏后拒绝与恢复，共十二组通过。镜像约 9.27 → 2.60 GiB。范围不包含 GPU、独立样本精度或生产容量。见[完整证据](validation/INFERENCE_20261101.md)。
+
+### ISS-041 HTTP keep-alive 定时器误关闭活动 SSE
+
+**P1 · 已修复 · 本地 TCP 与真实 Redis 验收通过（2026-11-01）。** 提交 `4cd6a2e` 的远端 Redis 验收在撤销 token、等待 SSE 结束时出现 incomplete chunked read；服务端报 h11 SEND_BODY 状态下错误关闭连接。
+
+- 根因：Uvicorn 0.24.0 完成前一响应后安排 idle timer，再处理已缓冲请求；新 SSE 请求没有取消旧 timer，活动响应被截断。
+- 修复：固定 Uvicorn 0.54.0，包含处理新请求时取消旧 timer 的上游修复；增加同一 TCP 连接连续普通请求/SSE 的回归，断言跨过 idle timeout 后消息和结束标记完整。
+- 验收：同一测试旧版失败、新版通过，真实 Redis 四进程十项通过；七项远端复验待补记。生产代理和容量不在关闭范围。见[协议修复证据](validation/SSE_KEEPALIVE_20261101.md)。
 
 ## 待验证或待决策事项
 

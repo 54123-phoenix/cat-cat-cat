@@ -156,7 +156,7 @@ def scenario(output, report, prepare_only, models_dir=None):
                 compose(project, 'cp', str(models_dir / name), f'backend:/app/models/{name}')
             compose(project, 'run', '--rm', '--no-deps', 'backend', 'python', '-m', 'pip', 'check')
             probe = compose(project, 'run', '--rm', '--no-deps', 'backend', 'python', '-c', '''
-import json, cv2, torch, torchvision, timm, ultralytics, faiss, httpx, numpy, tempfile
+import json, cv2, torch, torchvision, timm, ultralytics, faiss, httpx, numpy, tempfile, uvicorn, gunicorn
 from pathlib import Path
 from app.services import model_loader
 model = model_loader.load_model()
@@ -178,6 +178,7 @@ model_loader.MODEL_PATH = original
 print(json.dumps({'torch': torch.__version__, 'torchvision': torchvision.__version__,
     'timm': timm.__version__, 'ultralytics': ultralytics.__version__, 'opencv': cv2.__version__,
     'faiss': faiss.__version__, 'httpx': httpx.__version__, 'numpy': numpy.__version__,
+    'uvicorn': uvicorn.__version__, 'gunicorn': gunicorn.__version__,
     'cuda_runtime': torch.version.cuda, 'model_loaded': True,
     'missing_corrupt_incomplete_and_wrong_dimensions_rejected': True}))
 ''', timeout=120)

@@ -1,0 +1,118 @@
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.schemas
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.tables
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.types
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.constraints
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.defaults
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.autogenerate.comments
+2026-11-01 09:50:14 INFO alembic.runtime.plugins setup plugin alembic.ext.checkconstraint_byname
+2026-11-01 09:50:15 INFO faiss.loader Loading faiss with AVX2 support.
+2026-11-01 09:50:15 INFO faiss.loader Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-11-01 09:50:15 INFO faiss.loader Loading faiss.
+2026-11-01 09:50:15 INFO faiss.loader Successfully loaded faiss.
+2026-11-01 09:50:16 INFO alembic.runtime.migration Context impl SQLiteImpl.
+2026-11-01 09:50:16 INFO alembic.runtime.migration Will assume non-transactional DDL.
+2026-11-01 09:50:16 INFO cat_community.events Redis connected for SSE pub/sub
+2026-11-01 09:50:16 INFO cat_community.cache Cache: Redis connected
+2026-11-01 09:50:16 WARNING passlib.handlers.bcrypt (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-11-01 09:50:16 INFO cat_community.request {"event":"request_completed","request_id":"18805c4694ac46b899083f5ab8dd49a8","method":"GET","path":"/","status_code":200,"duration_ms":0.91,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"fc92c2d041d64e31913fdbb645b8eaac","method":"GET","path":"/","status_code":200,"duration_ms":0.63,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"f38dcb8d8c444f20959ebd9ab0d37bad","method":"GET","path":"/__acceptance/cache/shared","status_code":200,"duration_ms":0.95,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"d975c4ca365d4771872394badc4aad53","method":"DELETE","path":"/__acceptance/cache/shared","status_code":200,"duration_ms":1.05,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"9e57b0b00fe34e5d869f297eaa4f11d3","method":"GET","path":"/api/events/stream","status_code":200,"duration_ms":5.71,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"59e2928d0805435cb61033744e954a60","method":"GET","path":"/api/map/heatmap","status_code":200,"duration_ms":6.4,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"1e68679056bb4d06a79ca3724ceadc53","method":"GET","path":"/api/map/heatmap","status_code":200,"duration_ms":2.48,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"ba89e4ee69354f6dab3a15540a5580ec","method":"GET","path":"/api/map/heatmap","status_code":200,"duration_ms":2.07,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:17 INFO cat_community.request {"event":"request_completed","request_id":"9b9a23f490a449f8bb1dafe787e0214b","method":"GET","path":"/api/events/stream","status_code":200,"duration_ms":2.71,"client":"127.0.0.1","user_agent":"python-httpx/0.27.0"}
+2026-11-01 09:50:22 ERROR asyncio Exception in callback H11Protocol.timeout_keep_alive_handler()
+handle: <TimerHandle when=79.002096993 H11Protocol.timeout_keep_alive_handler()>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 363, in timeout_keep_alive_handler
+    self.conn.send(event)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 538, in send
+    data_list = self.send_with_data_passthrough(event)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 563, in send_with_data_passthrough
+    self._process_event(self.our_role, event)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 284, in _process_event
+    self._cstate.process_event(role, type(event), server_switch_event)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_state.py", line 291, in process_event
+    self._fire_event_triggered_transitions(role, _event_type)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_state.py", line 309, in _fire_event_triggered_transitions
+    raise LocalProtocolError(
+h11._util.LocalProtocolError: can't handle event type ConnectionClosed when role=SERVER and state=SEND_BODY
+2026-11-01 09:50:32 ERROR cat_community Unhandled exception on GET /api/events/stream
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/errors.py", line 162, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/base.py", line 109, in __call__
+    await response(scope, receive, send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 270, in __call__
+    async with anyio.create_task_group() as task_group:
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 597, in __aexit__
+    raise exceptions[0]
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 273, in wrap
+    await func()
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/base.py", line 134, in stream_response
+    return await super().stream_response(send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 267, in stream_response
+    await send({"type": "http.response.body", "body": b"", "more_body": False})
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/errors.py", line 159, in _send
+    await send(message)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 505, in send
+    output = self.conn.send(event=h11.Data(data=data))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 538, in send
+    data_list = self.send_with_data_passthrough(event)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 553, in send_with_data_passthrough
+    raise LocalProtocolError("Can't send data when our state is ERROR")
+h11._util.LocalProtocolError: Can't send data when our state is ERROR
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 408, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/fastapi/applications.py", line 1106, in __call__
+    await super().__call__(scope, receive, send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/applications.py", line 122, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/errors.py", line 184, in __call__
+    raise exc
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/errors.py", line 162, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/base.py", line 109, in __call__
+    await response(scope, receive, send)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 270, in __call__
+    async with anyio.create_task_group() as task_group:
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 597, in __aexit__
+    raise exceptions[0]
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 273, in wrap
+    await func()
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/base.py", line 134, in stream_response
+    return await super().stream_response(send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/responses.py", line 267, in stream_response
+    await send({"type": "http.response.body", "body": b"", "more_body": False})
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/starlette/middleware/errors.py", line 159, in _send
+    await send(message)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 505, in send
+    output = self.conn.send(event=h11.Data(data=data))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 538, in send
+    data_list = self.send_with_data_passthrough(event)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/h11/_connection.py", line 553, in send_with_data_passthrough
+    raise LocalProtocolError("Can't send data when our state is ERROR")
+h11._util.LocalProtocolError: Can't send data when our state is ERROR

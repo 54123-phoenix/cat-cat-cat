@@ -61,7 +61,9 @@ python scripts/verify_docker_runtime.py --models-dir artifacts/inference-models 
 
 省略 `--models-dir` 仍执行原有七组 API 阶段验收。`--prepare-only` 只检查配置；推理模式也会检查输入权重哈希，不把配置检查当作运行成功。
 
-新增独立 `inference-runtime` CI 任务，执行权重校验、完整镜像、真实加载/错误权重检查与十二组恢复验收；上传结果、诊断日志与小型参考库，不上传权重或数据库。远端结果待实际运行后补记。
+新增独立 `inference-runtime` CI 任务，执行权重校验、完整镜像、真实加载/错误权重检查与十二组恢复验收；上传结果、诊断日志与小型参考库，不上传权重或数据库。
+
+修复提交 `4cd6a2e` 的[首次远端运行 41294796254](https://github.com/54123-phoenix/cat-cat-cat/actions/runs/41294796254) 中，**inference-runtime 十二组全部通过**，见[首次远端结果](inference-ci-first.json)。Linux/amd64 Docker Engine 28.0.4，包含真实 Torch 错误权重检查、四 Gunicorn worker、新卷恢复与资产故障拒绝。同轮其余五项通过，Redis 任务失败并暴露活动 SSE 被旧 Uvicorn keep-alive 定时器截断的问题，已另记 [ISS-041](SSE_KEEPALIVE_20261101.md)，因此此轮不能称为整个 CI 全绿。
 
 ## 未关闭的范围
 
