@@ -1,0 +1,2355 @@
+{
+  "status": "completed_before_inference",
+  "reviewed_at": "2026-11-01T12:13:02.910001+00:00",
+  "reviewer": "Codex visual inspection in this session; not owner identity verification",
+  "scope": "All 328 final images reviewed using initial sheets and accepted replacement sheets before any new-study inference",
+  "excluded_identities": {
+    "0137": "Identity downloaded or inspected in a retired experiment",
+    "0178": "Identity downloaded or inspected in a retired experiment",
+    "0327": "Identity downloaded or inspected in a retired experiment",
+    "0177": "Identity downloaded or inspected in a retired experiment",
+    "0325": "Identity downloaded or inspected in a retired experiment",
+    "0225": "Identity downloaded or inspected in a retired experiment",
+    "0174": "Identity downloaded or inspected in a retired experiment",
+    "0235": "Identity downloaded or inspected in a retired experiment",
+    "0133": "Identity downloaded or inspected in a retired experiment",
+    "0087": "Identity downloaded or inspected in a retired experiment",
+    "0155": "Identity downloaded or inspected in a retired experiment",
+    "0146": "Identity downloaded or inspected in a retired experiment",
+    "0046": "Identity downloaded or inspected in a retired experiment",
+    "0249": "Identity downloaded or inspected in a retired experiment",
+    "0396": "Identity downloaded or inspected in a retired experiment",
+    "0007": "Identity downloaded or inspected in a retired experiment",
+    "0009": "Identity downloaded or inspected in a retired experiment",
+    "0022": "Identity downloaded or inspected in a retired experiment",
+    "0033": "Identity downloaded or inspected in a retired experiment",
+    "0060": "Identity downloaded or inspected in a retired experiment",
+    "0069": "Identity downloaded or inspected in a retired experiment",
+    "0091": "Identity downloaded or inspected in a retired experiment",
+    "0100": "Identity downloaded or inspected in a retired experiment",
+    "0115": "Identity downloaded or inspected in a retired experiment",
+    "0123": "Identity downloaded or inspected in a retired experiment",
+    "0142": "Identity downloaded or inspected in a retired experiment",
+    "0152": "Identity downloaded or inspected in a retired experiment",
+    "0157": "Identity downloaded or inspected in a retired experiment",
+    "0165": "Identity downloaded or inspected in a retired experiment",
+    "0167": "Identity downloaded or inspected in a retired experiment",
+    "0171": "Identity downloaded or inspected in a retired experiment",
+    "0175": "Identity downloaded or inspected in a retired experiment",
+    "0176": "Identity downloaded or inspected in a retired experiment",
+    "0179": "Identity downloaded or inspected in a retired experiment",
+    "0214": "Identity downloaded or inspected in a retired experiment",
+    "0217": "Identity downloaded or inspected in a retired experiment",
+    "0247": "Identity downloaded or inspected in a retired experiment",
+    "0278": "Identity downloaded or inspected in a retired experiment",
+    "0283": "Identity downloaded or inspected in a retired experiment",
+    "0284": "Identity downloaded or inspected in a retired experiment",
+    "0296": "Identity downloaded or inspected in a retired experiment",
+    "0302": "Identity downloaded or inspected in a retired experiment",
+    "0309": "Identity downloaded or inspected in a retired experiment",
+    "0332": "Identity downloaded or inspected in a retired experiment",
+    "0348": "Identity downloaded or inspected in a retired experiment",
+    "0352": "Identity downloaded or inspected in a retired experiment",
+    "0370": "Identity downloaded or inspected in a retired experiment",
+    "0383": "Identity downloaded or inspected in a retired experiment",
+    "0385": "Identity downloaded or inspected in a retired experiment",
+    "0395": "Identity downloaded or inspected in a retired experiment",
+    "0404": "Identity downloaded or inspected in a retired experiment",
+    "0411": "Identity downloaded or inspected in a retired experiment",
+    "0418": "Identity downloaded or inspected in a retired experiment",
+    "0421": "Identity downloaded or inspected in a retired experiment",
+    "0425": "Identity downloaded or inspected in a retired experiment",
+    "0426": "Identity downloaded or inspected in a retired experiment",
+    "0431": "Identity downloaded or inspected in a retired experiment",
+    "0438": "Identity downloaded or inspected in a retired experiment",
+    "0441": "Identity downloaded or inspected in a retired experiment",
+    "0464": "Identity downloaded or inspected in a retired experiment",
+    "0474": "Identity downloaded or inspected in a retired experiment",
+    "0482": "Identity downloaded or inspected in a retired experiment",
+    "0494": "Identity downloaded or inspected in a retired experiment",
+    "0497": "Identity downloaded or inspected in a retired experiment",
+    "0502": "Identity downloaded or inspected in a retired experiment",
+    "0513": "Identity downloaded or inspected in a retired experiment",
+    "0515": "Identity downloaded or inspected in a retired experiment",
+    "0028": "Identity downloaded or inspected in a retired experiment",
+    "0071": "Identity downloaded or inspected in a retired experiment",
+    "0102": "Identity downloaded or inspected in a retired experiment",
+    "0131": "Identity downloaded or inspected in a retired experiment",
+    "0183": "Identity downloaded or inspected in a retired experiment",
+    "0228": "Identity downloaded or inspected in a retired experiment",
+    "0237": "Identity downloaded or inspected in a retired experiment",
+    "0311": "Identity downloaded or inspected in a retired experiment",
+    "0334": "Identity downloaded or inspected in a retired experiment",
+    "0158": "Identity downloaded or inspected in a retired experiment",
+    "0329": "Identity downloaded or inspected in a retired experiment",
+    "0445": "Identity downloaded or inspected in a retired experiment",
+    "0023": "Identity downloaded or inspected in a retired experiment",
+    "0026": "Identity downloaded or inspected in a retired experiment",
+    "0031": "Identity downloaded or inspected in a retired experiment",
+    "0040": "Identity downloaded or inspected in a retired experiment",
+    "0050": "Identity downloaded or inspected in a retired experiment",
+    "0063": "Identity downloaded or inspected in a retired experiment",
+    "0068": "Identity downloaded or inspected in a retired experiment",
+    "0078": "Identity downloaded or inspected in a retired experiment",
+    "0124": "Identity downloaded or inspected in a retired experiment",
+    "0153": "Identity downloaded or inspected in a retired experiment",
+    "0181": "Identity downloaded or inspected in a retired experiment",
+    "0215": "Identity downloaded or inspected in a retired experiment",
+    "0218": "Identity downloaded or inspected in a retired experiment",
+    "0243": "Identity downloaded or inspected in a retired experiment",
+    "0301": "Identity downloaded or inspected in a retired experiment",
+    "0318": "Identity downloaded or inspected in a retired experiment",
+    "0350": "Identity downloaded or inspected in a retired experiment",
+    "0353": "Identity downloaded or inspected in a retired experiment",
+    "0359": "Identity downloaded or inspected in a retired experiment",
+    "0372": "Identity downloaded or inspected in a retired experiment",
+    "0394": "Identity downloaded or inspected in a retired experiment",
+    "0509": "Identity downloaded or inspected in a retired experiment",
+    "0510": "Identity downloaded or inspected in a retired experiment",
+    "0052": "Before inference: fewer than seven distinct images after fixed pixel/dHash duplicate filtering",
+    "0076": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0093": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0109": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0277": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0220": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0506": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0258": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0416": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0227": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0230": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+    "0437": "Pre-inference visual review: source folder mixes a tabby cat and a black/white cat",
+    "0323": "Pre-inference visual review: suspected mixed orange-cat identities; white bib/paws differ between selected photos",
+    "0472": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+    "0270": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+    "0358": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+    "0042": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+    "0112": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+    "0503": "Pre-inference enlarged-image review: suspected additional cats beyond the foreground cage without target annotation"
+  },
+  "contact_sheets_local_only": {
+    "artifacts\\coverage\\fresh-v2\\review-cats-00.jpg": "b70154eb930b74e3eb76e3b241028dd0075e4e03735e0f51a577569062adb429",
+    "artifacts\\coverage\\fresh-v2\\review-cats-01.jpg": "e9a6480cbe99fbe93f2a9a2fc40998b2062ec01b429421549d1824b8e73d2802",
+    "artifacts\\coverage\\fresh-v2\\review-cats-02.jpg": "05610d04c3e54881c93d82d447bbd12942e9a5f2102d0b1b588d95d88d97bc9d",
+    "artifacts\\coverage\\fresh-v2\\review-cats-03.jpg": "f6ce5e77a484bc47f88e15932c9a931ac9394e1e0ae59c5369e24540e49c74a7",
+    "artifacts\\coverage\\fresh-v2\\review-cats-04.jpg": "5076f8fdbf7ee7d9a73de7e292a54f4e72f18f201b24de9f0aa21d163a3bd968",
+    "artifacts\\coverage\\fresh-v2\\review-cats-05.jpg": "f3a05964a7a3a66f6bc816fee6f30e6ed2637ea77ba0d61bcbbd6658d113f842",
+    "artifacts\\coverage\\fresh-v2\\review-cats-06.jpg": "fb5ac8a35f883092d2bd51d46d02af07984947a20708b20e337e494a95c54339",
+    "artifacts\\coverage\\fresh-v2\\review-cats-07.jpg": "983515a5f2f8c7874bc7057e797944fd449faa2fe353d9e328c8a10d64b5fd4c",
+    "artifacts\\coverage\\fresh-v2\\review-dogs.jpg": "ffa9cab5864e52c2d2d4a2812bec02915f91d2114594820e0b2f783c920880b9",
+    "artifacts\\coverage\\fresh-v2\\check-0323.jpg": "45418be2a85cf8edb02bb21bcdceb4eefff19c329b0238974bfe8730ffee110b",
+    "artifacts\\coverage\\fresh-v2\\check-0379.jpg": "d254150891f5f3fdc4f95659609c8c868f0835e58c93d19501c51e19268af2c7",
+    "artifacts\\coverage\\fresh-v2\\check-0457.jpg": "a1d8ccc0f4499f805880378df7d51d5dfeac73d1201f08fb7b0d10139ee120dc",
+    "artifacts\\coverage\\fresh-v3\\replacements-0.jpg": "93e873268c630a8ccc807c086c9a94cda8b64f42c9a78ef340aa99d941e589bc",
+    "artifacts\\coverage\\fresh-v3\\replacements-1.jpg": "d8b82a845da30420c3ce11017a20433c7c581d9cf4ed36843289038e81f9f2ba",
+    "artifacts\\coverage\\fresh-v3\\replacements-2.jpg": "b67ab151e5d8e6a1f32ccd5a084184ead44bd39b68ab3c624267192862cfc440",
+    "artifacts\\coverage\\fresh-v3\\check-0112.jpg": "c6cafb5743ccc90383f08dacfe61b81fe22259fa52329f1b1d7bf97060493a65",
+    "artifacts\\coverage\\fresh-v4\\replacements.jpg": "cea32dd46d75804edd1e965de794a09d0c8dea65fc18e1d5762b158a8d711b46",
+    "artifacts\\coverage\\fresh-v4\\check-0503.jpg": "8af3906390d97c72870fa14f83a9352fabe1c57dcd7b9e0f8bd4825591abd252",
+    "artifacts\\coverage\\fresh-v5\\replacement.jpg": "7a852f5879de920054efbb1bd8839ce6bd9d15b5c84979c07a26bd3dde0193a8"
+  },
+  "selection_attempts": {
+    "fresh-v1": {
+      "plan": [
+        [
+          "calibration",
+          "known",
+          "0437"
+        ],
+        [
+          "calibration",
+          "known",
+          "0323"
+        ],
+        [
+          "calibration",
+          "known",
+          "0322"
+        ],
+        [
+          "calibration",
+          "known",
+          "0191"
+        ],
+        [
+          "calibration",
+          "known",
+          "0147"
+        ],
+        [
+          "calibration",
+          "known",
+          "0076"
+        ],
+        [
+          "calibration",
+          "known",
+          "0444"
+        ],
+        [
+          "calibration",
+          "known",
+          "0245"
+        ],
+        [
+          "calibration",
+          "known",
+          "0377"
+        ],
+        [
+          "calibration",
+          "known",
+          "0261"
+        ],
+        [
+          "calibration",
+          "known",
+          "0052"
+        ],
+        [
+          "calibration",
+          "known",
+          "0351"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0084"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0079"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0453"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0140"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0229"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0093"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0109"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0451"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0246"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0443"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0317"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0272"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0479"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0345"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0285"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0424"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0242"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0449"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0277"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0457"
+        ],
+        [
+          "holdout",
+          "known",
+          "0499"
+        ],
+        [
+          "holdout",
+          "known",
+          "0231"
+        ],
+        [
+          "holdout",
+          "known",
+          "0173"
+        ],
+        [
+          "holdout",
+          "known",
+          "0328"
+        ],
+        [
+          "holdout",
+          "known",
+          "0065"
+        ],
+        [
+          "holdout",
+          "known",
+          "0379"
+        ],
+        [
+          "holdout",
+          "known",
+          "0391"
+        ],
+        [
+          "holdout",
+          "known",
+          "0204"
+        ],
+        [
+          "holdout",
+          "known",
+          "0429"
+        ],
+        [
+          "holdout",
+          "known",
+          "0220"
+        ],
+        [
+          "holdout",
+          "known",
+          "0207"
+        ],
+        [
+          "holdout",
+          "known",
+          "0506"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0027"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0081"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0244"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0205"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0233"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0336"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0104"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0127"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0258"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0435"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0024"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0304"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0416"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0128"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0163"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0319"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0227"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0361"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0230"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0132"
+        ]
+      ],
+      "exclusions": {
+        "0050": "Identity downloaded or inspected in a retired experiment",
+        "0350": "Identity downloaded or inspected in a retired experiment",
+        "0510": "Identity downloaded or inspected in a retired experiment",
+        "0301": "Identity downloaded or inspected in a retired experiment",
+        "0372": "Identity downloaded or inspected in a retired experiment",
+        "0124": "Identity downloaded or inspected in a retired experiment",
+        "0359": "Identity downloaded or inspected in a retired experiment",
+        "0394": "Identity downloaded or inspected in a retired experiment",
+        "0068": "Identity downloaded or inspected in a retired experiment",
+        "0215": "Identity downloaded or inspected in a retired experiment",
+        "0218": "Identity downloaded or inspected in a retired experiment",
+        "0078": "Identity downloaded or inspected in a retired experiment",
+        "0243": "Identity downloaded or inspected in a retired experiment",
+        "0353": "Identity downloaded or inspected in a retired experiment",
+        "0318": "Identity downloaded or inspected in a retired experiment",
+        "0181": "Identity downloaded or inspected in a retired experiment",
+        "0153": "Identity downloaded or inspected in a retired experiment",
+        "0040": "Identity downloaded or inspected in a retired experiment",
+        "0009": "Identity downloaded or inspected in a retired experiment",
+        "0426": "Identity downloaded or inspected in a retired experiment",
+        "0284": "Identity downloaded or inspected in a retired experiment",
+        "0171": "Identity downloaded or inspected in a retired experiment",
+        "0418": "Identity downloaded or inspected in a retired experiment",
+        "0515": "Identity downloaded or inspected in a retired experiment",
+        "0383": "Identity downloaded or inspected in a retired experiment",
+        "0431": "Identity downloaded or inspected in a retired experiment",
+        "0348": "Identity downloaded or inspected in a retired experiment",
+        "0069": "Identity downloaded or inspected in a retired experiment",
+        "0309": "Identity downloaded or inspected in a retired experiment",
+        "0370": "Identity downloaded or inspected in a retired experiment",
+        "0283": "Identity downloaded or inspected in a retired experiment",
+        "0247": "Identity downloaded or inspected in a retired experiment",
+        "0332": "Identity downloaded or inspected in a retired experiment",
+        "0178": "Identity downloaded or inspected in a retired experiment",
+        "0155": "Identity downloaded or inspected in a retired experiment",
+        "0033": "Identity downloaded or inspected in a retired experiment",
+        "0385": "Identity downloaded or inspected in a retired experiment",
+        "0137": "Identity downloaded or inspected in a retired experiment",
+        "0325": "Identity downloaded or inspected in a retired experiment",
+        "0464": "Identity downloaded or inspected in a retired experiment",
+        "0395": "Identity downloaded or inspected in a retired experiment",
+        "0302": "Identity downloaded or inspected in a retired experiment",
+        "0142": "Identity downloaded or inspected in a retired experiment",
+        "0214": "Identity downloaded or inspected in a retired experiment",
+        "0327": "Identity downloaded or inspected in a retired experiment",
+        "0165": "Identity downloaded or inspected in a retired experiment",
+        "0175": "Identity downloaded or inspected in a retired experiment",
+        "0502": "Identity downloaded or inspected in a retired experiment",
+        "0091": "Identity downloaded or inspected in a retired experiment",
+        "0133": "Identity downloaded or inspected in a retired experiment",
+        "0352": "Identity downloaded or inspected in a retired experiment",
+        "0494": "Identity downloaded or inspected in a retired experiment",
+        "0060": "Identity downloaded or inspected in a retired experiment",
+        "0225": "Identity downloaded or inspected in a retired experiment",
+        "0411": "Identity downloaded or inspected in a retired experiment",
+        "0177": "Identity downloaded or inspected in a retired experiment",
+        "0007": "Identity downloaded or inspected in a retired experiment",
+        "0100": "Identity downloaded or inspected in a retired experiment",
+        "0278": "Identity downloaded or inspected in a retired experiment",
+        "0404": "Identity downloaded or inspected in a retired experiment",
+        "0022": "Identity downloaded or inspected in a retired experiment",
+        "0497": "Identity downloaded or inspected in a retired experiment",
+        "0152": "Identity downloaded or inspected in a retired experiment",
+        "0438": "Identity downloaded or inspected in a retired experiment",
+        "0167": "Identity downloaded or inspected in a retired experiment",
+        "0482": "Identity downloaded or inspected in a retired experiment",
+        "0474": "Identity downloaded or inspected in a retired experiment",
+        "0235": "Identity downloaded or inspected in a retired experiment",
+        "0146": "Identity downloaded or inspected in a retired experiment",
+        "0123": "Identity downloaded or inspected in a retired experiment",
+        "0441": "Identity downloaded or inspected in a retired experiment",
+        "0157": "Identity downloaded or inspected in a retired experiment",
+        "0174": "Identity downloaded or inspected in a retired experiment",
+        "0087": "Identity downloaded or inspected in a retired experiment",
+        "0115": "Identity downloaded or inspected in a retired experiment",
+        "0425": "Identity downloaded or inspected in a retired experiment",
+        "0513": "Identity downloaded or inspected in a retired experiment",
+        "0179": "Identity downloaded or inspected in a retired experiment",
+        "0217": "Identity downloaded or inspected in a retired experiment",
+        "0296": "Identity downloaded or inspected in a retired experiment",
+        "0176": "Identity downloaded or inspected in a retired experiment",
+        "0421": "Identity downloaded or inspected in a retired experiment",
+        "0046": "Identity downloaded or inspected in a retired experiment",
+        "0249": "Identity downloaded or inspected in a retired experiment",
+        "0071": "Identity downloaded or inspected in a retired experiment",
+        "0396": "Identity downloaded or inspected in a retired experiment",
+        "0311": "Identity downloaded or inspected in a retired experiment",
+        "0228": "Identity downloaded or inspected in a retired experiment",
+        "0183": "Identity downloaded or inspected in a retired experiment",
+        "0334": "Identity downloaded or inspected in a retired experiment",
+        "0131": "Identity downloaded or inspected in a retired experiment",
+        "0237": "Identity downloaded or inspected in a retired experiment",
+        "0102": "Identity downloaded or inspected in a retired experiment",
+        "0028": "Identity downloaded or inspected in a retired experiment",
+        "0329": "Identity downloaded or inspected in a retired experiment",
+        "0158": "Identity downloaded or inspected in a retired experiment",
+        "0445": "Identity downloaded or inspected in a retired experiment",
+        "0023": "Identity downloaded or inspected in a retired experiment",
+        "0026": "Identity downloaded or inspected in a retired experiment",
+        "0031": "Identity downloaded or inspected in a retired experiment",
+        "0063": "Identity downloaded or inspected in a retired experiment",
+        "0509": "Identity downloaded or inspected in a retired experiment"
+      }
+    },
+    "fresh-v2": {
+      "plan": [
+        [
+          "calibration",
+          "known",
+          "0437"
+        ],
+        [
+          "calibration",
+          "known",
+          "0323"
+        ],
+        [
+          "calibration",
+          "known",
+          "0322"
+        ],
+        [
+          "calibration",
+          "known",
+          "0191"
+        ],
+        [
+          "calibration",
+          "known",
+          "0147"
+        ],
+        [
+          "calibration",
+          "known",
+          "0076"
+        ],
+        [
+          "calibration",
+          "known",
+          "0444"
+        ],
+        [
+          "calibration",
+          "known",
+          "0245"
+        ],
+        [
+          "calibration",
+          "known",
+          "0377"
+        ],
+        [
+          "calibration",
+          "known",
+          "0261"
+        ],
+        [
+          "calibration",
+          "known",
+          "0305"
+        ],
+        [
+          "calibration",
+          "known",
+          "0351"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0084"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0079"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0453"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0140"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0229"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0093"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0109"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0451"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0246"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0443"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0317"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0272"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0479"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0345"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0285"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0424"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0242"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0449"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0277"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0457"
+        ],
+        [
+          "holdout",
+          "known",
+          "0499"
+        ],
+        [
+          "holdout",
+          "known",
+          "0231"
+        ],
+        [
+          "holdout",
+          "known",
+          "0173"
+        ],
+        [
+          "holdout",
+          "known",
+          "0328"
+        ],
+        [
+          "holdout",
+          "known",
+          "0065"
+        ],
+        [
+          "holdout",
+          "known",
+          "0379"
+        ],
+        [
+          "holdout",
+          "known",
+          "0391"
+        ],
+        [
+          "holdout",
+          "known",
+          "0204"
+        ],
+        [
+          "holdout",
+          "known",
+          "0429"
+        ],
+        [
+          "holdout",
+          "known",
+          "0220"
+        ],
+        [
+          "holdout",
+          "known",
+          "0207"
+        ],
+        [
+          "holdout",
+          "known",
+          "0506"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0027"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0081"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0244"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0205"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0233"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0336"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0104"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0127"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0258"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0435"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0024"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0304"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0416"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0128"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0163"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0319"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0227"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0361"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0230"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0132"
+        ]
+      ],
+      "exclusions": {
+        "0050": "Identity downloaded or inspected in a retired experiment",
+        "0350": "Identity downloaded or inspected in a retired experiment",
+        "0510": "Identity downloaded or inspected in a retired experiment",
+        "0301": "Identity downloaded or inspected in a retired experiment",
+        "0372": "Identity downloaded or inspected in a retired experiment",
+        "0124": "Identity downloaded or inspected in a retired experiment",
+        "0359": "Identity downloaded or inspected in a retired experiment",
+        "0394": "Identity downloaded or inspected in a retired experiment",
+        "0068": "Identity downloaded or inspected in a retired experiment",
+        "0215": "Identity downloaded or inspected in a retired experiment",
+        "0218": "Identity downloaded or inspected in a retired experiment",
+        "0078": "Identity downloaded or inspected in a retired experiment",
+        "0243": "Identity downloaded or inspected in a retired experiment",
+        "0353": "Identity downloaded or inspected in a retired experiment",
+        "0318": "Identity downloaded or inspected in a retired experiment",
+        "0181": "Identity downloaded or inspected in a retired experiment",
+        "0153": "Identity downloaded or inspected in a retired experiment",
+        "0040": "Identity downloaded or inspected in a retired experiment",
+        "0009": "Identity downloaded or inspected in a retired experiment",
+        "0426": "Identity downloaded or inspected in a retired experiment",
+        "0284": "Identity downloaded or inspected in a retired experiment",
+        "0171": "Identity downloaded or inspected in a retired experiment",
+        "0418": "Identity downloaded or inspected in a retired experiment",
+        "0515": "Identity downloaded or inspected in a retired experiment",
+        "0383": "Identity downloaded or inspected in a retired experiment",
+        "0431": "Identity downloaded or inspected in a retired experiment",
+        "0348": "Identity downloaded or inspected in a retired experiment",
+        "0069": "Identity downloaded or inspected in a retired experiment",
+        "0309": "Identity downloaded or inspected in a retired experiment",
+        "0370": "Identity downloaded or inspected in a retired experiment",
+        "0283": "Identity downloaded or inspected in a retired experiment",
+        "0247": "Identity downloaded or inspected in a retired experiment",
+        "0332": "Identity downloaded or inspected in a retired experiment",
+        "0178": "Identity downloaded or inspected in a retired experiment",
+        "0155": "Identity downloaded or inspected in a retired experiment",
+        "0033": "Identity downloaded or inspected in a retired experiment",
+        "0385": "Identity downloaded or inspected in a retired experiment",
+        "0137": "Identity downloaded or inspected in a retired experiment",
+        "0325": "Identity downloaded or inspected in a retired experiment",
+        "0464": "Identity downloaded or inspected in a retired experiment",
+        "0395": "Identity downloaded or inspected in a retired experiment",
+        "0302": "Identity downloaded or inspected in a retired experiment",
+        "0142": "Identity downloaded or inspected in a retired experiment",
+        "0214": "Identity downloaded or inspected in a retired experiment",
+        "0327": "Identity downloaded or inspected in a retired experiment",
+        "0165": "Identity downloaded or inspected in a retired experiment",
+        "0175": "Identity downloaded or inspected in a retired experiment",
+        "0502": "Identity downloaded or inspected in a retired experiment",
+        "0091": "Identity downloaded or inspected in a retired experiment",
+        "0133": "Identity downloaded or inspected in a retired experiment",
+        "0352": "Identity downloaded or inspected in a retired experiment",
+        "0494": "Identity downloaded or inspected in a retired experiment",
+        "0060": "Identity downloaded or inspected in a retired experiment",
+        "0225": "Identity downloaded or inspected in a retired experiment",
+        "0411": "Identity downloaded or inspected in a retired experiment",
+        "0177": "Identity downloaded or inspected in a retired experiment",
+        "0007": "Identity downloaded or inspected in a retired experiment",
+        "0100": "Identity downloaded or inspected in a retired experiment",
+        "0278": "Identity downloaded or inspected in a retired experiment",
+        "0404": "Identity downloaded or inspected in a retired experiment",
+        "0022": "Identity downloaded or inspected in a retired experiment",
+        "0497": "Identity downloaded or inspected in a retired experiment",
+        "0152": "Identity downloaded or inspected in a retired experiment",
+        "0438": "Identity downloaded or inspected in a retired experiment",
+        "0167": "Identity downloaded or inspected in a retired experiment",
+        "0482": "Identity downloaded or inspected in a retired experiment",
+        "0474": "Identity downloaded or inspected in a retired experiment",
+        "0235": "Identity downloaded or inspected in a retired experiment",
+        "0146": "Identity downloaded or inspected in a retired experiment",
+        "0123": "Identity downloaded or inspected in a retired experiment",
+        "0441": "Identity downloaded or inspected in a retired experiment",
+        "0157": "Identity downloaded or inspected in a retired experiment",
+        "0174": "Identity downloaded or inspected in a retired experiment",
+        "0087": "Identity downloaded or inspected in a retired experiment",
+        "0115": "Identity downloaded or inspected in a retired experiment",
+        "0425": "Identity downloaded or inspected in a retired experiment",
+        "0513": "Identity downloaded or inspected in a retired experiment",
+        "0179": "Identity downloaded or inspected in a retired experiment",
+        "0217": "Identity downloaded or inspected in a retired experiment",
+        "0296": "Identity downloaded or inspected in a retired experiment",
+        "0176": "Identity downloaded or inspected in a retired experiment",
+        "0421": "Identity downloaded or inspected in a retired experiment",
+        "0046": "Identity downloaded or inspected in a retired experiment",
+        "0249": "Identity downloaded or inspected in a retired experiment",
+        "0071": "Identity downloaded or inspected in a retired experiment",
+        "0396": "Identity downloaded or inspected in a retired experiment",
+        "0311": "Identity downloaded or inspected in a retired experiment",
+        "0228": "Identity downloaded or inspected in a retired experiment",
+        "0183": "Identity downloaded or inspected in a retired experiment",
+        "0334": "Identity downloaded or inspected in a retired experiment",
+        "0131": "Identity downloaded or inspected in a retired experiment",
+        "0237": "Identity downloaded or inspected in a retired experiment",
+        "0102": "Identity downloaded or inspected in a retired experiment",
+        "0028": "Identity downloaded or inspected in a retired experiment",
+        "0329": "Identity downloaded or inspected in a retired experiment",
+        "0158": "Identity downloaded or inspected in a retired experiment",
+        "0445": "Identity downloaded or inspected in a retired experiment",
+        "0023": "Identity downloaded or inspected in a retired experiment",
+        "0026": "Identity downloaded or inspected in a retired experiment",
+        "0031": "Identity downloaded or inspected in a retired experiment",
+        "0063": "Identity downloaded or inspected in a retired experiment",
+        "0509": "Identity downloaded or inspected in a retired experiment",
+        "0052": "Before inference: fewer than seven distinct images after fixed pixel/dHash duplicate filtering"
+      }
+    },
+    "fresh-v3": {
+      "plan": [
+        [
+          "calibration",
+          "known",
+          "0305"
+        ],
+        [
+          "calibration",
+          "known",
+          "0472"
+        ],
+        [
+          "calibration",
+          "known",
+          "0322"
+        ],
+        [
+          "calibration",
+          "known",
+          "0191"
+        ],
+        [
+          "calibration",
+          "known",
+          "0147"
+        ],
+        [
+          "calibration",
+          "known",
+          "0270"
+        ],
+        [
+          "calibration",
+          "known",
+          "0444"
+        ],
+        [
+          "calibration",
+          "known",
+          "0245"
+        ],
+        [
+          "calibration",
+          "known",
+          "0377"
+        ],
+        [
+          "calibration",
+          "known",
+          "0261"
+        ],
+        [
+          "calibration",
+          "known",
+          "0358"
+        ],
+        [
+          "calibration",
+          "known",
+          "0351"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0084"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0079"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0453"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0140"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0229"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0490"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0161"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0451"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0246"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0443"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0317"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0272"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0479"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0345"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0285"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0424"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0242"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0449"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0086"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0457"
+        ],
+        [
+          "holdout",
+          "known",
+          "0499"
+        ],
+        [
+          "holdout",
+          "known",
+          "0231"
+        ],
+        [
+          "holdout",
+          "known",
+          "0173"
+        ],
+        [
+          "holdout",
+          "known",
+          "0328"
+        ],
+        [
+          "holdout",
+          "known",
+          "0065"
+        ],
+        [
+          "holdout",
+          "known",
+          "0379"
+        ],
+        [
+          "holdout",
+          "known",
+          "0391"
+        ],
+        [
+          "holdout",
+          "known",
+          "0204"
+        ],
+        [
+          "holdout",
+          "known",
+          "0429"
+        ],
+        [
+          "holdout",
+          "known",
+          "0286"
+        ],
+        [
+          "holdout",
+          "known",
+          "0207"
+        ],
+        [
+          "holdout",
+          "known",
+          "0406"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0027"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0081"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0244"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0205"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0233"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0336"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0104"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0127"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0042"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0435"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0024"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0304"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0340"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0128"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0163"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0319"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0112"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0361"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0368"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0132"
+        ]
+      ],
+      "exclusions": {
+        "0050": "Identity downloaded or inspected in a retired experiment",
+        "0350": "Identity downloaded or inspected in a retired experiment",
+        "0510": "Identity downloaded or inspected in a retired experiment",
+        "0301": "Identity downloaded or inspected in a retired experiment",
+        "0372": "Identity downloaded or inspected in a retired experiment",
+        "0124": "Identity downloaded or inspected in a retired experiment",
+        "0359": "Identity downloaded or inspected in a retired experiment",
+        "0394": "Identity downloaded or inspected in a retired experiment",
+        "0068": "Identity downloaded or inspected in a retired experiment",
+        "0215": "Identity downloaded or inspected in a retired experiment",
+        "0218": "Identity downloaded or inspected in a retired experiment",
+        "0078": "Identity downloaded or inspected in a retired experiment",
+        "0243": "Identity downloaded or inspected in a retired experiment",
+        "0353": "Identity downloaded or inspected in a retired experiment",
+        "0318": "Identity downloaded or inspected in a retired experiment",
+        "0181": "Identity downloaded or inspected in a retired experiment",
+        "0153": "Identity downloaded or inspected in a retired experiment",
+        "0040": "Identity downloaded or inspected in a retired experiment",
+        "0009": "Identity downloaded or inspected in a retired experiment",
+        "0426": "Identity downloaded or inspected in a retired experiment",
+        "0284": "Identity downloaded or inspected in a retired experiment",
+        "0171": "Identity downloaded or inspected in a retired experiment",
+        "0418": "Identity downloaded or inspected in a retired experiment",
+        "0515": "Identity downloaded or inspected in a retired experiment",
+        "0383": "Identity downloaded or inspected in a retired experiment",
+        "0431": "Identity downloaded or inspected in a retired experiment",
+        "0348": "Identity downloaded or inspected in a retired experiment",
+        "0069": "Identity downloaded or inspected in a retired experiment",
+        "0309": "Identity downloaded or inspected in a retired experiment",
+        "0370": "Identity downloaded or inspected in a retired experiment",
+        "0283": "Identity downloaded or inspected in a retired experiment",
+        "0247": "Identity downloaded or inspected in a retired experiment",
+        "0332": "Identity downloaded or inspected in a retired experiment",
+        "0178": "Identity downloaded or inspected in a retired experiment",
+        "0155": "Identity downloaded or inspected in a retired experiment",
+        "0033": "Identity downloaded or inspected in a retired experiment",
+        "0385": "Identity downloaded or inspected in a retired experiment",
+        "0137": "Identity downloaded or inspected in a retired experiment",
+        "0325": "Identity downloaded or inspected in a retired experiment",
+        "0464": "Identity downloaded or inspected in a retired experiment",
+        "0395": "Identity downloaded or inspected in a retired experiment",
+        "0302": "Identity downloaded or inspected in a retired experiment",
+        "0142": "Identity downloaded or inspected in a retired experiment",
+        "0214": "Identity downloaded or inspected in a retired experiment",
+        "0327": "Identity downloaded or inspected in a retired experiment",
+        "0165": "Identity downloaded or inspected in a retired experiment",
+        "0175": "Identity downloaded or inspected in a retired experiment",
+        "0502": "Identity downloaded or inspected in a retired experiment",
+        "0091": "Identity downloaded or inspected in a retired experiment",
+        "0133": "Identity downloaded or inspected in a retired experiment",
+        "0352": "Identity downloaded or inspected in a retired experiment",
+        "0494": "Identity downloaded or inspected in a retired experiment",
+        "0060": "Identity downloaded or inspected in a retired experiment",
+        "0225": "Identity downloaded or inspected in a retired experiment",
+        "0411": "Identity downloaded or inspected in a retired experiment",
+        "0177": "Identity downloaded or inspected in a retired experiment",
+        "0007": "Identity downloaded or inspected in a retired experiment",
+        "0100": "Identity downloaded or inspected in a retired experiment",
+        "0278": "Identity downloaded or inspected in a retired experiment",
+        "0404": "Identity downloaded or inspected in a retired experiment",
+        "0022": "Identity downloaded or inspected in a retired experiment",
+        "0497": "Identity downloaded or inspected in a retired experiment",
+        "0152": "Identity downloaded or inspected in a retired experiment",
+        "0438": "Identity downloaded or inspected in a retired experiment",
+        "0167": "Identity downloaded or inspected in a retired experiment",
+        "0482": "Identity downloaded or inspected in a retired experiment",
+        "0474": "Identity downloaded or inspected in a retired experiment",
+        "0235": "Identity downloaded or inspected in a retired experiment",
+        "0146": "Identity downloaded or inspected in a retired experiment",
+        "0123": "Identity downloaded or inspected in a retired experiment",
+        "0441": "Identity downloaded or inspected in a retired experiment",
+        "0157": "Identity downloaded or inspected in a retired experiment",
+        "0174": "Identity downloaded or inspected in a retired experiment",
+        "0087": "Identity downloaded or inspected in a retired experiment",
+        "0115": "Identity downloaded or inspected in a retired experiment",
+        "0425": "Identity downloaded or inspected in a retired experiment",
+        "0513": "Identity downloaded or inspected in a retired experiment",
+        "0179": "Identity downloaded or inspected in a retired experiment",
+        "0217": "Identity downloaded or inspected in a retired experiment",
+        "0296": "Identity downloaded or inspected in a retired experiment",
+        "0176": "Identity downloaded or inspected in a retired experiment",
+        "0421": "Identity downloaded or inspected in a retired experiment",
+        "0046": "Identity downloaded or inspected in a retired experiment",
+        "0249": "Identity downloaded or inspected in a retired experiment",
+        "0071": "Identity downloaded or inspected in a retired experiment",
+        "0396": "Identity downloaded or inspected in a retired experiment",
+        "0311": "Identity downloaded or inspected in a retired experiment",
+        "0228": "Identity downloaded or inspected in a retired experiment",
+        "0183": "Identity downloaded or inspected in a retired experiment",
+        "0334": "Identity downloaded or inspected in a retired experiment",
+        "0131": "Identity downloaded or inspected in a retired experiment",
+        "0237": "Identity downloaded or inspected in a retired experiment",
+        "0102": "Identity downloaded or inspected in a retired experiment",
+        "0028": "Identity downloaded or inspected in a retired experiment",
+        "0329": "Identity downloaded or inspected in a retired experiment",
+        "0158": "Identity downloaded or inspected in a retired experiment",
+        "0445": "Identity downloaded or inspected in a retired experiment",
+        "0023": "Identity downloaded or inspected in a retired experiment",
+        "0026": "Identity downloaded or inspected in a retired experiment",
+        "0031": "Identity downloaded or inspected in a retired experiment",
+        "0063": "Identity downloaded or inspected in a retired experiment",
+        "0509": "Identity downloaded or inspected in a retired experiment",
+        "0052": "Before inference: fewer than seven distinct images after fixed pixel/dHash duplicate filtering",
+        "0076": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0093": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0109": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0277": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0220": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0506": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0258": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0416": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0227": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0230": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0437": "Pre-inference visual review: source folder mixes a tabby cat and a black/white cat",
+        "0323": "Pre-inference visual review: suspected mixed orange-cat identities; white bib/paws differ between selected photos"
+      }
+    },
+    "fresh-v4": {
+      "plan": [
+        [
+          "calibration",
+          "known",
+          "0305"
+        ],
+        [
+          "calibration",
+          "known",
+          "0156"
+        ],
+        [
+          "calibration",
+          "known",
+          "0322"
+        ],
+        [
+          "calibration",
+          "known",
+          "0191"
+        ],
+        [
+          "calibration",
+          "known",
+          "0147"
+        ],
+        [
+          "calibration",
+          "known",
+          "0503"
+        ],
+        [
+          "calibration",
+          "known",
+          "0444"
+        ],
+        [
+          "calibration",
+          "known",
+          "0245"
+        ],
+        [
+          "calibration",
+          "known",
+          "0377"
+        ],
+        [
+          "calibration",
+          "known",
+          "0261"
+        ],
+        [
+          "calibration",
+          "known",
+          "0450"
+        ],
+        [
+          "calibration",
+          "known",
+          "0351"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0084"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0079"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0453"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0140"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0229"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0490"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0161"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0451"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0246"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0443"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0317"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0272"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0479"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0345"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0285"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0424"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0242"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0449"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0086"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0457"
+        ],
+        [
+          "holdout",
+          "known",
+          "0499"
+        ],
+        [
+          "holdout",
+          "known",
+          "0231"
+        ],
+        [
+          "holdout",
+          "known",
+          "0173"
+        ],
+        [
+          "holdout",
+          "known",
+          "0328"
+        ],
+        [
+          "holdout",
+          "known",
+          "0065"
+        ],
+        [
+          "holdout",
+          "known",
+          "0379"
+        ],
+        [
+          "holdout",
+          "known",
+          "0391"
+        ],
+        [
+          "holdout",
+          "known",
+          "0204"
+        ],
+        [
+          "holdout",
+          "known",
+          "0429"
+        ],
+        [
+          "holdout",
+          "known",
+          "0286"
+        ],
+        [
+          "holdout",
+          "known",
+          "0207"
+        ],
+        [
+          "holdout",
+          "known",
+          "0406"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0027"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0081"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0244"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0205"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0233"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0336"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0104"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0127"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0251"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0435"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0024"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0304"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0340"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0128"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0163"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0319"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0099"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0361"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0368"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0132"
+        ]
+      ],
+      "exclusions": {
+        "0050": "Identity downloaded or inspected in a retired experiment",
+        "0350": "Identity downloaded or inspected in a retired experiment",
+        "0510": "Identity downloaded or inspected in a retired experiment",
+        "0301": "Identity downloaded or inspected in a retired experiment",
+        "0372": "Identity downloaded or inspected in a retired experiment",
+        "0124": "Identity downloaded or inspected in a retired experiment",
+        "0359": "Identity downloaded or inspected in a retired experiment",
+        "0394": "Identity downloaded or inspected in a retired experiment",
+        "0068": "Identity downloaded or inspected in a retired experiment",
+        "0215": "Identity downloaded or inspected in a retired experiment",
+        "0218": "Identity downloaded or inspected in a retired experiment",
+        "0078": "Identity downloaded or inspected in a retired experiment",
+        "0243": "Identity downloaded or inspected in a retired experiment",
+        "0353": "Identity downloaded or inspected in a retired experiment",
+        "0318": "Identity downloaded or inspected in a retired experiment",
+        "0181": "Identity downloaded or inspected in a retired experiment",
+        "0153": "Identity downloaded or inspected in a retired experiment",
+        "0040": "Identity downloaded or inspected in a retired experiment",
+        "0009": "Identity downloaded or inspected in a retired experiment",
+        "0426": "Identity downloaded or inspected in a retired experiment",
+        "0284": "Identity downloaded or inspected in a retired experiment",
+        "0171": "Identity downloaded or inspected in a retired experiment",
+        "0418": "Identity downloaded or inspected in a retired experiment",
+        "0515": "Identity downloaded or inspected in a retired experiment",
+        "0383": "Identity downloaded or inspected in a retired experiment",
+        "0431": "Identity downloaded or inspected in a retired experiment",
+        "0348": "Identity downloaded or inspected in a retired experiment",
+        "0069": "Identity downloaded or inspected in a retired experiment",
+        "0309": "Identity downloaded or inspected in a retired experiment",
+        "0370": "Identity downloaded or inspected in a retired experiment",
+        "0283": "Identity downloaded or inspected in a retired experiment",
+        "0247": "Identity downloaded or inspected in a retired experiment",
+        "0332": "Identity downloaded or inspected in a retired experiment",
+        "0178": "Identity downloaded or inspected in a retired experiment",
+        "0155": "Identity downloaded or inspected in a retired experiment",
+        "0033": "Identity downloaded or inspected in a retired experiment",
+        "0385": "Identity downloaded or inspected in a retired experiment",
+        "0137": "Identity downloaded or inspected in a retired experiment",
+        "0325": "Identity downloaded or inspected in a retired experiment",
+        "0464": "Identity downloaded or inspected in a retired experiment",
+        "0395": "Identity downloaded or inspected in a retired experiment",
+        "0302": "Identity downloaded or inspected in a retired experiment",
+        "0142": "Identity downloaded or inspected in a retired experiment",
+        "0214": "Identity downloaded or inspected in a retired experiment",
+        "0327": "Identity downloaded or inspected in a retired experiment",
+        "0165": "Identity downloaded or inspected in a retired experiment",
+        "0175": "Identity downloaded or inspected in a retired experiment",
+        "0502": "Identity downloaded or inspected in a retired experiment",
+        "0091": "Identity downloaded or inspected in a retired experiment",
+        "0133": "Identity downloaded or inspected in a retired experiment",
+        "0352": "Identity downloaded or inspected in a retired experiment",
+        "0494": "Identity downloaded or inspected in a retired experiment",
+        "0060": "Identity downloaded or inspected in a retired experiment",
+        "0225": "Identity downloaded or inspected in a retired experiment",
+        "0411": "Identity downloaded or inspected in a retired experiment",
+        "0177": "Identity downloaded or inspected in a retired experiment",
+        "0007": "Identity downloaded or inspected in a retired experiment",
+        "0100": "Identity downloaded or inspected in a retired experiment",
+        "0278": "Identity downloaded or inspected in a retired experiment",
+        "0404": "Identity downloaded or inspected in a retired experiment",
+        "0022": "Identity downloaded or inspected in a retired experiment",
+        "0497": "Identity downloaded or inspected in a retired experiment",
+        "0152": "Identity downloaded or inspected in a retired experiment",
+        "0438": "Identity downloaded or inspected in a retired experiment",
+        "0167": "Identity downloaded or inspected in a retired experiment",
+        "0482": "Identity downloaded or inspected in a retired experiment",
+        "0474": "Identity downloaded or inspected in a retired experiment",
+        "0235": "Identity downloaded or inspected in a retired experiment",
+        "0146": "Identity downloaded or inspected in a retired experiment",
+        "0123": "Identity downloaded or inspected in a retired experiment",
+        "0441": "Identity downloaded or inspected in a retired experiment",
+        "0157": "Identity downloaded or inspected in a retired experiment",
+        "0174": "Identity downloaded or inspected in a retired experiment",
+        "0087": "Identity downloaded or inspected in a retired experiment",
+        "0115": "Identity downloaded or inspected in a retired experiment",
+        "0425": "Identity downloaded or inspected in a retired experiment",
+        "0513": "Identity downloaded or inspected in a retired experiment",
+        "0179": "Identity downloaded or inspected in a retired experiment",
+        "0217": "Identity downloaded or inspected in a retired experiment",
+        "0296": "Identity downloaded or inspected in a retired experiment",
+        "0176": "Identity downloaded or inspected in a retired experiment",
+        "0421": "Identity downloaded or inspected in a retired experiment",
+        "0046": "Identity downloaded or inspected in a retired experiment",
+        "0249": "Identity downloaded or inspected in a retired experiment",
+        "0071": "Identity downloaded or inspected in a retired experiment",
+        "0396": "Identity downloaded or inspected in a retired experiment",
+        "0311": "Identity downloaded or inspected in a retired experiment",
+        "0228": "Identity downloaded or inspected in a retired experiment",
+        "0183": "Identity downloaded or inspected in a retired experiment",
+        "0334": "Identity downloaded or inspected in a retired experiment",
+        "0131": "Identity downloaded or inspected in a retired experiment",
+        "0237": "Identity downloaded or inspected in a retired experiment",
+        "0102": "Identity downloaded or inspected in a retired experiment",
+        "0028": "Identity downloaded or inspected in a retired experiment",
+        "0329": "Identity downloaded or inspected in a retired experiment",
+        "0158": "Identity downloaded or inspected in a retired experiment",
+        "0445": "Identity downloaded or inspected in a retired experiment",
+        "0023": "Identity downloaded or inspected in a retired experiment",
+        "0026": "Identity downloaded or inspected in a retired experiment",
+        "0031": "Identity downloaded or inspected in a retired experiment",
+        "0063": "Identity downloaded or inspected in a retired experiment",
+        "0509": "Identity downloaded or inspected in a retired experiment",
+        "0052": "Before inference: fewer than seven distinct images after fixed pixel/dHash duplicate filtering",
+        "0076": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0093": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0109": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0277": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0220": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0506": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0258": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0416": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0227": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0230": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0437": "Pre-inference visual review: source folder mixes a tabby cat and a black/white cat",
+        "0323": "Pre-inference visual review: suspected mixed orange-cat identities; white bib/paws differ between selected photos",
+        "0472": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0270": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0358": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0042": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0112": "Pre-inference replacement review: multiple cats visible without a target identity bounding box"
+      },
+      "protocol_sha256": "7e532e2cbe88706a14476b071b142abb8853abec602c1d1de11b7c057c2d40d8",
+      "previous_plan_sha256": "5b22abb56c3dcb480a69e97e27190d93c09b558c24a5b6b045227a2b488b8c90"
+    },
+    "fresh-v5": {
+      "plan": [
+        [
+          "calibration",
+          "known",
+          "0305"
+        ],
+        [
+          "calibration",
+          "known",
+          "0156"
+        ],
+        [
+          "calibration",
+          "known",
+          "0322"
+        ],
+        [
+          "calibration",
+          "known",
+          "0191"
+        ],
+        [
+          "calibration",
+          "known",
+          "0147"
+        ],
+        [
+          "calibration",
+          "known",
+          "0381"
+        ],
+        [
+          "calibration",
+          "known",
+          "0444"
+        ],
+        [
+          "calibration",
+          "known",
+          "0245"
+        ],
+        [
+          "calibration",
+          "known",
+          "0377"
+        ],
+        [
+          "calibration",
+          "known",
+          "0261"
+        ],
+        [
+          "calibration",
+          "known",
+          "0450"
+        ],
+        [
+          "calibration",
+          "known",
+          "0351"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0084"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0079"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0453"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0140"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0229"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0490"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0161"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0451"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0246"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0443"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0317"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0272"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0479"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0345"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0285"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0424"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0242"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0449"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0086"
+        ],
+        [
+          "calibration",
+          "unknown_cat",
+          "0457"
+        ],
+        [
+          "holdout",
+          "known",
+          "0499"
+        ],
+        [
+          "holdout",
+          "known",
+          "0231"
+        ],
+        [
+          "holdout",
+          "known",
+          "0173"
+        ],
+        [
+          "holdout",
+          "known",
+          "0328"
+        ],
+        [
+          "holdout",
+          "known",
+          "0065"
+        ],
+        [
+          "holdout",
+          "known",
+          "0379"
+        ],
+        [
+          "holdout",
+          "known",
+          "0391"
+        ],
+        [
+          "holdout",
+          "known",
+          "0204"
+        ],
+        [
+          "holdout",
+          "known",
+          "0429"
+        ],
+        [
+          "holdout",
+          "known",
+          "0286"
+        ],
+        [
+          "holdout",
+          "known",
+          "0207"
+        ],
+        [
+          "holdout",
+          "known",
+          "0406"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0027"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0081"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0244"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0205"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0233"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0336"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0104"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0127"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0251"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0435"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0024"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0304"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0340"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0128"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0163"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0319"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0099"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0361"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0368"
+        ],
+        [
+          "holdout",
+          "unknown_cat",
+          "0132"
+        ]
+      ],
+      "exclusions": {
+        "0050": "Identity downloaded or inspected in a retired experiment",
+        "0350": "Identity downloaded or inspected in a retired experiment",
+        "0510": "Identity downloaded or inspected in a retired experiment",
+        "0301": "Identity downloaded or inspected in a retired experiment",
+        "0372": "Identity downloaded or inspected in a retired experiment",
+        "0124": "Identity downloaded or inspected in a retired experiment",
+        "0359": "Identity downloaded or inspected in a retired experiment",
+        "0394": "Identity downloaded or inspected in a retired experiment",
+        "0068": "Identity downloaded or inspected in a retired experiment",
+        "0215": "Identity downloaded or inspected in a retired experiment",
+        "0218": "Identity downloaded or inspected in a retired experiment",
+        "0078": "Identity downloaded or inspected in a retired experiment",
+        "0243": "Identity downloaded or inspected in a retired experiment",
+        "0353": "Identity downloaded or inspected in a retired experiment",
+        "0318": "Identity downloaded or inspected in a retired experiment",
+        "0181": "Identity downloaded or inspected in a retired experiment",
+        "0153": "Identity downloaded or inspected in a retired experiment",
+        "0040": "Identity downloaded or inspected in a retired experiment",
+        "0009": "Identity downloaded or inspected in a retired experiment",
+        "0426": "Identity downloaded or inspected in a retired experiment",
+        "0284": "Identity downloaded or inspected in a retired experiment",
+        "0171": "Identity downloaded or inspected in a retired experiment",
+        "0418": "Identity downloaded or inspected in a retired experiment",
+        "0515": "Identity downloaded or inspected in a retired experiment",
+        "0383": "Identity downloaded or inspected in a retired experiment",
+        "0431": "Identity downloaded or inspected in a retired experiment",
+        "0348": "Identity downloaded or inspected in a retired experiment",
+        "0069": "Identity downloaded or inspected in a retired experiment",
+        "0309": "Identity downloaded or inspected in a retired experiment",
+        "0370": "Identity downloaded or inspected in a retired experiment",
+        "0283": "Identity downloaded or inspected in a retired experiment",
+        "0247": "Identity downloaded or inspected in a retired experiment",
+        "0332": "Identity downloaded or inspected in a retired experiment",
+        "0178": "Identity downloaded or inspected in a retired experiment",
+        "0155": "Identity downloaded or inspected in a retired experiment",
+        "0033": "Identity downloaded or inspected in a retired experiment",
+        "0385": "Identity downloaded or inspected in a retired experiment",
+        "0137": "Identity downloaded or inspected in a retired experiment",
+        "0325": "Identity downloaded or inspected in a retired experiment",
+        "0464": "Identity downloaded or inspected in a retired experiment",
+        "0395": "Identity downloaded or inspected in a retired experiment",
+        "0302": "Identity downloaded or inspected in a retired experiment",
+        "0142": "Identity downloaded or inspected in a retired experiment",
+        "0214": "Identity downloaded or inspected in a retired experiment",
+        "0327": "Identity downloaded or inspected in a retired experiment",
+        "0165": "Identity downloaded or inspected in a retired experiment",
+        "0175": "Identity downloaded or inspected in a retired experiment",
+        "0502": "Identity downloaded or inspected in a retired experiment",
+        "0091": "Identity downloaded or inspected in a retired experiment",
+        "0133": "Identity downloaded or inspected in a retired experiment",
+        "0352": "Identity downloaded or inspected in a retired experiment",
+        "0494": "Identity downloaded or inspected in a retired experiment",
+        "0060": "Identity downloaded or inspected in a retired experiment",
+        "0225": "Identity downloaded or inspected in a retired experiment",
+        "0411": "Identity downloaded or inspected in a retired experiment",
+        "0177": "Identity downloaded or inspected in a retired experiment",
+        "0007": "Identity downloaded or inspected in a retired experiment",
+        "0100": "Identity downloaded or inspected in a retired experiment",
+        "0278": "Identity downloaded or inspected in a retired experiment",
+        "0404": "Identity downloaded or inspected in a retired experiment",
+        "0022": "Identity downloaded or inspected in a retired experiment",
+        "0497": "Identity downloaded or inspected in a retired experiment",
+        "0152": "Identity downloaded or inspected in a retired experiment",
+        "0438": "Identity downloaded or inspected in a retired experiment",
+        "0167": "Identity downloaded or inspected in a retired experiment",
+        "0482": "Identity downloaded or inspected in a retired experiment",
+        "0474": "Identity downloaded or inspected in a retired experiment",
+        "0235": "Identity downloaded or inspected in a retired experiment",
+        "0146": "Identity downloaded or inspected in a retired experiment",
+        "0123": "Identity downloaded or inspected in a retired experiment",
+        "0441": "Identity downloaded or inspected in a retired experiment",
+        "0157": "Identity downloaded or inspected in a retired experiment",
+        "0174": "Identity downloaded or inspected in a retired experiment",
+        "0087": "Identity downloaded or inspected in a retired experiment",
+        "0115": "Identity downloaded or inspected in a retired experiment",
+        "0425": "Identity downloaded or inspected in a retired experiment",
+        "0513": "Identity downloaded or inspected in a retired experiment",
+        "0179": "Identity downloaded or inspected in a retired experiment",
+        "0217": "Identity downloaded or inspected in a retired experiment",
+        "0296": "Identity downloaded or inspected in a retired experiment",
+        "0176": "Identity downloaded or inspected in a retired experiment",
+        "0421": "Identity downloaded or inspected in a retired experiment",
+        "0046": "Identity downloaded or inspected in a retired experiment",
+        "0249": "Identity downloaded or inspected in a retired experiment",
+        "0071": "Identity downloaded or inspected in a retired experiment",
+        "0396": "Identity downloaded or inspected in a retired experiment",
+        "0311": "Identity downloaded or inspected in a retired experiment",
+        "0228": "Identity downloaded or inspected in a retired experiment",
+        "0183": "Identity downloaded or inspected in a retired experiment",
+        "0334": "Identity downloaded or inspected in a retired experiment",
+        "0131": "Identity downloaded or inspected in a retired experiment",
+        "0237": "Identity downloaded or inspected in a retired experiment",
+        "0102": "Identity downloaded or inspected in a retired experiment",
+        "0028": "Identity downloaded or inspected in a retired experiment",
+        "0329": "Identity downloaded or inspected in a retired experiment",
+        "0158": "Identity downloaded or inspected in a retired experiment",
+        "0445": "Identity downloaded or inspected in a retired experiment",
+        "0023": "Identity downloaded or inspected in a retired experiment",
+        "0026": "Identity downloaded or inspected in a retired experiment",
+        "0031": "Identity downloaded or inspected in a retired experiment",
+        "0063": "Identity downloaded or inspected in a retired experiment",
+        "0509": "Identity downloaded or inspected in a retired experiment",
+        "0052": "Before inference: fewer than seven distinct images after fixed pixel/dHash duplicate filtering",
+        "0076": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0093": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0109": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0277": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0220": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0506": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0258": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0416": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0227": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0230": "Pre-inference visual review: multiple cats visible without a target identity bounding box",
+        "0437": "Pre-inference visual review: source folder mixes a tabby cat and a black/white cat",
+        "0323": "Pre-inference visual review: suspected mixed orange-cat identities; white bib/paws differ between selected photos",
+        "0472": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0270": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0358": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0042": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0112": "Pre-inference replacement review: multiple cats visible without a target identity bounding box",
+        "0503": "Pre-inference enlarged-image review: suspected additional cats beyond the foreground cage without target annotation"
+      },
+      "protocol_sha256": "7e532e2cbe88706a14476b071b142abb8853abec602c1d1de11b7c057c2d40d8",
+      "previous_plan_sha256": "459969ecea2f979787b54fc17401fef600fef87ba051ac90db223d21ed9d89c3"
+    }
+  },
+  "limits": [
+    "Source labels retained, not independently owner verified",
+    "Near-identical poses/backgrounds remain despite pixel/dHash filters",
+    "Blur, occlusion, unusual poses and image orientation were retained when identity assignment was unambiguous",
+    "Multiple-cat and suspected mixed-identity exclusions restrict generalization to clean single-target images",
+    "All curation used fixed seed and data/visual eligibility criteria only; no new-study model predictions were read"
+  ],
+  "assignment_note": "v3 replay moved the accepted 0305 replacement within the same calibration-known group; its images and roles did not change. v4/v5 preserve all accepted slots through --previous-plan."
+}

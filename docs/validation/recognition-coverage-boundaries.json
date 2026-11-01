@@ -1,0 +1,7 @@
+{
+  "unique_images": 328,
+  "gallery_identities": 24,
+  "calibration_queries": 116,
+  "holdout_queries": 116,
+  "query_identity_overlap": 0
+}

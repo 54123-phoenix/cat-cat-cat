@@ -55,12 +55,31 @@ def prepare(args):
         for kind, number in (('known', k), ('unknown_cat', u)):
             for _ in range(number):
                 plan.append((part, kind, eligible.pop()))
+    if args.previous_plan:
+        prior = read(args.previous_plan)
+        prior_hash = prior.get('protocol_sha256')
+        if prior_hash is None:
+            prior_hash = read(args.previous_plan.parent / 'calibration.json')['provenance']['protocol_sha256']
+        if prior_hash != hashlib.sha256(args.protocol.read_bytes()).hexdigest():
+            raise ValueError('Previous selection plan belongs to a different protocol')
+        previous_plan = prior['plan']
+        if ([(p, k) for p, k, _ in previous_plan] != [(p, k) for p, k, _ in plan]
+                or len({i for _, _, i in previous_plan}) != len(plan)
+                or any(i not in groups or i in baseline_exclusions for _, _, i in previous_plan)):
+            raise ValueError('Invalid previous partition assignments')
+        # Keep accepted replacements in their original partition and slot.
+        # Replaying all exclusions would shift an earlier accepted replacement.
+        occupied = {i for _, _, i in previous_plan}
+        eligible = [i for i in eligible if i not in occupied]
+        plan = [tuple(row) for row in previous_plan]
     # Replace only excluded positions, keeping all other assignments fixed.
     while any(identity in excluded for _, _, identity in plan):
         for index, (part, kind, identity) in enumerate(plan):
             if identity in excluded:
                 plan[index] = (part, kind, eligible.pop())
-    (root / 'selection-plan.json').write_text(json.dumps({'plan': plan, 'exclusions': excluded}, indent=2), encoding='utf-8')
+    (root / 'selection-plan.json').write_text(json.dumps({'plan': plan, 'exclusions': excluded,
+        'protocol_sha256': hashlib.sha256(args.protocol.read_bytes()).hexdigest(),
+        'previous_plan_sha256': hashlib.sha256(args.previous_plan.read_bytes()).hexdigest() if args.previous_plan else None}, indent=2), encoding='utf-8')
     with httpx.Client(proxy=args.proxy, follow_redirects=True, timeout=45) as client:
         def get_image(local, url):
             if args.cache_dir and not (root / local).exists() and (args.cache_dir / local).is_file():
@@ -181,6 +200,8 @@ if __name__ == '__main__':
     parser.add_argument('--visual-exclusions', type=Path)
     parser.add_argument('--previous-manifest', type=Path, action='append', default=[],
                         help='Additional retired experiments; exclude their identities and image hashes')
+    parser.add_argument('--previous-plan', type=Path,
+                        help='Keep previously reviewed assignments fixed when replacing newly excluded slots')
     parser.add_argument('--cache-dir', type=Path, help='Reuse previously downloaded images before manifest freeze')
     parser.add_argument('--proxy')
     prepare(parser.parse_args())
