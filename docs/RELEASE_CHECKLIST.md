@@ -1,94 +1,82 @@
 # 发布清单
 
-本清单用于校园猫项目正式发布前的逐项确认。按顺序勾选，全部通过后方可发布。
+更新于 2026-11-08。本轮仅做本地修复与隔离验收，微信真机、目标服务器与校园质量仍待验证。本清单是当前操作入口；历史 P0–P6 标记和 harness 分数不能替代以下证据。
 
----
+## 版本与迁移
 
-## 一、发布前准备
+- [ ] 记录候选提交/文件指纹、依赖锁文件、日期与执行人，明确拟开放范围。
+- [ ] 核对实际 DATABASE_URL、uploads、models、reference-store；本地开发与 Compose 数据库位置可能不同。
+- [ ] 停止业务写入与 reference-worker，按 [完整资产备份](BACKUP_RECOVERY.md)创建并校验备份。
+- [ ] 先在隔离副本运行迁移，再核对记录数、外键与唯一约束。
 
-- [ ] 确认当前分支干净，无未提交的实验性改动。
-- [ ] 确认 `harness/TODO.md` 中本轮目标已勾选。
-- [ ] 确认 `harness/roadmap.yml` 中对应任务状态为 `completed`。
-- [ ] 确认 `README.md` 升级路径已更新。
-- [ ] 确认本次变更不引入新的大型依赖（未改动 `package.json` / `requirements.txt` 的依赖行）。
+在 `cat-backend` 执行 `python -m alembic upgrade head`，使用 Python 3.11 项目环境。当前 head 为 `k20261108`：新增偶遇提交请求标识、摘要与用户级唯一索引；不回填、合并或删除旧记录。启动只检查结构，不使用 `Base.metadata.create_all` 代替迁移。未核对的业务数据库不直接升级。
 
-## 二、Harness 监督命令
+## 自动检查
 
-必跑，不可跳过：
-
-```powershell
-cd D:\Desktop\cat
-powershell -NoProfile -ExecutionPolicy Bypass -File harness\run.ps1 -Mode quick -ContinueOnFailure
-powershell -NoProfile -ExecutionPolicy Bypass -File harness\run.ps1 -Mode full -ContinueOnFailure
-```
-
-- [ ] quick harness 通过。
-- [ ] full harness `score: 100` 且 `pass`。
-- [ ] `harness/reports/latest.md` 无新增失败项。
-
-## 三、后端 / API 检查
+在仓库根目录、已激活后端测试环境的终端中运行；测试不连接业务 Redis、参考库或外部 Agent。
 
 ```powershell
-cd D:\Desktop\cat\cat-backend
-.\.venv\Scripts\python.exe -m pytest tests -q
+$env:DATABASE_URL = 'sqlite://'
+$env:JWT_SECRET = 'local-validation-only-secret'
+$env:ADMIN_PASSWORD = 'local-validation-only-admin'
+$env:DEMO_PASSWORD = 'local-validation-only-demo'
+$env:INIT_DEMO_USER = '0'
+$env:UPLOAD_DIR = Join-Path $env:TEMP ('cat-local-validation-' + [guid]::NewGuid().ToString('N'))
+$env:REDIS_URL = ''
+$env:REFERENCE_STORE = ''
+$env:REFERENCE_DIR = ''
+$env:AGENT_ENABLED = '0'
+$env:AGENT_API_KEY = ''
+$env:WECHAT_APPID = ''
+$env:WECHAT_SECRET = ''
+$env:WECHAT_DEV_MODE = '0'
+python scripts/check_assets.py cat-frontend/public cat-miniprogram/src/assets showcase
+powershell -NoProfile -File harness/run.ps1 -Mode quick -ContinueOnFailure
+powershell -NoProfile -File harness/run.ps1 -Mode full -ContinueOnFailure
+python scripts/verify_browser.py
+python scripts/verify_reference_browser.py
 ```
 
-- [ ] 全部测试通过（当前基线 81 passed）。
-- [ ] 无新增 deprecation warning 影响运行。
-- [ ] 识别接口 `/api/recognize` 在无模型时返回 `unavailable`，不抛 500。
-- [ ] 管理端 `/api/admin/dashboard` 需 `require_admin`，未登录返回 401。
-- [ ] 路线推荐 `/api/routes/recommendations` 无数据时返回空 `stops`，不报错。
+- [ ] 后端、Web、小程序测试与类型检查通过，Web lint 和两端构建通过。
+- [ ] quick/full harness 无失败，并检查实际输出，不能只看总分。
+- [ ] 真实浏览器无未处理异常，手机/桌面宽度无横向溢出，提交结果可读。
+- [ ] 新目录依赖安装与 Git LFS 图片解码有效；记录已有警告及影响。
 
-## 四、前端 / 构建检查
+Web：在 `cat-frontend` 运行 `npm run typecheck`、`npm test`、`npm run lint`、`npm run build`。小程序：在 `cat-miniprogram` 运行 `npm run typecheck`、`npm test`、`npm run build:weapp`。首次浏览器验收需安装 `cat-backend/requirements-browser.txt` 和 Playwright Chromium。
 
-```powershell
-cd D:\Desktop\cat\cat-frontend
-npm test -- --run
-npm run build
-```
+## 核心流程
 
-- [ ] `npm test` 全部通过（当前基线 25 passed / 4 files）。
-- [ ] `npm run build` 成功，无类型错误。
-- [ ] 构建产物体积无异常膨胀（`dist/assets/index-*.js` gzip < 160 kB）。
-- [ ] 移动端窄屏（≤ 480px）下主要页面无横向溢出。
-- [ ] 首页「今日校园寻猫入口」在有数据和空数据时都能给出拍照识猫入口。
-- [ ] 识猫 confirmed 状态显示「已记入偶遇」与「生成偶遇纪念卡」入口。
-- [ ] `/routes` 路线页可生成分享卡，并可跳转地图和识猫入口。
+- [ ] 登录、选择照片、识别，结果出现时尚未创建偶遇。
+- [ ] confirmed/uncertain 均由用户核对后明确提交；相似度不描述为正确概率。
+- [ ] 提交中禁止重复点击，失败保留照片/地点/备注，相同内容重试只生成一条记录和一次奖励。
+- [ ] 模拟服务端写入成功而响应丢失，再重试仍只有一条记录和一张附件。
+- [ ] 成功显示待审核，不能再次提交同次偶遇，未审核记录没有公开链接。
+- [ ] 审核前匿名详情、列表、地图不可见；通过后可见，撤回后消失。
+- [ ] unknown/unavailable、上传失败有可执行下一步，缺模型不伪装成识别成功。
+- [ ] 小程序提交包含照片、实际定位/地图选点及地点说明；取消定位可重选，不生成猜测坐标。
+- [ ] 地图明确空态、全部/部分失败和重试，没有未标注的样例猫点位。
+- [ ] Web 断线恢复保留输入，鉴权失效与暂时网络故障区别处理。
 
-## 五、数据与上传安全
+## 校园数据与模型
 
-- [ ] 上传接口限制文件类型为图片，限制大小。
-- [ ] 上传路径不可越权写出到项目目录外。
-- [ ] SQLite 数据库文件不在 git 跟踪中。
-- [ ] `.env` / 密钥文件不在 git 跟踪中。
-- [ ] 模型健康接口不泄露密钥、token 或私有凭据。
-- [ ] `/api/system/health` 能检查模型权重、embedding、阈值和可选 warm model load。
+- [ ] 猫协/资料提供者核对身份、拍摄场次、来源与使用依据，保留审核记录。
+- [ ] 资料检查通过后冻结协议、实际图库映射、最少样本数、阈值与目标，使用 [校园评测入口](CAMPUS_DATA_PREPARATION.md)。
+- [ ] 参考、校准、留出按场次隔离，近重复经审核，完整实际图库绑定到评测。
+- [ ] 留出按冻结条件验收，已用留出不再用于调参后的独立验收。
+- [ ] 公开小样本、参考照自匹配、合成推理与校园效果分开报告。
+- [ ] 代码、图片、档案、模型使用范围明确；历史备份截断 ISS-043 保持跟踪。
 
-## 六、管理端工作流检查
+## 真机与部署（资料齐备后执行）
 
-- [ ] 管理员登录后默认进入「总览」tab。
-- [ ] 总览展示待审线索 / 举报 / 偶遇、近 7 天热区、活跃贡献者、审计动态。
-- [ ] 猫档案创建 / 更新 / 删除写入 AuditLog。
-- [ ] 线索审核通过 / 拒绝写入 AuditLog。
-- [ ] 举报处理（驳回 / 隐藏）状态流转正确。
+- [ ] 记录微信 AppID、域名、基础库、设备版本；关闭 demoMode 后验证登录、拍照、上传、定位、保存、列表与重试。
+- [ ] 核对目标服务器 TLS、域名、代理、持久卷和日志；Redis 仅供内部网络，默认不发布宿主 6379。
+- [ ] 四类资产恢复到全新隔离目录，核对结构、记录数、附件 HTTP/哈希、模型与参考库兼容及真实推理。
+- [ ] 预先记录试点人数、并发、图片量、API/识别 p95 与错误率目标，再执行容量验收。
+- [ ] 保留完整备份与原配置，记录恢复负责人、耗时和回退步骤。
+- [ ] 实际开放的地图/外部 LLM 分别有环境证据，回退成功不替代外部服务验收。
 
-## 七、回滚备注
+## 最终签收
 
-- 本项目使用 SQLite 单文件数据库，回滚前先备份 `cat-backend/*.db`。
-- 前端为纯静态产物，回滚只需替换 `dist/` 目录或重新 `npm run build`。
-- 后端无自动迁移脚本，schema 变更需手动 `Base.metadata.create_all` 或手写迁移。
-- 若发布后识别接口异常，先检查 `/api/system/health`；模型不可用时识别接口应降级到 `unavailable` 或 `unknown`，不影响主闭环。
-- 回滚不使用 `git reset --hard`；优先 `git revert` 保留历史。
-
-## 八、最终签收
-
-- [ ] quick harness pass
-- [ ] full harness score 100 pass
-- [ ] 后端测试全通过
-- [ ] 前端测试 + build 通过
-- [ ] 管理端总览与审核流人工冒烟通过
-- [ ] `/routes` 路线推荐页人工冒烟通过
-- [ ] 首页 -> 识猫 -> 偶遇纪念卡 -> 路线/地图 -> 公开分享的演示链路人工冒烟通过
-- [ ] 发布说明已写入 `README.md` 升级路径段
-
-全部勾选后，可标记本轮发布完成。
+- [ ] README、台账、roadmap、TODO 与本轮验收记录一致。
+- [ ] 分列本地通过、环境待验与产品限制，不用测试数量计算完成率。
+- [ ] 维护者在环境和数据证据齐备后决定发布。

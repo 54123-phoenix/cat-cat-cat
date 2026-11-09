@@ -94,8 +94,8 @@ function CatIcon({ className }) {
       <polygon points="16,6 17.5,1 13.5,5" fill="currentColor" />
       <circle cx="10" cy="8" r="1" fill="white" />
       <circle cx="14" cy="8" r="1" fill="white" />
-      <circle cx="10" cy="8" r="0.5" fill="#1C1917" />
-      <circle cx="14" cy="8" r="0.5" fill="#1C1917" />
+      <circle cx="10" cy="8" r="0.5" fill="#18253D" />
+      <circle cx="14" cy="8" r="0.5" fill="#18253D" />
     </svg>
   )
 }
@@ -107,20 +107,20 @@ function CatStretch({ progress }) {
   return (
     <svg width="28" height="24" viewBox="0 0 28 24" fill="none">
       {/* Body */}
-      <ellipse cx="14" cy={18 + backY} rx="6" ry="4" fill="#F97316" opacity="0.8" />
+      <ellipse cx="14" cy={18 + backY} rx="6" ry="4" fill="var(--color-primary, #0E419C)" opacity="0.8" />
       {/* Head */}
-      <circle cx="14" cy={11 + headY} r="4.5" fill="#F97316" />
+      <circle cx="14" cy={11 + headY} r="4.5" fill="var(--color-primary, #0E419C)" />
       {/* Ears */}
-      <polygon points="11,8 10,4 13,7" fill="#F97316" />
-      <polygon points="17,8 18,4 15,7" fill="#F97316" />
+      <polygon points="11,8 10,4 13,7" fill="var(--color-primary, #0E419C)" />
+      <polygon points="17,8 18,4 15,7" fill="var(--color-primary, #0E419C)" />
       {/* Front paws stretching */}
-      <ellipse cx="8" cy={22 - progress * 3} rx="2.5" ry="1.5" fill="#F97316" opacity="0.7" />
-      <ellipse cx="20" cy={22 - progress * 3} rx="2.5" ry="1.5" fill="#F97316" opacity="0.7" />
+      <ellipse cx="8" cy={22 - progress * 3} rx="2.5" ry="1.5" fill="var(--color-primary, #0E419C)" opacity="0.7" />
+      <ellipse cx="20" cy={22 - progress * 3} rx="2.5" ry="1.5" fill="var(--color-primary, #0E419C)" opacity="0.7" />
       {/* Eyes */}
       {progress > 0.5 && (
         <>
-          <circle cx="12" cy={10 + headY} r="0.8" fill="#1C1917" />
-          <circle cx="16" cy={10 + headY} r="0.8" fill="#1C1917" />
+          <circle cx="12" cy={10 + headY} r="0.8" fill="#18253D" />
+          <circle cx="16" cy={10 + headY} r="0.8" fill="#18253D" />
         </>
       )}
     </svg>

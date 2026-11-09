@@ -1,6 +1,7 @@
 import { cloneElement, isValidElement, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactElement } from 'react'
 import QRCode from 'qrcode'
 import Logo from './illustrations/Logo'
+import MascotCat from './MascotCat'
 import ShareSheet from './ShareSheet'
 
 export interface ShareArtifactProps {
@@ -11,6 +12,7 @@ export interface ShareArtifactProps {
   proof?: string
   badge?: string
   sharePath: string
+  linkLabel?: string
   accent?: string
   slogan?: string
   children: React.ReactNode
@@ -24,6 +26,7 @@ export default function ShareArtifact({
   proof,
   badge,
   sharePath,
+  linkLabel = '扫码打开同款记录',
   accent = 'from-primary/10 via-surface-0 to-primary/5',
   slogan = '来复旦找猫',
   children,
@@ -82,13 +85,13 @@ export default function ShareArtifact({
 
       <div
         ref={posterRef}
-        className={`fixed -left-[9999px] top-0 flex h-[640px] w-[360px] flex-col overflow-hidden bg-gradient-to-br ${accent} text-text`}
+        className={`fixed -left-[9999px] top-0 flex h-[640px] w-[360px] flex-col overflow-hidden bg-surface-0 bg-gradient-to-br ${accent} text-text`}
         aria-hidden="true"
       >
         <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-primary/10" />
-        <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-amber-200/25" />
+        <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-primary/10" />
         <div className="absolute left-6 top-24 h-2 w-2 rounded-full bg-primary/30" />
-        <div className="absolute right-9 top-40 h-3 w-3 rounded-full bg-amber-300/60" />
+        <div className="absolute right-9 top-40 h-3 w-3 rounded-full bg-primary/30" />
 
         <div className="relative flex items-center justify-between px-6 pt-6">
           <div className="flex items-center gap-2">
@@ -98,16 +101,16 @@ export default function ShareArtifact({
               <div className="text-[10px] font-medium text-text-secondary">Fudan Cat Journal</div>
             </div>
           </div>
-          <div className="rounded-full border border-primary/15 bg-white/70 px-3 py-1 text-[11px] font-semibold text-primary">
+          <div className="rounded-full border border-primary/15 bg-card px-3 py-1 text-[11px] font-semibold text-primary">
             {slogan}
           </div>
         </div>
 
         <div className="relative flex flex-1 flex-col px-6 pb-6 pt-5">
-          <div className="relative overflow-hidden rounded-[28px] bg-white shadow-e4 ring-1 ring-stone-900/5">
+          <div className="relative overflow-hidden rounded-[28px] bg-card shadow-e4 ring-1 ring-border">
             <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary-light to-transparent" />
             <div className="relative px-5 pt-5 text-center">
-              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-3xl text-white shadow-primary-glow">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-3xl text-on-primary shadow-primary-glow">
                 {badge || emoji}
               </div>
 
@@ -121,9 +124,11 @@ export default function ShareArtifact({
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-primary-light to-amber-100 text-primary">
-                    <div className="text-6xl">{emoji}</div>
-                    <div className="mt-2 rounded-full bg-white/70 px-3 py-1 text-xs font-bold">{initials}</div>
+                  <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-primary-light to-surface-0 text-primary">
+                    {!image && emoji === '🐱' ? <MascotCat size={148} /> : <>
+                      <div className="text-6xl">{emoji}</div>
+                      <div className="mt-2 rounded-full bg-card px-3 py-1 text-xs font-bold">{initials}</div>
+                    </>}
                   </div>
                 )}
               </div>
@@ -137,7 +142,7 @@ export default function ShareArtifact({
                 </p>
               )}
               {proof && (
-                <div className="mx-auto mt-4 max-w-[260px] rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-900">
+                <div className="mx-auto mt-4 max-w-[260px] rounded-2xl border border-primary/20 bg-primary-light px-4 py-3 text-sm font-semibold leading-6 text-primary">
                   {proof}
                 </div>
               )}
@@ -146,7 +151,7 @@ export default function ShareArtifact({
             <div className="mt-5 border-t border-dashed border-border px-5 py-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 text-left">
-                  <div className="text-[11px] font-semibold text-text-muted">扫码打开同款记录</div>
+                  <div className="text-[11px] font-semibold text-text-muted">{linkLabel}</div>
                   <div className="mt-1 truncate text-xs font-bold text-text-secondary">{sharePath}</div>
                 </div>
                 <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-2xl bg-white ring-1 ring-border">

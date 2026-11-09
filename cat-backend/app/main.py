@@ -12,9 +12,10 @@ logging.basicConfig(
 
 from contextlib import asynccontextmanager
 from pathlib import Path
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
+from starlette.concurrency import run_in_threadpool
 import os
 
 from app.config import settings
@@ -51,6 +52,7 @@ from app.middleware.request_logging import RequestLoggingMiddleware
 from app.middleware.security_headers import SecurityHeadersMiddleware
 from app import events
 from app.cache import init_cache
+from app.services.upload_thumbnail import ALLOWED_WIDTHS, ThumbnailError, create_thumbnail
 
 logger = logging.getLogger("cat_community")
 
@@ -146,7 +148,8 @@ os.makedirs(os.path.join(UPLOAD_DIR, "discoveries"), exist_ok=True)
 
 
 @app.get("/uploads/{filepath:path}")
-async def serve_upload(filepath: str):
+async def serve_upload(filepath: str, request: Request,
+                       w: str | None = Query(None, description="Optional preview width: 160, 320, 640, 960 or 1280")):
     upload_root = Path(UPLOAD_DIR).resolve()
     requested_path = Path(filepath)
     # Accept relative resource paths only, including on Windows (drive/UNC paths).
@@ -161,7 +164,20 @@ async def serve_upload(filepath: str):
         raise HTTPException(status_code=403, detail="Access denied")
     if not full_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(full_path)
+    if w is None:
+        return FileResponse(full_path)
+    if len(request.query_params.getlist("w")) != 1 or w not in {str(value) for value in ALLOWED_WIDTHS}:
+        raise HTTPException(status_code=422, detail="Preview width must be one of 160, 320, 640, 960, 1280")
+    try:
+        preview = await run_in_threadpool(create_thumbnail, full_path, upload_root, int(w))
+    except ThumbnailError as error:
+        headers = {"Retry-After": "1"} if error.status_code == 503 else None
+        raise HTTPException(status_code=error.status_code, detail=str(error), headers=headers) from error
+    headers = {"Cache-Control": "public, no-cache", "ETag": preview.etag}
+    validators = {value.strip().removeprefix("W/") for value in request.headers.get("if-none-match", "").split(",")}
+    if preview.etag in validators or "*" in validators:
+        return Response(status_code=304, headers=headers)
+    return Response(preview.body, media_type=preview.media_type, headers=headers)
 
 
 app.include_router(auth.router)

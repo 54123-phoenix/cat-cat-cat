@@ -50,11 +50,26 @@ class CatUpdate(CatBase):
     name: Optional[str] = None
 
 
+class HealthRecordResponse(BaseModel):
+    id: int
+    cat_id: int
+    record_type: str
+    title: str
+    description: Optional[str]
+    record_date: datetime
+    location: Optional[str]
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class CatResponse(CatBase):
     id: int
     created_at: datetime
     images: List[CatImageResponse] = []
-    health_records: List = []
+    health_records: List[HealthRecordResponse] = []
     personality_radar: Optional[List[int]] = None
     aliases_list: List[str] = []
     relationships_list: List[dict] = []
@@ -134,8 +149,9 @@ class SightingBase(BaseModel):
 
 
 class SightingCreate(SightingBase):
-    latitude: Optional[confloat(ge=-90, le=90)] = None
-    longitude: Optional[confloat(ge=-180, le=180)] = None
+    latitude: Optional[confloat(ge=-90, le=90, allow_inf_nan=False)] = None
+    longitude: Optional[confloat(ge=-180, le=180, allow_inf_nan=False)] = None
+    confidence: Optional[confloat(ge=-1, le=1, allow_inf_nan=False)] = None
     note: Optional[constr(max_length=500)] = None
 
 
@@ -469,21 +485,6 @@ class HealthRecordCreate(BaseModel):
     record_date: datetime
     location: Optional[constr(max_length=100)] = None
     status: str = "completed"
-
-
-class HealthRecordResponse(BaseModel):
-    id: int
-    cat_id: int
-    record_type: str
-    title: str
-    description: Optional[str]
-    record_date: datetime
-    location: Optional[str]
-    status: str
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class FeedingPointCreate(BaseModel):

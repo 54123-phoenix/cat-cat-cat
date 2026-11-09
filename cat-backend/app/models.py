@@ -147,10 +147,13 @@ class CatImage(Base):
 
 class Sighting(Base):
     __tablename__ = "sightings"
+    __table_args__ = (Index('uq_sightings_user_request', 'user_id', 'client_request_id', unique=True),)
 
     id = Column(Integer, primary_key=True, index=True)
     cat_id = Column(Integer, ForeignKey("cats.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    client_request_id = Column(String(36), nullable=True)
+    request_sha256 = Column(String(64), nullable=True)
     image_path = Column(String(200))
     location = Column(String(100))
     location_name = Column(String(100))
@@ -236,6 +239,7 @@ class Post(Base):
     )
 
     author = relationship("User", back_populates="posts")
+    related_cat = relationship("Cat", foreign_keys=[related_cat_id])
     images = relationship(
         "PostImage", back_populates="post", order_by="PostImage.sort_order"
     )

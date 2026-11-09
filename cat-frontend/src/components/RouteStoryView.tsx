@@ -118,7 +118,7 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
 
               <div className="relative flex items-start gap-3">
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                  checked ? 'bg-primary text-white' : 'bg-surface-3 text-text-secondary'
+                  checked ? 'bg-primary text-on-primary' : 'bg-surface-3 text-text-secondary'
                 }`}>
                   {checked ? <CheckCircle2 className="h-5 w-5" /> : idx + 1}
                 </div>
@@ -164,7 +164,7 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
                     {stop.confidence > 0 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-1">
                         <BadgeCheck className="h-3.5 w-3.5" />
-                        {Math.round(stop.confidence * 100)}%
+                        匹配相似度 {Math.round(stop.confidence * 100)}%（非正确概率）
                       </span>
                     )}
                   </div>
@@ -172,7 +172,7 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <button
                       onClick={() => onScanAtStop?.(stop)}
-                      className="rounded-full bg-primary px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-hover active:scale-[0.98]"
+                      className="rounded-full bg-primary px-3 py-2 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover active:scale-[0.98]"
                     >
                       到这里识猫
                     </button>
@@ -196,11 +196,11 @@ export default function RouteStoryView({ timeSlot = 'anytime', onCheckIn, onView
       </div>
 
       {allChecked && hasStamp && (
-        <div className="border-t border-primary/20 bg-gradient-to-br from-stone-950 via-stone-900 to-orange-950 px-5 py-5 text-white animate-fade-in">
+        <div className="border-t border-primary/20 bg-gradient-to-br from-slate-950 via-slate-900 to-[#0B337B] px-5 py-5 text-white animate-fade-in">
           <div className="flex items-center gap-4">
             <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-4 border-amber-200 bg-primary shadow-primary-glow">
               <div className="absolute inset-2 rounded-full border border-white/50" />
-              <Trophy className="h-9 w-9 text-white" />
+              <Trophy className="h-9 w-9 text-on-primary" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold text-amber-100">

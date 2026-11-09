@@ -17,7 +17,7 @@ function themeFor(series: string) {
     case 'special':
       return { ink: '#D97706', soft: '#FEF3C7', deep: '#B45309' }
     default:
-      return { ink: '#F97316', soft: '#FFF7ED', deep: '#EA580C' }
+      return { ink: '#0E419C', soft: '#EFF4FC', deep: '#0B337B' }
   }
 }
 

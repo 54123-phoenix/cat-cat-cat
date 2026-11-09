@@ -19,6 +19,11 @@ export default function ShareSheet({ posterRef, onClose, shareUrl }: ShareSheetP
         scale: 2,
         useCORS: true,
         backgroundColor: null,
+        onclone: (_document, poster) => {
+          // Render the isolated clone inside the canvas without moving the live poster.
+          poster.style.left = '0'
+          poster.style.top = '0'
+        },
       })
       const link = document.createElement('a')
       link.download = `猫猫社区_${Date.now()}.png`
@@ -26,7 +31,11 @@ export default function ShareSheet({ posterRef, onClose, shareUrl }: ShareSheetP
       link.click()
     } catch {
       try {
-        const dataUrl = await toPng(posterRef.current, { pixelRatio: 2 })
+        const dataUrl = await toPng(posterRef.current, {
+          pixelRatio: 2,
+          // The clone includes logical insets too; reset both so it stays inside the SVG.
+          style: { position: 'relative', inset: 'auto', insetBlock: 'auto', insetInline: 'auto', margin: '0' },
+        })
         const link = document.createElement('a')
         link.download = `猫猫社区_${Date.now()}.png`
         link.href = dataUrl

@@ -74,32 +74,36 @@ def test_upload_missing_file_or_directory_is_not_served(client, upload_tree, pat
         "cats/%2e%2e%2f%2e%2e%2fuploads_neighbor%2fmarker.txt",
     ],
 )
-def test_upload_rejects_parent_and_prefix_sibling_traversal(client, upload_tree, path):
+@pytest.mark.parametrize("suffix", ["", "?w=320"])
+def test_upload_rejects_parent_and_prefix_sibling_traversal(client, upload_tree, path, suffix):
     # Encode traversal so the HTTP client does not normalize it before dispatch.
-    response = client.get(f"/uploads/{path}")
+    response = client.get(f"/uploads/{path}{suffix}")
     assert response.status_code == 403
     assert response.json() == {"detail": "Access denied"}
 
 
-def test_upload_rejects_absolute_path(client, upload_tree):
+@pytest.mark.parametrize("suffix", ["", "?w=320"])
+def test_upload_rejects_absolute_path(client, upload_tree, suffix):
     _, neighbor = upload_tree
     path = quote(str(neighbor / "marker.txt"), safe="")
-    response = client.get(f"/uploads/{path}")
+    response = client.get(f"/uploads/{path}{suffix}")
     assert response.status_code == 403
     assert response.json() == {"detail": "Access denied"}
 
 
-def test_upload_does_not_allow_windows_separator_escape(client, upload_tree):
-    response = client.get("/uploads/%2e%2e%5cuploads_neighbor%5cmarker.txt")
+@pytest.mark.parametrize("suffix", ["", "?w=320"])
+def test_upload_does_not_allow_windows_separator_escape(client, upload_tree, suffix):
+    response = client.get("/uploads/%2e%2e%5cuploads_neighbor%5cmarker.txt" + suffix)
     # Backslash is an ordinary filename character on POSIX, so 404 is also safe.
     assert response.status_code == (403 if os.name == "nt" else 404)
     assert b"outside upload directory" not in response.content
 
 
-def test_upload_rejects_link_resolving_outside_root(client, upload_tree):
+@pytest.mark.parametrize("suffix", ["", "?w=320"])
+def test_upload_rejects_link_resolving_outside_root(client, upload_tree, suffix):
     root, neighbor = upload_tree
     _directory_link(root / "external", neighbor)
-    response = client.get("/uploads/external/marker.txt")
+    response = client.get("/uploads/external/marker.txt" + suffix)
     assert response.status_code == 403
     assert response.json() == {"detail": "Access denied"}
 
@@ -112,6 +116,7 @@ def test_upload_allows_link_resolving_inside_root(client, upload_tree):
     assert response.content == b"public upload"
 
 
-def test_upload_rejects_invalid_path_without_server_error(client, upload_tree):
-    response = client.get("/uploads/cats/%00sample.txt")
+@pytest.mark.parametrize("suffix", ["", "?w=320"])
+def test_upload_rejects_invalid_path_without_server_error(client, upload_tree, suffix):
+    response = client.get("/uploads/cats/%00sample.txt" + suffix)
     assert response.status_code in (403, 404)

@@ -3,7 +3,7 @@ export default function Wordmark({ size = 20, className = '' }) {
     <span
       className={className}
       style={{
-        fontFamily: 'Inter, system-ui, sans-serif',
+        fontFamily: 'var(--font-sans)',
         fontWeight: 700,
         fontSize: `${size}px`,
         color: 'currentColor',

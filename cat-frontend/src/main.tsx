@@ -5,7 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { getStoredTheme, applyTheme } from './components/ThemeSwitcher'
 import './index.css'
 
-applyTheme(getStoredTheme())
+applyTheme(getStoredTheme(), { persist: false })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

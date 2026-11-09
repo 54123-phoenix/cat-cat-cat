@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Kuala_Lumpur",
+  "status": "generated_and_visually_reviewed",
+  "selected_file": "mascot-hybrid-v1.png",
+  "size": [
+    1024,
+    1024
+  ],
+  "sha256": "9475933ffa277b8b2cf765aa7b3102e7333802f36559b134485392a8b1e90dcc",
+  "raw_selected_file": "hybrid-1024-s26-seed1109-volume-refined.png",
+  "raw_sha256": "8c910c78f8edae3a1cb30c13c125e7d645ae59bc826ebd0194fbf58c3ce41e76",
+  "comparison": "before-after.png",
+  "model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "model_page": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
+  "model_revision": "462165984030d82259a11f4367a4eed129e94a7b",
+  "mode": "local CUDA image-to-image, not the OpenAI CLI or a hosted image API",
+  "design": "A character identity with B-inspired editorial texture and stronger dimensional shading",
+  "references": {
+    "A": "Image input",
+    "B": "Visual style reference translated into text prompts; not a direct model input"
+  },
+  "stages": [
+    {
+      "name": "Remove chest ornament",
+      "method": "Masked local SDXL inpainting",
+      "file": "reference-a-cleaned.png"
+    },
+    {
+      "name": "Select dimensional draft",
+      "file": "hybrid-768-s82-seed1109-volume.png",
+      "record": "run-768-seed1109-volume-s72-82.json"
+    },
+    {
+      "name": "Refine at 1024 pixels",
+      "file": "hybrid-1024-s26-seed1109-volume-refined.png",
+      "record": "run-1024-seed1109-volume-s26-34-refined.json"
+    },
+    {
+      "name": "Blue palette refinement",
+      "method": "Hue moves toward 218.8 degrees only in saturated blue regions; saturation +0–6%; HSV value preserved"
+    }
+  ],
+  "review": {
+    "retained": [
+      "Blue and white asymmetrical face",
+      "Large blue eyes and pointed ears",
+      "Seated character with tail on viewer left"
+    ],
+    "changed": [
+      "Removed extra chest ornament",
+      "Softer painted fur and shadows",
+      "More rounded cheeks and paws",
+      "Fuller, furrier tail with white accent"
+    ],
+    "rejected": [
+      "First low-strength drafts remained too flat",
+      "Direct 1024 drafts changed the expression and shading too much"
+    ],
+    "remaining_scope": "Concept review; not yet integrated into Web assets"
+  },
+  "local_runtime": "D:\\Desktop\\fdmm\\cat-cat-cat-review\\imagegen-local\\.venv",
+  "local_model_directory": "D:\\.cache\\imagegen-models\\sdxl-base-1.0",
+  "versions": {
+    "torch": "2.7.1+cu128",
+    "diffusers": "0.36.0",
+    "transformers": "4.57.1",
+    "accelerate": "1.11.0"
+  }
+}

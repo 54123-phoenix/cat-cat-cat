@@ -81,10 +81,11 @@ export default function Gallery() {
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
             {COLOR_CHIPS.map((c) => (
               <button
+                type="button"
                 key={c}
                 onClick={() => setColorFilter(c)}
                 aria-pressed={colorFilter === c}
-                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${colorFilter === c ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-border'}`}
+                className={`min-h-11 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${colorFilter === c ? 'bg-primary text-on-primary' : 'bg-surface-1 text-text-secondary border border-border'}`}
               >
                 {c}
               </button>
@@ -93,10 +94,11 @@ export default function Gallery() {
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
             {locChips.map((l) => (
               <button
+                type="button"
                 key={l}
                 onClick={() => setLocFilter(l)}
                 aria-pressed={locFilter === l}
-                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${locFilter === l ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-border'}`}
+                className={`min-h-11 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${locFilter === l ? 'bg-primary text-on-primary' : 'bg-surface-1 text-text-secondary border border-border'}`}
               >
                 {l}
               </button>

@@ -1,6 +1,18 @@
 # 下一阶段优化路径
 
-设计日期：2026-10-30，进度更新：2026-11-01。依据：[已知问题台账](KNOWN_ISSUES.md)、[最近修复证据](validation/REPAIR_PROGRESS.md)和当前源码。用户已批准按顺序执行。执行状态见 [A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)，以下阶段出口仍作为验收标准。
+设计日期：2026-10-30，进度更新：2026-11-08。当前以[已知问题台账](KNOWN_ISSUES.md)、[本地收口记录](validation/LOCAL_REPAIR_20261108.md)和[发布清单](RELEASE_CHECKLIST.md)为准。用户明确本轮只做本地修复和隔离验收，微信真机、目标服务器及真实校园资料后续提供；不将环境待提供误记为功能失败，也不将本地完成上调为发布通过。
+
+## 当前下一步（2026-11-08）
+
+1. **保留已有本地闭环。** 两端明确提交、UUID/内容幂等、小程序真实地图状态、相似度说明、完整资产包、校园冻结门禁已实现；迁移 `k20261108` 只在临时库验证，未操作业务库。当前台账 45 项：32 本地通过、9 待专项、3 部分完成、1 未解决。
+2. **等待可靠资料后做校园验证。** [准备文档](CAMPUS_DATA_PREPARATION.md)提供 check/freeze/eval 命令与协议模板；身份、场次、完整实际图库、使用依据、样本数量和目标需真实核对。先校准、再冻结新留出，经验门槛不等于总体可靠性；本轮不采集新图、不重训、不切默认。
+3. **等待平台环境后做端到端验收。** 正式微信上验证拍照、明确提交、弱网/响应丢失重试、记录/XP唯一性，以及地图空态/失败恢复。目标服务器上验证部署、实际挂载、停写完整备份、新目录恢复和容量；已有工具不能替代真实演练。
+4. **按测量处理剩余工程债。** 先确定目标规模和延迟预算，针对图库全量读取、排行榜聚合、通知写入测查询数/时延，再决定优化；保持 SQLite，若迁 PostgreSQL 必须同时适配参考发布路径。模块/类型与告警治理继续局部推进，暂停新增课表、多 Agent 和新玩法。
+5. **保持证据与状态一致。** ISS-043 历史备份缺口、VER-007 来源许可继续开放；本轮 full harness 六项通过、后端全量 396 项通过，最后备份路径保护另经 27 项定向测试验证。设备/服务器未提供前只记录本地结果，不宣布相关专项通过。
+
+## 既往实施进度与原始计划（历史）
+
+以下 2026-10-30 至 11-01 的数字、受阻状态和“下一包”描述保留为当时记录；当前执行顺序以上方清单为准。历史执行证据见 [A](validation/OPTIMIZATION_A.md)、[B1](validation/OPTIMIZATION_B1.md)、[B2/B3](validation/OPTIMIZATION_B23.md)、[B4](validation/OPTIMIZATION_B4.md)、[C](validation/OPTIMIZATION_C.md)，原阶段出口继续作为分范围验收标准。
 
 2026-11-01 补充：测试密码隔离、浏览器等待及 WAL 启动锁竞争（ISS-038）修复后，远端六个 CI 任务全部通过，见 [SQLite 启动](validation/SQLITE_STARTUP_20261101.md)。Linux CI 与用户重新登录、更新后的本机 Desktop 4.97.0 均通过七组 API 阶段容器验收；临时项目及卷已清理，实际业务卷保留。浏览器重连包现已通过本机十组验收，新增并修复 ISS-039；Web 全量 78 项通过，详见 [重连记录](validation/RECONNECT_20261101.md)。完整 CPU inference 与模型/store 新卷恢复十二组、真实 Torch 四类坏权重检查已通过本地验收，关闭 ISS-014 并新增修复 ISS-040，见 [推理记录](validation/INFERENCE_20261101.md)。下一包先准备独立已知猫/未知猫/无猫评测集并复验评测脚本，随后按准备条件推进实际业务挂载、完整备份工具与容量。[Docker 已验收范围](validation/DOCKER_ACCEPTANCE_20261101.md)不等于整个 C 阶段完成。以下较早进度段落保留为历史。
 

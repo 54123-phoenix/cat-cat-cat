@@ -1,6 +1,8 @@
 # 校园照片整理与验收准备
 
-2026-11-01：已从项目历史指向的 Hugging Face 备份找回部分照片，详见[盘点证据](validation/CAMPUS_ASSETS_20261101.md)。用户现有照片缺少详细说明，因此先保留原图与可追溯信息，再逐批核对身份和场次。当前不能开始校园质量验收，也没有把公开数据候选设为业务默认。
+2026-11-08：资料检查已通过 `freeze` 接入校园评测强制前置条件；本轮只验证工具与临时夹具，没有执行真实校园评测，也没有切换业务默认。真实资料、真机和目标服务器由用户后续提供，见[本地收口记录](validation/LOCAL_REPAIR_20261108.md)。
+
+2026-11-01 历史材料：已从项目历史指向的 Hugging Face 备份找回部分照片，详见[盘点证据](validation/CAMPUS_ASSETS_20261101.md)。用户现有照片缺少详细说明，因此先保留原图与可追溯信息，再逐批核对身份和场次；这批资料仍未达到校园质量验收的准备条件。
 
 来源补充：已通过正常小程序响应采集复旦猫协完整当前目录，37 页、727 个不同 petId；受个人电脑资源限制，图片只下载 94 张（约 47.2 MiB），其余保留地址索引。旧 91 个名称中 90 个完全同名，仍需核实身份；至少 4 个源站 cat 档案显示犬类。远端样本、回下载校验和剩余条件见[原站核对记录](validation/MEOWZART_SOURCE_20261101.md)。这不关闭历史备份缺口或校园质量验收。
 
@@ -58,10 +60,78 @@ python cat-backend/scripts/prepare_campus_dataset.py check --root artifacts/camp
 
 当前单目标识别评测不能给多猫同框随意指定一个“正确身份”。这类照片另存清单并明确排除原因，后续按检测/选猫交互协议单独验收。双帧 MPO、GIF 等多帧文件需先确定评测哪一帧、保留来源关系，再生成独立静态样本。
 
-## 准备检查通过后的边界
+## 冻结校园协议并生成评测清单
+
+`check` 通过后，还需在**隔离数据库及参考目录**登记、构建完整实际图库；不得拿少量已知猫冒充完整图库。`cat-backend/scripts/build_reference_snapshot.py --output <新目录>` 可构建未发布快照，详见[参考库说明](REFERENCE_LIBRARY.md)。核对该快照的 `manifest.json`、持久 `reference_id`、模型哈希和 `pipeline`；只有这些确属本次实验时才能冻结协议。
+
+以下为 `protocol-v1-example.json` 的**填写模板**，不是已准备的校园数据或已获批准的样本量。将所有占位字符串替换为人工核对结果，`identity_bindings` 必须覆盖 `gallery.identity_ids` 中的每个身份，一对一对应实际图库的 32 位十六进制 `reference_id`。样本最低数量与另外两类错误率上限需负责人预先确认；示例数字不能证明统计上充分。已选定的业务方向仍为已知正确确认 ≥80%、未知猫误确认 ≤5%。
+
+```json
+{
+  "format_version": 1,
+  "purpose": "campus-recognition-protocol",
+  "dataset_id": "REPLACE_WITH_PREPARATION_DATASET_ID",
+  "preparation_sha256": "REPLACE_WITH_CANONICAL_JSON_SHA256",
+  "reference_manifest_sha256": "REPLACE_WITH_CANONICAL_JSON_SHA256",
+  "reviewer": "REPLACE_WITH_REVIEWER",
+  "evidence": "REPLACE_WITH_REVIEW_RECORD",
+  "identity_bindings": {
+    "REPLACE_WITH_CAMPUS_IDENTITY": "REPLACE_WITH_32_HEX_REFERENCE_ID"
+  },
+  "minimum_counts": {
+    "reference_per_identity": 4,
+    "calibration": {"known": 60, "unknown_cat": 100, "no_cat": 60},
+    "holdout": {"known": 60, "unknown_cat": 100, "no_cat": 60}
+  },
+  "policy": {"confirmed": 0.70, "uncertain": 0.49, "minimum_margin": 0.0},
+  "targets": {
+    "known_correct_confirmation_rate_min": 0.80,
+    "known_wrong_confirmation_rate_max": 0.05,
+    "unknown_cat_false_accept_rate_max": 0.05,
+    "no_cat_false_accept_rate_max": 0.05
+  }
+}
+```
+
+两个绑定哈希是**规范 JSON 哈希**（排序键、UTF-8、紧凑分隔符），不是原文件字节哈希；不要复制 `check` 回执中的 `manifest_sha256`。可在后端目录用同一实现计算，下面路径也是待替换的示例：
+
+```powershell
+Push-Location cat-backend
+python -c "import json,sys; from pathlib import Path; from scripts.campus_protocol import digest; print(digest(json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))))" ../artifacts/campus/reviewed-example/review-manifest.json
+python -c "import json,sys; from pathlib import Path; from scripts.campus_protocol import digest; print(digest(json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))))" ../artifacts/campus/reference-snapshot-example/manifest.json
+Pop-Location
+```
+
+在仓库根目录生成新的冻结文件；`--output` 必须位于 `--root` 的直接下一层，因为评测据此解析照片相对路径。将 `--partition holdout` 改成 `calibration` 并使用另一个新输出名可冻结校准组。任何参数选择只能利用校准组；选定后另存审核后的最终协议与哈希，再冻结留出组，留出结果不能回流调参。
+
+```powershell
+python cat-backend/scripts/prepare_campus_dataset.py freeze `
+  --root artifacts/campus/reviewed-example `
+  --manifest artifacts/campus/reviewed-example/review-manifest.json `
+  --protocol artifacts/campus/reviewed-example/protocol-v1-example.json `
+  --reference-manifest artifacts/campus/reference-snapshot-example/manifest.json `
+  --partition holdout `
+  --output artifacts/campus/reviewed-example/holdout-frozen-v1.json
+```
+
+输出设置 `evaluation_scope=campus`，嵌入准备清单、协议及各自规范 JSON 哈希；绑定完整参考源图、身份、场次、来源/使用依据、样本最低数量、策略和四项目标。预处理与模型版本由实际参考快照及其哈希绑定。运行前必须为独立进程显式配置隔离 `DATABASE_URL`、`UPLOAD_DIR`、`REFERENCE_DIR` 或 `REFERENCE_STORE`，以及必要的测试凭据；不可继承业务库配置。真实模型位于该隔离检出的 `cat-backend/models`，不会由 `freeze` 下载。运行阈值须与冻结 `policy` 完全一致，预处理须与快照一致。
+
+```powershell
+# 仅在隔离环境配置及真实审核资料齐备后运行，数值须来自最终冻结协议。
+$env:RECOGNIZE_THRESHOLD_CONFIRMED = '0.70'
+$env:RECOGNIZE_THRESHOLD_UNCERTAIN = '0.49'
+$env:RECOGNIZE_MIN_MARGIN = '0'
+python cat-backend/scripts/eval_recognition.py `
+  --manifest artifacts/campus/reviewed-example/holdout-frozen-v1.json `
+  --output artifacts/campus/holdout-result-v1.json
+```
+
+评测开始前重新校验全部校园证据、文件内容、实际活动图库及运行策略；缺失证据或篡改划分会拒绝推理。通用评测默认 `evaluation_scope=general`，不能充当校园验收；带有 `campus_preflight` 却改成 `general` 也会被拒绝。所有入口拒绝覆盖已有输出，历史失败证据保留。
+
+## 结果与剩余边界
 
 退出码 0 仅表示清单的结构、已填审核记录与内容检查通过；退出码 2 表示仍需准备或输入无效。工具无法替人工证明声明的身份、日期、校园或授权真实，也不生成模型准确率。
 
-该工具是独立准备入口，**尚未接入 `eval_recognition.py` 或校准工作流成为强制前置条件**。在真正执行校园验收前，仍需把完整实际图库、模型/预处理、身份及场次记录、样本量和业务目标冻结为新的实验协议，并绑定准备清单哈希；创建隔离参考库后，再用适配校园协议的评测入口执行。不能绕过这一步直接把公共预评测协议改名为校园验收。
+`eval_recognition.py` 退出码 0 表示通用评测执行完整，或校园评测执行完整且冻结的经验目标通过；2 表示输入无效或执行不完整；3 表示校园评测执行完成但经验目标未通过。回执的 `release_quality_passed` 始终为 false；`empirical_targets_passed` 只表示这批冻结样本是否过线，不能直接升级为发布或校园总体可靠性结论。`check` 只是准备检查，`freeze` 只是协议绑定，均不执行模型。
 
 用户已选定临时业务目标：未知猫误确认 ≤5%，已知猫正确确认 ≥80%。还须明确样本量、统计口径及多猫等独立场景的标准；小样本百分比通过不能证明总体可靠性。训练数据重叠和目标硬件容量继续单独跟踪。当前已消耗的公开留出集只作诊断，不再拿来调参。

@@ -229,6 +229,7 @@ def count_posts(db: Session, topic: str = "all", keyword: Optional[str] = None) 
 def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, current_user_id: int = 0) -> List[schemas.PostResponse]:
     query = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.comment_list),
     )
@@ -252,6 +253,7 @@ def get_posts(db: Session, topic: str = "all", skip: int = 0, limit: int = 20, c
 def get_post(db: Session, post_id: int) -> Optional[models.Post]:
     return db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == post_id).first()
@@ -286,6 +288,7 @@ def create_post(db: Session, post: schemas.PostCreate, user_id: int, image_paths
     db.refresh(db_post)
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == db_post.id).first()
@@ -314,6 +317,7 @@ def update_post(db: Session, post_id: int, post_update: schemas.PostUpdate, user
     db.refresh(db_post)
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == post_id).first()
@@ -349,6 +353,7 @@ def toggle_post_like(db: Session, post_id: int, user_id: int) -> Optional[schema
     db.commit()
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == post_id).first()
@@ -434,6 +439,7 @@ def poll_vote(db: Session, post_id: int, user_id: int, option_index: int) -> Opt
     events.publish("poll_voted", {"post_id": post_id, "user_id": user_id, "option_index": option_index})
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == post_id).first()
@@ -457,6 +463,7 @@ def accept_answer(db: Session, post_id: int, comment_id: int, user_id: int, is_a
     events.publish("answer_accepted", {"post_id": post_id, "comment_id": comment_id})
     post_with_rels = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(models.Post.id == post_id).first()
@@ -1341,6 +1348,7 @@ def search_posts(db: Session, keyword: str, skip: int = 0, limit: int = 20, curr
     from sqlalchemy import or_
     query = db.query(models.Post).options(
         joinedload(models.Post.author),
+        joinedload(models.Post.related_cat),
         joinedload(models.Post.images),
         joinedload(models.Post.likes),
     ).filter(

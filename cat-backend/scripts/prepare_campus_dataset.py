@@ -9,8 +9,11 @@ from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
+import sys
 
 from PIL import Image, ImageOps
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 RASTER = {'.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif'}
 PARTITIONS = {'reference', 'calibration', 'holdout'}
@@ -227,12 +230,30 @@ def main(argv=None):
     check.add_argument('--root', type=Path, required=True)
     check.add_argument('--manifest', type=Path, required=True)
     check.add_argument('--output', type=Path, required=True)
+    freeze = sub.add_parser('freeze', help='Bind reviewed data and a protocol to an actual reference snapshot')
+    freeze.add_argument('--root', type=Path, required=True)
+    freeze.add_argument('--manifest', type=Path, required=True)
+    freeze.add_argument('--protocol', type=Path, required=True)
+    freeze.add_argument('--reference-manifest', type=Path, required=True)
+    freeze.add_argument('--partition', choices=['calibration', 'holdout'], required=True)
+    freeze.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
     if args.output.exists():
         parser.error('Output already exists; choose a new path')
     try:
         if args.command == 'inventory':
             result = inventory(args.root, args.source_ref)
+            code = 0
+        elif args.command == 'freeze':
+            # Keep paths portable and bound to the same reviewed image root.
+            if args.output.resolve().parent != args.root.resolve():
+                raise ValueError('Frozen evaluation output must be in the reviewed image root')
+            from scripts.campus_protocol import freeze as freeze_evaluation
+            preparation = json.loads(args.manifest.read_bytes())
+            protocol = json.loads(args.protocol.read_bytes())
+            reference = json.loads(args.reference_manifest.read_bytes())
+            result = freeze_evaluation(preparation, protocol, args.root, reference, args.partition,
+                                       crop=reference['pipeline']['crop'] != 'none-v1')
             code = 0
         else:
             raw = args.manifest.read_bytes()

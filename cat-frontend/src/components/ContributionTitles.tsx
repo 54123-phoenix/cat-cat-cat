@@ -44,9 +44,9 @@ export default function ContributionTitles({ variant = 'full', className = '', o
   }
 
   return (
-    <div className={`rounded-2xl bg-white border border-gray-100 overflow-hidden ${className}`}>
-      <div className="px-4 py-3 border-b border-gray-50">
-        <h3 className="font-bold text-text-primary flex items-center gap-2">
+    <div className={`rounded-2xl bg-card border border-border overflow-hidden ${className}`}>
+      <div className="px-4 py-3 border-b border-border">
+        <h3 className="font-bold text-text flex flex-wrap items-center gap-x-2 gap-y-1">
           🏅 贡献头衔
           <span className="text-xs font-normal text-text-secondary">已获得 {data.total} 个</span>
         </h3>
@@ -61,13 +61,13 @@ export default function ContributionTitles({ variant = 'full', className = '', o
               🏅
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-text-primary text-sm">{title.label}</span>
-                <span className="text-xs text-text-secondary">{title.label_en}</span>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <span className="font-bold text-text text-sm">{title.label}</span>
+                <span className="text-xs text-text-secondary break-words">{title.label_en}</span>
               </div>
-              <div className="text-xs text-text-secondary truncate">{title.description}</div>
+              <div className="text-xs text-text-secondary break-words">{title.description}</div>
             </div>
-            <div className="text-lg font-bold text-primary/30 flex-shrink-0">{title.count}</div>
+            <div className="text-lg font-bold text-primary flex-shrink-0">{title.count}</div>
           </div>
         ))}
       </div>

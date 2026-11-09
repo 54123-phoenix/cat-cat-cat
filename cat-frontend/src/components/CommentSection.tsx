@@ -1,174 +1,149 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLiveData } from '../hooks/useLiveData'
 import { MessageCircle, Send, CheckCircle2 } from 'lucide-react'
-import { getPostComments, createComment, acceptAnswer, getStoredUser } from '../api'
+import { getPostComments, createComment, acceptAnswer } from '../api'
 import Avatar from './Avatar'
-import { toast } from './Toast'
 
 function getUserDisplay(user) {
   if (user?.nickname) return user
-  return { nickname: `铲屎官 #${user?.id || '?'}` }
+  return { nickname: '铲屎官 #' + (user?.id || '?') }
 }
 
 interface CommentSectionProps {
   postId: any
   initialCount?: number
-  expanded?: any
+  expanded?: boolean
   onExpand?: () => void
-  isQuestion?: any
+  isQuestion?: boolean
   acceptedCommentId?: any
-  canAccept?: any
+  canAccept?: boolean
 }
 
 export default function CommentSection({ postId, initialCount = 0, expanded: expandedProp, onExpand, isQuestion, acceptedCommentId, canAccept }: CommentSectionProps) {
   const { revision } = useLiveData()
   const [comments, setComments] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(Boolean(expandedProp))
+  const [loadError, setLoadError] = useState('')
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [submitStatus, setSubmitStatus] = useState('')
   const [internalExpanded, setInternalExpanded] = useState(false)
   const [accepting, setAccepting] = useState(false)
+  const [acceptError, setAcceptError] = useState('')
   const [acceptedId, setAcceptedId] = useState(acceptedCommentId || null)
+  const [retryKey, setRetryKey] = useState(0)
   const requestIdRef = useRef(0)
-
+  const generationRef = useRef(0)
+  const submitLock = useRef(false)
+  const acceptLock = useRef(false)
+  const loadingRef = useRef(false)
+  const submitErrorRef = useRef<HTMLParagraphElement>(null)
   const expanded = expandedProp ?? internalExpanded
 
   useEffect(() => {
-    setAcceptedId(acceptedCommentId || null)
-  }, [acceptedCommentId])
+    generationRef.current++
+    setComments([]); setText(''); setLoadError(''); setSubmitError(''); setSubmitStatus(''); setAcceptError('')
+    setSubmitting(false); setAccepting(false)
+    submitLock.current = false; acceptLock.current = false
+    return () => { generationRef.current++ }
+  }, [postId])
+  useEffect(() => { setAcceptedId(acceptedCommentId || null) }, [acceptedCommentId, postId])
+  useEffect(() => { if (submitError) submitErrorRef.current?.focus() }, [submitError])
 
   useEffect(() => {
     if (!expanded) return undefined
-    const rid = ++requestIdRef.current
-    setLoading(true)
+    const requestId = ++requestIdRef.current
+    setLoading(true); setLoadError('')
+    loadingRef.current = true
     getPostComments(postId).then(data => {
-      if (rid === requestIdRef.current) setComments(Array.isArray(data) ? data : [])
-    }).catch(() => {}).finally(() => {
-      if (rid === requestIdRef.current) setLoading(false)
+      if (requestId === requestIdRef.current) setComments(Array.isArray(data) ? data : [])
+    }).catch(() => {
+      if (requestId === requestIdRef.current) setLoadError('评论暂时无法加载，请重试。')
+    }).finally(() => {
+      if (requestId === requestIdRef.current) { setLoading(false); loadingRef.current = false }
     })
-    return () => { requestIdRef.current++ }
-  }, [revision, postId, expanded])
+    return () => { requestIdRef.current++; loadingRef.current = false }
+  }, [revision, postId, expanded, retryKey])
 
   function toggleExpanded() {
     if (onExpand) onExpand()
-    else setInternalExpanded(true)
+    else setInternalExpanded(previous => !previous)
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    if (!text.trim() || submitting) return
-    setSubmitting(true)
+  async function handleSubmit(event) {
+    event.preventDefault()
+    if (!text.trim() || submitLock.current) return
+    const generation = generationRef.current
+    submitLock.current = true
+    setSubmitting(true); setSubmitError(''); setSubmitStatus('')
     try {
       const newComment = await createComment(postId, { content: text.trim() })
-      setComments((prev) => [...prev, newComment])
+      if (generation !== generationRef.current) return
+      setComments(previous => previous.some(comment => comment.id === newComment.id) ? previous : [...previous, newComment])
       setText('')
-    } catch {
-      // silent fail
+      setSubmitStatus('评论已发送。')
+      // A read started before this write must not hide the newly created reply.
+      if (loadingRef.current) {
+        requestIdRef.current++
+        setRetryKey(value => value + 1)
+      }
+    } catch (error) {
+      if (generation === generationRef.current) setSubmitError((error.message || '评论发送失败') + '。内容已保留，可以重试。')
     } finally {
-      setSubmitting(false)
+      if (generation === generationRef.current) { submitLock.current = false; setSubmitting(false) }
     }
   }
 
   async function handleAccept(commentId) {
-    if (accepting) return
-    setAccepting(true)
+    if (acceptLock.current) return
+    const generation = generationRef.current
+    acceptLock.current = true
+    setAccepting(true); setAcceptError('')
     try {
       await acceptAnswer(postId, commentId)
-      setAcceptedId(commentId)
-    } catch (e) {
-      toast(e.message || '采纳失败', { emoji: '⚠️' })
+      if (generation === generationRef.current) setAcceptedId(commentId)
+    } catch (error) {
+      if (generation === generationRef.current) setAcceptError((error.message || '采纳失败') + '，请重试。')
     } finally {
-      setAccepting(false)
+      if (generation === generationRef.current) { acceptLock.current = false; setAccepting(false) }
     }
   }
 
   const total = Math.max(initialCount, comments.length)
-  const sortedComments = [...comments].sort((a, b) => {
-    if (a.id === acceptedId) return -1
-    if (b.id === acceptedId) return 1
-    return 0
-  })
+  const sortedComments = [...comments].sort((a, b) => a.id === acceptedId ? -1 : b.id === acceptedId ? 1 : 0)
+  const listId = 'comments-' + postId
 
   return (
-    <div className="border-t border-gray-50 pt-2 mt-1">
-      <button
-        onClick={toggleExpanded}
-        className="flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition-colors py-1"
-      >
-        <MessageCircle className="w-3.5 h-3.5" />
-        {total} 条回复{!expanded ? ' ›' : ' ∧'}
-      </button>
-
-      {expanded && (
-        <div className="mt-2 space-y-2 animate-fade-up">
-          {loading ? (
-            <div className="space-y-2">
-              {[1, 2].map((i) => (
-                <div key={i} className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full skeleton" />
-                  <div className="flex-1 space-y-1">
-                    <div className="h-2.5 w-16 skeleton" />
-                    <div className="h-3 w-full skeleton" />
-                  </div>
-                </div>
-              ))}
+    <section id={listId} tabIndex={-1} className="space-y-4 border-t border-border pt-5" aria-label="帖子回复">
+      {expandedProp === true
+        ? <h2 className="ui-section-title text-lg font-semibold text-text">{total} 条回复</h2>
+        : <button type="button" onClick={toggleExpanded} aria-expanded={expanded} aria-controls={listId + '-content'} className="flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-medium text-text-secondary hover:text-primary"><MessageCircle size={20} aria-hidden="true" />{total} 条回复 · {expanded ? '收起' : '展开'}</button>}
+      {expanded && <div id={listId + '-content'} className="space-y-5">
+        {loadError && <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-1 p-3"><p role="status" className="ui-meta text-sm leading-6 text-text-secondary">{comments.length > 0 ? '评论暂时无法更新，已加载的回复仍可浏览。' : loadError}</p><button type="button" disabled={loading} onClick={() => setRetryKey(value => value + 1)} className="btn btn-ghost">重试加载评论</button></div>}
+        {loading && <p role="status" className="ui-meta text-sm text-text-secondary">{comments.length ? '正在更新评论…' : '正在加载评论…'}</p>}
+        {loading && comments.length === 0 && <div aria-hidden="true" className="space-y-4">{[1, 2].map(id => <div key={id} className="flex gap-3"><div className="h-8 w-8 rounded-full skeleton" /><div className="flex-1 space-y-2"><div className="h-3 w-20 skeleton" /><div className="h-4 w-full skeleton" /></div></div>)}</div>}
+        {comments.length > 0 && <ol className="space-y-5">{sortedComments.map(comment => {
+          const isAccepted = comment.id === acceptedId
+          return <li key={comment.id} className={'flex gap-3 ' + (isAccepted ? 'rounded-xl border border-success/20 bg-success/5 p-3' : '')}>
+            <Avatar user={comment.user} />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"><span className="font-semibold text-text [overflow-wrap:anywhere]">{getUserDisplay(comment.user).nickname}</span><span className="ui-meta text-text-secondary">{comment.createdAt}</span>{isAccepted && <span className="flex items-center gap-1 font-medium text-success"><CheckCircle2 size={16} aria-hidden="true" />已采纳</span>}</div>
+              <p className="ui-body mt-2 whitespace-pre-wrap text-base leading-7 text-text [overflow-wrap:anywhere]">{comment.content}</p>
+              {isQuestion && canAccept && !isAccepted && <button type="button" onClick={() => handleAccept(comment.id)} disabled={accepting} className="mt-2 flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-medium text-success disabled:opacity-50"><CheckCircle2 size={18} aria-hidden="true" />{accepting ? '正在采纳…' : '采纳为最佳答案'}</button>}
             </div>
-          ) : comments.length > 0 ? (
-            sortedComments.map((c) => {
-              const isAccepted = c.id === acceptedId
-              return (
-              <div key={c.id} className={`flex gap-2 ${isAccepted ? 'bg-green-50 rounded-lg p-2 -m-1' : ''}`}>
-                <Avatar user={c.user} size="xs" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-text-secondary">{getUserDisplay(c.user).nickname}</span>
-                    <span className="text-xs text-gray-300">{c.createdAt}</span>
-                    {isAccepted && (
-                      <span className="text-xs text-green-600 flex items-center gap-0.5 font-medium">
-                        <CheckCircle2 className="w-3 h-3" />已采纳
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-text leading-relaxed mt-0.5">{c.content}</p>
-                  {isQuestion && canAccept && !isAccepted && (
-                    <button
-                      onClick={() => handleAccept(c.id)}
-                      disabled={accepting}
-                      className="mt-1 text-xs text-green-600 flex items-center gap-0.5 hover:text-green-700"
-                    >
-                      <CheckCircle2 className="w-3 h-3" />采纳为最佳答案
-                    </button>
-                  )}
-                </div>
-              </div>
-              )
-            })
-          ) : (
-            <p className="text-xs text-text-muted text-center py-2">还没有评论，来说两句吧</p>
-          )}
-
-          {/* Comment input */}
-          <form onSubmit={handleSubmit} className="flex gap-2 items-end pt-1">
-            <Avatar user={getStoredUser()} size="xs" />
-            <div className="flex-1 flex gap-2">
-              <input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="写评论…"
-                maxLength={200}
-                className="flex-1 text-sm bg-gray-50 border border-gray-100 rounded-full px-3 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-gray-300"
-              />
-              <button
-                type="submit"
-                disabled={!text.trim() || submitting}
-                className="shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center disabled:opacity-30 active:bg-primary/20 transition-colors"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
+          </li>
+        })}</ol>}
+        {!loading && !loadError && comments.length === 0 && <p className="ui-meta py-3 text-sm leading-6 text-text-secondary">还没有评论，来说两句吧。</p>}
+        {acceptError && <p role="alert" className="ui-meta text-sm leading-6 text-danger">{acceptError}</p>}
+        <form onSubmit={handleSubmit} className="space-y-3 rounded-xl border border-border bg-surface-1 p-4" aria-busy={submitting}>
+          <label htmlFor={listId + '-input'} className="block text-sm font-semibold text-text">写下你的回复</label>
+          <textarea id={listId + '-input'} value={text} disabled={submitting} onChange={event => { setText(event.target.value); setSubmitStatus('') }} placeholder="写评论…" maxLength={200} aria-describedby={listId + '-help'} className="ui-input min-h-28 w-full resize-y rounded-xl border border-border bg-surface-1 p-3 text-base leading-7 text-text" />
+          <div className="flex flex-wrap items-center justify-between gap-3"><p id={listId + '-help'} className="ui-meta text-sm text-text-secondary">{text.length}/200 字</p><button type="submit" disabled={!text.trim() || submitting} className="btn btn-primary"><Send size={18} aria-hidden="true" />{submitting ? '发送中…' : '发送回复'}</button></div>
+          {submitError && <p ref={submitErrorRef} role="alert" tabIndex={-1} className="ui-meta rounded-xl bg-danger/5 p-3 text-sm leading-6 text-danger">{submitError}</p>}
+          <p role="status" className="ui-meta text-sm text-success">{submitStatus}</p>
+        </form>
+      </div>}
+    </section>
   )
 }

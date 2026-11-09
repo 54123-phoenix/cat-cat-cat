@@ -23,10 +23,10 @@ async function buildShareCanvas(data, user) {
   canvas.height = H
   const ctx = canvas.getContext('2d')
 
+  // Export uses the fixed Fudan blue palette, independent of the page theme.
   const grad = ctx.createLinearGradient(0, 0, 0, H)
-  grad.addColorStop(0, '#FB923C')
-  grad.addColorStop(0.5, '#F97316')
-  grad.addColorStop(1, '#EA580C')
+  grad.addColorStop(0, '#0E419C')
+  grad.addColorStop(1, '#0B337B')
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, W, H)
 
@@ -94,7 +94,7 @@ async function buildShareCanvas(data, user) {
   } catch { /* The report remains exportable when optional artwork fails. */ }
   ctx.font = '22px sans-serif'
   ctx.fillStyle = 'rgba(255,255,255,0.8)'
-  ctx.fillText('扫码查看我的年度报告', W / 2, 1290)
+  ctx.fillText('扫码查看我的年度报告', W / 2, 1312)
 
   return canvas
 }
@@ -156,9 +156,9 @@ export default function Wrapped() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-primary to-[#EA580C] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-primary to-primary-hover flex items-center justify-center">
         <MascotCat mood="curious" size={80} />
-        <p className="text-white/80 ml-4">加载年度回忆…</p>
+        <p className="text-on-primary opacity-80 ml-4">加载年度回忆…</p>
       </div>
     )
   }
@@ -282,10 +282,10 @@ export default function Wrapped() {
           <button
             onClick={handleShare}
             disabled={generating}
-            className="bg-white/20 backdrop-blur-sm text-white rounded-full px-8 py-3 font-medium flex items-center gap-2 disabled:opacity-60 active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm text-on-primary rounded-full px-8 py-3 font-medium flex items-center gap-2 disabled:opacity-60 active:scale-95 transition-transform"
           >
             {generating ? (
-              <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />生成中…</>
+              <><div className="w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin" />生成中…</>
             ) : (
               <><Download className="w-5 h-5" />保存分享图</>
             )}
@@ -296,7 +296,7 @@ export default function Wrapped() {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary to-[#EA580C] text-white overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary to-primary-hover text-on-primary overflow-hidden">
       <div className="absolute inset-x-0 top-0 flex justify-between items-center p-4 z-10">
         <button
           onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
@@ -309,7 +309,7 @@ export default function Wrapped() {
           {slides.map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${i === currentSlide ? 'w-6 bg-white' : 'w-1.5 bg-white/40'}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === currentSlide ? 'w-6 bg-on-primary' : 'w-1.5 bg-on-primary opacity-40'}`}
             />
           ))}
         </div>

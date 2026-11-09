@@ -1,12 +1,13 @@
 """Real Vite/API/SQLite smoke; Chromium in CI, optional local Edge.
 
-Uses disposable records and credentials. Only the explicit failure test intercepts
-HTTP; saving, reviewing and public visibility use the real backend. Artifacts are
+Uses disposable records and credentials. Recognition and deliberate failure cases
+intercept HTTP; saving, reviewing and public visibility use the real backend. Artifacts are
 written outside showcase and include a trace/screenshot when a browser test fails.
 """
 import argparse
 from datetime import datetime, timezone
 import json
+import io
 import os
 from pathlib import Path
 import shutil
@@ -21,6 +22,7 @@ from urllib.request import urlopen
 
 from jose import jwt
 from playwright.sync_api import sync_playwright, expect
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SECRET = 'browser-validation-only-key'
@@ -160,6 +162,78 @@ def smoke(page, base, checks):
     checks['expired_admin_isolated_from_user_ui'] = 'passed'
 
 
+def scan_smoke(page, base, checks, output):
+    """Synthetic recognition response; real multipart persistence and retries."""
+    token = page.evaluate("localStorage.getItem('token')")
+    headers = {'Authorization': f'Bearer {token}'}
+    cats = payload(page.request.get(base + '/api/cats'))['items']
+    cat = cats[0]
+    image = io.BytesIO()
+    Image.new('RGB', (96, 80), 'orange').save(image, format='PNG')
+    file = {'name': 'isolated-scan.png', 'mimeType': 'image/png', 'buffer': image.getvalue()}
+    mine = base + '/api/sightings?mine=true&status=all&limit=100'
+    before = payload(page.request.get(mine, headers=headers))['total']
+    response = {'status': 'confirmed', 'cat_id': cat['id'], 'cat_name': cat['name'], 'confidence': .75}
+
+    def recognize(route):
+        route.fulfill(status=200, content_type='application/json', body=json.dumps(response))
+
+    page.route('**/api/recognize', recognize)
+    page.goto(base + '/scan?point=浏览器定位点&lat=31.3&lng=121.5')
+    page.locator('input[type=file]').set_input_files(file)
+    page.get_by_role('button', name='开始识别', exact=True).click()
+    expect(page.get_by_role('button', name='确认并提交偶遇')).to_be_visible()
+    assert payload(page.request.get(mine, headers=headers))['total'] == before
+
+    attempts = []
+    def lose_first_response(route):
+        if route.request.method != 'POST':
+            route.continue_(); return
+        attempts.append(route.request.post_data_buffer)
+        if len(attempts) == 1:
+            # Server has committed; imitate a response lost by an upstream proxy.
+            real = route.fetch()
+            assert real.status == 200, real.text()
+            route.fulfill(status=503, content_type='application/json', body='{"detail":"提交响应中断，请重试"}')
+        else:
+            route.continue_()
+    page.route('**/api/sightings', lose_first_response)
+    page.get_by_role('button', name='确认并提交偶遇').click()
+    expect(page.get_by_role('alert')).to_contain_text('提交响应中断')
+    page.get_by_role('button', name='确认并提交偶遇').click()
+    expect(page.get_by_role('status').filter(has_text='偶遇已提交')).to_be_visible()
+    rows = payload(page.request.get(mine, headers=headers))
+    assert rows['total'] == before + 1 and len(attempts) == 2
+    created = next(row for row in rows['items'] if row['location'] == '浏览器定位点')
+    assert created['image_path'] and created['status'] == 'pending'
+    assert (created['latitude'], created['longitude']) == (31.3, 121.5)
+    assert page.request.get(base + f"/api/sightings/{created['id']}").status == 404
+    expect(page.get_by_role('button', name='确认并提交偶遇')).to_have_count(0)
+    for name, width, height in [('scan-submitted-mobile', 390, 844), ('scan-submitted-desktop', 1280, 900)]:
+        page.set_viewport_size({'width': width, 'height': height})
+        page.evaluate('window.scrollTo(0, 0)')
+        assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+        page.screenshot(path=str(output / f'{name}.png'), full_page=True, animations='disabled')
+    page.set_viewport_size({'width': 390, 'height': 844})
+    checks['scan_explicit_save_lost_response_retry_real_db'] = 'passed'
+    page.unroute('**/api/sightings', lose_first_response)
+
+    response.clear()
+    response.update(status='uncertain', confidence=.6,
+                    candidates=[{'cat_id': cat['id'], 'cat_name': cat['name'], 'confidence': .6}])
+    page.get_by_role('button', name='记录下一次偶遇').click()
+    page.locator('input[type=file]').set_input_files(file)
+    page.get_by_role('button', name='开始识别', exact=True).click()
+    confirm = page.get_by_role('button', name=f"确认是{cat['name']}并提交偶遇", exact=True)
+    expect(confirm).to_be_visible()
+    assert payload(page.request.get(mine, headers=headers))['total'] == before + 1
+    confirm.click()
+    expect(page.get_by_role('status').filter(has_text='偶遇已提交')).to_be_visible()
+    assert payload(page.request.get(mine, headers=headers))['total'] == before + 2
+    checks['scan_candidate_explicit_save_real_db'] = 'passed'
+    page.unroute('**/api/recognize', recognize)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--browser-channel', default=None, help='Default: bundled Chromium; local Windows: msedge')
@@ -171,7 +245,8 @@ def main():
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     report = {'status': 'running', 'checks': {}, 'page_errors': [], 'http_errors': [],
-              'started_at': datetime.now(timezone.utc).isoformat()}
+              'started_at': datetime.now(timezone.utc).isoformat(),
+              'recognition_scope': 'synthetic scan responses; real multipart API/database, no quality claim'}
     base = f'http://127.0.0.1:{args.web_port}'
     api_base = f'http://127.0.0.1:{args.api_port}'
     try:
@@ -229,6 +304,7 @@ with SessionLocal() as db:
                         }) if response.status >= 400 else None)
                         try:
                             smoke(page, base, report['checks'])
+                            scan_smoke(page, base, report['checks'], output)
                             if args.screenshots:
                                 for name, route in [('home','/'), ('scan','/scan'), ('map','/map'), ('community','/community'), ('badges','/badges')]:
                                     page.goto(base + route)

@@ -28,34 +28,38 @@ describe('EmptyState', () => {
 })
 
 describe('Toast', () => {
-  it('renders nothing when no toasts', async () => {
+  it('mounts an empty live region before any notification arrives', async () => {
     const mod = await import('../components/Toast')
-    const { container } = render(<mod.default />)
-    expect(container.firstChild).toBeNull()
+    render(<mod.default />)
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+    expect(screen.queryByRole('button', { name: '关闭通知' })).not.toBeInTheDocument()
   })
 })
 
 describe('MascotCat renders moods', () => {
-  it('renders happy mood SVG', async () => {
+  it('reserves illustration space and stays still by default', async () => {
     const mod = await import('../components/MascotCat')
     const { container } = render(<mod.default mood="happy" size={64} />)
-    expect(container.querySelector('svg')).toBeTruthy()
+    const mascot = container.querySelector('[role="img"]')
+    expect(mascot).toHaveAccessibleName('蓝白校园猫吉祥物')
+    expect(mascot).toHaveStyle({ width: '64px', height: '67px' })
+    expect(mascot).not.toHaveClass('mascot-breathe')
   })
 
-  it('renders sleep mood SVG', async () => {
+  it('keeps quiet states still when animation is requested', async () => {
     const mod = await import('../components/MascotCat')
-    const { container } = render(<mod.default mood="sleep" size={64} />)
-    expect(container.querySelector('svg')).toBeTruthy()
+    const { container } = render(<mod.default mood="sleep" size={64} breathe />)
+    expect(container.querySelector('[role="img"]')).not.toHaveClass('mascot-breathe')
   })
 })
 
-describe('Logo SVG illustration', () => {
+describe('Logo illustration', () => {
   it('renders with role=img', async () => {
     const mod = await import('../components/illustrations/Logo')
     const { container } = render(<mod.default size={32} />)
-    const svg = container.querySelector('svg')
-    expect(svg).toBeTruthy()
-    expect(svg?.getAttribute('role')).toBe('img')
+    const logo = container.querySelector('[role="img"]')
+    expect(logo).toHaveAccessibleName('猫猫社区 Logo')
+    expect(logo).toHaveStyle({ width: '32px', height: '32px' })
   })
 })
 

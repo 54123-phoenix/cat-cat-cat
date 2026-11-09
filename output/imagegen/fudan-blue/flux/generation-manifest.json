@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Kuala_Lumpur",
+  "status": "three_concepts_generated",
+  "model": "FLUX.1-schnell",
+  "mode": "official_public_demo_browser",
+  "model_page": "https://huggingface.co/black-forest-labs/FLUX.1-schnell",
+  "demo_page": "https://huggingface.co/spaces/black-forest-labs/FLUX.1-schnell",
+  "model_license_as_listed": "Apache-2.0",
+  "prompts": "prompts.jsonl",
+  "comparison": "contact-sheet.png",
+  "successful_generations": 3,
+  "outputs": [
+    {
+      "id": "A",
+      "label": "平面校园猫",
+      "source": "01-campus-cat-v1.webp",
+      "png_copy": "01-campus-cat-v1.png",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 37094,
+      "sha256": "23510a642e62d0eb13c2f19b74b792d5a2fc0df01151c6a6728b8eceb8abefd7",
+      "source_download_url": "https://black-forest-labs-flux-1-schnell.hf.space/gradio_api/file=/tmp/gradio/992258076136d685785666747069d4a4af50ef424e238c044fc64833498e4188/image.webp",
+      "review_note": "轮廓鲜明；多余胸饰待精修"
+    },
+    {
+      "id": "B",
+      "label": "图书馆的猫",
+      "source": "02-library-cat.webp",
+      "png_copy": "02-library-cat.png",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 38058,
+      "sha256": "8f3d5bada8eec95418cfc1330a6ef4e1cb973efe04c1b5a08893fa22e1351661",
+      "source_download_url": "https://black-forest-labs-flux-1-schnell.hf.space/gradio_api/file=/tmp/gradio/efcfd1b9b50653b434a087c4e5b28a498bc13070ccb6c2358acd1e4870686b00/image.webp",
+      "review_note": "安静、书卷气，校园感更明确"
+    },
+    {
+      "id": "C",
+      "label": "陶瓷质感猫",
+      "source": "03-ceramic-cat.webp",
+      "png_copy": "03-ceramic-cat.png",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "bytes": 18004,
+      "sha256": "0ede581b96f1e36c1601cdf39ed020fe46980442525a84f9c1ea18d16bd21c78",
+      "source_download_url": "https://black-forest-labs-flux-1-schnell.hf.space/gradio_api/file=/tmp/gradio/ef8d3b42ceb77a9b4d4774bcd71527a8f5e0f612afb1433d412240438553ecbc/image.webp",
+      "review_note": "形体柔和，适合较大的形象展示"
+    }
+  ],
+  "checks": [
+    "Original files decoded with Pillow",
+    "All three originals are 1024x1024",
+    "Visual review of all three browser results",
+    "A has an extra chest ornament and is a concept requiring refinement"
+  ],
+  "followup_attempt": {
+    "id": "A-refinement",
+    "status": "blocked_guest_quota",
+    "generated_images": 0,
+    "message": "Guest quota reached",
+    "retried": false
+  },
+  "other_routes": {
+    "built_in_image_generation": "not_available_in_current_tools",
+    "existing_gateway": {
+      "model_list_http_status": 200,
+      "available_models": [
+        "gpt-6-astra",
+        "gpt-6-luna",
+        "gpt-6-sol"
+      ],
+      "prior_gpt_image_2_http_status": 403
+    },
+    "chatgpt_website": "login_required",
+    "fal_and_adobe": "suggested_but_not_confirmed_connected",
+    "local_generation": "GPU present; no existing image generation runtime or weights; no installation needed after public demo succeeded"
+  },
+  "notes": [
+    "Original WEBP outputs are retained. PNG copies and the comparison sheet contain no AI regeneration.",
+    "Requested blue palette is a design direction; exact output color values are model-generated.",
+    "No existing Web assets were replaced. The refinement requires available account quota."
+  ]
+}

@@ -45,7 +45,7 @@ function PrizePortrait({ prize, drawing }: { prize?: DailyGachaPrize; drawing: b
           <span>{prize?.emoji || '🎁'}</span>
         )}
       </div>
-      <div className="absolute -right-2 -top-2 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xl text-white shadow-primary-glow">
+      <div className="absolute -right-2 -top-2 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xl text-on-primary shadow-primary-glow">
         {prize?.emoji || '🐾'}
       </div>
     </div>
@@ -113,13 +113,13 @@ export default function CatGachaCard({ onViewCat }: CatGachaCardProps) {
   return (
     <section className="overflow-hidden rounded-2xl bg-stone-950 text-white shadow-e3" aria-live="polite">
       <div className="relative p-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(251,191,36,0.28),transparent_32%),radial-gradient(circle_at_90%_18%,rgba(94,200,167,0.20),transparent_30%),linear-gradient(135deg,#24150f_0%,#12100f_58%,#1f2937_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(251,191,36,0.28),transparent_32%),radial-gradient(circle_at_90%_18%,rgba(94,200,167,0.20),transparent_30%),linear-gradient(135deg,#0B337B_0%,#0F172A_58%,#1F2937_100%)]" />
         <div className="absolute -bottom-16 left-1/2 h-36 w-36 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
 
         <div className="relative space-y-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-orange-100 ring-1 ring-white/10">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 ring-1 ring-white/10">
                 <Sparkles className="h-3.5 w-3.5" />
                 今日猫缘扭蛋
               </div>
@@ -173,12 +173,12 @@ export default function CatGachaCard({ onViewCat }: CatGachaCardProps) {
                   badge={prize.emoji}
                   proof={prize.fortune}
                   sharePath={`/cats/${cat.id}`}
-                  accent="from-stone-100 via-orange-50 to-amber-100"
+                  accent="from-primary-light via-surface-0 to-primary-light"
                   slogan="今日猫签"
                 >
                   <button
                     type="button"
-                    className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-white px-3 py-2.5 text-sm font-bold text-stone-950 transition-colors hover:bg-orange-50 active:scale-[0.98]"
+                    className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-white px-3 py-2.5 text-sm font-bold text-stone-950 transition-colors hover:bg-blue-50 active:scale-[0.98]"
                   >
                     <Gift className="h-4 w-4" />
                     分享猫签
@@ -192,7 +192,7 @@ export default function CatGachaCard({ onViewCat }: CatGachaCardProps) {
                 type="button"
                 onClick={handleDraw}
                 disabled={drawing}
-                className="btn-sweep flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-stone-950 transition-transform hover:bg-orange-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-sweep flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-stone-950 transition-transform hover:bg-blue-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {drawing ? <Loader2 className="h-4 w-4 animate-cat-spin motion-reduce:animate-none" /> : <Wand2 className="h-4 w-4" />}
                 {drawing ? '猫签滚动中' : '抽今日猫签'}

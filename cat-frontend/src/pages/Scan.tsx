@@ -1,35 +1,59 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, type ChangeEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Camera, PawPrint, Cat, Check, Sparkles, HelpCircle, Share2, MapPin, BadgeCheck } from 'lucide-react'
+import { Camera, Cat, Check, Sparkles, HelpCircle, Share2, MapPin, ChevronDown } from 'lucide-react'
 import ShareArtifact from '../components/ShareArtifact'
-import MascotCat from '../components/MascotCat'
 import PawRain from '../components/PawRain'
 import ConfidenceBar from '../components/ConfidenceBar'
 import PageHeader from '../components/PageHeader'
 import CatIdentityCard from '../components/CatIdentityCard'
 import { createDiscovery, createSighting, identifyCat } from '../api'
+import type { RecognizeCandidate, RecognizeResult, Sighting } from '../types'
 import { campusLocations, resolveSightingLocation } from '../campusLocations'
 import { ACTIVITY_OPTIONS, WEATHER_OPTIONS, MOOD_OPTIONS } from '../constants/activities'
+
+function requestId() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
 
 export default function Scan() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [phase, setPhase] = useState('idle')
-  const [preview, setPreview] = useState(null)
-  const [result, setResult] = useState(null)
+  const [phase, setPhase] = useState<RecognizeResult['status'] | 'idle' | 'ready' | 'loading' | 'error'>('idle')
+  const [preview, setPreview] = useState<string | null>(null)
+  const [result, setResult] = useState<RecognizeResult | null>(null)
   const [message, setMessage] = useState('')
   const [discoveryNote, setDiscoveryNote] = useState('')
-  const [discovery, setDiscovery] = useState(null)
-  const [savedSighting, setSavedSighting] = useState(null)
+  const [discovery, setDiscovery] = useState<{ ai_summary?: string } | null>(null)
+  const [savedSighting, setSavedSighting] = useState<Sighting | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [fileError, setFileError] = useState('')
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [showPawRain, setShowPawRain] = useState(false)
   const [showIdentityCard, setShowIdentityCard] = useState(false)
   const [customLocation, setCustomLocation] = useState('')
   const [activity, setActivity] = useState('')
   const [weather, setWeather] = useState('')
   const [mood, setMood] = useState('')
-  const fileRef = useRef(null)
-  const selectedFileRef = useRef(null)
-  const previewRef = useRef(null)
+  const fileRef = useRef<HTMLInputElement | null>(null)
+  const uploadButtonRef = useRef<HTMLButtonElement | null>(null)
+  const identifyButtonRef = useRef<HTMLButtonElement | null>(null)
+  const resultHeadingRef = useRef<HTMLHeadingElement | null>(null)
+  const receiptRef = useRef<HTMLDivElement | null>(null)
+  const saveErrorRef = useRef<HTMLDivElement | null>(null)
+  const focusUploadRef = useRef(false)
+  const selectedFileRef = useRef<File | null>(null)
+  const previewRef = useRef<string | null>(null)
+  const identifyingRef = useRef(false)
+  const savingRef = useRef(false)
+  const savedRef = useRef(false)
+  const requestRef = useRef<{ signature: string; file: File; id: string } | null>(null)
+  const draftLocked = saving || Boolean(savedSighting) || Boolean(discovery)
 
   useEffect(() => {
     const point = searchParams.get('point')
@@ -45,12 +69,34 @@ export default function Scan() {
   }, [searchParams])
 
   useEffect(() => {
-    return () => { if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null } }
+    return () => {
+      if (previewRef.current) URL.revokeObjectURL(previewRef.current)
+      previewRef.current = null
+    }
   }, [])
 
-  function onFileChange(event) {
+  useEffect(() => {
+    if (savedSighting || discovery) receiptRef.current?.focus()
+    else if (phase === 'ready') identifyButtonRef.current?.focus()
+    else if (!['idle', 'loading'].includes(phase)) resultHeadingRef.current?.focus()
+    else if (phase === 'idle' && focusUploadRef.current) {
+      uploadButtonRef.current?.focus()
+      focusUploadRef.current = false
+    }
+  }, [phase, savedSighting, discovery])
+
+  useEffect(() => {
+    if (saveError) saveErrorRef.current?.focus()
+  }, [saveError])
+
+  function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024) {
+      setFileError('请选择 10 MB 以内的 JPG、PNG 或 WebP 照片。')
+      return
+    }
+    setFileError('')
     selectedFileRef.current = file
     if (previewRef.current) URL.revokeObjectURL(previewRef.current)
     const url = URL.createObjectURL(file)
@@ -59,110 +105,137 @@ export default function Scan() {
     setPhase('ready')
     setResult(null)
     setMessage('')
+    setSaveError('')
+    requestRef.current = null
   }
 
   function getLocationName() {
     return customLocation.trim()
   }
 
-  async function saveConfirmedSighting(data) {
-    if (!data.cat_id) return null
+  async function saveConfirmedSighting(data: RecognizeResult | RecognizeCandidate) {
+    if (savingRef.current || savedRef.current) return
+    if (!data.cat_id) return setSaveError('无法确认猫咪身份，请重新识别')
     const file = selectedFileRef.current
-    const location = resolveSightingLocation(getLocationName(), searchParams)
-    return createSighting({
+    if (!file) return setSaveError('照片已失效，请重新选择照片')
+    const point = resolveSightingLocation(getLocationName(), searchParams)
+    const fields = {
       catId: data.cat_id,
       location: getLocationName(),
       confidence: data.confidence,
       activity_type: activity || undefined,
       weather: weather || undefined,
       mood: mood || undefined,
-      file,
-      latitude: location?.latitude,
-      longitude: location?.longitude,
-    })
+      latitude: point?.latitude,
+      longitude: point?.longitude,
+    }
+    const signature = JSON.stringify(fields)
+    if (requestRef.current?.signature !== signature || requestRef.current.file !== file) {
+      requestRef.current = { signature, file, id: requestId() }
+    }
+    savingRef.current = true
+    setSaving(true)
+    setSaveError('')
+    try {
+      const created = await createSighting({ ...fields, file, client_request_id: requestRef.current.id })
+      savedRef.current = true
+      setSavedSighting(created)
+      setResult({ ...data, status: 'confirmed' })
+      setPhase('confirmed')
+      setShowPawRain(true)
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : '偶遇提交失败，请重试')
+    } finally {
+      savingRef.current = false
+      setSaving(false)
+    }
   }
 
   async function handleIdentify() {
+    if (identifyingRef.current || savingRef.current || savedRef.current || discovery) return
     const file = selectedFileRef.current
     if (!file) {
       setMessage('请先选择一张照片')
       return
     }
+    identifyingRef.current = true
     setPhase('loading')
+    setSaveError('')
     setMessage('正在识别中，请稍候...')
     const timer = window.setTimeout(() => setMessage('网络较慢，AI 还在努力识别...'), 8000)
     try {
       const data = await identifyCat(file)
-      window.clearTimeout(timer)
-      setResult(data)
-      setPhase(data.status || 'confirmed')
-      if (data.status === 'confirmed') {
-        const created = await saveConfirmedSighting(data)
-        setSavedSighting(created)
-        setShowPawRain(true)
-      } else if (data.status === 'unavailable') {
-        setMessage('识别服务暂时不可用，可以稍后重试，或先提交线索给猫协。')
+      if (!['confirmed', 'uncertain', 'unknown', 'unavailable'].includes(data.status)) {
+        throw new Error('识别结果格式异常，请重试')
       }
+      setResult(data)
+      setPhase(data.status)
+      setMessage('')
+      if (data.status === 'unavailable') setMessage('识别服务暂时不可用，可以稍后重试，或先提交线索给猫协。')
     } catch (error) {
-      window.clearTimeout(timer)
       console.error('[Scan] identify failed:', error)
-      setMessage(error.message || '识别服务暂时不可用，请稍后重试')
+      setMessage(error instanceof Error ? error.message : '识别服务暂时不可用，请稍后重试')
       setPhase('error')
+    } finally {
+      window.clearTimeout(timer)
+      identifyingRef.current = false
     }
   }
 
-  async function confirmCandidate(candidate) {
-    const catId = candidate.cat_id || candidate.catId
-    if (!catId) return setMessage('无法确认猫咪身份')
-    await saveConfirmedSighting({ ...candidate, cat_id: catId, confidence: candidate.confidence })
-    navigate(`/cats/${catId}`)
-  }
-
-  function openCatArchive(event, catId) {
-    event.stopPropagation()
-    if (catId) navigate(`/cats/${catId}`)
-  }
-
   async function submitDiscovery() {
+    if (savingRef.current || discovery) return
     const file = selectedFileRef.current
-    const location = resolveSightingLocation(getLocationName(), searchParams)
-    setMessage('')
+    const point = resolveSightingLocation(getLocationName(), searchParams)
+    savingRef.current = true
+    setSaving(true)
+    setSaveError('')
     try {
       const created = await createDiscovery({
-        locationName: getLocationName(),
-        latitude: location?.latitude,
-        longitude: location?.longitude,
-        note: discoveryNote || '识别为未知猫，等待猫协复核',
+        locationName: getLocationName(), latitude: point?.latitude, longitude: point?.longitude,
+        note: discoveryNote || (phase === 'unavailable' ? '识别暂不可用，等待猫协复核' : '识别为未知猫，等待猫协复核'),
         file,
       })
       setDiscovery(created)
-    } catch (err) {
-      setMessage(err.message || '提交失败，请重试')
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : '提交失败，请重试')
+    } finally {
+      savingRef.current = false
+      setSaving(false)
     }
   }
 
   function reset() {
+    if (savingRef.current || identifyingRef.current) return
+    focusUploadRef.current = true
     setPhase('idle')
     setResult(null)
     setDiscovery(null)
     setDiscoveryNote('')
     setMessage('')
+    setSaveError('')
+    setFileError('')
+    setDetailsOpen(false)
     setActivity('')
     setWeather('')
     setMood('')
     selectedFileRef.current = null
     setSavedSighting(null)
-    if (previewRef.current) { URL.revokeObjectURL(previewRef.current); previewRef.current = null }
+    savedRef.current = false
+    requestRef.current = null
+    setShowIdentityCard(false)
+    setShowPawRain(false)
+    if (previewRef.current) URL.revokeObjectURL(previewRef.current)
+    previewRef.current = null
     setPreview(null)
     if (fileRef.current) fileRef.current.value = ''
   }
 
-  function confidencePercent(value) {
+  function confidencePercent(value?: number) {
     return Math.max(0, Math.min(100, Math.round((value || 0) * 100)))
   }
 
-  function optionLabel(options, value) {
-    return options.find((option) => option.value === value)?.label
+  function optionLabel(options: { value: string; label: string }[], value: string) {
+    return options.find(option => option.value === value)?.label
   }
 
   function confirmedCatName() {
@@ -174,396 +247,265 @@ export default function Scan() {
   }
 
   function sharePath() {
-    if (savedSighting?.id) return `/sightings/share/${savedSighting.id}`
-    if (result?.cat_id) return `/cats/public/${result.cat_id}`
-    return '/scan'
+    return result?.cat_id ? `/cats/public/${result.cat_id}` : '/scan'
   }
 
   function memoryProof() {
-    const details = [
-      `置信度 ${confidencePercent(result?.confidence)}%`,
-      getLocationName(),
-      optionLabel(ACTIVITY_OPTIONS, activity),
-      optionLabel(WEATHER_OPTIONS, weather),
-      optionLabel(MOOD_OPTIONS, mood),
-    ].filter(Boolean)
-    return details.join(' · ')
+    return [
+      `匹配相似度 ${confidencePercent(result?.confidence)}%（非正确概率）`, getLocationName(),
+      optionLabel(ACTIVITY_OPTIONS, activity), optionLabel(WEATHER_OPTIONS, weather), optionLabel(MOOD_OPTIONS, mood),
+    ].filter(Boolean).join(' · ')
   }
 
+  const hasResult = !['idle', 'ready', 'loading'].includes(phase)
+  const hasReceipt = Boolean(savedSighting || discovery)
+  const location = resolveSightingLocation(getLocationName(), searchParams)
+  const currentStep = phase === 'idle' ? 0 : ['ready', 'loading', 'error'].includes(phase) ? 1 : 2
+  const selectedDetails = [optionLabel(ACTIVITY_OPTIONS, activity), optionLabel(WEATHER_OPTIONS, weather), optionLabel(MOOD_OPTIONS, mood)].filter(Boolean)
+  const resultTitles = {
+    confirmed: '请核对猫咪身份', uncertain: '选择你遇到的猫咪', unknown: '暂未匹配到猫咪',
+    unavailable: '识别服务暂时不可用', error: '这次识别没有完成',
+  }
+  const announcement = saving ? '正在提交，请稍候。'
+    : phase === 'loading' ? message
+    : phase === 'ready' ? '照片已选择，可以开始识别。'
+    : savedSighting ? '偶遇已提交，等待猫协审核。'
+    : discovery ? '线索已提交，等待猫协审核。'
+    : phase === 'confirmed' ? `识别完成，建议匹配${confirmedCatName()}。请核对后提交。`
+    : phase === 'uncertain' ? '识别完成，请从候选猫咪中核对身份。'
+    : phase === 'unknown' ? '暂未匹配到猫咪，可以提交线索给猫协复核。'
+    : phase === 'unavailable' ? '识别暂不可用，可以重试或提交线索。' : ''
+
   return (
-    <div className="pb-6">
+    <div className="pb-6 text-text">
       {showPawRain && <PawRain onDone={() => setShowPawRain(false)} />}
-      <PageHeader title="拍照识别" subtitle="拍一张照片，认识这只猫" />
+      <PageHeader title="拍照识别" subtitle="先认识它，再留下一次偶遇" />
+      <p aria-live="polite" aria-atomic="true" className="sr-only">{announcement}</p>
 
-      <div className="p-3 space-y-3">
-        <label className="block bg-white rounded-xl border border-gray-100 p-3">
-          <span className="text-xs font-medium text-gray-500">偶遇地点</span>
-          <div className="relative mt-1">
-            <input
-              type="text"
-              list="location-options"
-              value={customLocation}
-              onChange={(e) => setCustomLocation(e.target.value)}
-              placeholder="搜索或输入地点..."
-              className="w-full bg-primary-light rounded-full px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary/30"
-            />
-            <datalist id="location-options">
-              {campusLocations.map((loc) => (
-                <option key={loc.name} value={loc.name} />
-              ))}
-            </datalist>
-          </div>
-        </label>
+      <div className="mx-auto max-w-2xl space-y-5 px-4 py-5">
+        <ol aria-label="识猫步骤" className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-5 text-sm text-text-secondary">
+          {['选照片', '识别', '核对并提交'].map((label, index) => (
+            <li key={label} aria-current={currentStep === index ? 'step' : undefined} className={`inline-flex items-center gap-2 ${currentStep === index ? 'font-semibold text-primary' : ''}`}>
+              <span aria-hidden="true" className={`flex h-6 w-6 items-center justify-center rounded-full ${currentStep === index ? 'bg-primary-light' : 'bg-surface-3'}`}>
+                {hasReceipt || currentStep > index ? <Check className="h-3.5 w-3.5" /> : index + 1}
+              </span>
+              {label}
+            </li>
+          ))}
+        </ol>
 
-        <p className="text-xs text-gray-500">
-          {resolveSightingLocation(getLocationName(), searchParams)
-            ? '将保存所选点位的坐标，审核通过后可在地图显示。'
-            : '尚未选择有坐标的点位。仍可保存文字记录，但暂不会显示在地图上。'}
-        </p>
-
-        <div className="bg-white rounded-xl border border-gray-100 p-3 space-y-3">
-          <div>
-            <span className="text-xs font-medium text-gray-500">活动状态</span>
-            <div className="grid grid-cols-4 gap-2 mt-2">
-              {ACTIVITY_OPTIONS.map((a) => (
-                <button
-                  key={a.value}
-                  onClick={() => setActivity(activity === a.value ? '' : a.value)}
-                  className={`flex flex-col items-center py-2 rounded-lg border text-xs transition-colors ${
-                    activity === a.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
-                  }`}
-                >
-                  <span className="text-lg">{a.emoji}</span>
-                  <span className="mt-0.5">{a.label}</span>
+        <section aria-label="猫咪照片" className="space-y-3">
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" capture="environment" aria-label="拍照或上传图片" className="hidden" onChange={onFileChange} />
+          {phase === 'idle' ? (
+            <button ref={uploadButtonRef} type="button" onClick={() => fileRef.current?.click()} className="flex min-h-52 w-full flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-primary bg-primary-light px-5 py-8 text-center text-text transition-colors hover:bg-surface-2">
+              <Camera aria-hidden="true" className="h-9 w-9 text-primary" />
+              <span className="text-base font-semibold">拍照或上传图片</span>
+              <span className="text-sm text-text-secondary">选一张能看清猫咪面部和花纹的照片</span>
+              <span className="text-sm text-text-secondary">JPG、PNG、WebP，最大 10 MB</span>
+            </button>
+          ) : preview ? (
+            <figure className="overflow-hidden rounded-2xl border border-border bg-surface-2">
+              <img src={preview} alt="预览" className={`w-full object-contain ${hasResult ? 'h-52 sm:h-64' : 'h-64 sm:h-80'}`} />
+              <figcaption className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-surface-1 px-3 py-2">
+                <span className="text-sm text-text-secondary">{hasReceipt ? '本次提交的照片' : '用于识别和提交偶遇的照片'}</span>
+                <button type="button" onClick={reset} disabled={saving || phase === 'loading'} className="btn btn-ghost min-h-11 px-4 text-sm">
+                  {hasReceipt ? '记录下一次偶遇' : '重新选择照片'}
                 </button>
-              ))}
+              </figcaption>
+            </figure>
+          ) : null}
+          {fileError && <p role="alert" className="rounded-xl border border-danger bg-surface-1 px-4 py-3 text-sm text-danger">{fileError}</p>}
+          {phase === 'idle' && (
+            <div className="space-y-2 text-sm leading-6 text-text-secondary">
+              <p>尽量靠近、光线充足，一张照片中只保留一只猫。</p>
+              <p>识别不会自动保存；核对结果后，再由你决定是否提交。</p>
+              {customLocation && <p className="flex items-start gap-2 break-words"><MapPin aria-hidden="true" className="mt-1 h-4 w-4 shrink-0" />已带入地点：{customLocation}</p>}
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <span className="text-xs font-medium text-gray-500">天气</span>
-              <div className="flex gap-1.5 mt-2">
-                {WEATHER_OPTIONS.map((w) => (
-                  <button
-                    key={w.value}
-                    onClick={() => setWeather(weather === w.value ? '' : w.value)}
-                    className={`flex-1 flex flex-col items-center py-1.5 rounded-lg border text-xs transition-colors ${
-                      weather === w.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
-                    }`}
-                  >
-                    <span className="text-base">{w.emoji}</span>
-                    <span className="mt-0.5">{w.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-gray-500">心情</span>
-              <div className="flex gap-1.5 mt-2">
-                {MOOD_OPTIONS.map((m) => (
-                  <button
-                    key={m.value}
-                    onClick={() => setMood(mood === m.value ? '' : m.value)}
-                    className={`flex-1 flex flex-col items-center py-1.5 rounded-lg border text-xs transition-colors ${
-                      mood === m.value ? 'border-primary bg-primary-light text-primary' : 'border-gray-100 text-gray-500'
-                    }`}
-                  >
-                    <span className="text-base">{m.emoji}</span>
-                    <span className="mt-0.5">{m.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {phase === 'idle' ? (
-          <label className="block border-2 border-dashed border-primary rounded-xl p-8 text-center cursor-pointer bg-primary-light active:bg-orange-100">
-            <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
-            <div className="text-primary font-medium">拍照或上传图片</div>
-            <div className="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</div>
-            <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFileChange} />
-        </label>
-        ) : preview ? (
-          <div className="relative rounded-xl overflow-hidden aspect-square bg-gray-100">
-            <img src={preview} alt="预览" className="w-full h-full object-cover" />
-            {phase === 'ready' && (
-              <button onClick={reset} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm">
-                ×
-              </button>
-            )}
-          </div>
-        ) : null}
+          )}
+        </section>
 
         {phase === 'ready' && (
-          <button onClick={handleIdentify} className="w-full bg-primary text-white rounded-full py-3.5 font-medium text-base active:opacity-90 flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
-            <Sparkles className="w-4 h-4" />开始识别
-          </button>
+          <div className="space-y-2">
+            <button ref={identifyButtonRef} type="button" onClick={handleIdentify} className="btn btn-primary min-h-11 w-full gap-2">
+              <Sparkles aria-hidden="true" className="h-4 w-4" />开始识别
+            </button>
+            <p className="text-center text-sm leading-5 text-text-secondary">识别完成后，可核对身份并补充偶遇信息。</p>
+          </div>
         )}
 
         {phase === 'loading' && (
-          <>
-            <div className="w-full bg-primary/80 text-white rounded-full py-3.5 font-medium text-base flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              AI 正在识别中…
+          <div aria-busy="true" className="flex items-start gap-3 rounded-xl border border-border bg-surface-1 p-4">
+            <span aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-primary border-t-transparent motion-reduce:animate-none" />
+            <div className="min-w-0 space-y-1">
+              <p className="font-semibold">AI 正在识别中…</p>
+              <p className="text-sm leading-6 text-text-secondary">{message}</p>
             </div>
-            <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
-              <PawPrint className="w-6 h-6 text-primary mx-auto animate-paw mb-2" />
-              <div className="text-xs text-gray-500">{message || '通常不超过 10 秒'}</div>
+          </div>
+        )}
+
+        {hasResult && (
+          <section aria-labelledby="scan-result-heading" className="space-y-3">
+            <h2 id="scan-result-heading" ref={resultHeadingRef} tabIndex={-1} className="scroll-mt-24 rounded-md text-lg font-semibold leading-7">{resultTitles[phase]}</h2>
+            {phase === 'confirmed' && result && (
+              <div className="space-y-3 rounded-2xl border border-border bg-surface-1 p-4">
+                <p className="text-sm font-medium text-text-secondary">{savedSighting ? '已提交，待审核' : '识别结果，尚未提交'}</p>
+                <div className="flex min-w-0 flex-col items-start gap-3 min-[480px]:flex-row min-[480px]:justify-between">
+                  <p className="min-w-0 break-words text-2xl font-bold leading-8">{confirmedCatName()}</p>
+                  <button type="button" disabled={saving} onClick={() => navigate(`/cats/${result.cat_id}`)} className="btn btn-ghost min-h-11 shrink-0 px-3 text-sm">打开完整档案</button>
+                </div>
+                <ConfidenceBar value={result.confidence} />
+                <p className="text-sm leading-6 text-text-secondary">请对照照片与档案，确认是同一只猫后再提交。</p>
+              </div>
+            )}
+            {phase === 'uncertain' && (
+              <p className="text-sm leading-6 text-text-secondary">有几只猫与照片相似。请先查看档案再选择；匹配相似度不代表识别正确的概率。</p>
+            )}
+            {phase === 'unknown' && (
+              <p className="text-sm leading-6 text-text-secondary">它可能尚未入库，也可能是照片角度或光线影响了识别。可以补充线索，由猫协复核。</p>
+            )}
+            {phase === 'unavailable' && (
+              <p className="text-sm leading-6 text-text-secondary">{message || '你可以重试识别，或保留照片与地点，先提交线索给猫协。'}</p>
+            )}
+            {phase === 'error' && (
+              <div className="space-y-3">
+                <p role="alert" className="break-words rounded-xl border border-danger bg-surface-1 px-4 py-3 text-sm leading-6 text-danger">{message || '识别失败，请重试'}</p>
+                <button type="button" onClick={handleIdentify} className="btn btn-primary min-h-11 w-full">重试识别</button>
+              </div>
+            )}
+          </section>
+        )}
+
+        {preview && phase !== 'loading' && (
+          <fieldset disabled={draftLocked} className="space-y-4">
+            <legend className="sr-only">偶遇信息</legend>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <label htmlFor="sighting-location" className="text-sm font-semibold">偶遇地点</label>
+                <span className="text-sm text-text-secondary">选填</span>
+              </div>
+              <input id="sighting-location" type="text" list="location-options" value={customLocation} maxLength={100} onChange={event => setCustomLocation(event.target.value)} placeholder="搜索点位，或填写你看到它的地方" aria-describedby="sighting-location-help sighting-location-count" className="ui-input" />
+              <datalist id="location-options">{campusLocations.map(point => <option key={point.name} value={point.name} />)}</datalist>
+              <div className="flex items-start justify-between gap-3 text-sm leading-5 text-text-secondary">
+                <p id="sighting-location-help">{location ? '已关联点位坐标，审核通过后可在地图显示。' : '可以只保存文字地点；没有坐标的记录暂不显示在地图上。'}</p>
+                <span id="sighting-location-count" className="shrink-0 tabular-nums">{customLocation.length}/100</span>
+              </div>
             </div>
-          </>
+
+            {['ready', 'confirmed', 'uncertain'].includes(phase) && (
+              <div className="rounded-xl border border-border bg-surface-1">
+                <button type="button" aria-expanded={detailsOpen} aria-controls="sighting-extra-fields" onClick={() => setDetailsOpen(open => !open)} className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-4 py-3 text-left disabled:cursor-not-allowed">
+                  <span className="min-w-0 space-y-1">
+                    <span className="block text-sm font-semibold">补充偶遇信息（选填）</span>
+                    <span className="block break-words text-sm leading-5 text-text-secondary">{selectedDetails.length ? selectedDetails.join(' · ') : '活动状态、天气和心情'}</span>
+                  </span>
+                  <ChevronDown aria-hidden="true" className={`h-4 w-4 shrink-0 text-text-secondary transition-transform motion-reduce:transition-none ${detailsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <div id="sighting-extra-fields" hidden={!detailsOpen} className="space-y-4 border-t border-border p-4">
+                  {[
+                    { label: '活动状态', options: ACTIVITY_OPTIONS, value: activity, setValue: setActivity },
+                    { label: '天气', options: WEATHER_OPTIONS, value: weather, setValue: setWeather },
+                    { label: '心情', options: MOOD_OPTIONS, value: mood, setValue: setMood },
+                  ].map(group => (
+                    <fieldset key={group.label} className="space-y-2">
+                      <legend className="mb-2 text-sm font-semibold text-text-secondary">{group.label}</legend>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        {group.options.map(option => (
+                          <button key={option.value} type="button" aria-pressed={group.value === option.value} onClick={() => group.setValue(group.value === option.value ? '' : option.value)} className={`flex min-h-11 items-center justify-center gap-2 rounded-lg border px-2 py-2 text-sm disabled:cursor-not-allowed ${group.value === option.value ? 'border-primary bg-primary-light font-semibold text-primary' : 'border-border bg-surface-1 text-text-secondary hover:bg-surface-2'}`}>
+                            <span aria-hidden="true">{option.emoji}</span>{option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </fieldset>
+                  ))}
+                </div>
+              </div>
+            )}
+            {hasReceipt && <p className="text-sm leading-5 text-text-secondary">以上是本次已提交的信息，不能重复提交；继续记录请另选一张照片。</p>}
+          </fieldset>
+        )}
+
+        {saveError && (
+          <div ref={saveErrorRef} tabIndex={-1} role="alert" className="scroll-mt-24 space-y-1 break-words rounded-xl border border-danger bg-surface-1 px-4 py-3 text-sm leading-6 text-danger">
+            <p className="font-semibold">提交失败：{saveError}</p>
+            <p>照片和填写内容已保留，请重试提交。</p>
+          </div>
         )}
 
         {phase === 'confirmed' && result && (
           <div className="space-y-3">
-            <section className="overflow-hidden rounded-2xl bg-white shadow-e3">
-              <div className="relative min-h-[180px] bg-gradient-to-br from-orange-50 via-white to-amber-50">
-                {preview ? (
-                  <img src={preview} alt={`${confirmedCatName()} 的识别照片`} className="absolute inset-0 h-full w-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-primary-light">
-                    <Cat className="h-16 w-16 text-primary/30" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/20 to-transparent" />
-                <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-green-700 shadow-e1">
-                    <Check className="h-3.5 w-3.5" />
-                    已记入偶遇
-                  </span>
-                  <span className="rounded-full bg-stone-950/60 px-3 py-1.5 text-xs font-semibold text-white">
-                    {confidencePercent(result.confidence)}%
-                  </span>
+            {savedSighting ? (
+              <>
+                <div ref={receiptRef} tabIndex={-1} role="status" className="scroll-mt-24 space-y-2 rounded-xl border border-success bg-surface-1 p-4">
+                  <p className="flex items-start gap-2 text-sm font-semibold"><Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-success" />偶遇已提交，等待猫协审核</p>
+                  <p className="text-sm leading-6 text-text-secondary">审核通过后才会公开并进入地图。这次偶遇无需重复提交。</p>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <p className="text-xs font-medium text-white/80">这次遇见的是</p>
-                  <h2 className="mt-1 text-3xl font-bold leading-tight">{confirmedCatName()}</h2>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/90">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {confirmedZone()}
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1">
-                      <BadgeCheck className="h-3.5 w-3.5" />
-                      {result.collector_status || '校园观察员'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4 p-4">
-                <div>
-                  <div className="mb-2 flex items-center justify-between text-xs">
-                    <span className="font-medium text-text-secondary">识别可信度</span>
-                    <span className="font-semibold text-primary">高置信度匹配</span>
-                  </div>
-                  <ConfidenceBar value={result.confidence} />
-                </div>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="rounded-xl bg-surface-2 px-3 py-2">
-                    <p className="text-[11px] text-text-muted">地点</p>
-                    <p className="mt-1 truncate text-xs font-semibold text-text">{getLocationName()}</p>
-                  </div>
-                  <div className="rounded-xl bg-surface-2 px-3 py-2">
-                    <p className="text-[11px] text-text-muted">状态</p>
-                    <p className="mt-1 truncate text-xs font-semibold text-text">{optionLabel(ACTIVITY_OPTIONS, activity) || '已记录'}</p>
-                  </div>
-                  <div className="rounded-xl bg-surface-2 px-3 py-2">
-                    <p className="text-[11px] text-text-muted">下一步</p>
-                    <p className="mt-1 truncate text-xs font-semibold text-text">分享记忆卡</p>
-                  </div>
-                </div>
-
-                {(result.personality_tags?.length ?? 0) > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {result.personality_tags?.slice(0, 4).map((tag) => (
-                      <span key={tag} className="rounded-full bg-primary-light px-2.5 py-1 text-xs font-medium text-primary">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <ShareArtifact
-                  title={`我在复旦遇见了 ${confirmedCatName()}`}
-                  subtitle={confirmedZone()}
-                  image={preview || undefined}
-                  proof={memoryProof()}
-                  sharePath={sharePath()}
-                  badge="📸"
-                  slogan="这次偶遇已存入猫猫档案"
-                >
-                  <button className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white shadow-primary-glow transition-colors hover:bg-primary-hover active:scale-[0.98]">
-                    <Share2 className="h-4 w-4" />
-                    生成偶遇纪念卡
-                  </button>
+                <ShareArtifact title={`我在复旦遇见了 ${confirmedCatName()}`} subtitle={confirmedZone()} image={preview || undefined} proof={memoryProof()} sharePath={sharePath()} linkLabel="扫码查看猫咪档案" badge="📸" slogan="偶遇待审核 · 链接为猫咪档案">
+                  <button type="button" className="btn btn-primary min-h-11 w-full gap-2"><Share2 aria-hidden="true" className="h-4 w-4" />生成个人纪念卡</button>
                 </ShareArtifact>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => setShowIdentityCard(true)} className="rounded-full border border-primary/40 bg-white px-4 py-3 text-sm font-semibold text-primary">
-                    查看猫猫身份证
-                  </button>
-                  <button onClick={() => navigate(`/cats/${result.cat_id}`)} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-text-secondary">
-                    打开完整档案
-                  </button>
-                </div>
-                {savedSighting?.id && (
-                  <button onClick={() => navigate(`/sightings/share/${savedSighting.id}`)} className="w-full rounded-full border border-border bg-surface-2 px-4 py-3 text-sm font-semibold text-text-secondary">
-                    查看公开偶遇页
-                  </button>
-                )}
+              </>
+            ) : (
+              <div className="space-y-2">
+                <button type="button" onClick={() => saveConfirmedSighting(result)} disabled={saving} className="btn btn-primary min-h-11 w-full">{saving ? '正在提交偶遇…' : '确认并提交偶遇'}</button>
+                <p className="text-center text-sm leading-5 text-text-secondary">提交后进入猫协审核，不会立即公开。</p>
               </div>
-            </section>
-
-            <button onClick={reset} className="w-full rounded-full border border-primary text-primary py-3 font-medium text-sm">
-              重新识别
-            </button>
+            )}
+            <button type="button" disabled={saving} onClick={() => setShowIdentityCard(true)} className="btn btn-ghost min-h-11 w-full">查看猫猫身份证</button>
           </div>
         )}
 
         {phase === 'uncertain' && result && (
-          <div className="space-y-2">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-yellow-600" />
-              <div className="text-sm text-yellow-800">找到几个相似的猫咪，请确认是哪一只</div>
-            </div>
-            {result.candidates?.map((candidate) => (
-              <button key={candidate.cat_id} onClick={() => confirmCandidate(candidate)} className="w-full bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 active:bg-gray-50 cursor-pointer text-left">
-                <div
-                  onClick={(event) => openCatArchive(event, candidate.cat_id)}
-                  className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center overflow-hidden shrink-0"
-                >
-                  {candidate.cat_avatar ? (
-                    <img src={candidate.cat_avatar} alt={`${candidate.cat_name} 的参考照片`} className="w-full h-full object-cover" />
-                  ) : (
-                    <Cat className="w-6 h-6 text-primary/30" />
-                  )}
+          <div className="space-y-3">
+            {result.candidates?.map(candidate => (
+              <section key={candidate.cat_id} aria-label={`${candidate.cat_name} 候选`} className="space-y-4 rounded-xl border border-border bg-surface-1 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-2">
+                    {candidate.cat_avatar ? <img src={candidate.cat_avatar} alt={`${candidate.cat_name} 的参考照片`} className="h-full w-full object-cover" /> : <Cat aria-hidden="true" className="h-7 w-7 text-text-secondary" />}
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <h3 className="break-words text-base font-semibold leading-6">{candidate.cat_name}</h3>
+                    <ConfidenceBar value={candidate.confidence} showExplanation={false} />
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium">{candidate.cat_name}</div>
-                  <ConfidenceBar value={candidate.confidence} />
+                <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-2">
+                  <button type="button" disabled={saving} onClick={() => navigate(`/cats/${candidate.cat_id}`)} className="btn btn-ghost min-h-11 min-w-0 whitespace-normal break-words px-3 text-sm">查看{candidate.cat_name}档案</button>
+                  <button type="button" disabled={saving} onClick={() => saveConfirmedSighting(candidate)} aria-label={`确认是${candidate.cat_name}并提交偶遇`} className="btn btn-primary min-h-11 px-3 text-sm">{saving ? '正在提交偶遇…' : '确认并提交偶遇'}</button>
                 </div>
-                <span
-                  onClick={(event) => openCatArchive(event, candidate.cat_id)}
-                  className="shrink-0 rounded-full bg-primary-light px-3 py-1.5 text-xs font-semibold text-primary"
-                >
-                  看照片{candidate.photo_count ? ` ${candidate.photo_count}` : ''}
-                </span>
-              </button>
+              </section>
             ))}
-            <button onClick={reset} className="w-full border border-gray-200 text-gray-500 rounded-full py-3 text-sm">
-              都不对，重新拍
-            </button>
+            <p className="text-center text-sm leading-5 text-text-secondary">都不相符时，请用上方的“重新选择照片”再试一次。</p>
           </div>
         )}
 
-        {phase === 'unknown' && (
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary-light flex items-center justify-center">
-              <PawPrint className="w-6 h-6 text-primary/40" />
-            </div>
-            <div className="font-medium text-gray-800">发现新朋友！</div>
-            <div className="text-xs text-gray-400 mt-1 mb-4">AI 初步判断它可能还没入库，提交后将由猫协复核</div>
+        {(phase === 'unknown' || phase === 'unavailable') && (
+          <div className="space-y-3">
             {discovery ? (
-              <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left mb-3">
-                <p className="text-sm font-medium text-green-700">线索已提交，等待猫协审核</p>
-                <p className="text-xs text-green-600 mt-1">{discovery.ai_summary}</p>
+              <div ref={receiptRef} tabIndex={-1} role="status" className="scroll-mt-24 space-y-2 rounded-xl border border-success bg-surface-1 p-4">
+                <p className="text-sm font-semibold">线索已提交，等待猫协审核</p>
+                <p className="break-words text-sm leading-6 text-text-secondary">{discovery.ai_summary || '猫协会根据照片和描述核对身份，提交不代表已建立新档案。'}</p>
               </div>
             ) : (
               <>
-                <textarea
-                  value={discoveryNote}
-                  onChange={(event) => setDiscoveryNote(event.target.value)}
-                  placeholder="补充描述：毛色、状态、你在哪里看到它..."
-                  className="w-full h-24 text-sm text-gray-700 border border-gray-100 rounded-xl p-3 outline-none resize-none mb-3"
-                />
-                <button onClick={submitDiscovery} className="w-full bg-primary text-white rounded-full py-3 text-sm font-medium">
-                  提交给 AI 与猫协审核 →
-                </button>
-              </>
-            )}
-            <button onClick={reset} className="w-full mt-2 text-sm text-gray-400">取消</button>
-          </div>
-        )}
-
-        {phase === 'unavailable' && (
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-yellow-50 flex items-center justify-center">
-              <HelpCircle className="w-6 h-6 text-yellow-500" />
-            </div>
-            <div className="font-medium text-gray-800">识别服务暂时不可用</div>
-            <div className="text-xs text-gray-400 mt-1 mb-4">
-              {message || 'AI 现在没有返回可靠结果，你可以稍后重试，或先把这次偶遇提交给猫协。'}
-            </div>
-            {discovery ? (
-              <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left mb-3">
-                <p className="text-sm font-medium text-green-700">线索已提交，等待猫协审核</p>
-                <p className="text-xs text-green-600 mt-1">谢谢你先把这次偶遇留住。</p>
-              </div>
-            ) : (
-              <>
-                <textarea
-                  value={discoveryNote}
-                  onChange={(event) => setDiscoveryNote(event.target.value)}
-                  placeholder="补充描述：毛色、状态、你在哪里看到它..."
-                  className="w-full h-24 text-sm text-gray-700 border border-gray-100 rounded-xl p-3 outline-none resize-none mb-3"
-                />
-                <button onClick={submitDiscovery} className="w-full bg-primary text-white rounded-full py-3 text-sm font-medium">
-                  先提交线索
-                </button>
-              </>
-            )}
-            <button onClick={reset} className="w-full mt-2 border border-gray-200 text-gray-500 rounded-full py-3 text-sm">
-              重新选择照片
-            </button>
-          </div>
-        )}
-
-        {phase === 'error' && (
-          <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center text-sm text-red-500">
-            {message || '识别失败，请重试'}
-          </div>
-        )}
-
-        {phase === 'idle' && (
-          <>
-            {message && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-center text-sm text-yellow-700">
-                {message}
-              </div>
-            )}
-            <div className="bg-white rounded-xl border border-gray-100 p-4 text-xs text-gray-400 leading-7">
-              <div className="flex items-center gap-3 mb-3">
-                <MascotCat mood="curious" size={56} className="shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">来认识新的猫咪朋友吧</p>
-                  <p className="text-xs text-gray-400 mt-0.5">拍一张照片，AI 帮你识别</p>
+                <div className="space-y-2">
+                  <label htmlFor="discovery-note" className="block text-sm font-semibold">补充线索（选填）</label>
+                  <textarea id="discovery-note" disabled={saving} value={discoveryNote} maxLength={500} onChange={event => setDiscoveryNote(event.target.value)} placeholder="例如：左耳缺角，正在图书馆草坪休息" aria-describedby="discovery-note-help discovery-note-count" className="ui-input min-h-28 resize-y" />
+                  <div className="flex items-start justify-between gap-3 text-sm leading-5 text-text-secondary">
+                    <p id="discovery-note-help">描述毛色、明显特征或当时状态，帮助猫协复核。</p>
+                    <span id="discovery-note-count" className="shrink-0 tabular-nums">{discoveryNote.length}/500</span>
+                  </div>
                 </div>
-              </div>
-            <div>· 尽量拍清晰的正面或侧面照片</div>
-            <div>· 光线充足识别效果更佳</div>
-            <div>· 识别不确定时会展示多个候选</div>
+                <button type="button" disabled={saving} onClick={submitDiscovery} className="btn btn-primary min-h-11 w-full">{saving ? '正在提交线索…' : phase === 'unavailable' ? '先提交线索' : '提交给 AI 与猫协审核 →'}</button>
+                {phase === 'unavailable' && <button type="button" disabled={saving} onClick={handleIdentify} className="btn btn-ghost min-h-11 w-full">重试识别</button>}
+                <p className="flex items-start gap-2 text-sm leading-5 text-text-secondary"><HelpCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />提交线索后由猫协复核，暂不公开。</p>
+              </>
+            )}
           </div>
-          </>
         )}
       </div>
 
       {showIdentityCard && phase === 'confirmed' && result?.cat_id && (
         <CatIdentityCard
-          cat={{
-            id: result.cat_id,
-            name: result.cat_name || '校园猫猫',
-            personality: result.personality_tags?.join('、'),
-            location: result.campus_zone,
-            avatar: result.cat_avatar,
-            images: [],
-            health_records: [],
-            created_at: '',
-          }}
-          personalityTags={result.personality_tags}
-          campusZone={result.campus_zone}
-          collectorStatus={result.collector_status}
+          cat={{ id: result.cat_id, name: result.cat_name || '校园猫猫', personality: result.personality_tags?.join('、'), location: result.campus_zone, avatar: result.cat_avatar, images: [], health_records: [], created_at: '' }}
+          personalityTags={result.personality_tags} campusZone={result.campus_zone} collectorStatus={result.collector_status}
           onClose={() => setShowIdentityCard(false)}
         />
       )}

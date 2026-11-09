@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-09",
+  "mode": "local_reference_conditioned_image_to_image",
+  "model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+  "reference_a": {
+    "file": "D:\\Desktop\\fdmm\\cat-cat-cat\\output\\imagegen\\fudan-blue\\flux\\01-campus-cat-v1.png",
+    "role": "image input; identity and composition",
+    "sha256": "ee29ac6ffc451eb4c4d11fbef801a3600cb9078cab97e9e300359451e45b3d07"
+  },
+  "reference_b": {
+    "file": "D:\\Desktop\\fdmm\\cat-cat-cat\\output\\imagegen\\fudan-blue\\flux\\02-library-cat.png",
+    "role": "visual style reference translated into prompts; not a direct model input",
+    "sha256": "4d3cb18a314cae9af3ccf7441feca8b3c809ce597867bac331dd56bd226a00b6"
+  },
+  "prompt": "Softly painted three-dimensional blue and white cat character, rounded cheeks and body, soft short fur, large sapphire blue eyes, pointed ears, asymmetric cobalt blue forehead patch, white muzzle and chest, blue curled tail, seated pose. Gentle studio lighting, rich soft blue-gray shadows, subtle fur texture, illustrated depth, white background.",
+  "prompt_2": "Dimensional hand-painted storybook cat, beautiful soft fur shading, volume modeled by light, thin delicate contours, fine painted fur strokes, soft light from upper left, ambient occlusion beneath the chin and between paws, gentle shadow on the floor, friendly stylized face, refined editorial illustration, clear blue and white colors.",
+  "negative_prompt": "badge, medal, jewelry, accessory, letters, text, watermark, signature, book, multiple cats, human, photograph, plastic toy, flat vector, thick black outline, sketch, grain, extra limbs, deformed paws, malformed anatomy, cropped ears, cropped tail, orange fur",
+  "cleanup": {
+    "file": "reference-a-cleaned.png",
+    "method": "local SDXL masked inpainting",
+    "mask": "chest-cleanup-mask.png"
+  },
+  "outputs": [
+    {
+      "file": "hybrid-768-s72-seed1109-volume.png",
+      "size": [
+        768,
+        768
+      ],
+      "strength": 0.72,
+      "seed": 1109,
+      "steps": 32,
+      "guidance_scale": 6.0,
+      "elapsed_seconds": 20.7,
+      "sha256": "5fe57db2429c5bdba04fc41be8cd2a53c4ae65a0f2ac098eb07e2fdd7373e971"
+    },
+    {
+      "file": "hybrid-768-s82-seed1109-volume.png",
+      "size": [
+        768,
+        768
+      ],
+      "strength": 0.82,
+      "seed": 1109,
+      "steps": 32,
+      "guidance_scale": 6.0,
+      "elapsed_seconds": 14.16,
+      "sha256": "c763e1188d33523b28e27c5f668119ac33cd028efd9d17adcb0e44934872ceb8"
+    }
+  ]
+}

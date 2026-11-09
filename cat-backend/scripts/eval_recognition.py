@@ -56,6 +56,7 @@ class Sample(BaseModel):
 class Dataset(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     format_version: Literal[1] = 1
+    evaluation_scope: Literal['general', 'campus'] = 'general'
     dataset_id: str = Field(min_length=1)
     database_id: str = Field(pattern=r'^[0-9a-f]{32}$')
     snapshot_id: str = Field(pattern=r'^[0-9a-f]{32}$')
@@ -131,13 +132,21 @@ def validate_samples(dataset, root, snapshot):
 
 def evaluate(manifest_path):
     report = {'status': 'incomplete', 'started_at': datetime.now(timezone.utc).isoformat(),
-              'errors': [], 'predictions': [], 'summary': None}
+              'errors': [], 'predictions': [], 'summary': None, 'release_quality_passed': False}
     try:
         raw = manifest_path.read_bytes()
         dataset = Dataset.model_validate_json(raw)
+        if dataset.evaluation_scope != 'campus' and 'campus_preflight' in dataset.provenance:
+            raise ValueError('Campus evidence requires evaluation_scope=campus')
         report.update(dataset_id=dataset.dataset_id, dataset_sha256=hashlib.sha256(raw).hexdigest(),
-                      provenance=dataset.provenance, crop=dataset.crop)
+                      provenance=dataset.provenance, crop=dataset.crop, evaluation_scope=dataset.evaluation_scope)
         snapshot = load_active_snapshot(dataset.crop)
+        if dataset.evaluation_scope == 'campus':
+            from scripts.campus_protocol import validate_evaluation
+            report['campus_evidence'] = validate_evaluation(dataset, manifest_path.parent.resolve(),
+                snapshot.manifest.model_dump(), {'confirmed': settings.RECOGNIZE_THRESHOLD_CONFIRMED,
+                    'uncertain': settings.RECOGNIZE_THRESHOLD_UNCERTAIN,
+                    'minimum_margin': settings.RECOGNIZE_MIN_MARGIN})
         report['reference'] = {'manifest': snapshot.manifest.model_dump(), 'publication_id': snapshot.publication_id}
         queries, errors, near = validate_samples(dataset, manifest_path.parent.resolve(), snapshot)
         report['near_duplicate_candidates'] = near
@@ -199,8 +208,14 @@ def evaluate(manifest_path):
             report['errors'].append({'error': 'Recognition unavailable for one or more queries; evaluation incomplete'})
         else:
             report['status'] = 'completed'
+        if 'campus_evidence' in report and report['status'] == 'completed':
+            from scripts.campus_protocol import assess
+            report['empirical_gates'] = assess(report['summary'], report['campus_evidence']['targets'])
+            report['empirical_targets_passed'] = all(report['empirical_gates'].values())
+            if not report['empirical_targets_passed']:
+                return report, 3
         return report, 0 if report['status'] == 'completed' else 2
-    except (OSError, ValueError, ReferenceUnavailable) as exc:
+    except (OSError, ValueError, TypeError, KeyError, AttributeError, ReferenceUnavailable) as exc:
         report['errors'].append({'error': str(exc)})
         return report, 2
 
@@ -210,6 +225,8 @@ def main(argv=None):
     parser.add_argument('--manifest', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.output.exists():
+        parser.error('Output already exists; preserve prior evidence and choose a new path')
     if args.output.resolve() == args.manifest.resolve():
         parser.error('Output must not overwrite the dataset manifest')
     report, code = evaluate(args.manifest.resolve())

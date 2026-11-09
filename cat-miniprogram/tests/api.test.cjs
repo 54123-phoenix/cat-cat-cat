@@ -56,14 +56,16 @@ test('list clients receive items and paginated clients retain total/has_more', a
 
 test('sightings with and without images preserve API form fields', async () => {
   const { api, calls } = apiWithResponse({ statusCode: 200, data: { id: 4 } })
-  const fields = { catId: 3, confidence: 0.8, latitude: 0, longitude: 12, note: '猫 & 草坪' }
+  const fields = { catId: 3, confidence: 0.8, latitude: 0, longitude: 12, note: '猫 & 草坪', client_request_id: 'c5a83eec-c20e-4eec-9d6e-f541953630ff' }
   assert.equal((await api.createSighting(fields)).id, 4)
   const form = new URLSearchParams(calls[0].data)
   assert.equal(form.get('cat_id'), '3')
   assert.equal(form.get('latitude'), '0')
   assert.equal(form.get('note'), fields.note)
+  assert.equal(form.get('client_request_id'), fields.client_request_id)
   assert.equal(form.has('catId'), false)
   await api.createSighting({ ...fields, file: 'local-image.png' })
   assert.equal(calls[1].formData.cat_id, '3')
   assert.equal(calls[1].formData.note, fields.note)
+  assert.equal(calls[1].formData.client_request_id, fields.client_request_id)
 })

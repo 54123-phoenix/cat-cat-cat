@@ -1,5 +1,7 @@
 from pathlib import Path
 import json
+import shutil
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -126,8 +128,8 @@ if "phase === 'unavailable'" not in scan_page:
     errors.append("Scan page should render an unavailable recognition state")
 if "识别服务暂时不可用" not in scan_page:
     errors.append("Scan page should explain unavailable recognition state to users")
-if "/sightings/share/" not in scan_page:
-    errors.append("Scan page should link confirmed sightings to the share page")
+# New submissions are pending review. The scan contract is verified by actual
+# component interactions below, not by requiring a premature public share URL.
 
 crud = read("cat-backend/app/crud.py")
 if "def notify_cat_followers" not in crud:
@@ -200,6 +202,18 @@ routes_page = read("cat-frontend/src/pages/CatRoutes.tsx")
 for token in ("time_slot", "Share2", "ROUTES.SCAN", "ROUTES.MAP"):
     if token not in routes_page:
         errors.append(f"CatRoutes page missing token: {token}")
+
+if not errors:
+    try:
+        result = subprocess.run([
+            shutil.which('node') or 'node', 'node_modules/vitest/vitest.mjs', 'run',
+            'src/__tests__/scan.test.tsx', 'src/__tests__/sightingRequest.test.ts',
+        ], cwd=ROOT / 'cat-frontend', capture_output=True, text=True,
+            encoding='utf-8', errors='replace', timeout=90)
+        if result.returncode:
+            errors.append('Explicit sighting submission/retry/privacy behavior failed:\n' + result.stdout + result.stderr)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        errors.append(f'Could not run sighting behavior checks; install Web dependencies: {exc}')
 
 if errors:
     print("API/core-loop contract failed:")

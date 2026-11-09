@@ -10,6 +10,7 @@ interface CatIdentityCardProps {
   campusZone?: string
   collectorStatus?: string
   sightingCount?: number
+  sightingCountLabel?: string
   onClose?: () => void
 }
 
@@ -19,6 +20,7 @@ export default function CatIdentityCard({
   campusZone,
   collectorStatus,
   sightingCount,
+  sightingCountLabel = '偶遇记录',
   onClose,
 }: CatIdentityCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
@@ -30,6 +32,7 @@ export default function CatIdentityCard({
 
   const zone = campusZone || cat.location || '校园某处'
   const status = collectorStatus || '校园观察员'
+  const knownSightingCount = Number.isFinite(sightingCount) && sightingCount >= 0
 
   function handleMove(e: React.MouseEvent) {
     const el = cardRef.current
@@ -93,9 +96,9 @@ export default function CatIdentityCard({
             </span>
           </div>
 
-          {sightingCount !== undefined && (
+          {knownSightingCount && (
             <div className="mt-3 text-sm text-text-secondary">
-              已被记录 <span className="font-bold text-primary">{sightingCount}</span> 次
+              {sightingCountLabel} <span className="font-bold text-primary">{sightingCount}</span> 条
             </div>
           )}
 
@@ -119,7 +122,7 @@ export default function CatIdentityCard({
             title={cat.name}
             subtitle={cat.nickname || zone}
             image={cat.avatar}
-            proof={`已被记录 ${sightingCount ?? 0} 次 · ${status}`}
+            proof={knownSightingCount ? `${sightingCountLabel} ${sightingCount} 条 · ${status}` : status}
             sharePath={`/cats/public/${cat.id}`}
             slogan="来复旦找猫"
           >

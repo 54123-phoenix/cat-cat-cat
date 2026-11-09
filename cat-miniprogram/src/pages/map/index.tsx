@@ -1,146 +1,100 @@
-import { useState } from 'react'
-import { View, Text, Map, Image } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import { useEffect, useRef, useState } from 'react'
+import { View, Text, Map, Image, Button } from '@tarojs/components'
+import Taro, { useDidHide, useDidShow } from '@tarojs/taro'
 import { CONFIG } from '../../config'
 import { getHeatmapData, getCats } from '../../services/api'
+import { createMapLoader, MapData, MapMarker } from '../../services/mapData'
 import './index.scss'
 
-interface Marker {
-  id: number
-  latitude: number
-  longitude: number
-  iconPath?: string
-  width?: number
-  height?: number
-  title?: string
-  callout?: { content: string; fontSize: number; borderRadius: number; padding: number }
-  _cat?: any
-}
-
-const FALLBACK_CATS: { name: string; latitude: number; longitude: number }[] = [
-  { name: '皮球', latitude: 31.302, longitude: 121.504 },
-  { name: '尔康', latitude: 31.299, longitude: 121.505 },
-  { name: '可可', latitude: 31.303, longitude: 121.503 },
-  { name: '橙子', latitude: 31.301, longitude: 121.501 },
-  { name: '米线', latitude: 31.300, longitude: 121.500 },
-  { name: '小小灰', latitude: 31.300, longitude: 121.506 },
-]
-
 export default function MapPage() {
-  const [markers, setMarkers] = useState<Marker[]>([])
-  const [latitude, setLatitude] = useState(CONFIG.mapCenter.latitude)
-  const [longitude, setLongitude] = useState(CONFIG.mapCenter.longitude)
-  const [loading, setLoading] = useState(true)
-  const [selectedCat, setSelectedCat] = useState<any>(null)
+  const [data, setData] = useState<MapData>({ markers: [], errors: [], loading: true })
+  const [center, setCenter] = useState(CONFIG.mapCenter)
+  const [selected, setSelected] = useState<MapMarker['detail'] | null>(null)
+  const [mapError, setMapError] = useState(false)
+  const [mapVersion, setMapVersion] = useState(0)
+  const [locationError, setLocationError] = useState('')
+  const locationRequest = useRef(0)
+  const loader = useRef<ReturnType<typeof createMapLoader> | null>(null)
+  if (!loader.current) loader.current = createMapLoader(
+    () => getHeatmapData({ days: 0, limit: 100 }),
+    () => getCats({ limit: 100 }),
+    setData,
+  )
 
-  useDidShow(() => {
-    Promise.all([
-      getHeatmapData({ days: 0, limit: 100 }).catch(() => []),
-      getCats().catch(() => []),
-    ]).then(([heatmap, cats]) => {
-      const heatArr = Array.isArray(heatmap) ? heatmap : (heatmap as any)?.points || []
-      const heatMarkers: Marker[] = heatArr
-        .filter((h: any) => h && (h.latitude || h.lat) && (h.longitude || h.lng))
-        .map((h: any, i: number) => {
-          const cat = h.cat || h.cat_info || null
-          const name = cat?.name || h.name || h.location_name || '猫猫出没'
-          return {
-            id: 10000 + i,
-            latitude: h.latitude || h.lat,
-            longitude: h.longitude || h.lng,
-            iconPath: '/assets/map/cat.png',
-            width: 32,
-            height: 32,
-            title: name,
-            callout: { content: name, fontSize: 12, borderRadius: 8, padding: 6 },
-            _cat: cat,
-          }
-        })
+  function refresh() {
+    setSelected(null)
+    void loader.current?.load()
+  }
 
-      const catMarkers: Marker[] = (Array.isArray(cats) ? cats : [])
-        .filter((c: any) => c.latitude && c.longitude)
-        .map((c: any) => ({
-          id: 20000 + c.id,
-          latitude: c.latitude,
-          longitude: c.longitude,
-          iconPath: '/assets/map/cat.png',
-          width: 32,
-          height: 32,
-          title: c.name,
-          callout: { content: c.name || '猫猫', fontSize: 12, borderRadius: 8, padding: 6 },
-          _cat: c,
-        }))
+  function leavePage() {
+    loader.current?.cancel()
+    locationRequest.current += 1
+  }
 
-      let combined = [...heatMarkers, ...catMarkers]
-      if (combined.length === 0) {
-        combined = FALLBACK_CATS.map((c, i) => ({
-          id: 30000 + i,
-          latitude: c.latitude,
-          longitude: c.longitude,
-          iconPath: '/assets/map/cat.png',
-          width: 32,
-          height: 32,
-          title: c.name,
-          callout: { content: c.name, fontSize: 12, borderRadius: 8, padding: 6 },
-          _cat: { name: c.name, latitude: c.latitude, longitude: c.longitude, location: '复旦大学' },
-        }))
-      }
-      setMarkers(combined)
-    }).catch(console.error).finally(() => setLoading(false))
+  useDidShow(refresh)
+  useDidHide(leavePage)
+  useEffect(() => leavePage, [])
 
-    Taro.getLocation({ type: 'gcj02' }).then((res) => {
-      setLatitude(res.latitude)
-      setLongitude(res.longitude)
-    }).catch(() => {})
-  })
-
-  function onMarkerTap(e: any) {
-    const marker = markers.find(m => m.id === e.detail.markerId)
-    if (marker?._cat) {
-      setSelectedCat(marker._cat)
+  async function locate() {
+    const request = ++locationRequest.current
+    setLocationError('')
+    try {
+      const result = await Taro.getLocation({ type: 'gcj02' })
+      if (request === locationRequest.current) setCenter({ latitude: result.latitude, longitude: result.longitude })
+    } catch {
+      if (request === locationRequest.current) setLocationError('未能获取位置，仍可查看校园地图。请检查定位授权后重试。')
     }
   }
 
-  return (
-    <View style={{ width: '100%', height: '100%' }}>
-      {loading && (
-        <View style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }}>
-          <Text style={{ fontSize: '28rpx', color: '#78716C' }}>加载地图中...</Text>
-        </View>
-      )}
-      <Map
-        style={{ width: '100%', height: '100%' }}
-        latitude={latitude}
-        longitude={longitude}
-        scale={15}
-        markers={markers as any}
-        showLocation
-        onMarkerTap={onMarkerTap}
-        onError={() => {}}
-      />
+  function retryMap() {
+    setMapError(false)
+    setMapVersion(value => value + 1)
+    refresh()
+  }
 
-      {selectedCat && (
+  const empty = !data.loading && data.markers.length === 0
+
+  return (
+    <View className='map-page'>
+      <Map
+        key={mapVersion}
+        className='campus-map'
+        latitude={center.latitude}
+        longitude={center.longitude}
+        scale={15}
+        markers={data.markers}
+        showLocation
+        onMarkerTap={event => setSelected(data.markers.find(marker => marker.id === event.detail.markerId)?.detail || null)}
+        onError={() => setMapError(true)}
+      />
+      <View className='map-status'>
+        {data.loading && <Text className='status-title'>正在加载校园点位…</Text>}
+        {!data.loading && data.markers.length > 0 && <Text className='status-title'>当前显示 {data.markers.length} 个点位</Text>}
+        {empty && <Text className='status-title'>{data.errors.length ? '暂时无法完整读取校园点位' : '还没有可显示的校园点位'}</Text>}
+        {empty && !data.errors.length && <Text className='status-description'>带位置的偶遇经审核后会出现在这里。</Text>}
+        {data.errors.length > 0 && <Text className='status-description'>{data.errors.join('；')}。{data.markers.length ? '当前仅展示成功读取的数据。' : '请检查网络后重试。'}</Text>}
+        {mapError && <Text className='status-description'>底图加载失败，请检查网络后重新加载。</Text>}
+        {locationError && <Text className='status-description'>{locationError}</Text>}
+        <View className='map-status-actions'>
+          <Button size='mini' disabled={data.loading} onClick={mapError ? retryMap : refresh}>{mapError ? '重新加载地图' : data.errors.length ? '重试加载点位' : '刷新点位'}</Button>
+          <Button size='mini' onClick={locate}>定位到我</Button>
+        </View>
+      </View>
+      {selected && (
         <View className='map-popup-card'>
-          <View className='popup-handle' onClick={() => setSelectedCat(null)} />
-          <View className='popup-content'>
-            <View className='popup-header'>
-              <View className='popup-avatar'>
-                {selectedCat.avatar ? <Image src={selectedCat.avatar} mode='aspectFill' /> : <Text>🐱</Text>}
-              </View>
-              <View className='popup-info'>
-                <Text className='popup-name'>{selectedCat.name}</Text>
-                {selectedCat.location && <Text className='popup-loc'>📍 {selectedCat.location}</Text>}
-              </View>
-              <Text className='popup-distance'>约 50m</Text>
+          <View className='popup-header'>
+            <View className='popup-avatar'>
+              {selected.avatar ? <Image src={selected.avatar} mode='aspectFill' /> : <Text>🐾</Text>}
             </View>
-            <View className='popup-actions'>
-              <View className='popup-btn primary' onClick={() => Taro.navigateTo({ url: `/pages/cat-detail/index?id=${selectedCat.id}` })}>
-                <Text>查看档案</Text>
-              </View>
-              <View className='popup-btn' onClick={() => Taro.openLocation({ latitude: selectedCat.latitude, longitude: selectedCat.longitude, name: selectedCat.name, address: selectedCat.location })}>
-                <Text>导航过去</Text>
-              </View>
+            <View className='popup-info'>
+              <Text className='popup-name'>{selected.name}</Text>
+              <Text className='popup-loc'>{selected.source}{selected.location ? ` · ${selected.location}` : ''}</Text>
             </View>
+            <Button className='popup-close' size='mini' onClick={() => setSelected(null)}>关闭</Button>
+          </View>
+          <View className='popup-actions'>
+            {selected.id && <Button className='popup-btn primary' onClick={() => Taro.navigateTo({ url: `/pages/cat-detail/index?id=${selected.id}` })}>查看档案</Button>}
+            <Button className='popup-btn' onClick={() => Taro.openLocation({ latitude: selected.latitude, longitude: selected.longitude, name: selected.name, address: selected.location || '' }).catch(() => Taro.showToast({ title: '无法打开导航，请重试', icon: 'none' }))}>导航到此处</Button>
           </View>
         </View>
       )}

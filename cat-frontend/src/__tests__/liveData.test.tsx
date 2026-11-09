@@ -68,7 +68,6 @@ it('keeps a reply through a transient refresh failure but removes a confirmed de
   vi.mocked(getPostComments).mockResolvedValue([])
   const { rerender } = render(detailFrame(0))
   await screen.findByText('原帖内容')
-  fireEvent.click(screen.getByRole('button', { name: /条回复/ }))
   const input = screen.getByPlaceholderText('写评论…')
   fireEvent.change(input, { target: { value: '暂时失败也要保留' } })
   vi.mocked(getPost).mockRejectedValue(new ApiError('Temporary error', 503))

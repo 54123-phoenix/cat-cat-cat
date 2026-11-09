@@ -7,6 +7,8 @@
   Requires explicit -BackupPath and -ConfirmRestore to execute.
   Restore targets always stay inside the current project root (cat-backend/).
   BackupPath may be outside the project root.
+  -FullAssets instead verifies a complete asset bundle and creates only a new
+  isolated RestoreDir, requiring ConfirmRestore and WritersStopped to execute.
 .PARAMETER BackupPath
   Backup directory path (required). May be inside or outside project root.
 .PARAMETER ConfirmRestore
@@ -23,7 +25,10 @@ param(
     [string]$Python = "python",
     [switch]$ConfirmRestore,
     [switch]$SkipUploads,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$FullAssets,
+    [string]$RestoreDir = "",
+    [switch]$WritersStopped
 )
 
 $ErrorActionPreference = "Stop"
@@ -31,6 +36,26 @@ $ErrorActionPreference = "Stop"
 $Root = Resolve-Path "$PSScriptRoot\.."
 $BackendDir = Join-Path $Root "cat-backend"
 . (Join-Path $PSScriptRoot 'database_path.ps1')
+if ($FullAssets) {
+    if ($SkipUploads -or $DatabasePath) { throw '-FullAssets restores all assets into -RestoreDir; do not pass -SkipUploads or -DatabasePath.' }
+    if (-not $RestoreDir) { throw '-FullAssets requires a new isolated -RestoreDir.' }
+    function Resolve-FullRestorePath([string]$Value) {
+        if ([IO.Path]::IsPathRooted($Value)) { return [IO.Path]::GetFullPath($Value) }
+        return [IO.Path]::GetFullPath((Join-Path $Root $Value))
+    }
+    $AssetArgs = @(
+        (Join-Path $PSScriptRoot 'asset_bundle.py'), 'restore',
+        '--bundle', (Resolve-FullRestorePath $BackupPath),
+        '--destination', (Resolve-FullRestorePath $RestoreDir)
+    )
+    if ($DryRun) { $AssetArgs += '--dry-run' }
+    if ($ConfirmRestore) { $AssetArgs += '--confirm-restore' }
+    if ($WritersStopped) { $AssetArgs += '--writers-stopped' }
+    & $Python @AssetArgs
+    if ($LASTEXITCODE -ne 0) { throw 'Full asset restore failed; do not activate an incomplete output directory.' }
+    exit 0
+}
+if ($RestoreDir -or $WritersStopped) { throw 'Full asset arguments require -FullAssets.' }
 $DatabaseFile = Resolve-CatDatabasePath -BackendDir $BackendDir -DatabasePath $DatabasePath -AllowMissing
 $BackendBoundary = [IO.Path]::GetFullPath([string]$BackendDir).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
 if (-not ([IO.Path]::GetFullPath($DatabaseFile).StartsWith($BackendBoundary, [StringComparison]::OrdinalIgnoreCase))) {
@@ -42,6 +67,10 @@ if (-not (Test-Path -LiteralPath $BackupPath)) {
     exit 1
 }
 $BackupAbs = Resolve-Path -LiteralPath $BackupPath
+if ((Test-Path -LiteralPath (Join-Path $BackupAbs 'asset-manifest.json')) -or
+    (Test-Path -LiteralPath (Join-Path $BackupAbs '.bundle-incomplete'))) {
+    throw 'This is a full asset bundle. Use -FullAssets with a new -RestoreDir; legacy restore is not allowed.'
+}
 
 $IsDryRun = $DryRun -or (-not $ConfirmRestore)
 

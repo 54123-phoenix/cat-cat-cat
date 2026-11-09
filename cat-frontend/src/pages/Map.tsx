@@ -148,12 +148,12 @@ export default function Map() {
 
             const userMarkerContent = document.createElement('div')
             userMarkerContent.innerHTML = `
-              <div style="
+              <div role="img" aria-label="你的位置" title="你的位置" style="
                 width: 20px; height: 20px;
-                background: #3B82F6;
+                background: #0E419C;
                 border: 3px solid white;
                 border-radius: 50%;
-                box-shadow: 0 0 0 8px rgba(59,130,246,0.2), 0 2px 8px rgba(0,0,0,0.2);
+                box-shadow: 0 0 0 8px rgba(14,65,156,0.2), 0 2px 8px rgba(11,51,123,0.2);
               "></div>
             `
             const userMarker = new AMap.Marker({
@@ -209,7 +209,7 @@ export default function Map() {
           const cat = point.cat_id ? catById.get(point.cat_id) : null
           const catId = point.cat_id || cat?.id
           const markerContent = document.createElement('div')
-          markerContent.innerHTML = `<div style="width:46px;height:52px;cursor:pointer;filter:drop-shadow(0 6px 10px rgba(124,45,18,0.28))">${catMarkerString(cat?.avatar || null, point.count)}</div>`
+          markerContent.innerHTML = `<div style="width:46px;height:52px;cursor:pointer;filter:drop-shadow(0 6px 10px rgba(11,51,123,0.28))">${catMarkerString(cat?.avatar || null, point.count)}</div>`
 
           const marker = new AMap.Marker({
             position: new AMap.LngLat(point.longitude, point.latitude),
@@ -272,30 +272,42 @@ export default function Map() {
     }
   }, [days, navigate, mapReady, revision])
 
+  // Shell spacing includes the responsive main padding and the column's final 16px.
   return (
-    <div className="fixed inset-0 z-30 top-[52px] bottom-16">
+    <div
+      className="relative isolate min-h-[360px] w-full overflow-hidden rounded-container border border-border [--map-shell-spacing:64px] md:[--map-shell-spacing:72px] lg:[--map-shell-spacing:84px]"
+      style={{ height: 'calc(100dvh - var(--app-header-height, 65px) - var(--bottom-nav-height, 76px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--map-shell-spacing))' }}
+    >
       {/* Map container - always rendered so ref is always available */}
       <div ref={mapRef} className="w-full h-full amap-container" />
 
       {/* Time filter row */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-40 flex gap-2 bg-surface-1/90 backdrop-blur rounded-full px-2 py-1.5 shadow-e2">
-        {[
-          { label: '24小时', value: 1 },
-          { label: '7天', value: 7 },
-          { label: '全部', value: 0 },
-        ].map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => setDays(opt.value)}
-            className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
-              days === opt.value
-                ? 'bg-primary text-white'
-                : 'text-text-secondary hover:bg-gray-100'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div className="absolute inset-x-3 top-3 z-40 flex flex-wrap items-start justify-between gap-2">
+      <div className="flex gap-1 rounded-full bg-surface-1 p-1 shadow-e2">
+          {[
+            { label: '24小时', value: 1 },
+            { label: '7天', value: 7 },
+            { label: '全部', value: 0 },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setDays(opt.value)}
+              className={`min-h-11 px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                days === opt.value
+                  ? 'bg-primary text-on-primary'
+                  : 'text-text-secondary hover:bg-gray-100'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setShowMiniScene(s => !s)}
+        className="min-h-11 rounded-full bg-surface-1 px-3 py-1.5 text-sm font-medium text-text-secondary shadow-e2 hover:text-text"
+        >
+          🏫 {showMiniScene ? '收起' : '场景'}
+        </button>
       </div>
 
       {loading && (
@@ -305,18 +317,18 @@ export default function Map() {
       )}
 
       {error && !loading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-4 bg-warm-50/90">
-          <HelpCircle className="w-10 h-10 text-text-muted" />
-          <p className="text-stone-500 text-center">{error}</p>
-          <p className="text-stone-400 text-sm text-center">
-            请前往 <a href="https://console.amap.com/dev/key/app" target="_blank" rel="noreferrer" className="text-primary underline">高德开放平台</a> 申请有效的 API Key
-          </p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-5 bg-surface-2 text-center">
+          <HelpCircle className="w-10 h-10 text-text-secondary" aria-hidden="true" />
+          <h2 className="text-lg font-semibold text-text">地图暂时无法显示</h2>
+          <p className="max-w-xs text-sm leading-6 text-text-secondary">你仍可以浏览校园猫猫的档案，或记录一次新的偶遇。</p>
+          <button onClick={() => navigate('/collection')} className="btn btn-primary">浏览猫猫图鉴</button>
+          <button onClick={() => navigate('/scan')} className="btn btn-ghost">拍照记录偶遇</button>
         </div>
       )}
 
-      {showGeoModal && (
-        <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6" onClick={handleSkipLocation}>
-          <div className="bg-white rounded-2xl w-full max-w-sm p-8 text-center space-y-6 shadow-elevated" onClick={(e) => e.stopPropagation()}>
+      {showGeoModal && !error && !loading && (
+        <div className="modal-overlay absolute inset-0 z-50 flex items-center justify-center p-4" onClick={handleSkipLocation}>
+          <div className="max-h-full w-full max-w-sm space-y-6 overflow-y-auto rounded-2xl bg-surface-1 p-6 text-center shadow-elevated" onClick={(e) => e.stopPropagation()}>
             <div className="w-16 h-16 mx-auto rounded-full bg-primary-light flex items-center justify-center">
               <MapPin className="w-8 h-8 text-primary" />
             </div>
@@ -325,11 +337,11 @@ export default function Map() {
               <p className="text-text-secondary">允许获取位置信息，可在地图上查看您的位置</p>
             </div>
             <div className="flex flex-col gap-3">
-              <button onClick={handleAllowLocation} disabled={geoLoading} className="btn-primary w-full flex items-center justify-center gap-2">
+              <button onClick={handleAllowLocation} disabled={geoLoading} className="btn btn-primary w-full">
                 {geoLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Navigation className="w-5 h-5" />}
                 {geoLoading ? '定位中...' : '允许定位'}
               </button>
-              <button onClick={handleSkipLocation} className="w-full py-3 rounded-xl border border-border font-semibold text-text-secondary bg-white hover:bg-gray-50 transition-colors">暂不开启</button>
+              <button onClick={handleSkipLocation} className="btn btn-ghost w-full">暂不开启</button>
             </div>
           </div>
         </div>
@@ -337,7 +349,7 @@ export default function Map() {
 
       {/* Bottom sheet - nearby cats */}
       {nearbyCats.length > 0 && (
-        <div className="absolute bottom-0 left-0 right-0 z-40 bg-surface-1/95 backdrop-blur-md rounded-t-container shadow-e3 p-4 pb-20">
+        <div className="absolute bottom-0 left-0 right-0 z-40 bg-surface-1/95 backdrop-blur-md rounded-t-container shadow-e3 p-4">
           <div className="w-10 h-1 bg-border rounded-full mx-auto mb-3" />
           <h3 className="text-h3 font-bold text-text mb-3">附近猫咪</h3>
           <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-4 px-4 pb-1">
@@ -355,16 +367,8 @@ export default function Map() {
         </div>
       )}
 
-      {/* Mini scene toggle */}
-      <button
-        onClick={() => setShowMiniScene(s => !s)}
-        className="absolute top-3 right-3 z-40 px-3 py-1.5 rounded-full bg-surface-1/90 backdrop-blur shadow-e2 text-sm font-medium text-text-secondary hover:text-text transition-colors"
-      >
-        🏫 {showMiniScene ? '收起' : '场景'}
-      </button>
-
       {showMiniScene && nearbyCats.length > 0 && (
-        <div className="absolute top-16 left-3 right-3 z-40 animate-fade-in">
+        <div className="absolute top-28 left-3 right-3 z-40 animate-fade-in sm:top-20">
           <CampusMiniScene
             cats={nearbyCats.slice(0, 5).map((c, i) => ({
               id: c.id,
@@ -380,17 +384,19 @@ export default function Map() {
         </div>
       )}
 
-      <SightingPulse
-        sightings={recentSightings.map(s => ({
-          id: s.id,
-          cat_id: s.cat_id,
-          cat_name: s.cat?.name || '校园猫猫',
-          cat_avatar: s.cat?.avatar,
-          location_name: s.location_name,
-          created_at: s.created_at,
-        }))}
-        onViewCat={(catId) => navigate('/cats/' + catId)}
-      />
+      <div className={`[&>div]:absolute [&>div]:w-full [&>div]:max-w-sm [&>div]:px-3 ${nearbyCats.length > 0 ? '[&>div]:bottom-44' : '[&>div]:bottom-4'}`}>
+        <SightingPulse
+          sightings={recentSightings.map(s => ({
+            id: s.id,
+            cat_id: s.cat_id,
+            cat_name: s.cat?.name || '校园猫猫',
+            cat_avatar: s.cat?.avatar,
+            location_name: s.location_name,
+            created_at: s.created_at,
+          }))}
+          onViewCat={(catId) => navigate('/cats/' + catId)}
+        />
+      </div>
     </div>
   )
 }

@@ -210,7 +210,7 @@ export default function CatDetail() {
                   {s.note && <Text style={{ fontSize: '22rpx', color: '#78716C', display: 'block', marginTop: '4rpx' }}>"{s.note}"</Text>}
                   {s.confidence !== null && s.confidence !== undefined && (
                     <Text style={{ fontSize: '22rpx', color: '#A8A29E', display: 'block', marginTop: '4rpx' }}>
-                      识别匹配度 {Math.round(s.confidence * 100)}%
+                      匹配相似度 {Math.round(s.confidence * 100)}%（不代表正确概率）
                     </Text>
                   )}
                 </View>

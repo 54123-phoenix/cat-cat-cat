@@ -1,29 +1,37 @@
 import { describe, it, expect } from 'vitest'
+import { fireEvent } from '@testing-library/react'
 
-describe('MascotCat renders different moods', () => {
-  it('renders happy mood without crash', async () => {
+describe('MascotCat image recovery', () => {
+  it('falls back to PNG when WebP fails without leaving srcset active', async () => {
     const { default: MascotCat } = await import('../components/MascotCat')
     const { render } = await import('@testing-library/react')
     const { container } = render(<MascotCat mood="happy" size={64} />)
-    expect(container.querySelector('svg')).toBeTruthy()
+    const img = container.querySelector('img')!
+    fireEvent.error(img)
+    expect(img).toHaveAttribute('src', '/brand/mascot-384.png')
+    expect(img).not.toHaveAttribute('srcset')
   })
 
-  it('renders sleep mood without crash', async () => {
+  it('replaces failed artwork with an accessible stable fallback', async () => {
     const { default: MascotCat } = await import('../components/MascotCat')
     const { render } = await import('@testing-library/react')
     const { container } = render(<MascotCat mood="sleep" size={64} />)
-    expect(container.querySelector('svg')).toBeTruthy()
+    fireEvent.error(container.querySelector('img')!)
+    fireEvent.error(container.querySelector('img')!)
+    expect(container.querySelector('img')).toBeNull()
+    expect(container.querySelector('[role="img"]')).toHaveAccessibleName('蓝白校园猫吉祥物')
+    expect(container.querySelector('[role="img"]')).toHaveStyle({ width: '64px', height: '67px' })
   })
 })
 
-describe('Logo SVG illustration', () => {
-  it('renders with role=img', async () => {
+describe('Logo illustration', () => {
+  it('allows the navigation backdrop to be disabled', async () => {
     const { default: Logo } = await import('../components/illustrations/Logo')
     const { render } = await import('@testing-library/react')
-    const { container } = render(<Logo size={32} />)
-    const svg = container.querySelector('svg')
-    expect(svg).toBeTruthy()
-    expect(svg?.getAttribute('role')).toBe('img')
+    const { container, rerender } = render(<Logo size={32} />)
+    expect(container.querySelector('[role="img"]')).toHaveClass('brand-logo-circle')
+    rerender(<Logo size={32} withCircle={false} />)
+    expect(container.querySelector('[role="img"]')).not.toHaveClass('brand-logo-circle')
   })
 })
 

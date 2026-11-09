@@ -1,135 +1,75 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import ImageWithShimmer from './ImageWithShimmer'
 
-/**
- * Full-screen photo viewer with swipe / tap navigation.
- * Props:
- *   - images: array of { url, alt } or array of URL strings
- *   - initialIndex: starting index
- *   - onClose: () => void
- */
-function normalize(images) {
-  if (!Array.isArray(images)) return []
-  return images
-    .map((img) => {
-      if (typeof img === 'string') return { url: img, alt: '' }
-      if (img && typeof img === 'object') {
-        return {
-          url: img.url || img.image_path || img.src || img.avatar,
-          alt: img.alt || img.name || '',
-        }
-      }
-      return null
-    })
-    .filter((i) => i && i.url)
+type Photo = string | { url?: string; image_path?: string; src?: string; avatar?: string; alt?: string; name?: string }
+
+function normalize(images: Photo[]) {
+  return (Array.isArray(images) ? images : []).map(photo => typeof photo === 'string'
+    ? { url: photo, alt: '' }
+    : { url: photo?.url || photo?.image_path || photo?.src || photo?.avatar, alt: photo?.alt || photo?.name || '' })
 }
 
-export default function PhotoViewer({ images, initialIndex = 0, onClose }) {
+export default function PhotoViewer({ images, initialIndex = 0, onClose }: { images: Photo[]; initialIndex?: number; onClose: () => void }) {
   const list = normalize(images)
-  const [index, setIndex] = useState(
-    Math.min(Math.max(initialIndex, 0), Math.max(list.length - 1, 0))
-  )
-  const [touchStartX, setTouchStartX] = useState(null)
-
-  const go = useCallback(
-    (next) => {
-      setIndex((cur) => {
-        const n = list.length
-        if (n === 0) return cur
-        return (next + n) % n
-      })
-    },
-    [list.length]
-  )
+  const [index, setIndex] = useState(initialIndex)
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const imageStage = useRef<HTMLDivElement>(null)
+  const closeButton = useRef<HTMLButtonElement>(null)
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
+  const safeIndex = Math.min(Math.max(index, 0), Math.max(list.length - 1, 0))
+  const hasPhotos = list.length > 0
+  const go = (step: number) => {
+    // A failed image's retry button is removed with the old image request.
+    if (imageStage.current?.contains(document.activeElement)) closeButton.current?.focus()
+    setIndex((safeIndex + step + list.length) % list.length)
+  }
 
   useEffect(() => {
-    function onKey(e) {
-      if (e.key === 'Escape') onClose?.()
-      else if (e.key === 'ArrowLeft') go(index - 1)
-      else if (e.key === 'ArrowRight') go(index + 1)
-    }
-    window.addEventListener('keydown', onKey)
+    const dialog = dialogRef.current
+    if (!dialog || !hasPhotos) return undefined
+    const previousOverflow = document.body.style.overflow
+    const opener = document.activeElement as HTMLElement | null
+    dialog.showModal()
     document.body.style.overflow = 'hidden'
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [index, go, onClose])
+    return () => { dialog.close(); document.body.style.overflow = previousOverflow; if (opener?.isConnected) opener.focus() }
+  }, [hasPhotos])
 
-  if (list.length === 0) return null
-
-  const current = list[index]
-  const hasMultiple = list.length > 1
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center animate-fade-in"
-      onClick={onClose}
-      onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
-      onTouchEnd={(e) => {
-        if (touchStartX === null) return
-        const dx = e.changedTouches[0].clientX - touchStartX
-        if (Math.abs(dx) > 40) {
-          if (dx > 0) go(index - 1)
-          else go(index + 1)
-        }
-        setTouchStartX(null)
-      }}
-    >
-      {/* Close button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          onClose?.()
-        }}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
-        aria-label="关闭"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
-      {/* Counter */}
-      {hasMultiple && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 text-white/80 text-sm font-medium bg-white/10 rounded-full px-3 py-1">
-          {index + 1} / {list.length}
-        </div>
-      )}
-
-      {/* Prev */}
-      {hasMultiple && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            go(index - 1)
-          }}
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
-          aria-label="上一张"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-      )}
-
-      {/* Image */}
-      <img
-        src={current.url}
-        alt={current.alt}
-        onClick={(e) => e.stopPropagation()}
-        className="max-w-[92vw] max-h-[88vh] object-contain animate-scale-in"
-      />
-
-      {/* Next */}
-      {hasMultiple && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            go(index + 1)
-          }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
-          aria-label="下一张"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      )}
+  if (!hasPhotos) return null
+  const current = list[safeIndex]
+  return <dialog ref={dialogRef} className="photo-dialog" aria-labelledby="photo-viewer-title"
+    onCancel={event => { event.preventDefault(); onClose() }}
+    onClick={event => { if (event.target === event.currentTarget) onClose() }}
+    onKeyDown={event => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); go(event.key === 'ArrowLeft' ? -1 : 1) }
+      if (event.key !== 'Tab') return
+      const controls = [...event.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled])')].filter(node => node.getClientRects().length > 0)
+      const first = controls[0], last = controls[controls.length - 1]
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+    }}>
+    <div className="photo-viewer-panel">
+      <header className="flex items-center justify-between gap-3 px-4 py-2">
+        <h2 id="photo-viewer-title" className="text-base font-semibold">查看照片</h2>
+        <span role="status" className="text-sm">{safeIndex + 1} / {list.length}</span>
+        <button ref={closeButton} type="button" onClick={onClose} className="icon-button" aria-label="关闭照片"><X size={22} /></button>
+      </header>
+      <div ref={imageStage} className="min-h-0 flex-1 px-2 sm:px-4"
+        onTouchStart={event => { touchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY } }}
+        onTouchEnd={event => {
+          const start = touchStart.current
+          touchStart.current = null
+          if (!start || list.length < 2) return
+          const dx = event.changedTouches[0].clientX - start.x, dy = event.changedTouches[0].clientY - start.y
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx > 0 ? -1 : 1)
+        }}>
+        <ImageWithShimmer src={current.url} alt={current.alt || `照片 ${safeIndex + 1}`} thumbnail={false} loading="eager" fit="contain" retryable className="h-full w-full rounded-lg" />
+      </div>
+      <footer className="flex min-h-16 items-center justify-between gap-3 px-4 py-2">
+        {list.length > 1 && <button type="button" onClick={() => go(-1)} className="btn btn-ghost shrink-0" aria-label="上一张照片"><ChevronLeft size={20} /><span className="hidden sm:inline">上一张</span></button>}
+        <p className="min-w-0 flex-1 break-words text-center text-sm text-text-secondary">{current.alt || '原始照片'}</p>
+        {list.length > 1 && <button type="button" onClick={() => go(1)} className="btn btn-ghost shrink-0" aria-label="下一张照片"><span className="hidden sm:inline">下一张</span><ChevronRight size={20} /></button>}
+      </footer>
     </div>
-  )
+  </dialog>
 }

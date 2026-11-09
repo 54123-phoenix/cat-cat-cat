@@ -213,12 +213,13 @@ export interface PaginatedResponse<T> {
 }
 
 export interface RecognizeResult {
-  status: string
+  status: 'confirmed' | 'uncertain' | 'unknown' | 'unavailable'
   cat_id?: number
   cat_name?: string
   name?: string
-  confidence: number
-  candidates: RecognizeCandidate[]
+  confidence?: number
+  candidates?: RecognizeCandidate[]
+  cat_avatar?: string
   personality_tags?: string[]
   campus_zone?: string
   collector_status?: string
@@ -228,6 +229,8 @@ export interface RecognizeCandidate {
   cat_id: number
   cat_name: string
   confidence: number
+  cat_avatar?: string
+  photo_count?: number
 }
 
 export type HealthStatus = 'healthy' | 'degraded' | 'unhealthy'

@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react'
+import { cloneElement, isValidElement, useRef, useState, type MouseEvent, type ReactElement } from 'react'
 import QRCode from 'qrcode'
 import Logo from './illustrations/Logo'
+import MascotCat from './MascotCat'
 import ShareSheet from './ShareSheet'
 
 interface SharePosterProps {
@@ -17,7 +18,7 @@ export default function SharePoster({ type, data, children }: SharePosterProps) 
   async function generateQR() {
     try {
       const url = `${window.location.origin}${window.location.pathname}?utm_source=share&utm_campaign=${type}`
-      const qr = await QRCode.toDataURL(url, { width: 80, margin: 1, color: { dark: '#1a1a1a', light: '#ffffff00' } })
+      const qr = await QRCode.toDataURL(url, { width: 128, margin: 4, color: { dark: '#1a1a1a', light: '#ffffff' } })
       setQrDataUrl(qr)
     } catch {
       setQrDataUrl('')
@@ -36,13 +37,21 @@ export default function SharePoster({ type, data, children }: SharePosterProps) 
     wrapped: '我的猫猫年度总结',
   }
 
+  const trigger = isValidElement(children) && children.type === 'button'
+    ? cloneElement(children as ReactElement<React.ButtonHTMLAttributes<HTMLButtonElement>>, {
+        onClick: (event: MouseEvent<HTMLButtonElement>) => {
+          children.props.onClick?.(event)
+          if (!event.defaultPrevented) handleShare()
+        },
+        type: children.props.type || 'button',
+      })
+    : <button type="button" onClick={handleShare} className="btn btn-ghost min-h-11" aria-label="分享猫卡">{children || '分享猫卡'}</button>
+
   return (
     <>
-      <div onClick={handleShare} className="cursor-pointer" role="button" tabIndex={0} aria-label="分享">
-        {children}
-      </div>
+      {trigger}
 
-      <div ref={posterRef} className="fixed -left-[9999px] top-0 w-[360px] h-[640px] bg-gradient-to-br from-primary/10 via-surface-0 to-primary/5 p-6 flex flex-col" aria-hidden="true">
+      <div ref={posterRef} className="fixed -left-[9999px] top-0 w-[360px] h-[640px] bg-surface-0 bg-gradient-to-br from-primary/10 via-surface-0 to-primary/5 p-6 flex flex-col" aria-hidden="true">
         <div className="flex items-center gap-2 mb-4">
           <Logo size={28} />
           <span className="text-sm font-bold text-primary">猫猫社区</span>
@@ -72,7 +81,7 @@ export default function SharePoster({ type, data, children }: SharePosterProps) 
           )}
           {type === 'wrapped' && (
             <>
-              <span className="text-4xl mb-2">🐱</span>
+              <MascotCat size={112} className="mb-2" />
               <h2 className="text-xl font-bold text-text mb-1">我的猫猫年度总结</h2>
               <p className="text-sm text-text-secondary">遇见 {data.cats_count as number} 只猫 · {data.sightings_count as number} 次偶遇</p>
             </>

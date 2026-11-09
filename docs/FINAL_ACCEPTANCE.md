@@ -1,5 +1,7 @@
 # Final Acceptance
 
+> **2026-11-08 current status:** Local repairs and disposable-data verification only; 45 tracked issues: 32 locally accepted, 9 pending specialty checks, 3 partial and 1 unresolved. Explicit sighting submission/idempotency, honest mini-program map states, full asset bundles and the frozen campus protocol gate are implemented. Full harness passed all 6 checks (100); backend 396, Web 87, mini-program 14, core browser 8 groups and reference browser 8 groups passed. The final backup-path protection was separately verified by 27 asset-bundle tests, including 6 added after full-suite collection. See [current evidence](validation/LOCAL_REPAIR_20261108.md). No production database was migrated or deployment performed. Real devices, target server and reviewed campus data remain pending; release and campus-quality acceptance are **not passed**.
+
 > **2026-11-01 status:** 43 tracked issues: 32 locally accepted, 7 pending specialty checks, 3 partial and 1 unresolved. Backend regression: 303 passed. Public recognition holdout met the empirical targets; campus acceptance remains open. Existing photo backup is truncated (ISS-043); 936 unique stills were recovered, 272 with unverified capture-date candidates. See [campus photo preparation](validation/CAMPUS_ASSETS_20261101.md). Older status paragraphs below are historical.
 
 > **2026-10-31 status:** The current candidate has 25 locally accepted issues, 9 pending specialty checks and 3 partial items. Reference lifecycle B1–B4, 238 backend tests, four-process Redis (10 checks), and SQLite/upload recovery (4 groups) passed locally; the latest Web baseline is 66 tests. Docker engine startup, deployment integration, real model/platform validation and licensing remain open. See [C evidence](validation/OPTIMIZATION_C.md). This is not release approval; P0–P6 labels below describe historical implementation work.
@@ -20,6 +22,8 @@ The release candidate is acceptable when:
 - The repository has a clear handoff trail: roadmap, TODO, README, docs, and harness report agree with each other.
 
 ## Scope
+
+The following P6 scope is historical; current work is limited to local repairs and isolated validation described above. Device/server acceptance follows when the user supplies those environments.
 
 In scope for P6:
 
@@ -61,23 +65,23 @@ Run this path before a real demo or handoff:
 2. Log in with the configured demo account.
 3. Open home and verify the golden entry points to scan, routes, and map.
 4. Open scan, upload a valid image, and verify confirmed, uncertain, unknown, or unavailable states render without crashing.
-5. On a confirmed result, verify the encounter memory-card action is visible.
+5. On a confirmed result or manually selected candidate, verify no sighting is saved until explicit submission. Submit once, verify a pending receipt, then simulate a lost response and retry with the same UUID: there must be one record and one XP award. Similarity must not be presented as probability of correctness.
 6. Open a cat detail page and a public cat page.
-7. Create or inspect a sighting share page.
-8. Open routes, switch time slots, open map from routes, and jump from a route stop to scan.
+7. Verify a pending sighting is not publicly shareable; approve it before inspecting its public share page.
+8. Open routes and map. Verify empty/partial-failure/full-failure states show no fabricated cat locations. Heat-based routes and station-name check-ins do not prove optimal routing or physical arrival.
 9. Open community and confirm post list, comments, like, and report surfaces still render.
 10. Open profile and leaderboard.
 11. Open admin overview and verify pending work, hot locations, contributors, and audit activity.
 12. Call the system health endpoint and confirm the model-health payload is understandable.
-13. Run backup/restore on a disposable copy, verify integrity and attachments; never use production data for a drill.
+13. Run the complete SQLite/uploads/models/reference-store bundle on disposable copies with writers stopped. Preview first; restore only into a new isolated directory and verify hashes, schema, HTTP attachments and model/store compatibility.
 
 ## Risk Register
 
-- SQLite remains a single-file store. Real production traffic should receive a formal migration plan before multi-user deployment.
-- Model quality depends on the current weights and reference embeddings. Future work should add a labeled campus sample set and threshold calibration report.
+- SQLite capacity requires measurement on the target workload. Reference publication currently requires SQLite; PostgreSQL cannot be substituted without adapting and validating that path.
+- Campus data and policy can now be frozen through the enforced campus preflight, but human identity/session/rights review and an independent real holdout are still required. A passing empirical gate does not certify release readiness.
 - Frontend pages are feature-rich and some are still large. Future work should split heavily edited pages into smaller components.
 - External map coordinates remain demo-grade unless connected to a verified campus location source.
-- SQLite WAL snapshots and the PowerShell backup/restore wrappers passed a disposable-project drill. Docker volume persistence and a deployment-size backup including uploads still need environment validation.
+- Complete asset bundles and legacy wrappers passed disposable-fixture drills. Earlier Docker inference/volume recovery passed its isolated scope; actual production mounts, backup duration and full restoration on target hardware remain unverified.
 - opencode or other external agents may help, but Codex or the maintainer must review diff, tests, docs, and harness before acceptance.
 
 ## Next Upgrade Path

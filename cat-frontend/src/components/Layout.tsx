@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import TabBar from './TabBar'
+import DesktopNav from './DesktopNav'
 import Sidebar from './Sidebar'
 import Toast, { toast } from './Toast'
 import CelebrationOverlay from './CelebrationOverlay'
@@ -12,8 +13,8 @@ import { ApiError, getUserProfile, getToken, clearToken, setToken } from '../api
 import { useUserStore, updateUser } from '../App'
 import Logo from './illustrations/Logo'
 
-const routeTitles = {
-  '/': '猫猫社区',
+const routeTitles: Record<string, string> = {
+  '/': '校园猫猫',
   '/map': '猫猫地图',
   '/scan': '拍照识猫',
   '/community': '猫猫社区',
@@ -23,6 +24,11 @@ const routeTitles = {
   '/collection': '猫猫图鉴',
   '/league': '联赛季榜',
   '/intel': '猫情报 Agent',
+  '/notifications': '通知中心',
+  '/weekly-report': '校园周报',
+  '/wrapped': '年度报告',
+  '/routes': '寻猫路线',
+  '/badges': '勋章墙',
 }
 
 export default function Layout() {
@@ -31,7 +37,8 @@ export default function Layout() {
   const user = useUserStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const [, setTabIndex] = useState(0)
+  // Cat archives provide their own named h1 once loaded; other routes keep their existing heading behavior.
+  const AppHeading = location.pathname.startsWith('/cats/') ? 'p' : 'h1'
   const queryClient = useQueryClient()
   const [revision, setRevision] = useState(0)
   const [event, setEvent] = useState<StreamEvent | null>(null)
@@ -56,11 +63,8 @@ export default function Layout() {
   }
 
   useEffect(() => {
-    const path = location.pathname
-    if (path === '/') setTabIndex(0)
-    else if (path === '/map') setTabIndex(1)
-    else if (path === '/community') setTabIndex(2)
-    else if (path === '/profile') setTabIndex(3)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    setSidebarOpen(false)
   }, [location.pathname])
 
   useEffect(() => {
@@ -130,19 +134,21 @@ export default function Layout() {
 
   return (
     <LiveDataContext.Provider value={{ revision, event }}>
-    <div className="min-h-screen max-w-[480px] mx-auto bg-page-warm pb-16" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-0 focus:left-0 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:text-sm">
+    <div className="app-shell">
+      <a href="#main-content" className="skip-link">
         跳到主要内容
       </a>
-      {/* Top bar */}
-      <header className="sticky top-0 z-40 bg-surface-0/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+      <DesktopNav />
+      <div className="app-column">
+      <header className="app-header">
         <button
           onClick={() => setSidebarOpen(true)}
-          className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors"
+          className="icon-button shrink-0"
           aria-label="打开菜单"
           aria-expanded={sidebarOpen}
+          aria-controls="site-menu"
         >
-          <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+          <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center overflow-hidden">
             {user?.avatar ? (
               <img src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full object-cover" />
             ) : (
@@ -151,22 +157,21 @@ export default function Layout() {
           </div>
         </button>
 
-        <div className="flex items-center gap-2">
-          <Logo size={28} />
-          <h1 className="text-lg font-bold text-text">{getTitle()}</h1>
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="shrink-0 lg:hidden"><Logo size={28} /></span>
+          <AppHeading className="ui-section-title truncate text-text">{getTitle()}</AppHeading>
         </div>
 
-        <div className="w-9" />
+        <div className="w-11 shrink-0" aria-hidden="true" />
       </header>
 
       {/* Main content */}
-      <main id="main-content" className="px-4 pt-2 pb-4">
-        <div key={location.pathname} className="animate-fade-up">
-          <Outlet />
-        </div>
+      <main id="main-content" tabIndex={-1} className="app-main">
+        <Outlet />
       </main>
 
       <TabBar />
+      </div>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} onLogout={handleLogout} />
       <Toast />
       {celebration && (

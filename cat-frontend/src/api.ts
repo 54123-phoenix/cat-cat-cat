@@ -234,17 +234,31 @@ export function recognize(file) {
   return request('/recognize', { method: 'POST', body: form })
 }
 
-export function createSighting({ catId, location, confidence, file, activity_type, weather, mood, latitude, longitude }) {
+export interface CreateSightingInput {
+  catId: number | string
+  location?: string
+  confidence?: number
+  file?: File
+  activity_type?: string
+  weather?: string
+  mood?: string
+  latitude?: number
+  longitude?: number
+  client_request_id?: string
+}
+
+export function createSighting({ catId, location, confidence, file, activity_type, weather, mood, latitude, longitude, client_request_id }: CreateSightingInput): Promise<import('./types').Sighting> {
   const form = new FormData()
-  form.append('cat_id', catId)
+  form.append('cat_id', String(catId))
   if (location) form.append('location', location)
-  if (confidence !== undefined) form.append('confidence', confidence)
+  if (confidence !== undefined) form.append('confidence', String(confidence))
   if (file) form.append('file', file)
   if (activity_type) form.append('activity_type', activity_type)
   if (weather) form.append('weather', weather)
   if (mood) form.append('mood', mood)
   if (latitude !== undefined) form.append('latitude', String(latitude))
   if (longitude !== undefined) form.append('longitude', String(longitude))
+  if (client_request_id) form.append('client_request_id', client_request_id)
   return request('/sightings', { method: 'POST', body: form })
 }
 
@@ -384,7 +398,7 @@ export function getNearbyCats(lat: number, lng: number, n = 8) {
   return request(`/cats/nearby?${params.toString()}`)
 }
 
-export function identifyCat(file) {
+export function identifyCat(file: File): Promise<import('./types').RecognizeResult> {
   return recognize(file)
 }
 

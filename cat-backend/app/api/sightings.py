@@ -2,11 +2,13 @@ import uuid
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
 from sqlalchemy.orm import Session
+from pydantic import ValidationError
 
 from app.database import get_db
 from app import crud, schemas, models
 from app.api.auth import require_auth, optional_auth
-from app.api.upload import save_upload
+from app.api.upload import validate_upload
+from app.services.sighting_submission import submit_sighting
 from app.models import User
 from app.ratelimit import limit
 from app.config import settings
@@ -55,19 +57,23 @@ async def create_sighting(
     note: Optional[str] = Form(None),
     weather: Optional[str] = Form(None),
     mood: Optional[str] = Form(None),
+    client_request_id: Optional[uuid.UUID] = Form(None),
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(require_auth),
 ):
-    image_path = None
-    if file:
-        image_path = await save_upload(file, "sightings")
-
-    sighting_status = "pending"
-    sighting = schemas.SightingCreate(cat_id=cat_id, location=location, latitude=latitude, longitude=longitude, location_name=location_name, confidence=confidence, activity_type=activity_type, note=note, weather=weather, mood=mood)
-    db_sighting = crud.create_sighting(db, sighting, image_path=image_path, spotted_by=current_user.nickname, user_id=current_user.id, status=sighting_status)
-
-    return db_sighting
+    try:
+        sighting = schemas.SightingCreate(cat_id=cat_id, location=location, latitude=latitude,
+            longitude=longitude, location_name=location_name, confidence=confidence,
+            activity_type=activity_type, note=note, weather=weather, mood=mood)
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail='偶遇内容或坐标格式不正确') from exc
+    if db.get(models.Cat, cat_id) is None:
+        raise HTTPException(status_code=404, detail='Cat not found')
+    content = await validate_upload(file) if file else None
+    return submit_sighting(db, current_user, sighting,
+        request_id=str(client_request_id) if client_request_id else None,
+        image=content, content_type=file.content_type if file else None)
 
 
 def _recompute_grade(sighting) -> str:

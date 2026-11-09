@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import MascotCat from './components/MascotCat'
-import DailyCapsuleModal from './components/DailyCapsuleModal'
 import { getToken, getStoredUser } from './api'
 import { ROUTES } from './constants/routes'
 import { toast } from './components/Toast'
@@ -20,6 +19,7 @@ const queryClient = new QueryClient({
   },
 })
 
+const DailyCapsuleModal = lazy(() => import('./components/DailyCapsuleModal'))
 const Home = lazy(() => import('./pages/Home'))
 const Map = lazy(() => import('./pages/Map'))
 const Profile = lazy(() => import('./pages/Profile'))
@@ -92,10 +92,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     <>
       {children}
       {showCapsule && (
-        <DailyCapsuleModal
-          onClose={() => setShowCapsule(false)}
-          onViewCat={(catId) => navigate(ROUTES.CAT_DETAIL.replace(':catId', String(catId)))}
-        />
+        <Suspense fallback={null}>
+          <DailyCapsuleModal
+            onClose={() => setShowCapsule(false)}
+            onViewCat={(catId) => navigate(ROUTES.CAT_DETAIL.replace(':catId', String(catId)))}
+          />
+        </Suspense>
       )}
     </>
   )

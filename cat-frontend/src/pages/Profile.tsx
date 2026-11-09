@@ -123,7 +123,7 @@ export default function Profile() {
           <p className="text-sm text-text-secondary">登录后查看个人资料、勋章和猫档案</p>
           <button
             onClick={() => navigate('/login')}
-            className="px-6 py-2.5 rounded-full bg-primary text-white font-medium"
+            className="px-6 py-2.5 rounded-full bg-primary text-on-primary font-medium"
           >
             去登录
           </button>
@@ -186,22 +186,22 @@ export default function Profile() {
       <div className="card p-0 overflow-hidden relative">
         <button
           onClick={openProfileEditor}
-          className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-primary shadow-e1"
+          className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1.5 text-xs font-semibold text-primary shadow-e1"
         >
           <Pencil className="h-3.5 w-3.5" />
           编辑资料
         </button>
-        <div className="h-28 bg-gradient-to-r from-primary to-[#EA580C] rounded-b-3xl" />
+        <div className="h-28 bg-gradient-to-r from-primary to-primary-hover rounded-b-3xl" />
         <div className="px-5 pb-5">
-          <div className="flex items-end gap-4 -mt-10">
-            <div className="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden ring-4 ring-white shadow-md">
+          <div className="flex items-start gap-4">
+            <div className="-mt-10 w-20 h-20 rounded-full bg-primary-light flex items-center justify-center shrink-0 overflow-hidden ring-4 ring-card shadow-md">
               {user?.avatar ? (
                 <ImageWithShimmer src={user.avatar} alt={`${user?.nickname || '用户'}的头像`} className="w-full h-full" loading="lazy" compact />
               ) : (
                 <User className="w-8 h-8 text-primary" />
               )}
             </div>
-            <div className="min-w-0 pb-1">
+            <div className="min-w-0 flex-1 pt-3 pb-1">
               <h2 className="text-2xl font-extrabold text-text truncate">
                 {user?.nickname || '猫猫爱好者'}
               </h2>
@@ -278,7 +278,7 @@ export default function Profile() {
                 value={draftNickname}
                 maxLength={50}
                 onChange={(event) => setDraftNickname(event.target.value)}
-                className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-text outline-none focus:ring-2 focus:ring-primary/30"
+                className="ui-input mt-1"
                 placeholder="输入你的昵称"
               />
             </label>
@@ -291,7 +291,7 @@ export default function Profile() {
           <button
             onClick={saveProfile}
             disabled={profileSaving}
-            className="w-full rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
+            className="w-full rounded-full bg-primary px-4 py-3 text-sm font-semibold text-on-primary disabled:opacity-60"
           >
             {profileSaving ? '保存中...' : '保存资料'}
           </button>
@@ -369,8 +369,8 @@ export default function Profile() {
         onClick={() => navigate('/wrapped')}
         className="w-full card p-4 flex items-center gap-3 active:scale-95 transition-transform"
       >
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-[#EA580C] flex items-center justify-center">
-          <Sparkles className="w-6 h-6 text-white" />
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
+          <Sparkles className="w-6 h-6 text-on-primary" />
         </div>
         <div className="flex-1 text-left">
           <p className="font-bold text-text">年度猫猫报告</p>

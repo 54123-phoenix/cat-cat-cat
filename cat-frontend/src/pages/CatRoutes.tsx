@@ -109,9 +109,9 @@ export default function CatRoutes() {
                 sharePath={sharePath}
                 badge="🗺️"
                 slogan="跟着线索去找校园猫"
-                accent="from-stone-900 via-orange-100 to-primary/10"
+                accent="from-primary-light via-surface-0 to-primary-light"
               >
-                <button className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-stone-950 transition-colors hover:bg-orange-50 active:scale-[0.98]">
+                <button className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-stone-950 transition-colors hover:bg-blue-50 active:scale-[0.98]">
                   <Share2 className="h-4 w-4" />
                   生成路线分享卡
                 </button>
@@ -134,7 +134,7 @@ export default function CatRoutes() {
               key={slot.key}
               onClick={() => switchSlot(slot.key)}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                timeSlot === slot.key ? 'bg-primary text-white shadow-e2' : 'bg-white text-text-secondary border border-border'
+                timeSlot === slot.key ? 'bg-primary text-on-primary shadow-e2' : 'bg-white text-text-secondary border border-border'
               }`}
             >
               {slot.label}
@@ -173,7 +173,7 @@ export default function CatRoutes() {
             <div className="space-y-2">
               {stops.slice(0, 3).map((stop, index) => (
                 <div key={`${stop.name}-${index}`} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-on-primary">
                     {index + 1}
                   </span>
                   {stop.cat_avatar ? (
@@ -204,7 +204,7 @@ export default function CatRoutes() {
               <PawPrint className="mx-auto h-8 w-8 text-text-muted" />
               <p className="mt-2 text-sm font-semibold text-text">还没有足够的路线数据</p>
               <p className="mt-1 text-xs text-text-secondary">先记录几次偶遇，路线会自动变丰富。</p>
-              <Link to={ROUTES.SCAN} className="mt-3 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white">
+              <Link to={ROUTES.SCAN} className="mt-3 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary">
                 去识猫打卡
               </Link>
             </div>

@@ -69,8 +69,8 @@ services:
       interval: 2s
       timeout: 2s
       retries: 15
-    ports:
-      - "6379:6379"
+    # API and reference-worker reach Redis over the private Compose network.
+    # For local diagnostics use: docker compose exec redis redis-cli ping
     restart: on-failure
 
   postgres:

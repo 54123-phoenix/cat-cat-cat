@@ -4,6 +4,8 @@
 .DESCRIPTION
   Backs up cat-backend/*.db and cat-backend/uploads/ to <BackupDir>/<timestamp>/.
   Does not delete any files. Supports DryRun preview.
+  -FullAssets switches to explicit SQLite/uploads/models/reference-store bundles.
+  It requires all source paths, a new BundlePath, and WritersStopped to execute.
 .PARAMETER BackupDir
   Backup root directory. Relative paths resolve under project root; absolute paths used as-is. Default "backups".
 .PARAMETER SkipUploads
@@ -22,7 +24,13 @@ param(
     [string]$DatabasePath = "",
     [string]$Python = "python",
     [switch]$SkipUploads,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$FullAssets,
+    [string]$BundlePath = "",
+    [string]$UploadsPath = "",
+    [string]$ModelsPath = "",
+    [string]$ReferenceStorePath = "",
+    [switch]$WritersStopped
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,6 +38,32 @@ $ErrorActionPreference = "Stop"
 $Root = Resolve-Path "$PSScriptRoot\.."
 $BackendDir = Join-Path $Root "cat-backend"
 . (Join-Path $PSScriptRoot 'database_path.ps1')
+if ($FullAssets) {
+    if ($SkipUploads) { throw '-FullAssets cannot be combined with -SkipUploads.' }
+    if (-not $DatabasePath -or -not $UploadsPath -or -not $ModelsPath -or -not $ReferenceStorePath -or -not $BundlePath) {
+        throw '-FullAssets requires explicit -DatabasePath, -UploadsPath, -ModelsPath, -ReferenceStorePath and -BundlePath.'
+    }
+    function Resolve-FullAssetPath([string]$Value, [string]$Base) {
+        if ([IO.Path]::IsPathRooted($Value)) { return [IO.Path]::GetFullPath($Value) }
+        return [IO.Path]::GetFullPath((Join-Path $Base $Value))
+    }
+    $AssetArgs = @(
+        (Join-Path $PSScriptRoot 'asset_bundle.py'), 'backup',
+        '--database', (Resolve-FullAssetPath $DatabasePath $BackendDir),
+        '--uploads', (Resolve-FullAssetPath $UploadsPath $BackendDir),
+        '--models', (Resolve-FullAssetPath $ModelsPath $BackendDir),
+        '--reference-store', (Resolve-FullAssetPath $ReferenceStorePath $BackendDir),
+        '--output', (Resolve-FullAssetPath $BundlePath ([string]$Root))
+    )
+    if ($DryRun) { $AssetArgs += '--dry-run' }
+    if ($WritersStopped) { $AssetArgs += '--writers-stopped' }
+    & $Python @AssetArgs
+    if ($LASTEXITCODE -ne 0) { throw 'Full asset backup failed; do not use an incomplete output directory.' }
+    exit 0
+}
+if ($BundlePath -or $UploadsPath -or $ModelsPath -or $ReferenceStorePath -or $WritersStopped) {
+    throw 'Full asset arguments require -FullAssets.'
+}
 $DatabaseFile = Resolve-CatDatabasePath -BackendDir $BackendDir -DatabasePath $DatabasePath -AllowMissing:$DryRun
 $Timestamp = (Get-Date -Format "yyyyMMdd-HHmmss-fff")
 

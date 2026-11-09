@@ -31,7 +31,29 @@ def test_empty_database_can_upgrade_and_reupgrade(tmp_path):
         assert {tuple(c.name for c in i.columns) for i in table.indexes if i.unique} <= actual
     with engine.connect() as conn:
         assert conn.execute(text('PRAGMA foreign_key_check')).all() == []
-        assert conn.execute(text('SELECT version_num FROM alembic_version')).scalar() == 'j20261031'
+        assert conn.execute(text('SELECT version_num FROM alembic_version')).scalar() == 'k20261108'
+    engine.dispose()
+
+
+def test_sighting_request_upgrade_preserves_existing_rows_and_rewards(tmp_path):
+    path = tmp_path / 'before-request-keys.db'
+    env = {**os.environ, 'DATABASE_URL': f'sqlite:///{path.as_posix()}'}
+    result = subprocess.run([sys.executable, '-m', 'alembic', 'upgrade', 'j20261031'],
+                            cwd=BACKEND, env=env, capture_output=True, text=True, timeout=60)
+    assert result.returncode == 0, result.stderr
+    engine = create_engine(env['DATABASE_URL'])
+    with engine.begin() as conn:
+        conn.execute(text("INSERT INTO users (id,username,nickname,password_hash,xp) VALUES (1,'old','old','x',37)"))
+        conn.execute(text("INSERT INTO cats (id,name) VALUES (1,'old cat')"))
+        conn.execute(text("INSERT INTO sightings (id,cat_id,user_id,status,note) VALUES (1,1,1,'approved','keep'),(2,1,1,'pending','keep too')"))
+    upgrade(path)
+    with engine.connect() as conn:
+        assert conn.execute(text('SELECT id,status,note,client_request_id,request_sha256 FROM sightings ORDER BY id')).all() == [
+            (1, 'approved', 'keep', None, None), (2, 'pending', 'keep too', None, None)]
+        assert conn.execute(text('SELECT xp FROM users WHERE id=1')).scalar_one() == 37
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            conn.execute(text("UPDATE sightings SET client_request_id='same-request'"))
     engine.dispose()
 
 

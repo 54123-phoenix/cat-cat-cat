@@ -1,6 +1,10 @@
 # 上线步骤清单
 
-当前尚未通过发布验收。迁移 head 已更新为 `j20261031`，清单为 v2；旧参考向量及 B1 v1 候选必须重建，步骤见 [参考库操作说明](docs/REFERENCE_LIBRARY.md)。j20261031 修复身份唯一索引，存在重复记录时拒绝升级，不自动合并。下面是部署步骤，不是部署成功记录；本机 Redis 和 SQLite/附件恢复证据见 [C 验收](docs/validation/OPTIMIZATION_C.md)，API Docker 与完整 CPU 推理的隔离恢复已完成相应验收，见 [推理证据](docs/validation/INFERENCE_20261101.md)；生产挂载、独立识别质量及微信真机仍待验证。
+2026-11-08：当前尚未通过发布验收。本轮按用户约束只做本地修复与隔离验证，真机和目标服务器后续提供；以下为环境齐备后的操作指引，不表示已经部署。当前步骤以[发布清单](docs/RELEASE_CHECKLIST.md)为准，结果见[本地记录](docs/validation/LOCAL_REPAIR_20261108.md)。
+
+迁移 head 为 `k20261108`，新增偶遇提交回执和用户内唯一约束；旧记录与积分保留，业务数据库本轮未升级。之前 `j20261031` 修复身份唯一索引，重复身份仍会拒绝迁移，不自动合并。参考清单为 v2，旧向量/B1 v1 候选需重建，见[参考库说明](docs/REFERENCE_LIBRARY.md)。历史 API Docker 和完整 CPU 推理已完成隔离验收，见[推理证据](docs/validation/INFERENCE_20261101.md)；不能替代本轮代码在目标服务器的实际挂载、容量、校园质量与微信验证。
+
+完整备份工具现可覆盖数据库、自定义 uploads、models、reference-store 并验证 SHA-256；先预演，再在停止业务写入和 reference-worker 的窗口执行。完整恢复只允许新隔离目录，不会接管线上路径，详见[完整资产命令](docs/BACKUP_RECOVERY.md)。Compose 已取消 Redis 宿主端口映射，容器仍通过内部 URL 连接；排查用 `docker compose exec redis redis-cli ping`。本轮仅确认配置解析，服务器网络、TLS/代理和运行中服务需另验。
 
 ## 第一阶段：账号准备（1-3 天）
 
@@ -61,7 +65,7 @@
    docker compose up -d --build
    ```
 6. Compose 启动时先执行 `alembic upgrade head`，再启动服务。SQLite 的容器路径 `/app/data/cat_community.db` 对应宿主机 `cat-backend/data/cat_community.db`。升级旧库前先按 [备份恢复说明](docs/BACKUP_RECOVERY.md) 制作一致快照。
-7. 确认后端可访问：`curl http://你的域名:8000/`
+7. 在服务器本机确认 API：`curl http://127.0.0.1:8000/`；正式客户端通过已验证的 HTTPS 域名/代理访问，不以直连开发端口作为微信验收结果。
 
 Compose 另启动 `reference-worker`，与 backend 共享数据库、照片、模型及 `/app/reference-store`；它等待迁移完成，只处理队列，不执行迁移。首次无发布版本时识别返回 unavailable。维护档案和参考照片后，执行 `docker compose exec backend python scripts/reference_jobs.py enqueue`，再通过 `status` 或管理 API 核对任务结果。默认构建成功后发布，失败不替换当前指针；版本与当前数据库不兼容时旧结果也停止服务。仅启动容器不代表参考库就绪。完整 CPU 镜像已在隔离卷上跑通真实重建、HTTP 自匹配和模型/store 整体恢复；生产宿主挂载及业务恢复仍需另行验证。
 
@@ -82,7 +86,7 @@ python scripts/verify_browser.py
 
 Windows 可使用已安装的 Edge：`python scripts/verify_browser.py --browser-channel msedge`。支持 `--api-port`、`--web-port`、`--output-dir`；只有指定 `--screenshots` 才额外截取五张成功页面，不覆盖 showcase。默认结果位于忽略提交的 `artifacts/browser/时间戳/`。失败保留 result.json、服务日志和异常信息；页面测试失败另存截图与 Playwright trace。脚本只操作临时 SQLite、测试凭据和自己启动的进程。
 
-门禁覆盖实际 UI 登录、图鉴搜索、管理凭据过期隔离、503 保留凭据并重试，以及真实 API 的保存待审、权限拒绝、审核和公开列表/热力数据更新。审核由浏览器点击“通过”完成；保存步骤通过真实 API 发起，不代表拍照/上传 UI 或微信设备链路已经验收。CI 使用 Chromium；本地通过与 GitHub Actions 远端通过分别登记。
+门禁覆盖实际 UI 登录、图鉴搜索、管理凭据过期隔离、503 保留凭据并重试，以及保存待审、权限拒绝、审核和公开列表/热力数据更新。本轮增加 Web 上传 UI 的明确提交、候选提交及“服务器已保存但响应丢失”后重试，使用真实 multipart/API/数据库，只有识别响应使用合成替身。它不能证明手机摄像头、微信设备或真实识别质量。CI 使用 Chromium；本地通过与 GitHub Actions 远端通过分别登记。
 
 参考库管理端专项命令：`python scripts/verify_reference_browser.py`。该脚本使用真实 Vite、API、SQLite、构建进程和临时参考照片，只有检测/向量推理使用测试替身；覆盖管理页面提交、进度刷新、失败重试、档案保存与照片上传失败、审核员只读、503/401，以及 360/390/1280 宽度与明暗主题。结果默认保存在 `artifacts/optimization-b4-browser`。CI 顺序执行两个浏览器脚本，不把测试推理当成模型验收；本地也建议顺序运行以便隔离开发服务异常。
 
@@ -137,8 +141,9 @@ docker compose up -d --build
 - [ ] 微信开发者工具 → 顶部「预览」→ 生成二维码
 - [ ] 手机微信扫码 → 测试以下流程：
   - [ ] 微信登录能否成功获取用户信息
-  - [ ] 拍照识猫：选图 → 识别 → 显示结果
-  - [ ] 地图：定位 + 显示标记
+  - [ ] 拍照识猫：选图 → 识别建议/候选选择 → 明确提交 → 待审回执；提交前不保存
+  - [ ] 有图/无图、断网/响应丢失重试，记录及 XP 不重复；错误后输入可恢复
+  - [ ] 地图：定位与真实标记；空数据、部分失败、全部失败、重试均不生成假猫点位
   - [ ] 社区：发帖 + 评论 + 点赞
   - [ ] 我的：显示个人资料
   - [ ] 拉取刷新是否正常
@@ -182,11 +187,11 @@ docker compose up -d --build
 
 | 项目 | 状态 |
 |------|------|
-| 小程序代码 | 17 个页面，本地测试与构建记录见验收文档；真机未验收 |
-| 后端 API | 多个接口已通过隔离测试；正式微信与真实模型未验收 |
-| Web 版 | React 本地可构建、浏览器冒烟通过；Docker 未验收 |
-| 微信账号 | ⬜ 需注册 |
-| 服务器 | ⬜ 需购买/配置 |
+| 小程序代码 | 17 个页面；本轮 14 项合同、类型检查与构建通过，真机待提供 |
+| 后端 API | 全量 396 项、full harness 六项通过；最后备份路径保护另经 27 项定向测试验证。未升级业务库 |
+| Web 版 | 本轮 87 项测试与构建通过，核心/参考库浏览器各 8 组；历史 Docker 隔离通过，本轮服务器未部署 |
+| 微信账号与正式配置 | 待用户提供/核对，不据此推断尚未注册 |
+| 服务器 | 待用户提供目标环境后验收 |
 | Tab 图标 | 已替换，待真机显示验收 |
 | 真机测试 | ⬜ 未测 |
 | 审核提交 | ⬜ 未提交 |

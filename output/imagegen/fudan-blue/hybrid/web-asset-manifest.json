@@ -1,0 +1,123 @@
+{
+  "source": "mascot-hybrid-v1.png",
+  "source_sha256": "9475933ffa277b8b2cf765aa7b3102e7333802f36559b134485392a8b1e90dcc",
+  "segmentation": "rembg 2.0.67 / isnet-general-use",
+  "bounds": [
+    170,
+    92,
+    800,
+    931
+  ],
+  "head_crop": [
+    264,
+    66,
+    790,
+    592
+  ],
+  "outputs": {
+    "icon-180.png": {
+      "bytes": 48189,
+      "sha256": "e6a85e68cef8c0a20b47509c80375dbd2dd37d2d2e43177632b951c287736ab7",
+      "size": [
+        180,
+        180
+      ],
+      "mode": "RGBA"
+    },
+    "icon-32.png": {
+      "bytes": 3006,
+      "sha256": "dab97213c9ea0a8c888d500a8f0317f63f61cd11d03c16386d3b103f8742dc3c",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA"
+    },
+    "icon-64.png": {
+      "bytes": 8880,
+      "sha256": "8d29ed4413b96ea6296577c1ff39690fb3803f7c2ad6db26bcbc6c529479237e",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-192.webp": {
+      "bytes": 11030,
+      "sha256": "324b8fa4055de735681e5c0b3ba99ee50ded366ad81a26c2be0d17c4b7969724",
+      "size": [
+        192,
+        192
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-384.png": {
+      "bytes": 135450,
+      "sha256": "76a738b402914389f5cc9ed117ac6626adf097dd5ad7940b7a7eb17e5b4b9104",
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-384.webp": {
+      "bytes": 29168,
+      "sha256": "d5ac772cf33114b67d29366342c747d5873d1ec66d340a95ffe51f43a58b9568",
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-768.webp": {
+      "bytes": 82786,
+      "sha256": "e51d288cc5eb05de9ed566b74e62a107bd5801db156a910319b40bf266f2a31c",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-head-192.png": {
+      "bytes": 55672,
+      "sha256": "f1b29840050bbc7d1ff1a60c32a3e10e8a2b5f514f1ca9a18b9de2dc70e71fb8",
+      "size": [
+        192,
+        192
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-head-192.webp": {
+      "bytes": 13312,
+      "sha256": "44d2568f99748230002357b55a3605e82d65756db0e0156f630db0cc8f23799b",
+      "size": [
+        192,
+        192
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-head-96.webp": {
+      "bytes": 5284,
+      "sha256": "c48cba1798effe8f64f23adb36a1ccb44ac3934a61be84ed6e3ef220406a1765",
+      "size": [
+        96,
+        96
+      ],
+      "mode": "RGBA"
+    },
+    "mascot-social.png": {
+      "bytes": 361814,
+      "sha256": "47450652e74c903041cbfc6eec5a5e217b102dbc5ec1ea25d4c16956a6bbcfa2",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    }
+  },
+  "matting": {
+    "foreground_threshold": 240,
+    "background_threshold": 10,
+    "erode_structure_size": 10
+  }
+}

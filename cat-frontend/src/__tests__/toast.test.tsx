@@ -1,0 +1,113 @@
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import Toast, { toast } from '../components/Toast'
+
+describe('Toast interactions', () => {
+  beforeEach(() => { vi.useFakeTimers() })
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+    vi.useRealTimers()
+  })
+
+  it('keeps a stable live region and supports manual dismissal', () => {
+    render(<Toast />)
+    const status = screen.getByRole('status')
+    act(() => toast('记录已提交，等待审核'))
+    const message = screen.getByRole('group', { name: '记录已提交，等待审核' })
+    expect(screen.getByRole('status')).toBe(status)
+    expect(status).toHaveTextContent('记录已提交，等待审核')
+    fireEvent.click(within(message).getByRole('button', { name: '关闭通知' }))
+    expect(screen.queryByRole('group')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toBe(status)
+    expect(status).toBeEmptyDOMElement()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('allows time to read default messages and cleans expired timers', () => {
+    render(<Toast />)
+    act(() => toast('操作已完成'))
+    act(() => vi.advanceTimersByTime(5999))
+    expect(screen.getByRole('group', { name: '操作已完成' })).toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(1))
+    expect(screen.queryByRole('group')).not.toBeInTheDocument()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('pauses the remaining time while hovered or keyboard focused', () => {
+    render(<Toast />)
+    act(() => toast('可以继续阅读这条消息', { duration: 1000 }))
+    const message = screen.getByRole('group', { name: '可以继续阅读这条消息' })
+    const close = within(message).getByRole('button', { name: '关闭通知' })
+    act(() => vi.advanceTimersByTime(400))
+    fireEvent.pointerEnter(message, { pointerType: 'mouse' })
+    fireEvent.focus(close)
+    act(() => vi.advanceTimersByTime(10000))
+    fireEvent.pointerLeave(message)
+    act(() => vi.advanceTimersByTime(10000))
+    expect(message).toBeInTheDocument()
+    fireEvent.blur(close, { relatedTarget: document.body })
+    act(() => vi.advanceTimersByTime(599))
+    expect(message).toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(1))
+    expect(message).not.toBeInTheDocument()
+  })
+
+  it('does not consume reading time in a hidden tab', () => {
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible')
+    render(<Toast />)
+    act(() => toast('回来后仍可查看', { duration: 1000 }))
+    act(() => vi.advanceTimersByTime(200))
+    visibility.mockReturnValue('hidden')
+    fireEvent(document, new Event('visibilitychange'))
+    act(() => vi.advanceTimersByTime(30000))
+    expect(screen.getByRole('group')).toBeInTheDocument()
+    visibility.mockReturnValue('visible')
+    fireEvent(document, new Event('visibilitychange'))
+    act(() => vi.advanceTimersByTime(800))
+    expect(screen.queryByRole('group')).not.toBeInTheDocument()
+  })
+
+  it('bounds bursts without replacing the message being read with a keyboard', () => {
+    render(<Toast />)
+    act(() => toast('正在阅读', { duration: 1000 }))
+    const protectedMessage = screen.getByRole('group', { name: '正在阅读' })
+    fireEvent.focus(within(protectedMessage).getByRole('button', { name: '关闭通知' }))
+    act(() => {
+      toast('旧消息')
+      toast('后续消息')
+      toast('最新消息')
+    })
+    expect(screen.getAllByRole('group')).toHaveLength(3)
+    expect(protectedMessage).toBeInTheDocument()
+    expect(screen.queryByRole('group', { name: '旧消息' })).not.toBeInTheDocument()
+    expect(screen.getByRole('group', { name: '最新消息' })).toBeInTheDocument()
+    fireEvent.keyDown(within(protectedMessage).getByRole('button', { name: '关闭通知' }), { key: 'Escape' })
+    expect(protectedMessage).not.toBeInTheDocument()
+  })
+
+  it('cleans timers and the global handler when its host unmounts', () => {
+    const first = render(<Toast />)
+    act(() => toast('即将离开页面', { duration: 1000 }))
+    expect(vi.getTimerCount()).toBe(1)
+    first.unmount()
+    expect(vi.getTimerCount()).toBe(0)
+    act(() => toast('已卸载页面的消息'))
+    render(<Toast />)
+    act(() => vi.advanceTimersByTime(10000))
+    expect(screen.queryByRole('group')).not.toBeInTheDocument()
+    act(() => toast('新的页面消息', { duration: 0 }))
+    act(() => vi.advanceTimersByTime(60000))
+    expect(screen.getByRole('group', { name: '新的页面消息' })).toBeInTheDocument()
+  })
+
+  it('keeps the notification readable when its avatar fails', () => {
+    render(<Toast />)
+    act(() => toast('有人评论了动态', { avatar: '/missing-avatar.png', emoji: '💬' }))
+    const message = screen.getByRole('group', { name: '有人评论了动态' })
+    fireEvent.error(message.querySelector('img')!)
+    expect(message.querySelector('img')).toBeNull()
+    expect(within(message).getByText('💬')).toBeInTheDocument()
+    expect(within(message).getByRole('button', { name: '关闭通知' })).toBeEnabled()
+  })
+})
