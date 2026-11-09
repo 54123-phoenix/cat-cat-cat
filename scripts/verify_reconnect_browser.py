@@ -4,7 +4,6 @@ import asyncio
 from datetime import datetime, timezone
 import json
 import os
-import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -164,7 +163,7 @@ localStorage.setItem('cat-capsule-seen', new Date().toISOString().slice(0, 10));
                         # otherwise it can legitimately include the new post.
                         await page.wait_for_function('window.__postReads.completedAfterOpen > 0 && window.__postReads.pending === 0')
                         report['initial_post_reads'] = await page.evaluate('window.__postReads')
-                        await expect(page.get_by_text('还没有帖子', exact=True)).to_be_visible()
+                        await expect(page.get_by_text('这个话题还没有帖子', exact=True)).to_be_visible()
                         opens = await outage()
                         first_post = await request('post', '/api/posts', headers=author, form={'content': '断线期间的新帖子'})
                         assert any(row['content'] == '断线期间的新帖子' for row in (await request('get', '/api/posts', headers=author))['items'])
@@ -173,20 +172,28 @@ localStorage.setItem('cat-capsule-seen', new Date().toISOString().slice(0, 10));
                         await expect(page.get_by_text('断线期间的新帖子', exact=True)).to_be_visible()
                         passed('missed_post_refetched_after_redis_reconnect')
 
-                        await page.get_by_role('button', name='发帖', exact=True).click()
-                        draft = page.locator('textarea').first
+                        await page.get_by_role('button', name='发布帖子', exact=True).click()
+                        compose = page.get_by_role('dialog', name='分享校园日常', exact=True)
+                        draft = compose.get_by_role('textbox', name='想和猫友分享什么？', exact=True)
                         await draft.fill('这是一份尚未发送的草稿')
                         opens = await outage()
                         await request('post', '/api/posts', headers=author, form={'content': '草稿编辑期间的新帖子'})
                         await recover(opens)
                         await expect(draft).to_have_value('这是一份尚未发送的草稿')
+                        # The composer is now modal. Check refreshed posts after
+                        # closing it, then reopen to verify the same draft survived.
+                        await compose.get_by_role('button', name='关闭发帖，保留本页草稿', exact=True).click()
+                        await expect(compose).not_to_be_visible()
                         await expect(page.get_by_text('草稿编辑期间的新帖子', exact=True)).to_be_visible()
+                        await page.get_by_role('button', name='发布帖子', exact=True).click()
+                        await expect(draft).to_have_value('这是一份尚未发送的草稿')
+                        await compose.get_by_role('button', name='关闭发帖，保留本页草稿', exact=True).click()
                         passed('revalidation_preserves_unsent_compose_draft')
 
                         await page.goto(base + f"/posts/{first_post['id']}")
                         await page.wait_for_function('window.__streams.opened > 0')
-                        await page.get_by_role('button', name=re.compile('条回复')).click()
-                        reply = page.get_by_placeholder('写评论…')
+                        # Post details render the discussion expanded by default.
+                        reply = page.get_by_role('textbox', name='写下你的回复', exact=True)
                         await reply.fill('这份评论也还没有发送')
                         opens = await outage()
                         await request('post', f"/api/posts/{first_post['id']}/comments", headers=author,
